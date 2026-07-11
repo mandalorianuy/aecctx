@@ -52,3 +52,16 @@ def test_release_documentation_and_automation_exist() -> None:
     ]
 
     assert all(path.is_file() for path in required)
+
+
+def test_release_workflow_uploads_each_asset_once() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+
+    assert "dist/aecctx-0.1.0*" not in workflow
+    for asset in (
+        "dist/aecctx-0.1.0-py3-none-any.whl",
+        "dist/aecctx-0.1.0.tar.gz",
+        "dist/SHA256SUMS",
+        "dist/aecctx-0.1.0.spdx.json",
+    ):
+        assert workflow.count(asset) == 1
