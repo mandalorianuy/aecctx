@@ -170,3 +170,13 @@ def test_ingest_auto_selects_pdf_and_image_adapters(tmp_path: Path) -> None:
         completed = run_cli("ingest", str(fixture), "--output", str(output), "--form", "zip", "--json")
         assert completed.returncode == 0, completed.stderr
         assert json.loads(completed.stdout)["data"]["adapter"] == adapter
+
+
+def test_ingest_auto_selects_geometry_adapter(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "geometry" / "minimal-triangle.obj"
+    output = tmp_path / "mesh.aecctx"
+
+    completed = run_cli("ingest", str(fixture), "--output", str(output), "--form", "zip", "--json")
+
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout)["data"]["adapter"] == "geometry"

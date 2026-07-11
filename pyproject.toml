@@ -17,6 +17,7 @@ aecctx = "aecctx.cli:main"
 
 [project.optional-dependencies]
 dxf = ["ezdxf>=1.4.4,<2"]
+geometry = ["trimesh>=4.12,<5"]
 image = ["Pillow>=12.1,<13"]
 ifc = ["ifcopenshell>=0.8.5,<0.9"]
 pdf = ["pypdf>=6.6,<7", "Pillow>=12.1,<13"]
@@ -26,6 +27,7 @@ test = [
   "ifcopenshell>=0.8.5,<0.9",
   "Pillow>=12.1,<13",
   "pypdf>=6.6,<7",
+  "trimesh>=4.12,<5",
   "pytest>=8.3,<9",
 ]
 

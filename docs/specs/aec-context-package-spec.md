@@ -190,6 +190,8 @@ Pixels are not construction units without calibration. Tessellated meshes do not
 
 Preferred v0.1 derived exchange artifacts are SVG for 2D previews and GLB for 3D previews. Original or adapter-native geometry MAY use other registered media types.
 
+The reference conventions for deterministic SVG/GLB output, reversible transforms, preview scopes, bounds and rendering diagnostics are defined in `docs/specs/geometry-artifact-conventions.md`. These artifacts remain derived and never replace cited source evidence.
+
 ## 13. Capability and loss reporting
 
 Every ingest session MUST emit structured support levels for identity, hierarchy, properties, relations, text, 2D geometry, 3D geometry, materials/styles, georeferencing, and validation.

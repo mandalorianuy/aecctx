@@ -23,7 +23,7 @@ Opaque fallback ingest is implemented in the core. Format-specific adapter value
 | ASCII/binary DXF | `full` version/unit/layout/layer/block/handle provenance | `partial` evidence with no automatic domain classification | `full` for normalized supported entities; dynamic `partial` with exact raw-tag fallback | `partial` | ACX-05 completed |
 | Vector PDF | `full` source/page identity | `partial` text and content-stream evidence | `partial` path operators per page/viewport | `unsupported` as inferred hidden geometry | ACX-06 completed |
 | Raster PDF/image | `full` source/pixel identity | `partial` metadata; OCR/vision `unsupported` without provider | `partial` raster regions with explicit calibration state; image pixels `full` | `unsupported` as inferred hidden geometry | ACX-06 completed |
-| OBJ/STL/glTF | Target `full` | Target `opaque` or `partial` metadata | Target preview only | Target `full` mesh evidence | ACX-07 |
+| OBJ/STL/glTF | `full` source/object identity | `partial` metadata with explicit unknown units | deterministic SVG preview only | `full` preserved mesh evidence plus derived GLB with reversible transform | ACX-07 completed |
 | STEP/IGES | Target `full` | Target `partial` names/colors/assembly metadata | Target preview only | Target `full` B-Rep plus tessellation where supported | post-v0.1 |
 | DWG/DGN | Adapter-specific | Adapter-specific | Adapter-specific | Adapter-specific | optional plugin, post-v0.1 |
 | RVT/proprietary BIM | Adapter-specific | Adapter-specific | Adapter-specific | Adapter-specific | optional plugin, post-v0.1 |

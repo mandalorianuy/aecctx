@@ -9,3 +9,4 @@ Unless a fixture directory states otherwise, files in this directory are project
 - `pdf/minimal-vector.pdf`: minimal uncompressed PDF with vector path operators and text.
 - `pdf/minimal-raster.pdf`: minimal uncompressed PDF with one embedded raster XObject.
 - `images/minimal-grid.pgm`: minimal 3x2 grayscale pixel fixture.
+- `geometry/minimal-triangle.obj`: minimal named OBJ triangle with deliberately undeclared units and CRS.
