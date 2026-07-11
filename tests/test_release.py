@@ -52,6 +52,9 @@ def test_release_documentation_and_automation_exist() -> None:
     ]
 
     assert all(path.is_file() for path in required)
+    release_notes = (ROOT / "docs" / "releases" / "v0.1.0.md").read_text(encoding="utf-8")
+    assert "pip install aecctx==0.1.0" not in release_notes
+    assert "releases/download/v0.1.0/aecctx-0.1.0-py3-none-any.whl" in release_notes
 
 
 def test_release_workflow_uploads_each_asset_once() -> None:

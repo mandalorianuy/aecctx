@@ -22,11 +22,16 @@ AECCTX instead produces a package with:
 Python 3.12 or newer is required.
 
 ```bash
-pip install aecctx==0.1.0
-pip install 'aecctx[ifc,dxf,pdf,image,geometry]'
+python -m pip install https://github.com/mandalorianuy/aecctx/releases/download/v0.1.0/aecctx-0.1.0-py3-none-any.whl
 ```
 
-Use `aecctx[all]` for all adapters plus the optional read-only MCP server.
+For optional adapters or MCP, install from the tagged source checkout:
+
+```bash
+git clone --branch v0.1.0 --depth 1 https://github.com/mandalorianuy/aecctx.git
+cd aecctx
+python -m pip install '.[all]'
+```
 
 ## Status and authority
 
