@@ -1,7 +1,7 @@
 # AECCTX Capability Matrix
 
 Date: 2026-07-11
-Status: v0.1.0 release claim registry
+Status: v0.1.0 release claim registry plus non-claim expansion targets
 
 ## Support levels
 
@@ -42,3 +42,25 @@ Opaque fallback ingest is implemented in the core. Format-specific adapter value
 | Diff | Implemented | identity, record, artifact, capability, loss and producer changes |
 | MCP server | Optional, implemented | five read-only wrappers match stable library/CLI semantics |
 | Source mutation/write-back | Not in v0.1 | future reviewed contract |
+
+## Post-v0.1 expansion targets
+
+This table is a roadmap, not a support claim. Current claims in the release registry above remain authoritative until the owning task is completed with linked conformance evidence.
+
+| Capability gap | Current public state | Bounded target | Owning task |
+|---|---|---|---|
+| IFC source-native 2D | `partial` | Supported representation families preserve native 2D evidence and deterministic previews without relabeling 3D projection | ACX-13 |
+| IFC georeferencing | `partial` | Source CRS/coordinate-operation evidence and complete transform-chain state for declared schema profiles | ACX-13 |
+| DXF source semantics | `partial` | Source-native dictionaries/XDATA/ownership/material/structure evidence; no consumer classification | ACX-14 |
+| DXF 3D | `partial` | Bounded 3D entity families with OCS/transforms/topology and explicit kernel/proxy loss | ACX-14 |
+| Raster OCR | `unsupported` without provider | Optional OCR spans/regions with provider provenance and native-text conflict handling | ACX-15 |
+| Image/PDF vision | `unsupported` without provider | Optional inferred candidates with explicit confidence, privacy, reproducibility, and evidence links | ACX-15 |
+| Hidden/unobserved geometry | `unsupported` | Remains unsupported as source geometry; optional reconstruction hypotheses never become measurement authority | ACX-15 |
+| Mesh units and CRS | units often `unknown`; CRS unresolved | Preserve declared metadata and accept separately proven manual calibration/registration | ACX-16 |
+| STEP/IGES | `unsupported`/opaque fallback | Bounded profiles preserving B-Rep/assembly evidence plus derived tessellation | ACX-17 |
+| DWG | `unsupported`/opaque fallback | Optional reviewed external provider with adapter-specific claims | ACX-18 |
+| RVT | `unsupported`/opaque fallback | Optional reviewed external provider with neutral BIM evidence only | ACX-19 |
+| Package authenticity/signing | integrity only; authenticity `unsupported` | Optional governed signature verification with distinct integrity, validity, trust, and authorization states | ACX-20 |
+| Restricted decoder isolation | built-in runner rejects this class | Reviewed external sandbox/provider profiles with enforceable limits and attestations | ACX-12 |
+| AEC delivery quality gate | `unsupported` | Deterministic policy, baseline-diff and bounded IFC IDS evaluation with explicit outcomes and evidence citations | ACX-21 |
+| Codex plugin | standalone read-only MCP only | Optional `aecctx-inspector` package with inspection, revision, loss-triage and quality-gate skills; no unique semantics | ACX-22 |

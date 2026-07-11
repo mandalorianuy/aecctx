@@ -10,9 +10,10 @@ Authority is ordered as follows:
 1. `AGENTS.md` for repository execution rules.
 2. `docs/specs/aec-context-package-spec.md` for the package and neutral record model.
 3. `docs/specs/aec-context-plugin-contract.md` for adapter behavior.
-4. `docs/decisions/decision-log.md` for accepted and open decisions.
-5. `docs/capability-matrix.md` for support claims.
-6. `docs/implementation-plan.md` for task sequencing.
+4. `docs/specs/aecctx-capability-expansion-spec.md` for post-v0.1 capability targets and their acceptance boundaries.
+5. `docs/decisions/decision-log.md` for accepted and open decisions.
+6. `docs/capability-matrix.md` for support claims.
+7. `docs/implementation-plan.md` for task sequencing.
 
 Research notes and README examples are informative and cannot override normative specifications.
 
@@ -22,6 +23,7 @@ Research notes and README examples are informative and cannot override normative
 - An adapter cannot claim support beyond the capability matrix and its emitted capability/loss report.
 - An application integration cannot add consumer semantics to the neutral package contract.
 - Open decisions block only the affected capability; they must not be resolved implicitly in code.
+- A target in the expansion spec is not a capability claim until its conformance task is complete and the capability matrix is updated with evidence.
 
 ## Release gates
 

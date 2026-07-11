@@ -68,4 +68,64 @@ Status: Active
 - Consequence: Detached signatures may be carried only as optional namespaced extensions that do not alter v0.1 conformance. A future signing contract must decide canonical signed bytes, algorithm agility, key identity/distribution, revocation and trust policy before authenticity claims are allowed.
 - Evidence: ACX-02/ACX-07 deterministic digest tests and ACX-08 security review show stable integrity inputs but no governed trust/key lifecycle.
 
+### ACXD-013: Capability expansion does not revise v0.1 claims
+
+- Decision: Post-v0.1 gaps are governed by `docs/specs/aecctx-capability-expansion-spec.md` as targets. They remain partial or unsupported until their owning task publishes conformance evidence and updates the capability matrix.
+- Consequence: Planning, experimental code, or an optional dependency cannot silently promote a public support claim.
+
+### ACXD-014: External sandbox precedes restricted decoders
+
+- Decision: Native, GPL, commercial, and network-backed decoders require a separately reviewed external sandbox provider contract before adapter implementation. The built-in Python worker is not sufficient merely because it is process-isolated.
+- Consequence: ACX-12 is a prerequisite for STEP/IGES kernels that cannot use the permissive path and for all DWG/RVT provider work. Caller-provided commands remain prohibited.
+
+### ACXD-015: Hidden geometry is not extractable evidence
+
+- Decision: Geometry absent from observable source bytes or pixels remains `unsupported` as source geometry. Optional reconstruction may exist only as an inference hypothesis with provider provenance, confidence, visible-evidence citations, and no measurement or completeness authority.
+- Consequence: OCR/vision work cannot turn plausible reconstruction into a `full` geometry claim.
+
+### ACXD-016: Calibration augments but never rewrites source coordinates
+
+- Decision: Caller-supplied mesh units, control points, transforms, or CRS are manual/derived assertions. Original coordinates and unknown/conflicted states remain preserved.
+- Consequence: A calibrated artifact may become usable in a declared coordinate frame without falsifying what the source itself declared.
+
+### ACXD-021: Quality gates express policy conformance only
+
+- Decision: The AEC Delivery Quality Gate evaluates versioned policies over authoritative AECCTX records, capabilities, loss, diagnostics, diffs, and bounded IDS requirements. Its `pass` result is not engineering approval, regulatory acceptance, construction readiness, or consumer canonical acceptance.
+- Consequence: Gate results remain reproducible evidence with explicit `pass`, `fail`, `requires_review`, and `error` outcomes; unresolved states cannot be silently defaulted into success.
+
+### ACXD-022: Codex plugin is an optional orchestration surface
+
+- Decision: `aecctx-inspector` packages focused skills and allowlisted MCP access over stable AECCTX library/CLI behavior. It introduces no unique package semantics and keeps v0.2 MCP inspection read-only.
+- Consequence: AECCTX remains usable without Codex or an LLM, source content remains untrusted data, and plugin responses cannot elevate Markdown, inference, or presentation above structured evidence and policy results.
+
 ## Open decisions
+
+### ACXD-017: Post-v0.1 schema/version boundary
+
+- Owner: ACX-11.
+- Decision required: determine which observation/inference, coordinate, fidelity, and provider-attestation fields are optional v0.1 extensions and which require `0.2` schemas/events.
+- Acceptance: compatibility matrix, migration rules, old/new reader fixtures, and required-extension behavior.
+
+### ACXD-018: Signing and trust profile
+
+- Owner: ACX-20.
+- Decision required: select the canonical signed statement, envelope/serialization, algorithm agility, signer identity model, trust-root policy, offline verification, expiry/revocation, multiple-signature, and repackaging behavior.
+- Blocking effect: authenticity/signing implementation and claims only; other capability tasks may proceed.
+
+### ACXD-019: Restricted decoder distribution and entitlement
+
+- Owner: adapter-specific ACX-17, ACX-18, or ACX-19 task before implementation.
+- Decision required: for each selected STEP/IGES, DWG, or RVT provider, record license compatibility, entitlement, redistribution, CI access, fixture rights, telemetry/network behavior, supported platforms, and support lifecycle.
+- Blocking effect: only the affected provider/format. An adapter may remain unsupported while other tasks continue.
+
+### ACXD-020: Optional inference provider profiles
+
+- Owner: ACX-15.
+- Decision required: define the first local and/or network OCR/vision profiles, supported vocabulary, privacy/retention policy, nondeterminism class, thresholds, packaging extras, and conformance scope.
+- Blocking effect: the affected inference profile; baseline PDF/image extraction remains available without it.
+
+### ACXD-023: Quality-gate policy and IDS implementation profile
+
+- Owner: ACX-21.
+- Decision required: version the gate policy schema; select the reviewed IDS parser/checker or bounded implementation; enumerate supported IDS versions/facets; define stable check IDs, severities, waivers, outcome aggregation, exit codes, and official conformance-suite scope.
+- Blocking effect: ACX-21 quality-gate implementation and its ACX-22 plugin workflow only; earlier format, signing, and sandbox tasks may proceed.

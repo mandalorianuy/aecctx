@@ -13,6 +13,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SPEC = ROOT / "docs/specs/aec-context-package-spec.md"
 PLUGIN_SPEC = ROOT / "docs/specs/aec-context-plugin-contract.md"
+EXPANSION_SPEC = ROOT / "docs/specs/aecctx-capability-expansion-spec.md"
 PLAN = ROOT / "docs/implementation-plan.md"
 FIXTURE = ROOT / "fixtures/minimal-aecctx"
 
@@ -41,6 +42,7 @@ def check_required_files() -> None:
         ROOT / "docs/integration/woodframing-boundary.md",
         SPEC,
         PLUGIN_SPEC,
+        EXPANSION_SPEC,
         PLAN,
         ROOT / "schemas/v0.1/manifest.schema.json",
         ROOT / "schemas/v0.1/record.schema.json",
@@ -74,6 +76,19 @@ def check_authorities() -> None:
         if phrase not in plugin:
             fail(f"plugin spec missing authority phrase: {phrase}")
 
+    expansion = EXPANSION_SPEC.read_text(encoding="utf-8")
+    for phrase in [
+        "Claim lifecycle",
+        "Reviewed external sandbox provider contract",
+        "Hidden geometry boundary",
+        "Authenticity and signing",
+        "AEC Delivery Quality Gate",
+        "Codex plugin",
+        "no new capability claim is implied",
+    ]:
+        if phrase not in expansion:
+            fail(f"expansion spec missing authority phrase: {phrase}")
+
     plan = PLAN.read_text(encoding="utf-8")
     ledger = {
         task: status
@@ -81,12 +96,17 @@ def check_authorities() -> None:
     }
     if ledger.get("ACX-00") != "completed" or ledger.get("ACX-10") != "deferred":
         fail("implementation plan boundary tasks have invalid status")
-    executable = [f"ACX-{number:02d}" for number in range(1, 10)]
+    executable = [f"ACX-{number:02d}" for number in range(1, 10)] + [
+        f"ACX-{number:02d}" for number in range(11, 24)
+    ]
+    missing_tasks = [task for task in executable if task not in ledger]
+    if missing_tasks:
+        fail(f"implementation plan missing executable tasks: {', '.join(missing_tasks)}")
     pending_next = [task for task in executable if ledger.get(task) == "pending-next"]
     in_progress = [task for task in executable if ledger.get(task) == "in_progress"]
     if not pending_next and not in_progress:
         if any(ledger.get(task) != "completed" for task in executable):
-            fail("implementation plan without an active task requires ACX-01 through ACX-09 completed")
+            fail("implementation plan without an active task requires every executable task completed")
         return
     if len(pending_next) + len(in_progress) != 1:
         fail("implementation plan must contain exactly one pending-next or in_progress task")

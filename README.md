@@ -37,6 +37,7 @@ python -m pip install '.[all]'
 
 - Format specification: [`docs/specs/aec-context-package-spec.md`](docs/specs/aec-context-package-spec.md)
 - Plugin contract: [`docs/specs/aec-context-plugin-contract.md`](docs/specs/aec-context-plugin-contract.md)
+- Post-v0.1 expansion specification: [`docs/specs/aecctx-capability-expansion-spec.md`](docs/specs/aecctx-capability-expansion-spec.md)
 - Capability matrix: [`docs/capability-matrix.md`](docs/capability-matrix.md)
 - Active implementation sequence: [`docs/implementation-plan.md`](docs/implementation-plan.md)
 - Handoff for the implementation task: [`docs/HANDOFF.md`](docs/HANDOFF.md)

@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-11
-Handoff status: `0.1.0-IMPLEMENTED`
+Handoff status: `0.2.0-EXPANSION-SPEC-READY`
 
 ## Outcome
 
-The repository is ready for a dedicated implementation task. The public contract is application-agnostic, evidence-first, deterministic, local-first, and loss-aware. WoodFraming integration is intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. The post-v0.1 capability expansion is now specified and sequenced without changing existing release claims. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
 1. Read `AGENTS.md`.
-2. Read both normative files under `docs/specs/` completely.
+2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09 are complete. ACX-10 remains deferred and no additional implementation-plan task is executable in this repository.
+4. ACX-01 through ACX-09 are complete and ACX-10 remains deferred. Execute only ACX-11, currently `pending-next`.
 5. Run `./scripts/verify.sh` before handoff.
 
 ## Fixed decisions
@@ -25,10 +25,21 @@ The repository is ready for a dedicated implementation task. The public contract
 - Consumer mappings remain outside AECCTX.
 - GPL/commercial decoders remain optional process-isolated plugins.
 
+## Expansion invariants
+
+- Targets do not change the v0.1 claim registry until conformance evidence exists.
+- Hidden/unobserved geometry remains unsupported as source evidence; reconstruction can only be an inference hypothesis.
+- Manual mesh calibration augments and never rewrites source coordinates.
+- ACX-12 is required before native, GPL, commercial, or network-backed decoder work.
+- DWG/RVT remain optional provider capabilities outside the Apache-2.0 core distribution.
+- Authenticity remains unsupported until ACXD-018 and ACX-20 are complete.
+- The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
+- The ACX-22 Codex plugin remains optional, local-first and semantically subordinate to library/CLI results.
+
 ## Explicitly deferred
 
 - WoodFraming mapping and import UX;
-- direct DWG and RVT support in the core;
+- direct DWG and RVT dependencies in the core; optional external-provider work is governed by ACX-18/ACX-19;
 - editing or round-trip mutation of source authoring formats;
 - a universal AEC ontology;
 - public format stabilization at `1.0`.
@@ -38,6 +49,8 @@ The repository is ready for a dedicated implementation task. The public contract
 `ACX-01` created the Python package, CLI command surface, offline schema loader, directory package validator, typed diagnostics, and packaging gates. Acceptance evidence is recorded in [`docs/evidence/ACX-01.md`](evidence/ACX-01.md).
 
 ## Next implementation task
+
+ACX-11: version the shared observation/inference, coordinate, fidelity, and provider-attestation contracts; resolve ACXD-017; add compatibility fixtures and the claim-to-conformance registry. It MUST NOT implement a format adapter or promote a capability claim.
 
 ## Consumer integration planning entry point
 
