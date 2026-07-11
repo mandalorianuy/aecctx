@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import tempfile
 from dataclasses import dataclass
 from importlib.resources import files
 from pathlib import Path
@@ -10,6 +11,7 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 from .errors import Diagnostic
+from .package import PackageReadError, PackageReader, SafetyLimits
 
 
 REQUIRED_ARTIFACTS = (
@@ -149,8 +151,7 @@ def _validate_records(root: Path, diagnostics: list[Diagnostic]) -> None:
             seen.add(record_id)
 
 
-def validate_package(package_path: str | Path) -> ValidationResult:
-    root = Path(package_path)
+def _validate_directory(root: Path) -> ValidationResult:
     diagnostics: list[Diagnostic] = []
     if not root.is_dir():
         diagnostics.append(_diagnostic("AECCTX_PACKAGE_NOT_DIRECTORY", "ACX-01 accepts directory-form packages", path=str(root)))
@@ -171,3 +172,19 @@ def validate_package(package_path: str | Path) -> ValidationResult:
     ordered = tuple(sorted(diagnostics, key=lambda item: (item.path or "", item.code, item.message)))
     return ValidationResult(not ordered, ordered, manifest.get("package_id"), manifest)
 
+
+def validate_package(package_path: str | Path, *, limits: SafetyLimits | None = None) -> ValidationResult:
+    path = Path(package_path)
+    if path.is_dir():
+        return _validate_directory(path)
+    if not path.is_file():
+        diagnostic = _diagnostic("AECCTX_PACKAGE_NOT_FOUND", "Package path does not exist", path=str(path))
+        return ValidationResult(False, (diagnostic,))
+    try:
+        reader = PackageReader(path, limits=limits)
+        with tempfile.TemporaryDirectory(prefix="aecctx-validate-") as temporary:
+            reader.extract_to(temporary)
+            return _validate_directory(Path(temporary))
+    except PackageReadError as error:
+        diagnostic = _diagnostic(error.code, str(error), path=str(path))
+        return ValidationResult(False, (diagnostic,))

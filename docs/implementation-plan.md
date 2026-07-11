@@ -14,8 +14,8 @@ Execute only the first task with status `pending-next` or `in_progress`. Update 
 |---|---|---|
 | ACX-00 | completed | Repository, research, normative specs, schemas, fixture, governance, validation and implementation handoff |
 | ACX-01 | completed | Python package/CLI scaffold and schema-backed validator |
-| ACX-02 | pending-next | Deterministic package reader/writer, hashes, source registration and opaque fallback |
-| ACX-03 | pending | Neutral record APIs, query, diff and budgeted Markdown context renderer |
+| ACX-02 | completed | Deterministic package reader/writer, hashes, source registration and opaque fallback |
+| ACX-03 | pending-next | Neutral record APIs, query, diff and budgeted Markdown context renderer |
 | ACX-04 | pending | IFC adapter via IfcOpenShell |
 | ACX-05 | pending | DXF adapter via ezdxf |
 | ACX-06 | pending | Vector/raster PDF and image evidence adapters |
@@ -69,6 +69,8 @@ Evidence: [`docs/evidence/ACX-01.md`](evidence/ACX-01.md).
 Implement directory/ZIP reading and writing, logical digest, source hashing, artifact inventory, explicit embedding policy, safety limits, and an opaque fallback that registers any unsupported file without claiming interpretation.
 
 Acceptance includes repeated-build logical digest equality, archive traversal/decompression defenses, large-file streaming behavior, and exact capability/loss reporting.
+
+Evidence: [`docs/evidence/ACX-02.md`](evidence/ACX-02.md).
 
 ## ACX-03: Neutral records and agent context
 

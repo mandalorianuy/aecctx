@@ -6,6 +6,7 @@ import sys
 from typing import Any, Sequence
 
 from . import __version__
+from .ingest import ingest_opaque
 from .validation import ValidationResult, validate_package
 
 
@@ -42,6 +43,13 @@ def build_parser() -> argparse.ArgumentParser:
         command_parser.add_argument("--json", action="store_true", dest="as_json")
     version = subparsers.add_parser("version")
     version.add_argument("--json", action="store_true", dest="as_json")
+    ingest = subparsers.add_parser("ingest")
+    ingest.add_argument("source")
+    ingest.add_argument("--output", required=True)
+    ingest.add_argument("--form", choices=("directory", "zip"), default="directory")
+    ingest.add_argument("--embedding-policy", choices=("external", "embedded", "redacted"), default="external")
+    ingest.add_argument("--created-at")
+    ingest.add_argument("--json", action="store_true", dest="as_json")
     return parser
 
 
@@ -53,6 +61,33 @@ def main(argv: Sequence[str] | None = None) -> int:
         else:
             print(__version__)
         return 0
+    if arguments.command == "ingest":
+        try:
+            result = ingest_opaque(
+                arguments.source,
+                arguments.output,
+                created_at=arguments.created_at,
+                embedding_policy=arguments.embedding_policy,
+                package_form=arguments.form,
+            )
+        except (OSError, ValueError) as error:
+            diagnostic = {"code": "AECCTX_INGEST_FAILED", "message": str(error), "severity": "error"}
+            if arguments.as_json:
+                print(json.dumps(_envelope(False, None, [diagnostic]), sort_keys=True, separators=(",", ":")))
+            else:
+                print(f"AECCTX_INGEST_FAILED: {error}", file=sys.stderr)
+            return 2
+        data = {
+            "logical_digest": result.logical_digest,
+            "output": str(result.output),
+            "package_id": result.package_id,
+            "source_id": result.source_id,
+            "support": "opaque",
+        }
+        if arguments.as_json:
+            print(json.dumps(_envelope(True, data, []), sort_keys=True, separators=(",", ":")))
+        else:
+            print(f"AECCTX opaque package created: {result.output}")
+        return 0
     result = validate_package(arguments.package)
     return _emit_result(result, as_json=arguments.as_json, info=arguments.command == "info")
-

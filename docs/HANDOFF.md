@@ -1,7 +1,7 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-11
-Handoff status: `ACX-01-COMPLETE`
+Handoff status: `ACX-02-COMPLETE`
 
 ## Outcome
 
@@ -12,7 +12,7 @@ The repository is ready for a dedicated implementation task. The public contract
 1. Read `AGENTS.md`.
 2. Read both normative files under `docs/specs/` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. Execute only `ACX-02`, the first `pending-next` task in `docs/implementation-plan.md`.
+4. Execute only `ACX-03`, the first `pending-next` task in `docs/implementation-plan.md`.
 5. Run `./scripts/verify.sh` before handoff.
 
 ## Fixed decisions
@@ -39,4 +39,4 @@ The repository is ready for a dedicated implementation task. The public contract
 
 ## Next implementation task
 
-`ACX-02` owns deterministic directory/ZIP reading and writing, logical digests, source hashing, embedding policy, safety limits, and opaque fallback ingest. It must not implement neutral query/diff/context, format-specific adapters, MCP, geometry conversion, or consumer mapping.
+`ACX-03` owns neutral record APIs, deterministic query/diff, context profiles, citations, chunk indexes, and token-budget reporting. It must not implement format-specific adapters, MCP, geometry conversion, or consumer mapping.

@@ -61,3 +61,37 @@ def test_version_command_is_machine_readable() -> None:
         "ok": True,
     }
 
+
+def test_ingest_command_creates_valid_opaque_package(tmp_path: Path) -> None:
+    source = tmp_path / "source.bin"
+    source.write_bytes(b"opaque")
+    output = tmp_path / "source.aecctx"
+
+    completed = run_cli(
+        "ingest",
+        str(source),
+        "--output",
+        str(output),
+        "--form",
+        "zip",
+        "--created-at",
+        "2026-07-11T00:00:00Z",
+        "--json",
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert output.is_file()
+    assert json.loads(completed.stdout)["data"]["support"] == "opaque"
+
+
+def test_validate_accepts_archive_form(tmp_path: Path) -> None:
+    source = tmp_path / "source.bin"
+    source.write_bytes(b"opaque")
+    output = tmp_path / "source.aecctx"
+    created = run_cli("ingest", str(source), "--output", str(output), "--form", "zip", "--json")
+    assert created.returncode == 0, created.stderr
+
+    completed = run_cli("validate", str(output), "--json")
+
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout)["ok"] is True

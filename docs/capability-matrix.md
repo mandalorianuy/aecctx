@@ -14,11 +14,11 @@ Status: Normative claim registry
 
 ## Planned format capabilities
 
-No adapter is currently implemented. Values below are targets, not present claims.
+Opaque fallback ingest is implemented in the core. Format-specific adapter values remain targets until their owning tasks complete.
 
 | Source | Identity/provenance | Properties/semantics | 2D geometry | 3D geometry | Planned task |
 |---|---|---|---|---|---|
-| Unknown binary/text | Target `full` registration | Target `opaque` | Target `opaque` | Target `opaque` | ACX-02 |
+| Unknown binary/text | `full` registration | `opaque` with structured loss | `opaque` with structured loss | `opaque` with structured loss | ACX-02 completed |
 | IFC 2x3/4.x | Target `full` | Target `full` with unsupported preservation | Target `partial` | Target `full` tessellated plus source representation refs | ACX-04 |
 | ASCII/binary DXF | Target `full` | Target `partial` evidence, no automatic domain classification | Target `full` for supported entities | Target `partial` | ACX-05 |
 | Vector PDF | Target `full` | Target `partial` text/dimensions | Target `partial` per-page/viewport evidence | `unsupported` as inferred hidden geometry | ACX-06 |
@@ -32,11 +32,11 @@ No adapter is currently implemented. Values below are targets, not present claim
 
 | Capability | v0.1 target | Gate |
 |---|---|---|
-| Package directory validation | Required | JSON Schema plus logical integrity check |
-| Deterministic ZIP package | Required | repeated builds produce identical logical digest |
-| Source registration and hashing | Required | SHA-256 fixture |
-| Explicit value states | Required | schema and semantic tests |
-| Capability/loss report | Required | no adapter output accepted without it |
+| Package directory validation | Implemented | JSON Schema plus logical integrity tests |
+| Deterministic ZIP package | Implemented | repeated builds produce identical bytes and logical digest |
+| Source registration and hashing | Implemented | SHA-256 streaming conformance fixture |
+| Explicit value states | Implemented for opaque ingest | schema and semantic tests |
+| Capability/loss report | Implemented for opaque ingest | all non-full claims have structured diagnostics |
 | Markdown context projection | Required | source references and token budget report |
 | Query | Required | read-only deterministic record selection |
 | Diff | Required | source, entity, relation, evidence and artifact changes |

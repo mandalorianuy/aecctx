@@ -50,6 +50,12 @@ Status: Active
 - Decision: The repository consumes `baseline-shared-v1` using the `builder` specialization profile.
 - Consequence: Shared shell governance remains baseline-owned and repository policy extends it only through the managed overlay and project instructions.
 
+### ACXD-012: Source embedding policy defaults
+
+- Decision: Generated packages default to `external`; `embedded` and `redacted` retention require an explicit caller policy.
+- Consequence: Opaque ingest never copies untrusted source bytes into a package implicitly. Every policy remains recorded with the exact source hash, and embedded content is inventoried as authoritative source evidence.
+- Evidence: ACX-02 conformance tests cover all policies, streaming hashing, deterministic package identity, and explicit embedding.
+
 ## Open decisions
 
 ### ACXD-010: Stable neutral vocabulary registry
@@ -63,9 +69,3 @@ Status: Active
 - Question: Should v0.1 standardize detached signatures or defer signatures until the logical digest contract has implementation evidence?
 - Non-blocking boundary: SHA-256 content integrity is required; authenticity is not claimed.
 - Owner: `ACX-08`.
-
-### ACXD-012: Source embedding policy defaults
-
-- Question: Should generated packages default to external, embedded, or redacted source retention for different source classes?
-- Non-blocking boundary: v0.1 defaults to `external`; embedding requires an explicit flag and records licensing/privacy policy.
-- Owner: `ACX-02`.
