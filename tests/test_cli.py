@@ -158,3 +158,15 @@ def test_ingest_auto_selects_dxf_adapter(tmp_path: Path) -> None:
 
     assert completed.returncode == 0, completed.stderr
     assert json.loads(completed.stdout)["data"]["adapter"] == "dxf"
+
+
+def test_ingest_auto_selects_pdf_and_image_adapters(tmp_path: Path) -> None:
+    cases = [
+        (ROOT / "fixtures" / "pdf" / "minimal-vector.pdf", "pdf"),
+        (ROOT / "fixtures" / "images" / "minimal-grid.pgm", "image"),
+    ]
+    for index, (fixture, adapter) in enumerate(cases):
+        output = tmp_path / f"output-{index}.aecctx"
+        completed = run_cli("ingest", str(fixture), "--output", str(output), "--form", "zip", "--json")
+        assert completed.returncode == 0, completed.stderr
+        assert json.loads(completed.stdout)["data"]["adapter"] == adapter

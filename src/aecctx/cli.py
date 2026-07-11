@@ -51,7 +51,7 @@ def build_parser() -> argparse.ArgumentParser:
     ingest.add_argument("--output", required=True)
     ingest.add_argument("--form", choices=("directory", "zip"), default="directory")
     ingest.add_argument("--embedding-policy", choices=("external", "embedded", "redacted"), default="external")
-    ingest.add_argument("--adapter", choices=("auto", "opaque", "ifc", "dxf"), default="auto")
+    ingest.add_argument("--adapter", choices=("auto", "opaque", "ifc", "dxf", "pdf", "image"), default="auto")
     ingest.add_argument("--created-at")
     ingest.add_argument("--json", action="store_true", dest="as_json")
     query = subparsers.add_parser("query")
@@ -85,6 +85,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             if adapter == "auto":
                 from .adapters.ifc import IFCPlugin
                 from .adapters.dxf import DXFPlugin
+                from .adapters.image import ImagePlugin
+                from .adapters.pdf import PDFPlugin
 
                 with open(arguments.source, "rb") as source_handle:
                     prefix = source_handle.read(64 * 1024)
@@ -92,6 +94,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                     adapter = "ifc"
                 elif DXFPlugin().probe(prefix)["confidence"] == 1.0:
                     adapter = "dxf"
+                elif PDFPlugin().probe(prefix)["confidence"] == 1.0:
+                    adapter = "pdf"
+                elif ImagePlugin().probe(prefix)["confidence"] == 1.0:
+                    adapter = "image"
                 else:
                     adapter = "opaque"
             if adapter == "ifc":
@@ -108,6 +114,26 @@ def main(argv: Sequence[str] | None = None) -> int:
                 from .adapters.dxf import ingest_dxf
 
                 result = ingest_dxf(
+                    arguments.source,
+                    arguments.output,
+                    created_at=arguments.created_at,
+                    embedding_policy=arguments.embedding_policy,
+                    package_form=arguments.form,
+                )
+            elif adapter == "pdf":
+                from .adapters.pdf import ingest_pdf
+
+                result = ingest_pdf(
+                    arguments.source,
+                    arguments.output,
+                    created_at=arguments.created_at,
+                    embedding_policy=arguments.embedding_policy,
+                    package_form=arguments.form,
+                )
+            elif adapter == "image":
+                from .adapters.image import ingest_image
+
+                result = ingest_image(
                     arguments.source,
                     arguments.output,
                     created_at=arguments.created_at,
@@ -134,7 +160,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "output": str(result.output),
             "package_id": result.package_id,
             "source_id": result.source_id,
-            "support": "partial" if adapter in {"ifc", "dxf"} else "opaque",
+            "support": "partial" if adapter in {"ifc", "dxf", "pdf", "image"} else "opaque",
             "adapter": adapter,
         }
         if arguments.as_json:

@@ -18,8 +18,8 @@ Execute only the first task with status `pending-next` or `in_progress`. Update 
 | ACX-03 | completed | Neutral record APIs, query, diff and budgeted Markdown context renderer |
 | ACX-04 | completed | IFC adapter via IfcOpenShell |
 | ACX-05 | completed | DXF adapter via ezdxf |
-| ACX-06 | pending-next | Vector/raster PDF and image evidence adapters |
-| ACX-07 | pending | Geometry artifact normalization and deterministic previews |
+| ACX-06 | completed | Vector/raster PDF and image evidence adapters |
+| ACX-07 | pending-next | Geometry artifact normalization and deterministic previews |
 | ACX-08 | pending | Plugin isolation, security limits, optional MCP and signing decision |
 | ACX-09 | pending | Cross-platform conformance corpus, packaging and `0.1.0` release |
 | ACX-10 | deferred | Consumer integration template; WoodFraming-specific plan remains consumer-owned |
@@ -93,6 +93,8 @@ Evidence: [`docs/evidence/ACX-05.md`](evidence/ACX-05.md).
 ## ACX-06: PDF and image adapters
 
 Separate vector extraction, raster/OCR/vision evidence, viewport calibration, coordinates, extraction confidence, interpretation confidence, and unsupported hidden geometry. Inference providers remain optional.
+
+Evidence: [`docs/evidence/ACX-06.md`](evidence/ACX-06.md).
 
 ## ACX-07: Geometry and previews
 

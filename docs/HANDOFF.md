@@ -1,7 +1,7 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-11
-Handoff status: `ACX-05-COMPLETE`
+Handoff status: `ACX-06-COMPLETE`
 
 ## Outcome
 
@@ -12,7 +12,7 @@ The repository is ready for a dedicated implementation task. The public contract
 1. Read `AGENTS.md`.
 2. Read both normative files under `docs/specs/` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. Execute only `ACX-06`, the first `pending-next` task in `docs/implementation-plan.md`.
+4. Execute only `ACX-07`, the first `pending-next` task in `docs/implementation-plan.md`.
 5. Run `./scripts/verify.sh` before handoff.
 
 ## Fixed decisions
@@ -39,4 +39,4 @@ The repository is ready for a dedicated implementation task. The public contract
 
 ## Next implementation task
 
-`ACX-06` owns separate vector PDF, raster PDF, and image evidence adapters with explicit coordinates, viewport calibration, extraction confidence, interpretation confidence, and unsupported hidden geometry. It must not require inference providers or implement generic SVG/GLB previews, MCP, or consumer mapping.
+`ACX-07` owns deterministic SVG/GLB conventions, coordinate metadata, mesh provenance, bounds, level/sheet previews, and rendering diagnostics. Geometry artifacts remain subordinate to source evidence. It must not implement plugin isolation, MCP, signing, or consumer mapping.

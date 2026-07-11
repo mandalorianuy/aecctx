@@ -21,8 +21,8 @@ Opaque fallback ingest is implemented in the core. Format-specific adapter value
 | Unknown binary/text | `full` registration | `opaque` with structured loss | `opaque` with structured loss | `opaque` with structured loss | ACX-02 completed |
 | IFC 2x3/4.x | `full` schema/GUID/class provenance | `full` when representable; dynamic `partial` with unsupported preservation | `partial` with native refs | `full` for successfully tessellated representations; dynamic `partial` on failures | ACX-04 completed |
 | ASCII/binary DXF | `full` version/unit/layout/layer/block/handle provenance | `partial` evidence with no automatic domain classification | `full` for normalized supported entities; dynamic `partial` with exact raw-tag fallback | `partial` | ACX-05 completed |
-| Vector PDF | Target `full` | Target `partial` text/dimensions | Target `partial` per-page/viewport evidence | `unsupported` as inferred hidden geometry | ACX-06 |
-| Raster PDF/image | Target `full` | Target `partial` optional OCR/vision | Target `partial` pixels/regions, calibration explicit | `unsupported` as inferred hidden geometry | ACX-06 |
+| Vector PDF | `full` source/page identity | `partial` text and content-stream evidence | `partial` path operators per page/viewport | `unsupported` as inferred hidden geometry | ACX-06 completed |
+| Raster PDF/image | `full` source/pixel identity | `partial` metadata; OCR/vision `unsupported` without provider | `partial` raster regions with explicit calibration state; image pixels `full` | `unsupported` as inferred hidden geometry | ACX-06 completed |
 | OBJ/STL/glTF | Target `full` | Target `opaque` or `partial` metadata | Target preview only | Target `full` mesh evidence | ACX-07 |
 | STEP/IGES | Target `full` | Target `partial` names/colors/assembly metadata | Target preview only | Target `full` B-Rep plus tessellation where supported | post-v0.1 |
 | DWG/DGN | Adapter-specific | Adapter-specific | Adapter-specific | Adapter-specific | optional plugin, post-v0.1 |
