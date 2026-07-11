@@ -1,0 +1,15 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.1/record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "provenance": {"additionalProperties": false, "properties": {"method": {"minLength": 1, "type": "string"}, "parent_record_ids": {"items": {"type": "string"}, "type": "array", "uniqueItems": true}, "producer_id": {"minLength": 1, "type": "string"}, "producer_version": {"minLength": 1, "type": "string"}, "recorded_at": {"format": "date-time", "type": "string"}}, "required": ["producer_id", "producer_version", "method", "recorded_at", "parent_record_ids"], "type": "object"},
+    "source_ref": {"additionalProperties": false, "properties": {"locator": {"minLength": 1, "type": "string"}, "source_id": {"minLength": 1, "type": "string"}}, "required": ["source_id", "locator"], "type": "object"},
+    "value_state": {"additionalProperties": true, "oneOf": [{"properties": {"state": {"const": "known"}}, "required": ["state", "value"]}, {"properties": {"state": {"enum": ["unknown", "not_applicable", "conflicted", "explicit_null", "unsupported"]}, "reason_code": {"minLength": 1, "type": "string"}}, "required": ["state", "reason_code"]}], "type": "object"}
+  },
+  "additionalProperties": true,
+  "properties": {"extensions": {"type": "object"}, "provenance": {"$ref": "#/$defs/provenance"}, "record_id": {"minLength": 1, "type": "string"}, "record_type": {"enum": ["source", "primitive", "assertion", "entity", "relation", "diagnostic", "unsupported"]}, "record_version": {"const": "0.1"}, "source_refs": {"items": {"$ref": "#/$defs/source_ref"}, "type": "array"}},
+  "required": ["record_version", "record_id", "record_type", "source_refs", "provenance"],
+  "title": "AECCTX v0.1 common record",
+  "type": "object"
+}
+

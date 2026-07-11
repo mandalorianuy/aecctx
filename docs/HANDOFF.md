@@ -1,7 +1,7 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-11
-Handoff status: `SPEC-READY`
+Handoff status: `ACX-01-COMPLETE`
 
 ## Outcome
 
@@ -12,7 +12,7 @@ The repository is ready for a dedicated implementation task. The public contract
 1. Read `AGENTS.md`.
 2. Read both normative files under `docs/specs/` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. Execute only `ACX-01`, the first `pending-next` task in `docs/implementation-plan.md`.
+4. Execute only `ACX-02`, the first `pending-next` task in `docs/implementation-plan.md`.
 5. Run `./scripts/verify.sh` before handoff.
 
 ## Fixed decisions
@@ -33,6 +33,10 @@ The repository is ready for a dedicated implementation task. The public contract
 - a universal AEC ontology;
 - public format stabilization at `1.0`.
 
-## Definition of the first implementation task
+## Completed implementation milestone
 
-`ACX-01` creates the Python package, CLI command surface, schema loader, package validator, and deterministic minimal fixture round trip. It must not implement IFC, DXF, PDF, MCP, geometry conversion, or consumer mapping.
+`ACX-01` created the Python package, CLI command surface, offline schema loader, directory package validator, typed diagnostics, and packaging gates. Acceptance evidence is recorded in [`docs/evidence/ACX-01.md`](evidence/ACX-01.md).
+
+## Next implementation task
+
+`ACX-02` owns deterministic directory/ZIP reading and writing, logical digests, source hashing, embedding policy, safety limits, and opaque fallback ingest. It must not implement neutral query/diff/context, format-specific adapters, MCP, geometry conversion, or consumer mapping.

@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import hashlib
 import pathlib
+import re
 import sys
 
 
@@ -68,10 +69,23 @@ def check_authorities() -> None:
             fail(f"plugin spec missing authority phrase: {phrase}")
 
     plan = PLAN.read_text(encoding="utf-8")
-    if plan.count("| ACX-01 | pending-next |") != 1:
-        fail("implementation plan must contain exactly one ACX-01 pending-next row")
-    if "| ACX-00 | completed |" not in plan:
-        fail("implementation plan must record ACX-00 completed")
+    ledger = {
+        task: status
+        for task, status in re.findall(r"^\| (ACX-\d{2}) \| ([a-z-]+) \|", plan, re.MULTILINE)
+    }
+    if ledger.get("ACX-00") != "completed" or ledger.get("ACX-10") != "deferred":
+        fail("implementation plan boundary tasks have invalid status")
+    executable = [f"ACX-{number:02d}" for number in range(1, 10)]
+    pending_next = [task for task in executable if ledger.get(task) == "pending-next"]
+    in_progress = [task for task in executable if ledger.get(task) == "in_progress"]
+    if len(pending_next) + len(in_progress) != 1:
+        fail("implementation plan must contain exactly one pending-next or in_progress task")
+    active = (pending_next + in_progress)[0]
+    active_index = executable.index(active)
+    if any(ledger.get(task) != "completed" for task in executable[:active_index]):
+        fail("tasks before the active task must be completed")
+    if any(ledger.get(task) != "pending" for task in executable[active_index + 1 :]):
+        fail("tasks after the active task must remain pending")
 
 
 def check_fixture() -> None:

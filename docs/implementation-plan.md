@@ -13,8 +13,8 @@ Execute only the first task with status `pending-next` or `in_progress`. Update 
 | Task | Status | Outcome |
 |---|---|---|
 | ACX-00 | completed | Repository, research, normative specs, schemas, fixture, governance, validation and implementation handoff |
-| ACX-01 | pending-next | Python package/CLI scaffold and schema-backed validator |
-| ACX-02 | pending | Deterministic package reader/writer, hashes, source registration and opaque fallback |
+| ACX-01 | completed | Python package/CLI scaffold and schema-backed validator |
+| ACX-02 | pending-next | Deterministic package reader/writer, hashes, source registration and opaque fallback |
 | ACX-03 | pending | Neutral record APIs, query, diff and budgeted Markdown context renderer |
 | ACX-04 | pending | IFC adapter via IfcOpenShell |
 | ACX-05 | pending | DXF adapter via ezdxf |
@@ -61,6 +61,8 @@ Acceptance:
 - CLI stdout is JSON when `--json` is selected and diagnostics use stderr otherwise;
 - package build contains schemas;
 - `./scripts/verify.sh` passes.
+
+Evidence: [`docs/evidence/ACX-01.md`](evidence/ACX-01.md).
 
 ## ACX-02: Deterministic package and opaque ingest
 
