@@ -50,6 +50,12 @@ Status: Active
 - Decision: The repository consumes `baseline-shared-v1` using the `builder` specialization profile.
 - Consequence: Shared shell governance remains baseline-owned and repository policy extends it only through the managed overlay and project instructions.
 
+### ACXD-010: Open project vocabulary with external classifications
+
+- Decision: v0.1 uses a small, versioned project registry for compact `aecctx:` neutral kinds and relation types, while allowing optional stable external classification URIs and explicit unregistered extension terms.
+- Consequence: The registry improves deterministic query/context behavior without becoming a universal or consumer ontology. `original_class` remains mandatory evidence and registry membership never implies downstream acceptance.
+- Evidence: `schemas/v0.1/neutral-vocabulary.json` and ACX-03 record/query conformance tests.
+
 ### ACXD-012: Source embedding policy defaults
 
 - Decision: Generated packages default to `external`; `embedded` and `redacted` retention require an explicit caller policy.
@@ -57,12 +63,6 @@ Status: Active
 - Evidence: ACX-02 conformance tests cover all policies, streaming hashing, deterministic package identity, and explicit embedding.
 
 ## Open decisions
-
-### ACXD-010: Stable neutral vocabulary registry
-
-- Question: Should normalized `kind` and `relation_type` values use project-owned URIs, buildingSMART/bSDD references, or a hybrid registry?
-- Non-blocking boundary: v0.1 accepts stable strings plus optional external classification URIs and always preserves `original_class`.
-- Owner: `ACX-03`.
 
 ### ACXD-011: Package signing
 

@@ -1,0 +1,21 @@
+{
+  "kinds": [
+    "annotation",
+    "linear-element",
+    "mesh-object",
+    "opaque-object",
+    "solid-element",
+    "spatial-container",
+    "surface-element"
+  ],
+  "namespace": "https://aecctx.dev/vocabulary/v0.1#",
+  "relation_types": [
+    "aggregation",
+    "connection",
+    "containment",
+    "material-assignment",
+    "representation",
+    "type-assignment"
+  ],
+  "version": "0.1"
+}

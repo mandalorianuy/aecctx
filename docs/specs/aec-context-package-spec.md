@@ -170,6 +170,8 @@ Relations contain `relation_id`, `relation_type`, ordered or unordered endpoint 
 
 A normalized entity or relation MUST NOT be emitted without evidence, unless explicitly marked as `manual` or `derived` with producer provenance. Consumer-domain classifications do not belong in the core neutral record.
 
+The v0.1 project vocabulary is the open registry in `schemas/v0.1/neutral-vocabulary.json`. Compact `aecctx:` terms resolve against its versioned namespace. Producers MAY use stable external URI terms and MAY preserve unregistered extension terms, but MUST retain `original_class`; the registry is not a closed ontology and does not authorize consumer-domain classification.
+
 ## 12. Geometry and coordinate contract
 
 Geometry remains in sidecar artifacts unless a compact primitive is explicitly supported by a record schema. Every geometry reference includes:

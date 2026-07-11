@@ -6,7 +6,10 @@ import sys
 from typing import Any, Sequence
 
 from . import __version__
+from .context import render_context
+from .diff import diff_packages
 from .ingest import ingest_opaque
+from .query import QuerySyntaxError, query_package
 from .validation import ValidationResult, validate_package
 
 
@@ -50,6 +53,20 @@ def build_parser() -> argparse.ArgumentParser:
     ingest.add_argument("--embedding-policy", choices=("external", "embedded", "redacted"), default="external")
     ingest.add_argument("--created-at")
     ingest.add_argument("--json", action="store_true", dest="as_json")
+    query = subparsers.add_parser("query")
+    query.add_argument("package")
+    query.add_argument("expression")
+    query.add_argument("--json", action="store_true", dest="as_json")
+    diff = subparsers.add_parser("diff")
+    diff.add_argument("before")
+    diff.add_argument("after")
+    diff.add_argument("--json", action="store_true", dest="as_json")
+    context = subparsers.add_parser("context")
+    context.add_argument("package")
+    context.add_argument("--profile", choices=("agent", "audit", "compact"), default="agent")
+    context.add_argument("--token-budget", type=int, default=40_000)
+    context.add_argument("--chunk-token-budget", type=int, default=4_000)
+    context.add_argument("--json", action="store_true", dest="as_json")
     return parser
 
 
@@ -88,6 +105,51 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(json.dumps(_envelope(True, data, []), sort_keys=True, separators=(",", ":")))
         else:
             print(f"AECCTX opaque package created: {result.output}")
+        return 0
+    if arguments.command == "query":
+        try:
+            result = query_package(arguments.package, arguments.expression)
+        except (QuerySyntaxError, ValueError) as error:
+            diagnostic = {"code": getattr(error, "code", "AECCTX_QUERY_FAILED"), "message": str(error), "severity": "error"}
+            if arguments.as_json:
+                print(json.dumps(_envelope(False, None, [diagnostic]), sort_keys=True, separators=(",", ":")))
+            else:
+                print(f"{diagnostic['code']}: {error}", file=sys.stderr)
+            return 2
+        data = result.to_dict()
+        if arguments.as_json:
+            print(json.dumps(_envelope(True, data, []), sort_keys=True, separators=(",", ":")))
+        else:
+            for record_id in result.record_ids:
+                print(record_id)
+        return 0
+    if arguments.command == "diff":
+        result = diff_packages(arguments.before, arguments.after)
+        data = result.to_dict()
+        if arguments.as_json:
+            print(json.dumps(_envelope(True, data, []), sort_keys=True, separators=(",", ":")))
+        else:
+            print(json.dumps(data, indent=2, sort_keys=True))
+        return 1 if result.semantic_change else 0
+    if arguments.command == "context":
+        try:
+            projection = render_context(
+                arguments.package,
+                profile=arguments.profile,
+                token_budget=arguments.token_budget,
+                chunk_token_budget=arguments.chunk_token_budget,
+            )
+        except ValueError as error:
+            diagnostic = {"code": "AECCTX_CONTEXT_FAILED", "message": str(error), "severity": "error"}
+            if arguments.as_json:
+                print(json.dumps(_envelope(False, None, [diagnostic]), sort_keys=True, separators=(",", ":")))
+            else:
+                print(f"AECCTX_CONTEXT_FAILED: {error}", file=sys.stderr)
+            return 2
+        if arguments.as_json:
+            print(json.dumps(_envelope(True, projection.to_dict(), []), sort_keys=True, separators=(",", ":")))
+        else:
+            sys.stdout.buffer.write(projection.files["context/index.md"])
         return 0
     result = validate_package(arguments.package)
     return _emit_result(result, as_json=arguments.as_json, info=arguments.command == "info")

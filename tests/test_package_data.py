@@ -17,7 +17,7 @@ def test_bundled_schemas_match_normative_repository_copies() -> None:
     root = files("aecctx.schemas.v0_1")
     repository = Path(__file__).parents[1] / "schemas" / "v0.1"
 
-    for name in ("manifest.schema.json", "record.schema.json"):
+    for name in ("manifest.schema.json", "record.schema.json", "neutral-vocabulary.json"):
         bundled = json.loads(root.joinpath(name).read_text(encoding="utf-8"))
         normative = json.loads((repository / name).read_text(encoding="utf-8"))
         assert bundled == normative

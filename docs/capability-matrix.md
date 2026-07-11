@@ -37,8 +37,8 @@ Opaque fallback ingest is implemented in the core. Format-specific adapter value
 | Source registration and hashing | Implemented | SHA-256 streaming conformance fixture |
 | Explicit value states | Implemented for opaque ingest | schema and semantic tests |
 | Capability/loss report | Implemented for opaque ingest | all non-full claims have structured diagnostics |
-| Markdown context projection | Required | source references and token budget report |
-| Query | Required | read-only deterministic record selection |
-| Diff | Required | source, entity, relation, evidence and artifact changes |
+| Markdown context projection | Implemented | source locations, chunks, profiles and token budget report |
+| Query | Implemented | read-only deterministic record selection with package digest |
+| Diff | Implemented | identity, record, artifact, capability, loss and producer changes |
 | MCP server | Optional | cannot become the only API |
 | Source mutation/write-back | Not in v0.1 | future reviewed contract |

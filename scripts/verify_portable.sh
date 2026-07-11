@@ -13,6 +13,7 @@ fi
 "$python_runtime" scripts/check_spec_contract.py
 "$python_runtime" -m json.tool schemas/v0.1/manifest.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.1/record.schema.json >/dev/null
+"$python_runtime" -m json.tool schemas/v0.1/neutral-vocabulary.json >/dev/null
 "$python_runtime" -m json.tool fixtures/minimal-aecctx/manifest.json >/dev/null
 "$python_runtime" -m pytest
 "$python_runtime" -m build --wheel --sdist --outdir dist

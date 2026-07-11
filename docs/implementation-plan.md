@@ -15,8 +15,8 @@ Execute only the first task with status `pending-next` or `in_progress`. Update 
 | ACX-00 | completed | Repository, research, normative specs, schemas, fixture, governance, validation and implementation handoff |
 | ACX-01 | completed | Python package/CLI scaffold and schema-backed validator |
 | ACX-02 | completed | Deterministic package reader/writer, hashes, source registration and opaque fallback |
-| ACX-03 | pending-next | Neutral record APIs, query, diff and budgeted Markdown context renderer |
-| ACX-04 | pending | IFC adapter via IfcOpenShell |
+| ACX-03 | completed | Neutral record APIs, query, diff and budgeted Markdown context renderer |
+| ACX-04 | pending-next | IFC adapter via IfcOpenShell |
 | ACX-05 | pending | DXF adapter via ezdxf |
 | ACX-06 | pending | Vector/raster PDF and image evidence adapters |
 | ACX-07 | pending | Geometry artifact normalization and deterministic previews |
@@ -75,6 +75,8 @@ Evidence: [`docs/evidence/ACX-02.md`](evidence/ACX-02.md).
 ## ACX-03: Neutral records and agent context
 
 Implement record models, stable ordering, read-only query/diff, context profiles, source citations, chunk indexes, and token-estimate reporting. Resolve ACXD-010 without creating a consumer ontology.
+
+Evidence: [`docs/evidence/ACX-03.md`](evidence/ACX-03.md).
 
 ## ACX-04: IFC adapter
 

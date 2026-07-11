@@ -95,3 +95,26 @@ def test_validate_accepts_archive_form(tmp_path: Path) -> None:
 
     assert completed.returncode == 0, completed.stderr
     assert json.loads(completed.stdout)["ok"] is True
+
+
+def test_query_command_returns_record_ids() -> None:
+    completed = run_cli("query", str(FIXTURE), 'entity.original_class == "LINE"', "--json")
+
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout)["data"]["record_ids"] == ["entity_line_1"]
+
+
+def test_diff_command_ignores_identical_packages() -> None:
+    completed = run_cli("diff", str(FIXTURE), str(FIXTURE), "--json")
+
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout)["data"]["semantic_change"] is False
+
+
+def test_context_command_emits_index_json() -> None:
+    completed = run_cli("context", str(FIXTURE), "--token-budget", "600", "--json")
+
+    assert completed.returncode == 0, completed.stderr
+    data = json.loads(completed.stdout)["data"]
+    assert data["token_estimate"] <= 600
+    assert "context/index.md" in data["files"]
