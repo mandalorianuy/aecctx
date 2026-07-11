@@ -1,8 +1,8 @@
 # AECCTX Extractor Plugin Contract
 
-Version: `0.1.0-draft`
+Version: `0.1.0`
 Date: 2026-07-11
-Status: Normative
+Status: Stable v0.1 normative contract
 
 ## 1. Purpose
 

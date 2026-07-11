@@ -70,7 +70,7 @@ def ingest_opaque(
         "method": "opaque-registration",
         "parent_record_ids": [],
         "producer_id": "aecctx.core.opaque",
-        "producer_version": "0.1.0.dev0",
+        "producer_version": "0.1.0",
         "recorded_at": instant,
     }
     storage_ref = f"sources/content/{source.name}" if embedding_policy == "embedded" else None
@@ -84,7 +84,7 @@ def ingest_opaque(
         "detected_units": _unknown("AECCTX_NO_FORMAT_ADAPTER"),
         "display_name": source.name,
         "embedding_policy": embedding_policy,
-        "extractor": {"plugin_id": "aecctx.core.opaque", "plugin_version": "0.1.0.dev0"},
+        "extractor": {"plugin_id": "aecctx.core.opaque", "plugin_version": "0.1.0"},
         "media_type": media_type,
         "prior_source_revision": _unknown("AECCTX_PRIOR_REVISION_NOT_PROVIDED"),
         "provenance": provenance,
@@ -172,7 +172,7 @@ def ingest_opaque(
         capabilities=capabilities,
         loss_summary=loss_summary,
         embedding_policy=embedding_policy,
-        producer={"name": "aecctx", "version": "0.1.0.dev0"},
+        producer={"name": "aecctx", "version": "0.1.0"},
         artifacts=artifact_inputs,
     )
     return IngestResult(package_id, source_id, manifest["logical_digest"], output)

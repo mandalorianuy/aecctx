@@ -21,7 +21,7 @@ uv sync --extra test
 .venv/bin/aecctx info fixtures/minimal-aecctx --json
 ```
 
-Observed result: 12 tests passed; wheel and sdist built; portable verification passed; baseline integration reported healthy; the committed fixture validated with package ID `pkg_minimal_fixture` and logical digest `7ca4067f732dc1aed30c1be1257437ed009742e8d85f318a1ee1d0b6b6026b1b`.
+Observed result: 12 tests passed; wheel and sdist built; portable verification passed; baseline integration reported healthy. ACX-09 promoted the fixture to stable v0.1 producer metadata; its release logical digest is `a28454b8afdbc42b791df4a9c928020d69235d65bbb7b9bd26e96c239a8473a9`.
 
 ## Scope confirmation
 

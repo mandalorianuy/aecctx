@@ -4,19 +4,41 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aecctx"
-version = "0.1.0.dev0"
+version = "0.1.0"
 description = "Deterministic, evidence-preserving AEC context packages"
 readme = "README.md"
 requires-python = ">=3.12"
-license = {file = "LICENSE"}
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [{name = "AECCTX contributors"}]
 dependencies = ["jsonschema[format]>=4.23,<5"]
+keywords = ["AEC", "BIM", "CAD", "IFC", "DXF", "context-packages"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+]
+
+[project.urls]
+Homepage = "https://github.com/mandalorianuy/aecctx"
+Issues = "https://github.com/mandalorianuy/aecctx/issues"
+Repository = "https://github.com/mandalorianuy/aecctx"
 
 [project.scripts]
 aecctx = "aecctx.cli:main"
 aecctx-mcp = "aecctx.mcp_server:main"
 
 [project.optional-dependencies]
+all = [
+  "ezdxf>=1.4.4,<2",
+  "ifcopenshell>=0.8.5,<0.9",
+  "mcp>=1.20,<2",
+  "Pillow>=12.1,<13",
+  "pypdf>=6.6,<7",
+  "trimesh>=4.12,<5",
+]
 dxf = ["ezdxf>=1.4.4,<2"]
 geometry = ["trimesh>=4.12,<5"]
 image = ["Pillow>=12.1,<13"]

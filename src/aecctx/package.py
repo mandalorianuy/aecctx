@@ -127,7 +127,7 @@ class PackageWriter:
             files[logical_path] = artifact.content
         logical_digest = hashlib.sha256(b"".join(digest_lines)).hexdigest()
         manifest: dict[str, Any] = {
-            "aecctx_version": "0.1.0-draft",
+            "aecctx_version": "0.1.0",
             "artifacts": inventory,
             "capabilities": capabilities,
             "created_at": created_at,

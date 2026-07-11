@@ -1,7 +1,7 @@
 ---
-aecctx_version: 0.1.0-draft
+aecctx_version: 0.1.0
 package_id: pkg_minimal_fixture
-generator: aecctx-fixture/0.1.0-draft
+generator: aecctx-fixture/0.1.0
 profile: agent
 ---
 

@@ -46,6 +46,11 @@ def check_required_files() -> None:
         ROOT / "schemas/v0.1/record.schema.json",
         ROOT / "schemas/v0.1/neutral-vocabulary.json",
         ROOT / "scripts/verify_portable.sh",
+        ROOT / "scripts/verify_release.sh",
+        ROOT / "conformance/v0.1/corpus.json",
+        ROOT / "CHANGELOG.md",
+        ROOT / "docs/compatibility.md",
+        ROOT / "docs/releases/v0.1.0.md",
     ]
     missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
     if missing:
@@ -72,7 +77,7 @@ def check_authorities() -> None:
     plan = PLAN.read_text(encoding="utf-8")
     ledger = {
         task: status
-        for task, status in re.findall(r"^\| (ACX-\d{2}) \| ([a-z-]+) \|", plan, re.MULTILINE)
+        for task, status in re.findall(r"^\| (ACX-\d{2}) \| ([a-z_-]+) \|", plan, re.MULTILINE)
     }
     if ledger.get("ACX-00") != "completed" or ledger.get("ACX-10") != "deferred":
         fail("implementation plan boundary tasks have invalid status")
@@ -105,7 +110,7 @@ def check_fixture() -> None:
             fail(f"fixture missing {relative}")
 
     manifest = load_json(FIXTURE / "manifest.json")
-    if not isinstance(manifest, dict) or manifest.get("aecctx_version") != "0.1.0-draft":
+    if not isinstance(manifest, dict) or manifest.get("aecctx_version") != "0.1.0":
         fail("fixture manifest version mismatch")
     if manifest.get("source_ids") != ["src_minimal"]:
         fail("fixture source identity mismatch")

@@ -1,0 +1,13 @@
+# Changelog
+
+All notable changes are documented here. AECCTX follows Semantic Versioning for the reference implementation; the format compatibility policy for 0.x is in `docs/compatibility.md`.
+
+## 0.1.0 - 2026-07-11
+
+- Published the stable v0.1 directory/ZIP package, schemas, value states, capability/loss reports and validation levels.
+- Added deterministic reader/writer, source hashing, opaque fallback, query, semantic diff and budgeted context projections.
+- Added optional IFC, DXF, vector/raster PDF, image and OBJ/STL/glTF adapters with public conformance fixtures.
+- Added deterministic SVG/GLB derived artifacts, plugin isolation/resource policies and optional read-only MCP tools.
+- Added multi-platform CI, clean-install verification, checksums, SPDX SBOM generation and release automation.
+
+Unsupported in 0.1.0: authoring-format write-back, hidden-geometry inference, mandatory OCR/vision, direct DWG/RVT decoders, package authenticity/signing and consumer-specific mappings.

@@ -1,6 +1,6 @@
 # AECCTX v0.1 Geometry Artifact Conventions
 
-Version: `0.1.0-draft`
+Version: `0.1.0`
 Date: 2026-07-11
 Status: Normative reference implementation profile
 

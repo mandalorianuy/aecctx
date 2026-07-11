@@ -37,14 +37,14 @@ def test_record_store_loads_authoritative_records_with_locations() -> None:
     assert entity.record_type == "entity"
     assert entity.location.path == "model/entities.jsonl"
     assert entity.location.line == 1
-    assert store.logical_digest == "7ca4067f732dc1aed30c1be1257437ed009742e8d85f318a1ee1d0b6b6026b1b"
+    assert store.logical_digest == "a28454b8afdbc42b791df4a9c928020d69235d65bbb7b9bd26e96c239a8473a9"
 
 
 def test_query_selects_records_deterministically() -> None:
     result = query_package(FIXTURE, 'entity.original_class == "LINE"')
 
     assert result.record_ids == ("entity_line_1",)
-    assert result.logical_digest == "7ca4067f732dc1aed30c1be1257437ed009742e8d85f318a1ee1d0b6b6026b1b"
+    assert result.logical_digest == "a28454b8afdbc42b791df4a9c928020d69235d65bbb7b9bd26e96c239a8473a9"
     assert result.records[0]["record_id"] == "entity_line_1"
 
 
@@ -109,4 +109,3 @@ def test_context_budget_omits_projection_records_not_authoritative_data() -> Non
 
     assert projection.omitted_record_ids
     assert (FIXTURE / "evidence" / "primitives.jsonl").read_bytes() == before
-

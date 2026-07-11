@@ -77,7 +77,7 @@ def _index(store: RecordStore, profile: str, budget: int, included: int, omitted
     return (
         "# AECCTX generated context index\n\n"
         f"Package: `{store.manifest['package_id']}`  \nLogical digest: `{store.logical_digest}`  \n"
-        f"Generator: `aecctx/0.1.0.dev0`  \nProfile: `{profile}`  \nToken budget: {budget}  \n"
+        f"Generator: `aecctx/0.1.0`  \nProfile: `{profile}`  \nToken budget: {budget}  \n"
         f"Token estimate: {estimate}  \nIncluded records: {included}  \nOmitted records: {omitted}\n\n"
         f"Capabilities: `{capabilities}`\n\nLoss summary: `{losses}`\n\n"
         "## Authoritative record chunks\n\n"
@@ -122,4 +122,3 @@ def render_context(
     estimate = estimate_tokens(index) + sum(estimate_tokens(content) for _, content in chunks)
     files = {"context/index.md": index, **dict(chunks)}
     return ContextProjection(files, estimate, included_ids, omitted_ids, profile, store.logical_digest)
-

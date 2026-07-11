@@ -1,7 +1,7 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-11
-Handoff status: `ACX-08-COMPLETE`
+Handoff status: `0.1.0-RELEASE-CANDIDATE`
 
 ## Outcome
 
@@ -12,7 +12,7 @@ The repository is ready for a dedicated implementation task. The public contract
 1. Read `AGENTS.md`.
 2. Read both normative files under `docs/specs/` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. Execute only `ACX-09`, the first `pending-next` task in `docs/implementation-plan.md`.
+4. Continue only `ACX-09`, the sole `in_progress` task in `docs/implementation-plan.md`.
 5. Run `./scripts/verify.sh` before handoff.
 
 ## Fixed decisions

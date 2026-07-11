@@ -47,7 +47,7 @@ def test_info_json_reports_package_identity() -> None:
 
     assert completed.returncode == 0
     payload = json.loads(completed.stdout)
-    assert payload["data"]["logical_digest"] == "7ca4067f732dc1aed30c1be1257437ed009742e8d85f318a1ee1d0b6b6026b1b"
+    assert payload["data"]["logical_digest"] == "a28454b8afdbc42b791df4a9c928020d69235d65bbb7b9bd26e96c239a8473a9"
     assert payload["data"]["source_ids"] == ["src_minimal"]
 
 
@@ -56,7 +56,7 @@ def test_version_command_is_machine_readable() -> None:
 
     assert completed.returncode == 0
     assert json.loads(completed.stdout) == {
-        "data": {"version": "0.1.0.dev0"},
+        "data": {"version": "0.1.0"},
         "diagnostics": [],
         "ok": True,
     }

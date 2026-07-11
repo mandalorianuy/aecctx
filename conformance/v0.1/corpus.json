@@ -1,0 +1,133 @@
+{
+  "version": "0.1.0",
+  "created_at": "2026-07-11T00:00:00Z",
+  "entries": [
+    {
+      "id": "opaque",
+      "adapter": "opaque",
+      "source": "fixtures/sources/opaque-sample.bin",
+      "sha256": "57a002b24a829c4859749bb2661ec282123b172f424c3b2c8a0507c4b35a1594",
+      "capabilities": {
+        "2d_geometry": "opaque",
+        "3d_geometry": "opaque",
+        "georeferencing": "opaque",
+        "hierarchy": "opaque",
+        "identity": "full",
+        "materials_styles": "opaque",
+        "properties": "opaque",
+        "relationships": "opaque",
+        "text": "opaque",
+        "validation": "full"
+      }
+    },
+    {
+      "id": "ifc-minimal",
+      "adapter": "ifc",
+      "source": "fixtures/ifc/minimal-wall.ifc",
+      "sha256": "91c89d35362f564842abf4416a4e68c0d22af5f507a4eac638e08d5211b2a459",
+      "capabilities": {
+        "2d_geometry": "partial",
+        "3d_geometry": "full",
+        "georeferencing": "partial",
+        "hierarchy": "full",
+        "identity": "full",
+        "materials_styles": "full",
+        "properties": "full",
+        "relationships": "full",
+        "text": "full",
+        "validation": "full"
+      }
+    },
+    {
+      "id": "dxf-minimal",
+      "adapter": "dxf",
+      "source": "fixtures/dxf/minimal-plan.dxf",
+      "sha256": "248f21195ae3fc52c116fa7910b53e6abf8ebd29c82633b21062b124ec41a841",
+      "capabilities": {
+        "2d_geometry": "full",
+        "3d_geometry": "partial",
+        "georeferencing": "partial",
+        "hierarchy": "full",
+        "identity": "full",
+        "materials_styles": "partial",
+        "properties": "partial",
+        "relationships": "partial",
+        "text": "full",
+        "validation": "full"
+      }
+    },
+    {
+      "id": "pdf-vector",
+      "adapter": "pdf",
+      "source": "fixtures/pdf/minimal-vector.pdf",
+      "sha256": "2917f41a4bca58e9bd40f38df8efe75e9e87313bbb37c27f47158e7d55bdae75",
+      "capabilities": {
+        "2d_geometry": "partial",
+        "3d_geometry": "unsupported",
+        "georeferencing": "unsupported",
+        "hierarchy": "full",
+        "identity": "full",
+        "materials_styles": "partial",
+        "properties": "partial",
+        "relationships": "opaque",
+        "text": "full",
+        "validation": "full"
+      }
+    },
+    {
+      "id": "pdf-raster",
+      "adapter": "pdf",
+      "source": "fixtures/pdf/minimal-raster.pdf",
+      "sha256": "0feda4b0830a75bc3f0fea936f11901179c532855bf9b9d9cf6a4258cb858662",
+      "capabilities": {
+        "2d_geometry": "partial",
+        "3d_geometry": "unsupported",
+        "georeferencing": "unsupported",
+        "hierarchy": "full",
+        "identity": "full",
+        "materials_styles": "partial",
+        "properties": "partial",
+        "relationships": "opaque",
+        "text": "unsupported",
+        "validation": "full"
+      }
+    },
+    {
+      "id": "image-minimal",
+      "adapter": "image",
+      "source": "fixtures/images/minimal-grid.pgm",
+      "sha256": "08ad4d1a63cee8eec7ee04762089f40bfe5e8287c5d4f34a14e1ec528681d03e",
+      "capabilities": {
+        "2d_geometry": "full",
+        "3d_geometry": "unsupported",
+        "georeferencing": "unsupported",
+        "hierarchy": "opaque",
+        "identity": "full",
+        "materials_styles": "partial",
+        "properties": "partial",
+        "relationships": "opaque",
+        "text": "unsupported",
+        "validation": "full"
+      }
+    },
+    {
+      "id": "geometry-minimal",
+      "adapter": "geometry",
+      "source": "fixtures/geometry/minimal-triangle.obj",
+      "sha256": "9bcf071ea0f363e78781f917b326ca0558dafd9f507b1ae2649ea0a15ec2bb90",
+      "capabilities": {
+        "2d_geometry": "partial",
+        "3d_geometry": "full",
+        "georeferencing": "unsupported",
+        "hierarchy": "partial",
+        "identity": "full",
+        "materials_styles": "partial",
+        "properties": "partial",
+        "relationships": "opaque",
+        "text": "unsupported",
+        "validation": "full"
+      }
+    }
+  ]
+}
+
