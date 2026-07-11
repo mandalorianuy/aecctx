@@ -62,10 +62,10 @@ Status: Active
 - Consequence: Opaque ingest never copies untrusted source bytes into a package implicitly. Every policy remains recorded with the exact source hash, and embedded content is inventoried as authoritative source evidence.
 - Evidence: ACX-02 conformance tests cover all policies, streaming hashing, deterministic package identity, and explicit embedding.
 
+### ACXD-011: Package signing deferred beyond v0.1
+
+- Decision: v0.1 standardizes SHA-256 artifact integrity and the logical package digest, but does not standardize or claim package authenticity.
+- Consequence: Detached signatures may be carried only as optional namespaced extensions that do not alter v0.1 conformance. A future signing contract must decide canonical signed bytes, algorithm agility, key identity/distribution, revocation and trust policy before authenticity claims are allowed.
+- Evidence: ACX-02/ACX-07 deterministic digest tests and ACX-08 security review show stable integrity inputs but no governed trust/key lifecycle.
+
 ## Open decisions
-
-### ACXD-011: Package signing
-
-- Question: Should v0.1 standardize detached signatures or defer signatures until the logical digest contract has implementation evidence?
-- Non-blocking boundary: SHA-256 content integrity is required; authenticity is not claimed.
-- Owner: `ACX-08`.

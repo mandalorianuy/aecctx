@@ -40,5 +40,5 @@ Opaque fallback ingest is implemented in the core. Format-specific adapter value
 | Markdown context projection | Implemented | source locations, chunks, profiles and token budget report |
 | Query | Implemented | read-only deterministic record selection with package digest |
 | Diff | Implemented | identity, record, artifact, capability, loss and producer changes |
-| MCP server | Optional | cannot become the only API |
+| MCP server | Optional, implemented | five read-only wrappers match stable library/CLI semantics |
 | Source mutation/write-back | Not in v0.1 | future reviewed contract |

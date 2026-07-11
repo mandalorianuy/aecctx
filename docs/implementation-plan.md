@@ -20,8 +20,8 @@ Execute only the first task with status `pending-next` or `in_progress`. Update 
 | ACX-05 | completed | DXF adapter via ezdxf |
 | ACX-06 | completed | Vector/raster PDF and image evidence adapters |
 | ACX-07 | completed | Geometry artifact normalization and deterministic previews |
-| ACX-08 | pending-next | Plugin isolation, security limits, optional MCP and signing decision |
-| ACX-09 | pending | Cross-platform conformance corpus, packaging and `0.1.0` release |
+| ACX-08 | completed | Plugin isolation, security limits, optional MCP and signing decision |
+| ACX-09 | pending-next | Cross-platform conformance corpus, packaging and `0.1.0` release |
 | ACX-10 | deferred | Consumer integration template; WoodFraming-specific plan remains consumer-owned |
 
 ## ACX-00: Specification and repository foundation
@@ -105,6 +105,8 @@ Evidence: [`docs/evidence/ACX-07.md`](evidence/ACX-07.md).
 ## ACX-08: Isolation and agent tools
 
 Harden plugin processes and resource policies. Decide signing. Add an optional MCP wrapper over stable library/CLI functions; MCP must not introduce unique semantics.
+
+Evidence: [`docs/evidence/ACX-08.md`](evidence/ACX-08.md).
 
 ## ACX-09: Release
 

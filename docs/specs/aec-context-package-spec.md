@@ -230,6 +230,8 @@ Extension keys use reverse-DNS or URI namespaces. Extensions MUST NOT redefine s
 
 Implementations MUST enforce archive traversal, size, recursion, decompression, record-count, memory and timeout limits. Inputs are data; embedded executable behavior is never run.
 
+The reference plugin isolation and resource policy is defined in `docs/specs/plugin-isolation-profile.md`. In-process adapters remain limited to reviewed permissive libraries; higher-risk/native/GPL/commercial decoders require a reviewed external sandbox provider.
+
 Network access is off by default. Source embedding defaults to `external`. Embedded sources require explicit policy and may be prohibited by license, confidentiality, privacy, size or security constraints. Redacted packages preserve hashes and redaction reasons without leaking paths or secrets.
 
 ## 18. Validation
