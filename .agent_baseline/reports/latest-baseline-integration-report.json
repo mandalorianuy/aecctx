@@ -1,0 +1,4124 @@
+{
+  "generated_at_utc": "2026-07-11T17:33:49.839896+00:00",
+  "target_repo": "/Users/facundo/desarrollo/aecctx",
+  "baseline_root": "/Users/facundo/desarrollo/codex-agent-baseline",
+  "baseline_resolution": "python-package",
+  "status": "healthy",
+  "bundle_id": "baseline-shared-v1",
+  "expected_skill_ids": [
+    "baseline-meta-agent-discovery",
+    "baseline-meta-agent-bootstrap",
+    "baseline-meta-agent-sync"
+  ],
+  "installed_skill_ids": [
+    "baseline-meta-agent-discovery",
+    "baseline-meta-agent-bootstrap",
+    "baseline-meta-agent-sync"
+  ],
+  "checks": {
+    "baseline_resolved": true,
+    "catalog_loaded": true,
+    "sync_idle": true,
+    "overlay_present": true,
+    "specialization_profile_valid": true,
+    "governance_state_present": true,
+    "meta_agent_contract_loads": true,
+    "shell_runtime_loads": true,
+    "bundle_pin_valid": true,
+    "skillpack_installed": true,
+    "skillpack_aligned": true,
+    "checker_wrapper_present": true,
+    "agents_block_present": true,
+    "catalog_family_matches": true,
+    "skillpack_version_matches": true,
+    "skillpack_digest_matches": true,
+    "generated_files_present": true,
+    "baseline_offer_files_present": true,
+    "bundle_pin_matches_catalog": true,
+    "profile_state_matches_overlay": true,
+    "contract_runtime_consistent": true
+  },
+  "issues": [],
+  "summary": {
+    "baseline_offer": {
+      "baseline_id": "agent-baseline",
+      "default_contract_bundle_id": "baseline-shared-v1",
+      "default_specialization_profile_id": "neutral",
+      "baseline_command_ids": [
+        "requirement",
+        "runtime",
+        "audit",
+        "harness",
+        "validation",
+        "graph",
+        "gui"
+      ],
+      "baseline_panel_ids": [
+        "sessions",
+        "runtime",
+        "approvals",
+        "graphs"
+      ],
+      "published_offer_files": [
+        "scripts/check_mission_control_adapter_conformance.py",
+        "scripts/check_hos_adoption_conformance.py",
+        ".agent_baseline/baseline_offer/manifests/codex_app_runtime.toml",
+        ".agent_baseline/baseline_offer/manifests/security_posture.toml",
+        ".agent_baseline/baseline_offer/manifests/codex_app_interactions.toml",
+        ".agent_baseline/baseline_offer/manifests/codex_app_automations.toml",
+        ".agent_baseline/baseline_offer/manifests/codex_app_plugins.toml",
+        ".agent_baseline/baseline_offer/manifests/tool_taxonomy.toml",
+        ".agent_baseline/baseline_offer/manifests/codex_app_memory.toml",
+        ".agent_baseline/baseline_offer/manifests/codex_app_remote_workspaces.toml",
+        ".agent_baseline/baseline_offer/manifests/workspace_bootstrap.toml",
+        ".agent_baseline/baseline_offer/manifests/sandbox_workspaces.toml",
+        ".agent_baseline/baseline_offer/manifests/sandbox_session.toml",
+        ".agent_baseline/baseline_offer/manifests/agent_run_results.toml",
+        ".agent_baseline/baseline_offer/manifests/continuation_state.toml",
+        ".agent_baseline/baseline_offer/manifests/guardrail_controls.toml",
+        ".agent_baseline/baseline_offer/manifests/execution_projection.toml",
+        ".agent_baseline/baseline_offer/manifests/context_lineage.toml",
+        ".agent_baseline/baseline_offer/manifests/prompt_section_profile.toml",
+        ".agent_baseline/baseline_offer/manifests/capability_authority_boundaries.toml",
+        ".agent_baseline/baseline_offer/manifests/skill_grants.toml",
+        ".agent_baseline/baseline_offer/manifests/workspace_boundary_guard.toml",
+        ".agent_baseline/baseline_offer/manifests/runtime_continuity.toml",
+        ".agent_baseline/baseline_offer/manifests/durable_outputs.toml",
+        ".agent_baseline/baseline_offer/manifests/capability_packages.toml",
+        ".agent_baseline/baseline_offer/manifests/operator_surface_mutability.toml",
+        ".agent_baseline/baseline_offer/manifests/hos_adoption_conformance.toml",
+        ".agent_baseline/baseline_offer/manifests/orchestration_taxonomy.toml",
+        ".agent_baseline/baseline_offer/manifests/workflow_trace_envelope.toml",
+        ".agent_baseline/baseline_offer/manifests/mission_control.toml",
+        ".agent_baseline/baseline_offer/manifests/environment_envelope.toml",
+        ".agent_baseline/baseline_offer/manifests/environment_portability.toml",
+        ".agent_baseline/baseline_offer/manifests/environment_operator_summary.toml",
+        ".agent_baseline/baseline_offer/manifests/environment_invariants.toml",
+        ".agent_baseline/baseline_offer/manifests/environment_promotion_pipeline.toml",
+        ".agent_baseline/baseline_offer/manifests/trace_eval_promotion.toml",
+        ".agent_baseline/baseline_offer/manifests/codex_app_images.toml",
+        ".agent_baseline/baseline_offer/manifests/local_agent_exchange.toml",
+        ".agent_baseline/baseline_offer/manifests/mcp_app_extensions.toml",
+        ".agent_baseline/baseline_offer/manifests/workflow_editor.toml",
+        ".agent_baseline/baseline_offer/artifacts/codex_app_runtime/latest-codex-app-runtime.json",
+        ".agent_baseline/baseline_offer/artifacts/codex_app_interactions/latest-codex-app-interaction.json",
+        ".agent_baseline/baseline_offer/artifacts/codex_app_automations/latest-codex-app-automation.json",
+        ".agent_baseline/baseline_offer/artifacts/codex_app_plugins/latest-codex-app-plugin-catalog.json",
+        ".agent_baseline/baseline_offer/artifacts/tool_taxonomy/latest-tool-taxonomy.json",
+        ".agent_baseline/baseline_offer/artifacts/codex_app_memory/latest-codex-app-memory.json",
+        ".agent_baseline/baseline_offer/artifacts/codex_app_remote_workspaces/latest-codex-app-remote-workspace.json",
+        ".agent_baseline/baseline_offer/artifacts/workspace_bootstrap/latest-workspace-bootstrap.json",
+        ".agent_baseline/baseline_offer/artifacts/sandbox_workspaces/latest-sandbox-workspace.json",
+        ".agent_baseline/baseline_offer/artifacts/sandbox_sessions/latest-sandbox-session.json",
+        ".agent_baseline/baseline_offer/artifacts/agent_run_results/latest-agent-run-result.json",
+        ".agent_baseline/baseline_offer/artifacts/continuation_state/latest-agent-continuation-state.json",
+        ".agent_baseline/baseline_offer/artifacts/guardrail_controls/latest-guardrail-control-taxonomy.json",
+        ".agent_baseline/baseline_offer/artifacts/execution_projection/latest-execution-projection-receipt.json",
+        ".agent_baseline/baseline_offer/artifacts/context_lineage/latest-context-lineage-record.json",
+        ".agent_baseline/baseline_offer/artifacts/prompt_section_profile/latest-prompt-section-profile.json",
+        ".agent_baseline/baseline_offer/artifacts/capability_authority/latest-capability-authority-boundaries.json",
+        ".agent_baseline/baseline_offer/artifacts/skill_grants/latest-skill-grant-receipts.json",
+        ".agent_baseline/baseline_offer/artifacts/workspace_boundary_guard/latest-workspace-boundary-guard.json",
+        ".agent_baseline/baseline_offer/artifacts/runtime_continuity/latest-runtime-continuity-projection.json",
+        ".agent_baseline/baseline_offer/artifacts/durable_outputs/latest-durable-output-artifacts.json",
+        ".agent_baseline/baseline_offer/artifacts/durable_outputs/baseline-execution-compiler-governance-operator-report.md",
+        ".agent_baseline/baseline_offer/artifacts/capability_packages/latest-capability-package-manifest.json",
+        ".agent_baseline/baseline_offer/artifacts/operator_surface_mutability/latest-operator-surface-mutability.json",
+        ".agent_baseline/baseline_offer/artifacts/hos_adoption/latest-hos-adoption-conformance.json",
+        ".agent_baseline/baseline_offer/artifacts/hos_adoption/fixtures/hos-baseline-offer-fixture.json",
+        ".agent_baseline/baseline_offer/artifacts/hos_adoption/schemas/hos-prompt-section-profile-schema.json",
+        ".agent_baseline/baseline_offer/artifacts/hos_adoption/schemas/hos-capability-authority-schema.json",
+        ".agent_baseline/baseline_offer/artifacts/hos_adoption/schemas/hos-skill-grants-schema.json",
+        ".agent_baseline/baseline_offer/artifacts/hos_adoption/schemas/hos-workspace-boundary-guard-schema.json",
+        ".agent_baseline/baseline_offer/artifacts/hos_adoption/schemas/hos-runtime-continuity-schema.json",
+        ".agent_baseline/baseline_offer/artifacts/hos_adoption/schemas/hos-durable-outputs-schema.json",
+        ".agent_baseline/baseline_offer/artifacts/hos_adoption/schemas/hos-capability-packages-schema.json",
+        ".agent_baseline/baseline_offer/artifacts/hos_adoption/schemas/hos-operator-surface-mutability-schema.json",
+        ".agent_baseline/baseline_offer/artifacts/orchestration_taxonomy/latest-workflow-orchestration-taxonomy.json",
+        ".agent_baseline/baseline_offer/artifacts/workflow_trace_envelope/latest-workflow-trace-envelope.json",
+        ".agent_baseline/baseline_offer/artifacts/mission_control/latest-mission-control-session.json",
+        ".agent_baseline/baseline_offer/artifacts/mission_control/latest-mission-control-view.json",
+        ".agent_baseline/baseline_offer/artifacts/mission_control/latest-mission-control-events.json",
+        ".agent_baseline/baseline_offer/artifacts/mission_control/schemas/mission-control-session-schema.json",
+        ".agent_baseline/baseline_offer/artifacts/mission_control/schemas/mission-control-view-schema.json",
+        ".agent_baseline/baseline_offer/artifacts/mission_control/schemas/mission-control-events-schema.json",
+        ".agent_baseline/baseline_offer/artifacts/mission_control/fixtures/mission-control-hitl-fixtures.json",
+        ".agent_baseline/baseline_offer/artifacts/environment_envelope/latest-environment-envelope.json",
+        ".agent_baseline/baseline_offer/artifacts/environment_portability/latest-environment-portability-taxonomy.json",
+        ".agent_baseline/baseline_offer/artifacts/environment_operator_summary/latest-operator-environment-summary.json",
+        ".agent_baseline/baseline_offer/artifacts/environment_invariants/latest-environment-invariants-report.json",
+        ".agent_baseline/baseline_offer/artifacts/environment_promotion_pipeline/latest-environment-promotion-pipeline.json",
+        ".agent_baseline/baseline_offer/artifacts/trace_eval_promotion/latest-trace-eval-promotion.json",
+        ".agent_baseline/baseline_offer/artifacts/codex_app_images/latest-codex-app-image-workflow.json",
+        ".agent_baseline/baseline_offer/artifacts/local_agent_exchange/latest-local-agent-exchange.json",
+        ".agent_baseline/baseline_offer/artifacts/mcp_app_extensions/latest-mcp-app-extension-catalog.json",
+        ".agent_baseline/baseline_offer/artifacts/workflow_editor/latest-workflow-editor-state.json",
+        ".agent_baseline/baseline_offer/artifacts/harness/session_views/latest-harness-session-view.json"
+      ]
+    },
+    "operator_contract_offer": [
+      {
+        "capability_id": "baseline_consumer_offer",
+        "label": "Baseline Consumer Offer",
+        "contract_family": "baseline-consumer-offer",
+        "loader_symbols": [
+          "load_baseline_consumer_offer_record",
+          "load_baseline_consumer_offer_publication",
+          "load_workbench_contract_index",
+          "load_read_only_workbench_fixture",
+          "load_legacy_hard_cut_plan",
+          "load_consumer_migration_receipt_template"
+        ],
+        "summary_symbols": [
+          "build_workbench_contract_surfaces",
+          "build_workbench_contract_index",
+          "build_read_only_workbench_fixture",
+          "build_legacy_hard_cut_plan",
+          "build_consumer_migration_receipt_template",
+          "build_baseline_consumer_offer_publication",
+          "build_baseline_consumer_offer",
+          "build_baseline_consumer_offer_schema",
+          "check_baseline_consumer_offer_conformance",
+          "check_baseline_consumer_offer_publication",
+          "check_consumer_migration_receipt_conformance"
+        ],
+        "operator_symbols": [
+          "baseline-consumer-offer",
+          "baseline-consumer-offer-publication",
+          "workbench-contract-index",
+          "read-only-workbench-fixture",
+          "legacy-hard-cut-plan",
+          "consumer-migration-receipt",
+          "specialized-agent",
+          "agent-profile",
+          "workbench-consumer"
+        ]
+      },
+      {
+        "capability_id": "baseline_hardening",
+        "label": "Baseline Hardening Review",
+        "contract_family": "baseline-hardening-review",
+        "loader_symbols": [
+          "load_baseline_hardening_record"
+        ],
+        "summary_symbols": [
+          "build_module_coverage_map",
+          "build_large_module_risk_register",
+          "build_semantic_governance_rubric",
+          "build_artifact_refresh_plan",
+          "build_ci_posture",
+          "build_baseline_hardening_report"
+        ],
+        "operator_symbols": [
+          "coverage_map",
+          "semantic_rubric",
+          "artifact_refresh_plan",
+          "ci_posture"
+        ]
+      },
+      {
+        "capability_id": "agentic_memory_evolution",
+        "label": "Agentic Memory Evolution",
+        "contract_family": "agentic-memory-evolution",
+        "loader_symbols": [
+          "load_agentic_memory_record",
+          "load_agentic_memory_conformance_report"
+        ],
+        "summary_symbols": [
+          "build_agentic_memory_note",
+          "build_memory_relationship_evolution_receipt",
+          "build_memory_consolidation_snapshot",
+          "build_memory_evolution_guardrail_policy",
+          "build_linked_memory_retrieval_expansion",
+          "build_memory_quality_drift_eval_pack",
+          "build_agentic_memory_summary",
+          "check_agentic_memory_conformance"
+        ],
+        "operator_symbols": [
+          "memory_note",
+          "memory_evolution_receipt",
+          "linked_memory_retrieval",
+          "memory_quality_eval"
+        ]
+      },
+      {
+        "capability_id": "runnable_harness",
+        "label": "Runnable Agent Harness",
+        "contract_family": "runnable-agent-harness",
+        "loader_symbols": [
+          "load_runnable_harness_record",
+          "load_runnable_harness_conformance_report"
+        ],
+        "summary_symbols": [
+          "build_thread_run_lifecycle",
+          "build_streaming_event",
+          "build_backend_task_execution_receipt",
+          "build_runtime_gateway_boundary",
+          "build_setup_doctor_diagnostic",
+          "build_skill_runtime_activation_cache",
+          "build_guardrail_middleware_decision",
+          "build_sandbox_tool_execution_boundary",
+          "build_runnable_harness_summary",
+          "check_runnable_harness_conformance"
+        ],
+        "operator_symbols": [
+          "thread_run_lifecycle",
+          "streaming_events",
+          "task_receipts",
+          "setup_doctor"
+        ]
+      },
+      {
+        "capability_id": "persona_skill_contracts",
+        "label": "Persona / Skill Operating Contracts",
+        "contract_family": "persona-skill-operating-contracts",
+        "loader_symbols": [
+          "load_persona_skill_record",
+          "load_persona_skill_conformance_report"
+        ],
+        "summary_symbols": [
+          "build_persona_profile",
+          "build_persona_authority_boundary",
+          "build_skill_operating_contract",
+          "build_skill_grant_receipt",
+          "build_workflow_pattern_pack",
+          "select_workflow_pattern",
+          "build_persona_execution_selection",
+          "build_mission_control_persona_surface",
+          "build_flat_fan_out_merge_policy",
+          "build_persona_template_pack",
+          "build_skill_template_pack",
+          "build_persona_skill_effectiveness_receipt",
+          "build_persona_skill_summary",
+          "check_persona_skill_conformance"
+        ],
+        "operator_symbols": [
+          "persona_profile",
+          "skill_contract",
+          "workflow_pattern",
+          "fanout_merge_policy"
+        ]
+      },
+      {
+        "capability_id": "goal_mode",
+        "label": "Goal Mode",
+        "contract_family": "goal-mode",
+        "loader_symbols": [
+          "load_goal_mode_record",
+          "load_thread_mission_goal",
+          "load_goal_mode_conformance_report"
+        ],
+        "summary_symbols": [
+          "build_thread_mission_goal",
+          "build_goal_lifecycle_transition",
+          "build_goal_authority_boundary",
+          "build_goal_runtime_accounting",
+          "check_goal_alignment",
+          "build_goal_mission_control_surface",
+          "build_goal_effectiveness_receipt",
+          "build_goal_mode_summary",
+          "check_goal_mode_conformance"
+        ],
+        "operator_symbols": [
+          "goal",
+          "goal_lifecycle",
+          "goal_alignment",
+          "goal_effectiveness"
+        ]
+      },
+      {
+        "capability_id": "workbench_support",
+        "label": "Generic Agent Workbench Support",
+        "contract_family": "generic-agent-workbench-support",
+        "loader_symbols": [
+          "load_workbench_support_record",
+          "load_workbench_launch_contract",
+          "load_agent_workspace_descriptor",
+          "load_shared_shell_session_api",
+          "load_workbench_navigation_model",
+          "load_workbench_action_dispatch_contract",
+          "load_multi_project_workspace_contract",
+          "load_workbench_conformance_report",
+          "load_workbench_fixture_pack",
+          "load_workbench_adapter_template_pack",
+          "load_workbench_readiness_guidance"
+        ],
+        "summary_symbols": [
+          "build_workbench_launch_contract",
+          "build_agent_workspace_descriptor",
+          "build_shared_shell_session_api",
+          "build_workbench_navigation_model",
+          "build_workbench_action_dispatch_contract",
+          "build_workbench_project_session_state",
+          "build_multi_project_workspace_contract",
+          "check_workbench_conformance",
+          "build_workbench_fixture_pack",
+          "build_workbench_adapter_template_pack",
+          "build_workbench_readiness_guidance",
+          "build_workbench_support_summary"
+        ],
+        "operator_symbols": [
+          "workbench_launch",
+          "workspace_descriptor",
+          "shared_shell_session",
+          "check_workbench_conformance"
+        ]
+      },
+      {
+        "capability_id": "memory_runtime",
+        "label": "Memory Runtime",
+        "contract_family": "memory-runtime",
+        "loader_symbols": [
+          "load_latest_agent_memory_snapshot",
+          "load_memory_write_proposal",
+          "load_requirement_retrieval_bundle",
+          "list_memory_entries"
+        ],
+        "summary_symbols": [
+          "build_requirement_retrieval_bundle",
+          "memory_governance_summary"
+        ],
+        "operator_symbols": [
+          "instruction_memory_summary",
+          "chronicle_summary",
+          "memory_governance_summary"
+        ]
+      },
+      {
+        "capability_id": "instruction_memory",
+        "label": "Instruction Memory",
+        "contract_family": "instruction-memory",
+        "loader_symbols": [
+          "load_instruction_set",
+          "load_memory_candidate",
+          "load_memory_governance_summary",
+          "list_instruction_sets"
+        ],
+        "summary_symbols": [
+          "summarize_instruction_set",
+          "build_memory_governance_summary",
+          "query_instruction_sets",
+          "query_governed_memory"
+        ],
+        "operator_symbols": [
+          "instruction_memory_summary",
+          "memory_governance_summary",
+          "instruction_set_artifact"
+        ]
+      },
+      {
+        "capability_id": "session_chronicle",
+        "label": "Session Chronicle",
+        "contract_family": "session-chronicle",
+        "loader_symbols": [
+          "load_session_chronicle_record",
+          "load_session_chronicle_index",
+          "list_session_chronicle_summaries"
+        ],
+        "summary_symbols": [
+          "summarize_session_chronicle_record",
+          "query_session_chronicle",
+          "build_session_chronicle_record"
+        ],
+        "operator_symbols": [
+          "chronicle_summary",
+          "chronicle_artifact",
+          "chronicle_index_artifact"
+        ]
+      },
+      {
+        "capability_id": "workflow_runtime",
+        "label": "Workflow Runtime",
+        "contract_family": "workflow-runtime",
+        "loader_symbols": [
+          "load_workflow_plan",
+          "load_workflow_state",
+          "load_workflow_resume_request",
+          "load_workflow_resume_result",
+          "list_workflow_states"
+        ],
+        "summary_symbols": [
+          "build_workflow_plan",
+          "build_workflow_state",
+          "summarize_workflow_state",
+          "build_workflow_resume_request",
+          "build_workflow_resume_result"
+        ],
+        "operator_symbols": [
+          "workflow_summary",
+          "workflow_plan_artifact",
+          "workflow_state_artifact",
+          "workflow_resume_request_artifact",
+          "workflow_resume_result_artifact"
+        ]
+      },
+      {
+        "capability_id": "eval_runtime",
+        "label": "Eval Runtime",
+        "contract_family": "eval-runtime",
+        "loader_symbols": [
+          "load_agent_trace",
+          "load_eval_suite",
+          "load_eval_run",
+          "load_simulation_pack",
+          "list_eval_runs"
+        ],
+        "summary_symbols": [
+          "summarize_agent_trace",
+          "summarize_eval_suite",
+          "run_baseline_eval",
+          "run_session_trace_eval"
+        ],
+        "operator_symbols": [
+          "eval_summary",
+          "eval_run_artifact",
+          "eval_suite_artifact",
+          "agent_trace_artifact",
+          "latest-eval-run.json"
+        ]
+      },
+      {
+        "capability_id": "review_core",
+        "label": "Review Core",
+        "contract_family": "review-lifecycle",
+        "loader_symbols": [
+          "load_harness_review_artifact"
+        ],
+        "summary_symbols": [
+          "build_harness_review_artifact",
+          "build_review_lifecycle_summary",
+          "list_harness_review_artifacts"
+        ],
+        "operator_symbols": [
+          "review_summary",
+          "classification",
+          "stage_status"
+        ]
+      },
+      {
+        "capability_id": "learning_runtime",
+        "label": "Learning Runtime",
+        "contract_family": "learning-runtime",
+        "loader_symbols": [
+          "load_learning_report",
+          "load_learning_report_contract",
+          "list_learning_reports"
+        ],
+        "summary_symbols": [
+          "build_learning_report",
+          "build_learning_runtime_contract",
+          "build_learning_runtime_summary"
+        ],
+        "operator_symbols": [
+          "learning_runtime",
+          "learning-prefer",
+          "latest-learning-report.json"
+        ]
+      },
+      {
+        "capability_id": "structural_graph",
+        "label": "Structural Graph",
+        "contract_family": "structural-graph",
+        "loader_symbols": [
+          "load_structural_graph",
+          "load_structural_graph_index",
+          "load_graph_retrieval_fusion_summary",
+          "load_structural_graph_hotspot_overlay",
+          "load_structural_graph_staleness_report",
+          "list_structural_graphs",
+          "list_graph_retrieval_fusion_summaries",
+          "list_structural_graph_hotspot_overlays"
+        ],
+        "summary_symbols": [
+          "build_structural_graph_impact_summary",
+          "build_graph_retrieval_fusion_summary",
+          "build_graph_grounded_context_pack",
+          "build_structural_graph_hotspot_overlay",
+          "build_structural_graph_staleness_report",
+          "build_structural_graph_overview",
+          "query_structural_graph_index"
+        ],
+        "operator_symbols": [
+          "build_structural_graph_overview",
+          "graph_retrieval_summary",
+          "graph-fusions",
+          "graph-hotspot-overlays",
+          "graph-staleness",
+          "blast-radius"
+        ]
+      },
+      {
+        "capability_id": "execution_graph",
+        "label": "Execution Graph",
+        "contract_family": "execution-graph",
+        "loader_symbols": [
+          "load_execution_graph"
+        ],
+        "summary_symbols": [
+          "build_execution_graph_overview",
+          "summarize_execution_graph",
+          "list_execution_graph_sessions"
+        ],
+        "operator_symbols": [
+          "build_execution_graph_overview"
+        ]
+      },
+      {
+        "capability_id": "artifact_retention",
+        "label": "Artifact Retention",
+        "contract_family": "artifact-retention",
+        "loader_symbols": [
+          "load_artifact_retention_policies",
+          "load_artifact_retention_report",
+          "list_artifact_retention_reports"
+        ],
+        "summary_symbols": [
+          "build_artifact_retention_report",
+          "build_artifact_retention_summary"
+        ],
+        "operator_symbols": [
+          "artifact_retention",
+          "retention-policies",
+          "retention-candidates"
+        ]
+      },
+      {
+        "capability_id": "runtime_performance",
+        "label": "Runtime Performance",
+        "contract_family": "runtime-performance",
+        "loader_symbols": [
+          "runtime_performance_summary_path"
+        ],
+        "summary_symbols": [
+          "summarize_runtime_performance",
+          "build_routing_improvement_suggestions"
+        ],
+        "operator_symbols": [
+          "artifacts/agent_baseline/runtime_performance/latest-summary.json"
+        ]
+      },
+      {
+        "capability_id": "skill_marketplace",
+        "label": "Skill Marketplace",
+        "contract_family": "skill-marketplace",
+        "loader_symbols": [
+          "load_skill_package_manifest",
+          "load_skill_marketplace_entry",
+          "load_skill_marketplace_proposal"
+        ],
+        "summary_symbols": [
+          "build_skill_package_manifest",
+          "build_skill_marketplace_summary",
+          "build_skill_selection_summary",
+          "list_skill_marketplace_entries",
+          "list_skill_marketplace_proposals"
+        ],
+        "operator_symbols": [
+          "skill_marketplace",
+          "skills",
+          "trusted-skills"
+        ]
+      },
+      {
+        "capability_id": "harness_links",
+        "label": "Harness Links",
+        "contract_family": "harness-links",
+        "loader_symbols": [
+          "load_harness_session_linkage"
+        ],
+        "summary_symbols": [
+          "build_harness_session_linkage"
+        ],
+        "operator_symbols": [
+          "linkage_summary",
+          "session_linkage"
+        ]
+      },
+      {
+        "capability_id": "validation_results",
+        "label": "Validation Results",
+        "contract_family": "validation-results",
+        "loader_symbols": [
+          "load_validation_result",
+          "list_validation_results"
+        ],
+        "summary_symbols": [
+          "build_bundle_validation_result",
+          "build_run_validation_result",
+          "build_session_validation_plan"
+        ],
+        "operator_symbols": [
+          "validation_summary"
+        ]
+      },
+      {
+        "capability_id": "execution_compiler",
+        "label": "Execution Compiler",
+        "contract_family": "execution-compiler",
+        "loader_symbols": [
+          "load_execution_compiler_artifact",
+          "list_execution_compiler_artifacts"
+        ],
+        "summary_symbols": [
+          "build_execution_compiler_summary",
+          "build_execution_compiler_artifact"
+        ],
+        "operator_symbols": [
+          "compiler_artifact",
+          "latest-execution-compiler-artifact.json"
+        ]
+      },
+      {
+        "capability_id": "provider_broker",
+        "label": "Provider Broker",
+        "contract_family": "provider-broker",
+        "loader_symbols": [
+          "load_provider_catalog",
+          "load_provider_catalog_manifest",
+          "load_persisted_provider_catalog"
+        ],
+        "summary_symbols": [
+          "provider_catalog_snapshot"
+        ],
+        "operator_symbols": [
+          "provider_catalog_snapshot",
+          "latest-provider-catalog.json"
+        ]
+      },
+      {
+        "capability_id": "runtime_broker",
+        "label": "Runtime Broker",
+        "contract_family": "runtime-broker",
+        "loader_symbols": [
+          "load_runtime_broker_artifact",
+          "list_runtime_broker_artifacts"
+        ],
+        "summary_symbols": [
+          "build_runtime_broker_artifact",
+          "build_runtime_broker_summary"
+        ],
+        "operator_symbols": [
+          "runtime_broker_summary",
+          "runtime_decision_artifact",
+          "selected_executor_runtime_id"
+        ]
+      },
+      {
+        "capability_id": "runtime_activation",
+        "label": "Runtime Activation",
+        "contract_family": "runtime-activation",
+        "loader_symbols": [
+          "load_runtime_activation_report",
+          "list_runtime_activation_reports"
+        ],
+        "summary_symbols": [
+          "build_runtime_activation_contract",
+          "build_runtime_activation_summary",
+          "build_runtime_activation_report"
+        ],
+        "operator_symbols": [
+          "runtime_activation",
+          "activation-review-ready",
+          "latest-runtime-activation-report.json"
+        ]
+      },
+      {
+        "capability_id": "runtime_provider_calibration",
+        "label": "Runtime Provider Calibration",
+        "contract_family": "runtime-provider-calibration",
+        "loader_symbols": [
+          "load_runtime_provider_calibration_contract",
+          "load_runtime_provider_calibration_report"
+        ],
+        "summary_symbols": [
+          "build_runtime_provider_calibration_contract",
+          "build_runtime_provider_calibration_summary",
+          "build_runtime_provider_calibration_report"
+        ],
+        "operator_symbols": [
+          "runtime_provider_calibration",
+          "latest-runtime-provider-calibration.json"
+        ]
+      },
+      {
+        "capability_id": "runtime_registry",
+        "label": "Runtime Registry",
+        "contract_family": "runtime-registry",
+        "loader_symbols": [
+          "load_runtime_registry",
+          "load_runtime_registry_snapshot",
+          "list_runtime_registry_snapshots"
+        ],
+        "summary_symbols": [
+          "runtime_registry_snapshot",
+          "build_runtime_registry_summary",
+          "load_codex_runtime_posture"
+        ],
+        "operator_symbols": [
+          "runtime_registry",
+          "latest-runtime-registry.json"
+        ]
+      },
+      {
+        "capability_id": "codex_app_runtime",
+        "label": "Codex App Runtime",
+        "contract_family": "codex-app-runtime",
+        "loader_symbols": [
+          "load_codex_app_runtime_manifest",
+          "load_codex_app_runtime_snapshot",
+          "list_codex_app_runtime_snapshots",
+          "load_codex_app_runtime_contract"
+        ],
+        "summary_symbols": [
+          "codex_app_runtime_snapshot",
+          "build_codex_app_runtime_summary",
+          "parse_codex_app_runtime_contract_payload"
+        ],
+        "operator_symbols": [
+          "codex_app_runtime",
+          "browser",
+          "computer_use",
+          "thread_automations",
+          "plugin_inventory",
+          "memory",
+          "ssh_devbox",
+          "image_generation",
+          "multi_terminal",
+          "file_preview",
+          "summary_pane",
+          "review_comments"
+        ]
+      },
+      {
+        "capability_id": "workspace_bootstrap",
+        "label": "Workspace Bootstrap",
+        "contract_family": "workspace-bootstrap",
+        "loader_symbols": [
+          "load_workspace_bootstrap_manifest",
+          "load_workspace_bootstrap_record",
+          "load_workspace_bootstrap_contract",
+          "list_workspace_bootstrap_records"
+        ],
+        "summary_symbols": [
+          "workspace_bootstrap_snapshot",
+          "build_workspace_bootstrap_summary"
+        ],
+        "operator_symbols": [
+          "instruction_entrypoint",
+          "task_file_count",
+          "skill_root_count",
+          "preferred_path_mode"
+        ]
+      },
+      {
+        "capability_id": "sandbox_workspaces",
+        "label": "Sandbox Workspaces",
+        "contract_family": "sandbox-workspace",
+        "loader_symbols": [
+          "load_sandbox_workspace_manifest",
+          "load_sandbox_workspace_record",
+          "load_sandbox_workspace_contract",
+          "list_sandbox_workspace_records"
+        ],
+        "summary_symbols": [
+          "sandbox_workspace_snapshot",
+          "build_sandbox_workspace_summary"
+        ],
+        "operator_symbols": [
+          "mount_count",
+          "persisted_output_count",
+          "operator_approval_required",
+          "path_policy",
+          "sandbox_workspace_artifact",
+          "sandbox_workspace_summary"
+        ]
+      },
+      {
+        "capability_id": "sandbox_sessions",
+        "label": "Sandbox Sessions",
+        "contract_family": "sandbox-session",
+        "loader_symbols": [
+          "load_sandbox_session_manifest",
+          "load_sandbox_session_record",
+          "load_sandbox_session_contract",
+          "list_sandbox_session_snapshots"
+        ],
+        "summary_symbols": [
+          "sandbox_session_snapshot",
+          "build_sandbox_session_summary"
+        ],
+        "operator_symbols": [
+          "checkpoint_state",
+          "continuation_posture",
+          "current_owner",
+          "requires_operator_reapproval",
+          "sandbox_session_artifact",
+          "sandbox_session_summary"
+        ]
+      },
+      {
+        "capability_id": "agent_run_results",
+        "label": "Agent Run Results",
+        "contract_family": "agent-run-result",
+        "loader_symbols": [
+          "load_agent_run_result_manifest",
+          "load_agent_run_result_record",
+          "list_agent_run_results"
+        ],
+        "summary_symbols": [
+          "build_agent_run_result_record",
+          "build_agent_run_result_summary",
+          "agent_run_result_path"
+        ],
+        "operator_symbols": [
+          "status",
+          "result_mode",
+          "current_owner",
+          "replay_event_count",
+          "validation_artifact_count",
+          "agent_run_result_artifact",
+          "agent_run_result_summary"
+        ]
+      },
+      {
+        "capability_id": "continuation_state",
+        "label": "Continuation State",
+        "contract_family": "agent-continuation-state",
+        "loader_symbols": [
+          "load_continuation_state_manifest",
+          "load_continuation_state",
+          "list_continuation_states"
+        ],
+        "summary_symbols": [
+          "build_continuation_state",
+          "build_continuation_state_summary",
+          "continuation_state_path"
+        ],
+        "operator_symbols": [
+          "checkpoint_state",
+          "resume_posture",
+          "current_owner",
+          "pause_reason_count",
+          "approval_checkpoint_count",
+          "carry_forward_count",
+          "continuation_state_artifact",
+          "continuation_state_summary"
+        ]
+      },
+      {
+        "capability_id": "guardrail_controls",
+        "label": "Guardrail Controls",
+        "contract_family": "guardrail-control-taxonomy",
+        "loader_symbols": [
+          "load_guardrail_controls_manifest",
+          "load_guardrail_control_taxonomy",
+          "list_guardrail_control_taxonomies"
+        ],
+        "summary_symbols": [
+          "build_guardrail_control_taxonomy",
+          "build_guardrail_control_summary",
+          "guardrail_controls_path"
+        ],
+        "operator_symbols": [
+          "control_count",
+          "control_point_count",
+          "blocking_control_count",
+          "human_approval_count",
+          "tool_control_count",
+          "guardrail_controls_artifact",
+          "guardrail_controls_summary"
+        ]
+      },
+      {
+        "capability_id": "orchestration_taxonomy",
+        "label": "Workflow Orchestration Taxonomy",
+        "contract_family": "workflow-orchestration-taxonomy",
+        "loader_symbols": [
+          "load_workflow_orchestration_manifest",
+          "load_workflow_orchestration_record",
+          "list_workflow_orchestration_records"
+        ],
+        "summary_symbols": [
+          "build_workflow_orchestration_taxonomy",
+          "build_workflow_orchestration_summary",
+          "build_execution_graph_orchestration_summary"
+        ],
+        "operator_symbols": [
+          "graph_shape",
+          "route_kind",
+          "delegation_mode",
+          "branch_count",
+          "explicit_branch_owner_count",
+          "ownership_transfer_handoff_count",
+          "orchestration_taxonomy_artifact",
+          "orchestration_summary"
+        ]
+      },
+      {
+        "capability_id": "workflow_trace_envelope",
+        "label": "Workflow Trace Envelope",
+        "contract_family": "workflow-trace-envelope",
+        "loader_symbols": [
+          "load_workflow_trace_envelope_manifest",
+          "load_workflow_trace_envelope",
+          "list_workflow_trace_envelopes"
+        ],
+        "summary_symbols": [
+          "build_workflow_trace_envelope",
+          "build_workflow_trace_envelope_summary"
+        ],
+        "operator_symbols": [
+          "envelope_id",
+          "group_count",
+          "grouped_event_count",
+          "linked_session_count",
+          "approval_event_count",
+          "handoff_event_count",
+          "tool_event_count",
+          "workflow_trace_envelope_artifact",
+          "workflow_trace_envelope_summary"
+        ]
+      },
+      {
+        "capability_id": "mission_control",
+        "label": "Mission Control",
+        "contract_family": "mission-control",
+        "loader_symbols": [
+          "load_mission_control_manifest",
+          "load_mission_control_session",
+          "load_mission_control_view",
+          "load_mission_control_events",
+          "list_missions"
+        ],
+        "summary_symbols": [
+          "build_mission_session",
+          "build_mission_view",
+          "build_mission_control_summary",
+          "build_mission_control_schema",
+          "build_mission_control_hitl_fixtures",
+          "build_mission_approval_lifecycle_summary"
+        ],
+        "operator_symbols": [
+          "mission_id",
+          "state",
+          "mission_kind",
+          "current_owner",
+          "needs_human_input",
+          "approval_required",
+          "mutating_execution_allowed",
+          "execution_posture",
+          "turn_intent_kind",
+          "approval_card_count",
+          "pending_approval_card_count",
+          "approval_lifecycle",
+          "tooling_candidate_count",
+          "adapter_conformance_count",
+          "adapter_conformance_checker",
+          "projection_receipt_count",
+          "transition_validation_count",
+          "blocked_transition_count",
+          "decision_receipt_count",
+          "context_stack_count",
+          "artifact_link_count",
+          "evidence_link_count",
+          "integrity_link_count",
+          "approval_link_count",
+          "dispatch_link_count",
+          "policy_decision_link_count",
+          "mission_control_view_artifact",
+          "mission_control_events_artifact"
+        ]
+      },
+      {
+        "capability_id": "trace_eval_promotion",
+        "label": "Trace Eval Promotion",
+        "contract_family": "trace-eval-promotion",
+        "loader_symbols": [
+          "load_trace_eval_promotion_manifest",
+          "load_trace_eval_promotion",
+          "list_trace_eval_promotions"
+        ],
+        "summary_symbols": [
+          "build_trace_eval_promotion",
+          "build_trace_eval_promotion_summary"
+        ],
+        "operator_symbols": [
+          "promotion_id",
+          "grader_count",
+          "regression_target_count",
+          "actionable_target_count",
+          "target_surface_counts",
+          "trace_eval_promotion_artifact",
+          "trace_eval_promotion_summary"
+        ]
+      },
+      {
+        "capability_id": "shell_contracts",
+        "label": "Shell Contracts",
+        "contract_family": "meta-agent-contract",
+        "loader_symbols": [
+          "load_meta_agent_contract",
+          "load_meta_agent_contract_snapshot",
+          "list_meta_agent_contract_snapshots"
+        ],
+        "summary_symbols": [
+          "build_meta_agent_contract_summary"
+        ],
+        "operator_symbols": [
+          "shell_contract",
+          "latest-meta-agent-contract.json"
+        ]
+      },
+      {
+        "capability_id": "shell_runtime",
+        "label": "Shell Runtime",
+        "contract_family": "shell-runtime-state",
+        "loader_symbols": [
+          "load_shell_runtime",
+          "load_shell_runtime_state",
+          "list_shell_runtime_states"
+        ],
+        "summary_symbols": [
+          "build_shell_runtime_summary"
+        ],
+        "operator_symbols": [
+          "shell_runtime",
+          "latest-gui-shell-runtime.json",
+          "latest-cli-shell-runtime.json"
+        ]
+      },
+      {
+        "capability_id": "interoperability_plane",
+        "label": "Interoperability Plane",
+        "contract_family": "interoperability-plane",
+        "loader_symbols": [
+          "load_mcp_server_catalog",
+          "load_interoperability_session_snapshot",
+          "list_interoperability_session_snapshots"
+        ],
+        "summary_symbols": [
+          "summarize_interoperability_session_snapshot",
+          "build_interoperability_session_snapshot"
+        ],
+        "operator_symbols": [
+          "interoperability_summary",
+          "interoperability_artifact"
+        ]
+      },
+      {
+        "capability_id": "policy_plane",
+        "label": "Policy Plane",
+        "contract_family": "policy-plane",
+        "loader_symbols": [
+          "load_policy_hook_handler_specs",
+          "load_policy_session_record",
+          "list_policy_session_records"
+        ],
+        "summary_symbols": [
+          "summarize_policy_session_record",
+          "build_policy_session_record"
+        ],
+        "operator_symbols": [
+          "policy_summary",
+          "policy_artifact"
+        ]
+      },
+      {
+        "capability_id": "harness_session_view",
+        "label": "Harness Session View",
+        "contract_family": "harness-session-view",
+        "loader_symbols": [
+          "load_harness_session_view_contract",
+          "list_harness_session_view_contracts"
+        ],
+        "summary_symbols": [
+          "build_harness_session_view",
+          "build_harness_session_view_from_replay",
+          "export_harness_session_view_contract"
+        ],
+        "operator_symbols": [
+          "build_harness_session_view",
+          "load_harness_session_view_contract",
+          "stage_guardrails",
+          "trace_summary",
+          "approvals",
+          "validation",
+          "interoperability",
+          "policy",
+          "memory",
+          "workflow",
+          "result",
+          "continuation",
+          "guardrail_controls",
+          "routing",
+          "orchestration",
+          "workflow_trace",
+          "evaluation",
+          "eval_promotion",
+          "promotion_pipeline",
+          "environment",
+          "skills",
+          "links",
+          "timestamps"
+        ]
+      },
+      {
+        "capability_id": "codex_app_interactions",
+        "label": "Codex App Interactions",
+        "contract_family": "codex-app-interaction",
+        "loader_symbols": [
+          "load_codex_app_interaction_record",
+          "load_codex_app_interaction_contract",
+          "list_codex_app_interaction_records"
+        ],
+        "summary_symbols": [
+          "build_codex_app_interaction_summary",
+          "export_codex_app_interaction_contract",
+          "parse_codex_app_interaction_contract_payload"
+        ],
+        "operator_symbols": [
+          "browser",
+          "computer_use",
+          "page_annotations",
+          "action_trace",
+          "screenshot_artifacts",
+          "replay_lineage",
+          "policy_posture"
+        ]
+      },
+      {
+        "capability_id": "codex_app_automations",
+        "label": "Codex App Automations",
+        "contract_family": "codex-app-automation",
+        "loader_symbols": [
+          "load_codex_app_automation_binding",
+          "load_codex_app_automation_contract",
+          "list_codex_app_automation_bindings"
+        ],
+        "summary_symbols": [
+          "build_codex_app_automation_summary",
+          "export_codex_app_automation_contract",
+          "parse_codex_app_automation_contract_payload"
+        ],
+        "operator_symbols": [
+          "thread_reuse",
+          "workflow_continuation",
+          "wake_posture",
+          "resume_binding",
+          "replay_lineage"
+        ]
+      },
+      {
+        "capability_id": "codex_app_plugins",
+        "label": "Codex App Plugins",
+        "contract_family": "codex-app-plugin-catalog",
+        "loader_symbols": [
+          "load_codex_app_plugin_catalog",
+          "load_codex_app_plugin_catalog_contract",
+          "list_codex_app_plugin_catalogs"
+        ],
+        "summary_symbols": [
+          "build_codex_app_plugin_summary",
+          "export_codex_app_plugin_catalog_contract",
+          "codex_app_plugin_catalog_snapshot"
+        ],
+        "operator_symbols": [
+          "plugin_inventory",
+          "route_hints",
+          "selection_posture",
+          "policy_required_capabilities"
+        ]
+      },
+      {
+        "capability_id": "tool_taxonomy",
+        "label": "Tool Taxonomy",
+        "contract_family": "tool-taxonomy",
+        "loader_symbols": [
+          "load_tool_taxonomy_manifest",
+          "load_tool_taxonomy_snapshot",
+          "load_tool_taxonomy_contract",
+          "list_tool_taxonomy_snapshots"
+        ],
+        "summary_symbols": [
+          "build_tool_taxonomy_summary",
+          "build_tool_taxonomy_selection_summary",
+          "search_tool_taxonomy"
+        ],
+        "operator_symbols": [
+          "discovery_class_counts",
+          "local_mcp_count",
+          "remote_mcp_count",
+          "deferred_surface_ids"
+        ]
+      },
+      {
+        "capability_id": "execution_projection",
+        "label": "Execution Projection",
+        "contract_family": "execution-projection-receipt",
+        "loader_symbols": [
+          "load_execution_projection_manifest",
+          "load_execution_projection_receipt",
+          "load_execution_projection_contract",
+          "list_execution_projection_receipts"
+        ],
+        "summary_symbols": [
+          "build_execution_projection_summary",
+          "export_execution_projection_contract"
+        ],
+        "operator_symbols": [
+          "visible_surface_ids",
+          "unprojected_surface_ids",
+          "selected_provider_id",
+          "orchestration_shape"
+        ]
+      },
+      {
+        "capability_id": "context_lineage",
+        "label": "Context Lineage",
+        "contract_family": "context-lineage-record",
+        "loader_symbols": [
+          "load_context_lineage_manifest",
+          "load_context_lineage_record",
+          "load_context_lineage_contract",
+          "list_context_lineage_records"
+        ],
+        "summary_symbols": [
+          "build_context_lineage_record",
+          "build_context_lineage_summary",
+          "export_context_lineage_contract"
+        ],
+        "operator_symbols": [
+          "selected_source_count",
+          "discarded_source_count",
+          "temperature_counts",
+          "selected_refs_preview",
+          "discarded_refs_preview"
+        ]
+      },
+      {
+        "capability_id": "codex_app_memory",
+        "label": "Codex App Memory",
+        "contract_family": "codex-app-memory-adapter",
+        "loader_symbols": [
+          "load_codex_app_memory_record",
+          "load_codex_app_memory_contract",
+          "list_codex_app_memory_records"
+        ],
+        "summary_symbols": [
+          "build_codex_app_memory_summary",
+          "export_codex_app_memory_contract"
+        ],
+        "operator_symbols": [
+          "memory_signal_import",
+          "candidate_creation",
+          "approval_required_writeback",
+          "memory_lineage",
+          "governance_posture"
+        ]
+      },
+      {
+        "capability_id": "environment_envelope",
+        "label": "Environment Envelope",
+        "contract_family": "environment-envelope",
+        "loader_symbols": [
+          "load_environment_envelope_manifest",
+          "load_environment_envelope_record",
+          "load_environment_envelope_contract",
+          "list_environment_envelopes"
+        ],
+        "summary_symbols": [
+          "build_environment_envelope_summary",
+          "export_environment_envelope_contract"
+        ],
+        "operator_symbols": [
+          "layer_counts",
+          "contract_families",
+          "projection_id",
+          "trace_envelope_id"
+        ]
+      },
+      {
+        "capability_id": "environment_portability",
+        "label": "Environment Portability",
+        "contract_family": "environment-portability-taxonomy",
+        "loader_symbols": [
+          "load_environment_portability_manifest",
+          "load_environment_portability_taxonomy_record",
+          "load_environment_portability_taxonomy_contract",
+          "list_environment_portability_taxonomies"
+        ],
+        "summary_symbols": [
+          "build_environment_portability_taxonomy",
+          "build_environment_portability_summary",
+          "classify_environment_portability",
+          "export_environment_portability_contract"
+        ],
+        "operator_symbols": [
+          "runtime_tag_counts",
+          "consumer_offer_tag_counts",
+          "consumer_publishable_count",
+          "applicable_role_ids"
+        ]
+      },
+      {
+        "capability_id": "environment_operator_summary",
+        "label": "Operator Environment Summary",
+        "contract_family": "operator-environment-summary",
+        "loader_symbols": [
+          "load_environment_operator_summary_manifest",
+          "load_environment_operator_summary_record",
+          "load_environment_operator_summary_contract",
+          "list_environment_operator_summaries"
+        ],
+        "summary_symbols": [
+          "build_environment_operator_summary",
+          "build_environment_operator_summary_summary",
+          "export_environment_operator_summary_contract"
+        ],
+        "operator_symbols": [
+          "component_count",
+          "checkpoint_state",
+          "visible_surface_count",
+          "result_status",
+          "promotion_candidate_count",
+          "consumer_publishable_count"
+        ]
+      },
+      {
+        "capability_id": "environment_invariants",
+        "label": "Environment Invariants",
+        "contract_family": "environment-invariants-report",
+        "loader_symbols": [
+          "load_environment_invariants_manifest",
+          "load_environment_invariants_record",
+          "load_environment_invariants_contract",
+          "list_environment_invariants_reports"
+        ],
+        "summary_symbols": [
+          "build_environment_invariants_report",
+          "build_environment_invariants_summary",
+          "export_environment_invariants_contract"
+        ],
+        "operator_symbols": [
+          "check_count",
+          "passed_count",
+          "failed_count",
+          "swap_stable",
+          "swap_conformance_passed",
+          "swap_dimension_count",
+          "checked_artifact_count"
+        ]
+      },
+      {
+        "capability_id": "prompt_section_profile",
+        "label": "Prompt Section Profile",
+        "contract_family": "prompt-section-profile",
+        "loader_symbols": [
+          "load_prompt_section_profile_manifest",
+          "load_prompt_section_profile_record",
+          "load_prompt_section_profile_contract",
+          "list_prompt_section_profiles"
+        ],
+        "summary_symbols": [
+          "build_prompt_section_profile",
+          "build_prompt_section_profile_summary",
+          "export_prompt_section_profile_contract"
+        ],
+        "operator_symbols": [
+          "section_count",
+          "selected_section_count",
+          "volatility_counts",
+          "cache_profile_counts",
+          "highest_authority_section_id"
+        ]
+      },
+      {
+        "capability_id": "capability_authority",
+        "label": "Capability Authority Boundaries",
+        "contract_family": "capability-authority-boundaries",
+        "loader_symbols": [
+          "load_capability_authority_manifest",
+          "load_capability_authority_record",
+          "load_capability_authority_contract"
+        ],
+        "summary_symbols": [
+          "build_capability_authority_snapshot",
+          "build_capability_authority_summary",
+          "export_capability_authority_contract"
+        ],
+        "operator_symbols": [
+          "entry_count",
+          "enabled_count",
+          "stale_count",
+          "execution_authority_count",
+          "consumer_overlay_allowed_count"
+        ]
+      },
+      {
+        "capability_id": "skill_grants",
+        "label": "Skill Grant Receipts",
+        "contract_family": "skill-grant-receipts",
+        "loader_symbols": [
+          "load_skill_grants_manifest",
+          "load_skill_grants_record",
+          "load_skill_grants_contract"
+        ],
+        "summary_symbols": [
+          "build_skill_grant_receipts",
+          "build_skill_grants_summary",
+          "export_skill_grants_contract"
+        ],
+        "operator_symbols": [
+          "receipt_count",
+          "granted_count",
+          "selected_count",
+          "authority_widening_count"
+        ]
+      },
+      {
+        "capability_id": "workspace_boundary_guard",
+        "label": "Workspace Boundary Guard",
+        "contract_family": "workspace-boundary-guard",
+        "loader_symbols": [
+          "load_workspace_boundary_guard_manifest",
+          "load_workspace_boundary_guard_record",
+          "load_workspace_boundary_guard_contract"
+        ],
+        "summary_symbols": [
+          "build_workspace_boundary_guard",
+          "build_workspace_boundary_guard_summary",
+          "export_workspace_boundary_guard_contract"
+        ],
+        "operator_symbols": [
+          "allowed_root_count",
+          "path_decision_count",
+          "command_decision_count",
+          "rejected_path_count",
+          "rejected_command_count",
+          "boundary_clean"
+        ]
+      },
+      {
+        "capability_id": "runtime_continuity",
+        "label": "Runtime Continuity Projection",
+        "contract_family": "runtime-continuity-projection",
+        "loader_symbols": [
+          "load_runtime_continuity_manifest",
+          "load_runtime_continuity_record",
+          "load_runtime_continuity_contract"
+        ],
+        "summary_symbols": [
+          "build_runtime_continuity_projection",
+          "build_runtime_continuity_summary",
+          "export_runtime_continuity_contract"
+        ],
+        "operator_symbols": [
+          "same_run_ref_count",
+          "session_continuity_ref_count",
+          "durable_memory_candidate_count",
+          "durable_skill_candidate_count",
+          "promotion_blocked"
+        ]
+      },
+      {
+        "capability_id": "durable_outputs",
+        "label": "Durable Output Artifacts",
+        "contract_family": "durable-output-artifacts",
+        "loader_symbols": [
+          "load_durable_outputs_manifest",
+          "load_durable_outputs_record",
+          "load_durable_outputs_contract"
+        ],
+        "summary_symbols": [
+          "build_durable_output_record",
+          "build_durable_outputs_summary",
+          "export_durable_outputs_contract"
+        ],
+        "operator_symbols": [
+          "output_count",
+          "report_count",
+          "lineage_ref_count",
+          "durable_count"
+        ]
+      },
+      {
+        "capability_id": "capability_packages",
+        "label": "Capability Package Manifest",
+        "contract_family": "capability-package-manifest",
+        "loader_symbols": [
+          "load_capability_packages_manifest",
+          "load_capability_package_record",
+          "load_capability_package_contract"
+        ],
+        "summary_symbols": [
+          "build_capability_package_manifest",
+          "build_capability_package_summary",
+          "export_capability_package_contract"
+        ],
+        "operator_symbols": [
+          "package_count",
+          "healthy_count",
+          "active_count",
+          "tool_surface_count",
+          "output_ref_count",
+          "consumer_sync_published_count"
+        ]
+      },
+      {
+        "capability_id": "operator_surface_mutability",
+        "label": "Operator Surface Mutability",
+        "contract_family": "operator-surface-mutability",
+        "loader_symbols": [
+          "load_operator_surface_mutability_manifest",
+          "load_operator_surface_mutability_record",
+          "load_operator_surface_mutability_contract"
+        ],
+        "summary_symbols": [
+          "build_operator_surface_mutability",
+          "build_operator_surface_mutability_summary",
+          "export_operator_surface_mutability_contract"
+        ],
+        "operator_symbols": [
+          "field_count",
+          "display_only_count",
+          "actionable_count",
+          "writeback_enabled_count",
+          "consumer_owned_count"
+        ]
+      },
+      {
+        "capability_id": "hos_adoption",
+        "label": "HOS Adoption Conformance",
+        "contract_family": "hos-adoption-conformance",
+        "loader_symbols": [
+          "load_hos_adoption_record",
+          "load_hos_adoption_contract"
+        ],
+        "summary_symbols": [
+          "build_hos_adoption_summary",
+          "check_hos_adoption_conformance",
+          "export_hos_adoption_contract"
+        ],
+        "operator_symbols": [
+          "conformance_status",
+          "covered_contract_count",
+          "missing_contract_count",
+          "issue_contract_count",
+          "checker"
+        ]
+      },
+      {
+        "capability_id": "environment_promotion_pipeline",
+        "label": "Environment Promotion Pipeline",
+        "contract_family": "environment-promotion-pipeline",
+        "loader_symbols": [
+          "load_environment_promotion_pipeline_manifest",
+          "load_environment_promotion_pipeline_record",
+          "list_environment_promotion_pipelines"
+        ],
+        "summary_symbols": [
+          "build_environment_promotion_pipeline",
+          "build_environment_promotion_pipeline_summary",
+          "export_environment_promotion_pipeline_contract"
+        ],
+        "operator_symbols": [
+          "status",
+          "review_required",
+          "auto_promotion_blocked",
+          "candidate_count",
+          "pending_candidate_count",
+          "accepted_candidate_count",
+          "candidate_kind_counts"
+        ]
+      },
+      {
+        "capability_id": "codex_app_remote_workspaces",
+        "label": "Codex App Remote Workspaces",
+        "contract_family": "codex-app-remote-workspace",
+        "loader_symbols": [
+          "load_codex_app_remote_workspace_record",
+          "load_codex_app_remote_workspace_contract",
+          "list_codex_app_remote_workspace_records"
+        ],
+        "summary_symbols": [
+          "build_codex_app_remote_workspace_summary",
+          "export_codex_app_remote_workspace_contract"
+        ],
+        "operator_symbols": [
+          "remote_workspace_identity",
+          "trust_posture",
+          "ssh_context",
+          "devbox_context",
+          "remote_artifact_provenance"
+        ]
+      },
+      {
+        "capability_id": "codex_app_images",
+        "label": "Codex App Images",
+        "contract_family": "codex-app-image-workflow",
+        "loader_symbols": [
+          "load_codex_app_image_workflow_record",
+          "load_codex_app_image_workflow_contract",
+          "list_codex_app_image_workflow_records"
+        ],
+        "summary_symbols": [
+          "build_codex_app_image_workflow_summary",
+          "export_codex_app_image_workflow_contract"
+        ],
+        "operator_symbols": [
+          "image_request_kind",
+          "image_run_status",
+          "image_output_provenance",
+          "policy_posture",
+          "consumer_sync_posture"
+        ]
+      },
+      {
+        "capability_id": "local_agent_exchange",
+        "label": "Local Agent Exchange",
+        "contract_family": "local-agent-exchange",
+        "loader_symbols": [
+          "load_local_agent_exchange_catalog",
+          "load_local_agent_exchange_contract",
+          "list_local_agent_exchange_catalogs"
+        ],
+        "summary_symbols": [
+          "build_local_agent_exchange_summary",
+          "export_local_agent_exchange_contract",
+          "local_agent_exchange_snapshot"
+        ],
+        "operator_symbols": [
+          "agent_cards",
+          "capability_exchange",
+          "manager_mediated_posture",
+          "local_only_handoffs"
+        ]
+      },
+      {
+        "capability_id": "mcp_app_extensions",
+        "label": "MCP App Extensions",
+        "contract_family": "mcp-app-extension-catalog",
+        "loader_symbols": [
+          "load_mcp_app_extension_catalog",
+          "load_mcp_app_extension_catalog_contract",
+          "list_mcp_app_extension_catalogs"
+        ],
+        "summary_symbols": [
+          "build_mcp_app_extension_summary",
+          "export_mcp_app_extension_catalog_contract",
+          "mcp_app_extension_catalog_snapshot"
+        ],
+        "operator_symbols": [
+          "artifact_viewers",
+          "operator_widgets",
+          "panel_bindings",
+          "extension_policy_posture"
+        ]
+      },
+      {
+        "capability_id": "workflow_editor",
+        "label": "Workflow Editor",
+        "contract_family": "workflow-editor-state",
+        "loader_symbols": [
+          "load_workflow_editor_state",
+          "load_workflow_editor_contract",
+          "list_workflow_editor_states"
+        ],
+        "summary_symbols": [
+          "build_workflow_editor_state",
+          "build_workflow_editor_summary",
+          "export_workflow_editor_state_contract"
+        ],
+        "operator_symbols": [
+          "visual_editor_state",
+          "editable_operations",
+          "layout_posture",
+          "review_gated_writeback"
+        ]
+      },
+      {
+        "capability_id": "agent_stack_composition",
+        "label": "Agent Stack Composition",
+        "contract_family": "agent-stack-composition",
+        "loader_symbols": [
+          "load_agent_stack_composition_manifest",
+          "load_agent_stack_composition_record",
+          "load_agent_profile_descriptor",
+          "load_agent_stack_conceptual_model",
+          "load_agent_profile_conformance",
+          "load_profile_composition_receipt",
+          "load_agent_profile_catalog",
+          "load_composition_state_authority_map",
+          "load_capability_negotiation_report",
+          "load_target_project_binding",
+          "load_adapter_lifecycle_freshness_report"
+        ],
+        "summary_symbols": [
+          "build_agent_stack_conceptual_model",
+          "build_agent_profile_contract",
+          "build_agent_profile_catalog",
+          "build_agent_stack_composition_summary",
+          "build_profile_composition_receipt",
+          "check_agent_profile_conformance",
+          "build_composition_state_authority_map",
+          "build_capability_negotiation_report",
+          "build_target_project_binding",
+          "build_adapter_lifecycle_freshness_report"
+        ],
+        "operator_symbols": [
+          "agent_stack_composition",
+          "agent-profile-descriptor",
+          "agent-profile-conformance",
+          "profile-composition-receipt",
+          "agent-profile-catalog",
+          "composition-state-authority-map",
+          "capability-negotiation",
+          "target-project-binding",
+          "adapter-lifecycle-freshness",
+          "latest-agent-stack-composition.json"
+        ]
+      },
+      {
+        "capability_id": "profile_bootstrap",
+        "label": "Profile Bootstrap Tooling",
+        "contract_family": "profile-bootstrap-tooling",
+        "loader_symbols": [
+          "load_profile_bootstrap_record",
+          "load_profile_bootstrap_proposal",
+          "load_profile_bootstrap_conformance",
+          "load_profile_bootstrap_receipt",
+          "load_profile_bootstrap_review_checkpoint",
+          "load_profile_bootstrap_activation_receipt"
+        ],
+        "summary_symbols": [
+          "scan_profile_bootstrap_target",
+          "build_bootstrap_safety_defaults",
+          "build_profile_bootstrap_proposal",
+          "check_profile_bootstrap_conformance",
+          "build_profile_bootstrap_receipt",
+          "build_profile_bootstrap_review_checkpoint",
+          "build_profile_bootstrap_review_decision",
+          "build_profile_bootstrap_activation_receipt",
+          "build_profile_bootstrap_summary"
+        ],
+        "operator_symbols": [
+          "profile_bootstrap",
+          "profile-bootstrap",
+          "profile-bootstrap-proposal",
+          "profile-bootstrap-conformance",
+          "profile-bootstrap-receipt",
+          "profile-bootstrap-review-checkpoint",
+          "profile-bootstrap-activation-receipt",
+          "agent_profile.toml",
+          "mutation_policy.toml",
+          "latest-profile-bootstrap-proposal.json"
+        ]
+      },
+      {
+        "capability_id": "project_aware_operation",
+        "label": "Project-Aware Operation",
+        "contract_family": "project-aware-operation",
+        "loader_symbols": [
+          "load_project_aware_operation_record",
+          "load_project_specialization_contract",
+          "load_instruction_applicability_registry",
+          "load_capability_overlay_conformance",
+          "load_repo_bootstrap_profile",
+          "load_project_work_slice",
+          "load_change_impact_contract",
+          "load_coupled_project_artifact_contract",
+          "load_safe_mutation_policy",
+          "load_validation_gate_registry",
+          "load_patch_change_receipt",
+          "load_project_review_finding_contract",
+          "load_human_review_checkpoint",
+          "load_quality_bar_profile",
+          "load_project_memory_map",
+          "load_rollback_recovery_contract",
+          "load_golden_task_eval_pack",
+          "load_consumer_adapter_template_pack"
+        ],
+        "summary_symbols": [
+          "build_project_command_ref",
+          "build_project_specialization_contract",
+          "build_instruction_applicability_registry",
+          "check_capability_overlay_conformance",
+          "profile_repo_bootstrap",
+          "build_project_work_slice",
+          "build_change_impact_contract",
+          "build_coupled_project_artifact_contract",
+          "build_safe_mutation_policy",
+          "build_validation_gate_registry",
+          "build_patch_change_receipt",
+          "build_project_review_finding_contract",
+          "build_human_review_checkpoint",
+          "build_quality_bar_profile",
+          "build_project_memory_map",
+          "build_rollback_recovery_contract",
+          "build_golden_task_eval_pack",
+          "build_consumer_adapter_template_pack",
+          "build_project_aware_operation_summary"
+        ],
+        "operator_symbols": [
+          "project-aware-operation",
+          "project-specialization",
+          "instruction-applicability",
+          "overlay-conformance",
+          "repo-bootstrap-profile",
+          "work-slice",
+          "change-impact",
+          "coupled-artifacts",
+          "safe-mutation-policy",
+          "validation-gate-registry",
+          "patch-change-receipt",
+          "review-finding-contract",
+          "human-review-checkpoint",
+          "quality-bar-profile",
+          "project-memory-map",
+          "rollback-recovery-contract",
+          "golden-task-eval-pack",
+          "consumer-adapter-template-pack",
+          "latest-project-aware-operation.json"
+        ]
+      },
+      {
+        "capability_id": "planning_dispatch_kernel",
+        "label": "Planning Dispatch Kernel",
+        "contract_family": "planning-dispatch-kernel",
+        "loader_symbols": [
+          "load_planning_dispatch_record",
+          "load_canonical_plan",
+          "load_plan_review_change_control",
+          "load_plan_conformance",
+          "load_work_slice_dispatch",
+          "load_parallelization_schedule",
+          "load_dispatch_execution_receipt",
+          "load_dispatch_evidence_acceptance_contract",
+          "load_model_routing_record",
+          "load_model_tier_capability_map",
+          "load_routing_candidate_receipt",
+          "load_knowledge_retrieval_record",
+          "load_knowledge_source_index",
+          "load_retrieval_policy_query_plan",
+          "load_retrieval_quality_eval_pack",
+          "load_model_adaptation_record",
+          "load_model_adaptation_decision",
+          "load_fine_tune_lora_adapter_registry",
+          "load_adaptation_promotion_receipt"
+        ],
+        "summary_symbols": [
+          "build_canonical_plan",
+          "compile_canonical_plan",
+          "build_plan_work_slice",
+          "build_plan_review_change_control",
+          "build_work_slice_dispatch",
+          "build_parallelization_schedule",
+          "build_dispatch_execution_receipt",
+          "build_dispatch_evidence_acceptance_contract",
+          "build_model_tier_capability_map",
+          "build_model_availability_snapshot",
+          "build_routing_candidate_receipt",
+          "build_cost_quota_budget_registry",
+          "build_local_small_model_eligibility_policy",
+          "build_protocol_translation_capability_matrix",
+          "build_knowledge_source_index",
+          "build_retrieval_policy_query_plan",
+          "build_retrieval_quality_eval_pack",
+          "build_model_adaptation_decision",
+          "build_fine_tune_lora_adapter_entry",
+          "build_fine_tune_lora_adapter_registry",
+          "build_adaptation_promotion_receipt",
+          "check_canonical_plan_conformance",
+          "build_planning_dispatch_summary"
+        ],
+        "operator_symbols": [
+          "planning_dispatch_kernel",
+          "planning-dispatch-kernel",
+          "canonical-plan",
+          "plan-review-change-control",
+          "plan-conformance",
+          "work-slice-dispatch",
+          "parallelization-schedule",
+          "dispatch-execution-receipt",
+          "dispatch-evidence-acceptance-contract",
+          "model-routing",
+          "routing-candidate-receipt",
+          "knowledge-retrieval",
+          "retrieval-query-plan",
+          "retrieval-quality-eval-pack",
+          "model-adaptation",
+          "model-adaptation-decision",
+          "fine-tune-lora-adapter-registry",
+          "adaptation-promotion-receipt",
+          "latest-canonical-plan.json",
+          "latest-dispatch-evidence-acceptance.json"
+        ]
+      },
+      {
+        "capability_id": "security_posture",
+        "label": "Security Posture",
+        "contract_family": "security-posture",
+        "loader_symbols": [
+          "load_security_posture_manifest",
+          "load_security_posture_snapshot",
+          "load_security_posture_contract",
+          "list_security_posture_snapshots"
+        ],
+        "summary_symbols": [
+          "build_security_posture_summary",
+          "security_posture_snapshot"
+        ],
+        "operator_symbols": [
+          "security_posture",
+          "security-posture",
+          "latest-security-posture.json"
+        ]
+      }
+    ],
+    "baseline_capability_statuses": [
+      {
+        "capability_id": "ADL-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ADT-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AGP-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AGP-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AGP-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AGP-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AGP-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AME-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AME-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AME-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AME-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AME-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AME-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "APP-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ASM-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "AUT-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "BCH-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "BCH-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "BSP-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "CAP-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "CHG-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "CI-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "CMP-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "CNS-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "CNY-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "CNY-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "CNY-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "COV-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "COV-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "COV-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "CPL-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "CRV-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "DIA-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "E2E-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ENV-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ENV-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ENV-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ENV-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ENV-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ENV-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ENV-07",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "EVA-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "EVA-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "EVA-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "EVA-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "EVA-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "EVA-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "EXC-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "EXC-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "EXC-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "FUT-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Baseline now exposes governed local agent cards and capability exchange, and the compiler uses them to enrich bounded delegation posture."
+      },
+      {
+        "capability_id": "FUT-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Baseline now exposes a governed local extension catalog for artifact viewers and operator widgets, surfaced through runtime and GUI summaries."
+      },
+      {
+        "capability_id": "FUT-07",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Baseline now persists a governed workflow-editor state derived from planner task graphs, with review-gated editable operations and shell surfacing."
+      },
+      {
+        "capability_id": "GOL-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GOL-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GOL-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GOL-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GOL-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GOL-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GOL-07",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GOV-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GOV-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GOV-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GOV-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GOV-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GRA-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GRA-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GRA-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GRD-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GRD-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "GUI-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HAR-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HOS-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HOS-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HOS-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HOS-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HOS-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HOS-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HOS-07",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HOS-08",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HOS-09",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HOS-10",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HOS-11",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HRC-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HRD-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HRD-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "HRD-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "IMG-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "IMP-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "INT-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "INT-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "KAG-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "KAG-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "KAG-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "LRN-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MAD-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MAD-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MAD-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MC-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MC-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MC-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MC-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MC-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MC-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MC-07",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MC-08",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MC-09",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MCH-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MCH-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MCH-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MCH-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MCH-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MCH-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MCH-07",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MCH-08",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MCH-09",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MCH-10",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MCH-11",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MEM-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MEM-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MEM-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MEM-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MEM-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MRG-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MRG-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MRG-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MRG-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MRG-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MRG-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MTR-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "MUT-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "OBS-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ORC-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ORC-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "ORC-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "OVL-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PAO-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PAO-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PBG-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PBG-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PBG-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PBG-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PDK-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PDK-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PDK-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PDK-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PDK-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PDK-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PDK-07",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PIR-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PLG-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PMM-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "POL-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PRM-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PRM-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PRS-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PRS-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PRS-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PRS-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PRS-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PRS-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "PRV-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "QBP-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "RC-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "RCV-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "REV-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "REV-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "RFR-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "RFR-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "RNH-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "RNH-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "RNH-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "RNH-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "RST-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "RST-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "RTR-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SBX-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SBX-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SBX-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SCG-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Structural graphs now extract symbol nodes from impacted files and relate them back to files/modules."
+      },
+      {
+        "capability_id": "SCG-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Impact summaries and retrieval hits now carry symbol/file/module context and recommended context refs."
+      },
+      {
+        "capability_id": "SCG-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Compiler now uses graph-grounded context packs with explicit path/symbol budgets and reduction ratios."
+      },
+      {
+        "capability_id": "SCG-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Structural graphs now support generic issue/PR/code-area hotspot overlays with persisted overlay artifacts and overview surfacing."
+      },
+      {
+        "capability_id": "SCG-07",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Structural graphs now emit persisted staleness reports and overview counts for missing/newer sources and age-based refresh posture."
+      },
+      {
+        "capability_id": "SEM-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SEM-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SHELL-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SHELL-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SKL-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SKL-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SKL-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SKL-07",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SKL-08",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SKL-09",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SKM-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SKM-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SSH-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "STB-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "STB-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "SWR-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Compiler artifacts now persist versioned task-graph seeds with explicit nodes, edges, dependencies, and replay-linked execution-graph summaries."
+      },
+      {
+        "capability_id": "SWR-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Planner seeds now make fan-out, fan-in, retry windows, and speculative branches explicit where the baseline policy allows them."
+      },
+      {
+        "capability_id": "SWR-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Planner decisions now freeze budget, cost tier, retry budget, and risk controls before worker lanes open."
+      },
+      {
+        "capability_id": "SWR-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Task-graph nodes now carry owner, active-slice id, collision policy, and inbox/outbox notes for bounded handoffs."
+      },
+      {
+        "capability_id": "SWR-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Compiler now emits explicit shapes for `single-agent`, `multi-agent-sequential`, `multi-agent-parallel`, `review-heavy`, and `safe-autofix`."
+      },
+      {
+        "capability_id": "SWR-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": "Planner seeds and execution graphs now surface approvals/checkpoints as first-class human nodes instead of implicit notes."
+      },
+      {
+        "capability_id": "TGT-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "VAL-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WBH-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WBH-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WBH-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WBH-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WBH-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WBH-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WBH-07",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WBH-08",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WBH-09",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WBH-10",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WEB-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WFL-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WFL-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WFP-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WFP-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WFP-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WS-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WSL-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-01",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-02",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-03",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-04",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-05",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-06",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-07",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-08",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-09",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-10",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-11",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      },
+      {
+        "capability_id": "WTH-12",
+        "status": "implemented",
+        "coverage_percent": 100,
+        "delivery_class": "implemented",
+        "snapshot_counting_policy": "counted",
+        "blocking_posture": "non-blocking",
+        "notes": ""
+      }
+    ],
+    "selected_specialization_profile_id": "builder",
+    "available_specialization_profile_ids": [
+      "builder",
+      "neutral",
+      "operator",
+      "session-centric"
+    ],
+    "gap_count": 0,
+    "next_action": "none"
+  },
+  "ok": true
+}

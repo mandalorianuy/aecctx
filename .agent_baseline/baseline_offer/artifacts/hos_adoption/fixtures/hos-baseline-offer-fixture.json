@@ -1,0 +1,85 @@
+{
+  "fixture_id": "baseline-offer-fixture",
+  "contract_count": 8,
+  "contracts": {
+    "prompt_section_profile": {
+      "artifact_ref": "artifacts/agent_baseline/prompt_section_profile/latest-prompt-section-profile.json",
+      "schema_ref": "artifacts/agent_baseline/hos_adoption/schemas/hos-prompt-section-profile-schema.json",
+      "required_fields": [
+        "profile_id",
+        "requirement_id",
+        "sections"
+      ]
+    },
+    "capability_authority": {
+      "artifact_ref": "artifacts/agent_baseline/capability_authority/latest-capability-authority-boundaries.json",
+      "schema_ref": "artifacts/agent_baseline/hos_adoption/schemas/hos-capability-authority-schema.json",
+      "required_fields": [
+        "snapshot_id",
+        "entries",
+        "summary"
+      ]
+    },
+    "skill_grants": {
+      "artifact_ref": "artifacts/agent_baseline/skill_grants/latest-skill-grant-receipts.json",
+      "schema_ref": "artifacts/agent_baseline/hos_adoption/schemas/hos-skill-grants-schema.json",
+      "required_fields": [
+        "record_id",
+        "receipts",
+        "summary"
+      ]
+    },
+    "workspace_boundary_guard": {
+      "artifact_ref": "artifacts/agent_baseline/workspace_boundary_guard/latest-workspace-boundary-guard.json",
+      "schema_ref": "artifacts/agent_baseline/hos_adoption/schemas/hos-workspace-boundary-guard-schema.json",
+      "required_fields": [
+        "guard_id",
+        "allowed_roots",
+        "path_decisions",
+        "command_decisions",
+        "summary"
+      ]
+    },
+    "runtime_continuity": {
+      "artifact_ref": "artifacts/agent_baseline/runtime_continuity/latest-runtime-continuity-projection.json",
+      "schema_ref": "artifacts/agent_baseline/hos_adoption/schemas/hos-runtime-continuity-schema.json",
+      "required_fields": [
+        "projection_id",
+        "same_run_refs",
+        "promotion_blocked",
+        "summary"
+      ]
+    },
+    "durable_outputs": {
+      "artifact_ref": "artifacts/agent_baseline/durable_outputs/latest-durable-output-artifacts.json",
+      "schema_ref": "artifacts/agent_baseline/hos_adoption/schemas/hos-durable-outputs-schema.json",
+      "required_fields": [
+        "record_id",
+        "outputs",
+        "summary"
+      ]
+    },
+    "capability_packages": {
+      "artifact_ref": "artifacts/agent_baseline/capability_packages/latest-capability-package-manifest.json",
+      "schema_ref": "artifacts/agent_baseline/hos_adoption/schemas/hos-capability-packages-schema.json",
+      "required_fields": [
+        "manifest_id",
+        "packages",
+        "summary"
+      ]
+    },
+    "operator_surface_mutability": {
+      "artifact_ref": "artifacts/agent_baseline/operator_surface_mutability/latest-operator-surface-mutability.json",
+      "schema_ref": "artifacts/agent_baseline/hos_adoption/schemas/hos-operator-surface-mutability-schema.json",
+      "required_fields": [
+        "record_id",
+        "fields",
+        "summary"
+      ]
+    }
+  },
+  "notes": [
+    "The fixture validates the baseline offer shape; consumers should project local state into the same contract ids.",
+    "Execution, secrets, domain enforcement, and UI rendering remain consumer-owned."
+  ]
+}

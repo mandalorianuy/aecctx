@@ -1,0 +1,39 @@
+{
+  "lineage_id": "baseline-context-lineage",
+  "session_id": "baseline-wave2-session",
+  "requirement_id": "baseline-execution-compiler-governance",
+  "recorded_at_utc": "2026-04-29T22:00:32.444698+00:00",
+  "selected_source_refs": [
+    "artifacts/agent_baseline/sandbox_sessions/latest-sandbox-session.json"
+  ],
+  "discarded_source_refs": [],
+  "sources": [
+    {
+      "source_ref": "artifacts/agent_baseline/sandbox_sessions/latest-sandbox-session.json",
+      "source_kind": "sandbox-session",
+      "temperature": "warm",
+      "selected": true,
+      "origin_lane": "continuity",
+      "packaging_tags": [
+        "rehydratable-runtime",
+        "local-only"
+      ],
+      "selection_reason": "Sandbox session state survives as warm execution continuity.",
+      "notes": []
+    }
+  ],
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/sandbox_sessions/latest-sandbox-session.json"
+  ],
+  "temperature_policy": {
+    "hot": "Current-turn workspace context such as authority docs, recent changes, and explicit working-set files.",
+    "warm": "Continuity-bearing state reused into the run, such as instruction sets, chronicle matches, and resumable continuation artifacts.",
+    "cold": "Durable candidate context not automatically in the active budget, such as graph-grounded retrieval candidates."
+  },
+  "notes": [
+    "ENV-04 records hot, warm, and cold context provenance per run instead of leaving selection lineage implicit.",
+    "Discarded cold candidates are first-class audit state because budgeting decisions matter to replay and operator inspection.",
+    "HOS-02 extends the same temperature vocabulary into execution packs, environment summaries, Mission Control projections, and reviewed durable-memory promotion candidates.",
+    "Canonical ENV-04 sample for repo-owned artifact governance."
+  ]
+}

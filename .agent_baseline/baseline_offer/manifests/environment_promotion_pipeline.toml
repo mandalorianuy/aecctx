@@ -1,0 +1,24 @@
+[environment_promotion_pipeline]
+version = "1.0"
+default_pipeline_id = "baseline-environment-promotion-pipeline"
+notes = [
+  "ENV-07 closes the reviewed improvement loop by turning run outcomes and eval judgments into explicit promotion candidates instead of implicit follow-up folklore.",
+  "The pipeline is review-gated by design: memory, skill, policy, and capability candidates can be surfaced together without silently mutating durable baseline state.",
+]
+
+[candidate_kind_mapping]
+results = "memory"
+tools = "skill"
+guardrails = "policy"
+routing = "policy"
+workflow = "capability"
+prompt = "capability"
+observability = "capability"
+
+[review_policy]
+auto_promotion_blocked = true
+default_pending_state = "pending-review"
+default_non_actionable_state = "watch"
+accepted_state = "accepted"
+decision_registry_path = "artifacts/agent_baseline/environment_promotion_pipeline/decisions"
+accepted_decision_required_fields = ["candidate_id", "candidate_kind", "decision", "durable_artifact_ref"]

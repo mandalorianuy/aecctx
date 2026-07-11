@@ -1,0 +1,32 @@
+# Managed by codex-agent-baseline meta-agent tooling.
+[profile]
+profile_id = "{{profile_id}}"
+label = "{{profile_label}}"
+description = "{{profile_description}}"
+recommended_for = ["{{profile_recommended_for}}"]
+
+[overlay]
+meta_agent_id = "{{meta_agent_id}}"
+overlay_id = "{{overlay_id}}"
+specialization_kind = "{{specialization_kind}}"
+specialization_profile_id = "{{profile_id}}"
+contract_bundle_id = "{{contract_bundle_id}}"
+domain_pack_id = "{{domain_pack_id}}"
+policy_pack_id = "{{policy_pack_id}}"
+runtime_pack_id = "{{runtime_pack_id}}"
+repo_overlay_id = "{{repo_overlay_id}}"
+
+[labels]
+display_name = "{{display_name}}"
+
+[defaults]
+command_namespace = "{{command_namespace}}"
+default_panel = "{{default_panel}}"
+operator_label = "{{operator_label}}"
+short_name = "{{short_name}}"
+
+[visibility]
+show_runtime = true
+show_approvals = true
+show_graphs = true
+show_review_center = false

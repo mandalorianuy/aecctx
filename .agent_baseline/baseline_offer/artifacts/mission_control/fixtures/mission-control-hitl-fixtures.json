@@ -1,0 +1,1751 @@
+{
+  "schema_version": "mission-control/v2",
+  "fixture_count": 5,
+  "fixtures": {
+    "approval_required": {
+      "session": {
+        "mission_id": "fixture-approval-required",
+        "created_at_utc": "2026-04-29T22:00:32.324406+00:00",
+        "updated_at_utc": "2026-04-29T22:00:32.324406+00:00",
+        "user_input": "Implement the baseline Mission Control adapter projection",
+        "mission_kind": "active-work",
+        "state": "awaiting-human-approval",
+        "next_engine_action": "request-approval",
+        "current_owner": "operator",
+        "approval_required": true,
+        "mutating_execution_allowed": false,
+        "execution_posture": "not-executed",
+        "intent_summary": "Approval-required active work fixture",
+        "bounded_contexts": [],
+        "linked_capabilities": [
+          "requirement-dialogue",
+          "execution-compiler",
+          "workflow-runtime",
+          "guardrail-control-taxonomy",
+          "agent-continuation-state",
+          "agent-run-result",
+          "harness-session-view",
+          "workflow-trace-envelope",
+          "sandbox-workspace",
+          "sandbox-session",
+          "workspace-bootstrap"
+        ],
+        "artifact_links": [],
+        "turn_intent": {
+          "intent_id": "fixture-approval-required-intent",
+          "utterance": "Implement the baseline Mission Control adapter projection",
+          "intent_kind": "active-work",
+          "confidence": 1.0,
+          "requires_clarification": false,
+          "requires_approval": true,
+          "expected_output": "",
+          "routing_reason": "mission_kind=active-work; next_engine_action=request-approval",
+          "extracted_actions": [
+            "compile-before-execution",
+            "request-human-approval"
+          ],
+          "bounded_contexts": [],
+          "metadata": {}
+        },
+        "approval_cards": [
+          {
+            "approval_id": "fixture-approval-required-execution-approval",
+            "approval_kind": "execution",
+            "status": "pending",
+            "title": "Approve active mission execution",
+            "prompt": "Approve the exact active-work boundary before any mutating execution is allowed.",
+            "exact_invocation": "python3 scripts/project_mission_control.py --dry-run",
+            "risk_level": "medium",
+            "guardrail_refs": [
+              "guardrail-control-taxonomy"
+            ],
+            "required_inputs": [
+              "operator approval"
+            ],
+            "expires_at_utc": "",
+            "decision_ref": "",
+            "lifecycle_status": "requested",
+            "metadata": {}
+          }
+        ],
+        "tooling_candidates": [],
+        "adapter_conformance": [
+          {
+            "adapter_id": "fixture-approval-required-baseline-adapter",
+            "consumer_ref": "baseline",
+            "source_surface": "mission_control",
+            "conformance_status": "baseline-generated",
+            "checked_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "covered_fields": [
+              "session",
+              "view",
+              "events",
+              "turn_intent",
+              "approval_cards",
+              "tooling_candidates",
+              "artifact_links"
+            ],
+            "missing_fields": [],
+            "notes": [
+              "Consumer adapters can replace this record with repo-specific conformance evidence."
+            ]
+          }
+        ],
+        "projection_receipts": [
+          {
+            "projection_id": "fixture-approval-required-projection",
+            "source_of_truth": "baseline-mission-control",
+            "source_ref": "mission:fixture-approval-required",
+            "projection_mode": "canonical-envelope",
+            "freshness_ref": "",
+            "source_hash": "",
+            "projected_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "canonical_envelope": true,
+            "notes": [
+              "Baseline-generated missions are canonical envelopes; consumer adapters can publish read-only projections."
+            ]
+          }
+        ],
+        "transition_validations": [
+          {
+            "validation_id": "fixture-approval-required-transition-awaiting-human-approval-request-approval",
+            "from_state": "awaiting-human-approval",
+            "requested_action": "request-approval",
+            "to_state": "awaiting-human-approval",
+            "allowed": false,
+            "reason": "transition-not-allowed",
+            "required_approval_ref": "fixture-approval-required-execution-approval",
+            "guardrail_refs": [
+              "guardrail-control-taxonomy"
+            ]
+          }
+        ],
+        "decision_receipts": [],
+        "context_stack": [],
+        "human_interactions": [
+          {
+            "interaction_id": "fixture-approval-required-execution-approval",
+            "interaction_kind": "approval",
+            "status": "pending",
+            "prompt": "Approve the proposed active work boundary before any mutating execution is allowed.",
+            "response": "",
+            "required": true,
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "intent_ref": "fixture-approval-required-intent",
+            "approval_card_ref": "fixture-approval-required-execution-approval",
+            "tooling_candidate_refs": [],
+            "input_kind": "none",
+            "sensitive_input": false,
+            "redaction_policy": ""
+          }
+        ],
+        "approval_lifecycle_summary": {
+          "requested_count": 1,
+          "pending_count": 1,
+          "approved_count": 0,
+          "rejected_count": 0,
+          "expired_count": 0,
+          "revoked_count": 0,
+          "deferred_count": 0,
+          "runtime_input_request_count": 0,
+          "sensitive_input_request_count": 0,
+          "retry_request_count": 0,
+          "resume_request_count": 0
+        },
+        "events": [
+          {
+            "event_id": "fixture-approval-required-intake",
+            "event_kind": "mission-intake",
+            "actor": "operator",
+            "state": "awaiting-human-approval",
+            "detail": "Implement the baseline Mission Control adapter projection",
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-approval-required-intent",
+            "event_kind": "mission-turn-intent",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "intent_kind=active-work; requires_approval=True",
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-approval-required-routing",
+            "event_kind": "mission-routing",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "mission_kind=active-work; next_engine_action=request-approval",
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-approval-required-projection",
+            "event_kind": "mission-projection",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "projection_mode=canonical-envelope; source_of_truth=baseline-mission-control",
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-approval-required-transition-validation",
+            "event_kind": "mission-transition-validation",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "requested_action=request-approval; allowed=False; reason=transition-not-allowed",
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "artifact_links": []
+          }
+        ],
+        "adapter_hints": {
+          "surface_model": "headless-view-model",
+          "interaction_model": "natural-language-primary",
+          "ui_policy": "consumer-owned-ui"
+        },
+        "notes": [
+          "Mission Control is a baseline-owned headless control surface, not a GUI or TUI.",
+          "Mutating execution remains blocked unless guardrails and human approval allow it."
+        ]
+      },
+      "view": {
+        "mission_id": "fixture-approval-required",
+        "state": "awaiting-human-approval",
+        "headline": "active-work: Approval-required active work fixture",
+        "primary_response": "Approve the proposed active work boundary before any mutating execution is allowed.",
+        "current_owner": "operator",
+        "needs_human_input": true,
+        "human_prompt": "Approve the proposed active work boundary before any mutating execution is allowed.",
+        "execution_posture": "not-executed",
+        "suggested_affordances": [
+          "respond-in-natural-language",
+          "provide-approval-decision",
+          "inspect-approval-card"
+        ],
+        "visible_artifact_links": [],
+        "visible_intent": {
+          "intent_id": "fixture-approval-required-intent",
+          "utterance": "Implement the baseline Mission Control adapter projection",
+          "intent_kind": "active-work",
+          "confidence": 1.0,
+          "requires_clarification": false,
+          "requires_approval": true,
+          "expected_output": "",
+          "routing_reason": "mission_kind=active-work; next_engine_action=request-approval",
+          "extracted_actions": [
+            "compile-before-execution",
+            "request-human-approval"
+          ],
+          "bounded_contexts": [],
+          "metadata": {}
+        },
+        "visible_approval_cards": [
+          {
+            "approval_id": "fixture-approval-required-execution-approval",
+            "approval_kind": "execution",
+            "status": "pending",
+            "title": "Approve active mission execution",
+            "prompt": "Approve the exact active-work boundary before any mutating execution is allowed.",
+            "exact_invocation": "python3 scripts/project_mission_control.py --dry-run",
+            "risk_level": "medium",
+            "guardrail_refs": [
+              "guardrail-control-taxonomy"
+            ],
+            "required_inputs": [
+              "operator approval"
+            ],
+            "expires_at_utc": "",
+            "decision_ref": "",
+            "lifecycle_status": "requested",
+            "metadata": {}
+          }
+        ],
+        "visible_tooling_candidates": [],
+        "visible_context_stack": [],
+        "event_count": 5
+      },
+      "events": [
+        {
+          "event_id": "fixture-approval-required-intake",
+          "event_kind": "mission-intake",
+          "actor": "operator",
+          "state": "awaiting-human-approval",
+          "detail": "Implement the baseline Mission Control adapter projection",
+          "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-approval-required-intent",
+          "event_kind": "mission-turn-intent",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "intent_kind=active-work; requires_approval=True",
+          "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-approval-required-routing",
+          "event_kind": "mission-routing",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "mission_kind=active-work; next_engine_action=request-approval",
+          "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-approval-required-projection",
+          "event_kind": "mission-projection",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "projection_mode=canonical-envelope; source_of_truth=baseline-mission-control",
+          "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-approval-required-transition-validation",
+          "event_kind": "mission-transition-validation",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "requested_action=request-approval; allowed=False; reason=transition-not-allowed",
+          "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+          "artifact_links": []
+        }
+      ],
+      "summary": {
+        "mission_id": "fixture-approval-required",
+        "state": "awaiting-human-approval",
+        "mission_kind": "active-work",
+        "current_owner": "operator",
+        "needs_human_input": true,
+        "approval_required": true,
+        "mutating_execution_allowed": false,
+        "execution_posture": "not-executed",
+        "linked_capability_count": 11,
+        "turn_intent_kind": "active-work",
+        "approval_card_count": 1,
+        "pending_approval_card_count": 1,
+        "approval_lifecycle": {
+          "requested_count": 1,
+          "pending_count": 1,
+          "approved_count": 0,
+          "rejected_count": 0,
+          "expired_count": 0,
+          "revoked_count": 0,
+          "deferred_count": 0,
+          "runtime_input_request_count": 0,
+          "sensitive_input_request_count": 0,
+          "retry_request_count": 0,
+          "resume_request_count": 0
+        },
+        "tooling_candidate_count": 0,
+        "adapter_conformance_count": 1,
+        "projection_receipt_count": 1,
+        "transition_validation_count": 1,
+        "blocked_transition_count": 1,
+        "decision_receipt_count": 0,
+        "context_stack_count": 0,
+        "artifact_link_count": 0,
+        "evidence_link_count": 0,
+        "integrity_link_count": 0,
+        "approval_link_count": 0,
+        "dispatch_link_count": 0,
+        "policy_decision_link_count": 0,
+        "event_count": 5,
+        "session_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-session.json",
+        "view_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-view.json",
+        "events_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-events.json",
+        "adapter_conformance_checker": "scripts/check_mission_control_adapter_conformance.py"
+      }
+    },
+    "rejected": {
+      "session": {
+        "mission_id": "fixture-rejected",
+        "created_at_utc": "2026-04-29T22:00:32.324406+00:00",
+        "updated_at_utc": "2026-04-29T22:00:32.324406+00:00",
+        "user_input": "Implement the baseline Mission Control adapter projection",
+        "mission_kind": "active-work",
+        "state": "blocked",
+        "next_engine_action": "wait-for-revised-mission",
+        "current_owner": "operator",
+        "approval_required": false,
+        "mutating_execution_allowed": false,
+        "execution_posture": "not-executed",
+        "intent_summary": "Approval-required active work fixture",
+        "bounded_contexts": [],
+        "linked_capabilities": [
+          "requirement-dialogue",
+          "execution-compiler",
+          "workflow-runtime",
+          "guardrail-control-taxonomy",
+          "agent-continuation-state",
+          "agent-run-result",
+          "harness-session-view",
+          "workflow-trace-envelope",
+          "sandbox-workspace",
+          "sandbox-session",
+          "workspace-bootstrap"
+        ],
+        "artifact_links": [],
+        "turn_intent": {
+          "intent_id": "fixture-approval-required-intent",
+          "utterance": "Implement the baseline Mission Control adapter projection",
+          "intent_kind": "active-work",
+          "confidence": 1.0,
+          "requires_clarification": false,
+          "requires_approval": true,
+          "expected_output": "",
+          "routing_reason": "mission_kind=active-work; next_engine_action=request-approval",
+          "extracted_actions": [
+            "compile-before-execution",
+            "request-human-approval"
+          ],
+          "bounded_contexts": [],
+          "metadata": {}
+        },
+        "approval_cards": [
+          {
+            "approval_id": "fixture-approval-required-execution-approval",
+            "approval_kind": "execution",
+            "status": "rejected",
+            "title": "Approve active mission execution",
+            "prompt": "Approve the exact active-work boundary before any mutating execution is allowed.",
+            "exact_invocation": "python3 scripts/project_mission_control.py --dry-run",
+            "risk_level": "medium",
+            "guardrail_refs": [
+              "guardrail-control-taxonomy"
+            ],
+            "required_inputs": [
+              "operator approval"
+            ],
+            "expires_at_utc": "",
+            "decision_ref": "fixture-rejection-decision",
+            "lifecycle_status": "rejected",
+            "metadata": {}
+          }
+        ],
+        "tooling_candidates": [],
+        "adapter_conformance": [
+          {
+            "adapter_id": "fixture-approval-required-baseline-adapter",
+            "consumer_ref": "baseline",
+            "source_surface": "mission_control",
+            "conformance_status": "baseline-generated",
+            "checked_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "covered_fields": [
+              "session",
+              "view",
+              "events",
+              "turn_intent",
+              "approval_cards",
+              "tooling_candidates",
+              "artifact_links"
+            ],
+            "missing_fields": [],
+            "notes": [
+              "Consumer adapters can replace this record with repo-specific conformance evidence."
+            ]
+          }
+        ],
+        "projection_receipts": [
+          {
+            "projection_id": "fixture-approval-required-projection",
+            "source_of_truth": "baseline-mission-control",
+            "source_ref": "mission:fixture-approval-required",
+            "projection_mode": "canonical-envelope",
+            "freshness_ref": "",
+            "source_hash": "",
+            "projected_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "canonical_envelope": true,
+            "notes": [
+              "Baseline-generated missions are canonical envelopes; consumer adapters can publish read-only projections."
+            ]
+          }
+        ],
+        "transition_validations": [
+          {
+            "validation_id": "fixture-approval-required-transition-awaiting-human-approval-request-approval",
+            "from_state": "awaiting-human-approval",
+            "requested_action": "request-approval",
+            "to_state": "awaiting-human-approval",
+            "allowed": false,
+            "reason": "transition-not-allowed",
+            "required_approval_ref": "fixture-approval-required-execution-approval",
+            "guardrail_refs": [
+              "guardrail-control-taxonomy"
+            ]
+          }
+        ],
+        "decision_receipts": [],
+        "context_stack": [],
+        "human_interactions": [
+          {
+            "interaction_id": "fixture-approval-required-execution-approval",
+            "interaction_kind": "approval",
+            "status": "rejected",
+            "prompt": "Approve the proposed active work boundary before any mutating execution is allowed.",
+            "response": "rejected",
+            "required": true,
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "intent_ref": "fixture-approval-required-intent",
+            "approval_card_ref": "fixture-approval-required-execution-approval",
+            "tooling_candidate_refs": [],
+            "input_kind": "none",
+            "sensitive_input": false,
+            "redaction_policy": ""
+          }
+        ],
+        "approval_lifecycle_summary": {
+          "requested_count": 0,
+          "pending_count": 0,
+          "approved_count": 0,
+          "rejected_count": 1,
+          "expired_count": 0,
+          "revoked_count": 0,
+          "deferred_count": 0,
+          "runtime_input_request_count": 0,
+          "sensitive_input_request_count": 0,
+          "retry_request_count": 0,
+          "resume_request_count": 0
+        },
+        "events": [
+          {
+            "event_id": "fixture-approval-required-intake",
+            "event_kind": "mission-intake",
+            "actor": "operator",
+            "state": "awaiting-human-approval",
+            "detail": "Implement the baseline Mission Control adapter projection",
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-approval-required-intent",
+            "event_kind": "mission-turn-intent",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "intent_kind=active-work; requires_approval=True",
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-approval-required-routing",
+            "event_kind": "mission-routing",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "mission_kind=active-work; next_engine_action=request-approval",
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-approval-required-projection",
+            "event_kind": "mission-projection",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "projection_mode=canonical-envelope; source_of_truth=baseline-mission-control",
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-approval-required-transition-validation",
+            "event_kind": "mission-transition-validation",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "requested_action=request-approval; allowed=False; reason=transition-not-allowed",
+            "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+            "artifact_links": []
+          }
+        ],
+        "adapter_hints": {
+          "surface_model": "headless-view-model",
+          "interaction_model": "natural-language-primary",
+          "ui_policy": "consumer-owned-ui"
+        },
+        "notes": [
+          "Mission Control is a baseline-owned headless control surface, not a GUI or TUI.",
+          "Mutating execution remains blocked unless guardrails and human approval allow it."
+        ]
+      },
+      "view": {
+        "mission_id": "fixture-rejected",
+        "state": "blocked",
+        "headline": "active-work: Approval-required active work fixture",
+        "primary_response": "Mission can proceed only after approval and guardrail-compatible execution compilation.",
+        "current_owner": "operator",
+        "needs_human_input": false,
+        "human_prompt": "",
+        "execution_posture": "not-executed",
+        "suggested_affordances": [
+          "respond-in-natural-language",
+          "request-execution-approval"
+        ],
+        "visible_artifact_links": [],
+        "visible_intent": {
+          "intent_id": "fixture-approval-required-intent",
+          "utterance": "Implement the baseline Mission Control adapter projection",
+          "intent_kind": "active-work",
+          "confidence": 1.0,
+          "requires_clarification": false,
+          "requires_approval": true,
+          "expected_output": "",
+          "routing_reason": "mission_kind=active-work; next_engine_action=request-approval",
+          "extracted_actions": [
+            "compile-before-execution",
+            "request-human-approval"
+          ],
+          "bounded_contexts": [],
+          "metadata": {}
+        },
+        "visible_approval_cards": [
+          {
+            "approval_id": "fixture-approval-required-execution-approval",
+            "approval_kind": "execution",
+            "status": "rejected",
+            "title": "Approve active mission execution",
+            "prompt": "Approve the exact active-work boundary before any mutating execution is allowed.",
+            "exact_invocation": "python3 scripts/project_mission_control.py --dry-run",
+            "risk_level": "medium",
+            "guardrail_refs": [
+              "guardrail-control-taxonomy"
+            ],
+            "required_inputs": [
+              "operator approval"
+            ],
+            "expires_at_utc": "",
+            "decision_ref": "fixture-rejection-decision",
+            "lifecycle_status": "rejected",
+            "metadata": {}
+          }
+        ],
+        "visible_tooling_candidates": [],
+        "visible_context_stack": [],
+        "event_count": 5
+      },
+      "events": [
+        {
+          "event_id": "fixture-approval-required-intake",
+          "event_kind": "mission-intake",
+          "actor": "operator",
+          "state": "awaiting-human-approval",
+          "detail": "Implement the baseline Mission Control adapter projection",
+          "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-approval-required-intent",
+          "event_kind": "mission-turn-intent",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "intent_kind=active-work; requires_approval=True",
+          "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-approval-required-routing",
+          "event_kind": "mission-routing",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "mission_kind=active-work; next_engine_action=request-approval",
+          "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-approval-required-projection",
+          "event_kind": "mission-projection",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "projection_mode=canonical-envelope; source_of_truth=baseline-mission-control",
+          "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-approval-required-transition-validation",
+          "event_kind": "mission-transition-validation",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "requested_action=request-approval; allowed=False; reason=transition-not-allowed",
+          "recorded_at_utc": "2026-04-29T22:00:32.324406+00:00",
+          "artifact_links": []
+        }
+      ],
+      "summary": {
+        "mission_id": "fixture-rejected",
+        "state": "blocked",
+        "mission_kind": "active-work",
+        "current_owner": "operator",
+        "needs_human_input": false,
+        "approval_required": false,
+        "mutating_execution_allowed": false,
+        "execution_posture": "not-executed",
+        "linked_capability_count": 11,
+        "turn_intent_kind": "active-work",
+        "approval_card_count": 1,
+        "pending_approval_card_count": 0,
+        "approval_lifecycle": {
+          "requested_count": 0,
+          "pending_count": 0,
+          "approved_count": 0,
+          "rejected_count": 1,
+          "expired_count": 0,
+          "revoked_count": 0,
+          "deferred_count": 0,
+          "runtime_input_request_count": 0,
+          "sensitive_input_request_count": 0,
+          "retry_request_count": 0,
+          "resume_request_count": 0
+        },
+        "tooling_candidate_count": 0,
+        "adapter_conformance_count": 1,
+        "projection_receipt_count": 1,
+        "transition_validation_count": 1,
+        "blocked_transition_count": 1,
+        "decision_receipt_count": 0,
+        "context_stack_count": 0,
+        "artifact_link_count": 0,
+        "evidence_link_count": 0,
+        "integrity_link_count": 0,
+        "approval_link_count": 0,
+        "dispatch_link_count": 0,
+        "policy_decision_link_count": 0,
+        "event_count": 5,
+        "session_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-session.json",
+        "view_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-view.json",
+        "events_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-events.json",
+        "adapter_conformance_checker": "scripts/check_mission_control_adapter_conformance.py"
+      }
+    },
+    "clarification": {
+      "session": {
+        "mission_id": "fixture-clarification",
+        "created_at_utc": "2026-04-29T22:00:32.324543+00:00",
+        "updated_at_utc": "2026-04-29T22:00:32.324543+00:00",
+        "user_input": "fix",
+        "mission_kind": "active-work",
+        "state": "needs-clarification",
+        "next_engine_action": "clarify",
+        "current_owner": "operator",
+        "approval_required": false,
+        "mutating_execution_allowed": false,
+        "execution_posture": "not-executed",
+        "intent_summary": "Clarification-required fixture",
+        "bounded_contexts": [],
+        "linked_capabilities": [
+          "requirement-dialogue",
+          "execution-compiler",
+          "workflow-runtime",
+          "guardrail-control-taxonomy",
+          "agent-continuation-state",
+          "agent-run-result",
+          "harness-session-view",
+          "workflow-trace-envelope",
+          "sandbox-workspace",
+          "sandbox-session",
+          "workspace-bootstrap"
+        ],
+        "artifact_links": [],
+        "turn_intent": {
+          "intent_id": "fixture-clarification-intent",
+          "utterance": "fix",
+          "intent_kind": "active-work",
+          "confidence": 1.0,
+          "requires_clarification": true,
+          "requires_approval": false,
+          "expected_output": "",
+          "routing_reason": "mission_kind=active-work; next_engine_action=clarify",
+          "extracted_actions": [
+            "compile-before-execution",
+            "request-human-approval"
+          ],
+          "bounded_contexts": [],
+          "metadata": {}
+        },
+        "approval_cards": [],
+        "tooling_candidates": [],
+        "adapter_conformance": [
+          {
+            "adapter_id": "fixture-clarification-baseline-adapter",
+            "consumer_ref": "baseline",
+            "source_surface": "mission_control",
+            "conformance_status": "baseline-generated",
+            "checked_at_utc": "2026-04-29T22:00:32.324543+00:00",
+            "covered_fields": [
+              "session",
+              "view",
+              "events",
+              "turn_intent",
+              "approval_cards",
+              "tooling_candidates",
+              "artifact_links"
+            ],
+            "missing_fields": [],
+            "notes": [
+              "Consumer adapters can replace this record with repo-specific conformance evidence."
+            ]
+          }
+        ],
+        "projection_receipts": [
+          {
+            "projection_id": "fixture-clarification-projection",
+            "source_of_truth": "baseline-mission-control",
+            "source_ref": "mission:fixture-clarification",
+            "projection_mode": "canonical-envelope",
+            "freshness_ref": "",
+            "source_hash": "",
+            "projected_at_utc": "2026-04-29T22:00:32.324543+00:00",
+            "canonical_envelope": true,
+            "notes": [
+              "Baseline-generated missions are canonical envelopes; consumer adapters can publish read-only projections."
+            ]
+          }
+        ],
+        "transition_validations": [
+          {
+            "validation_id": "fixture-clarification-transition-needs-clarification-clarify",
+            "from_state": "needs-clarification",
+            "requested_action": "clarify",
+            "to_state": "needs-clarification",
+            "allowed": true,
+            "reason": "allowed",
+            "required_approval_ref": "",
+            "guardrail_refs": []
+          }
+        ],
+        "decision_receipts": [],
+        "context_stack": [],
+        "human_interactions": [
+          {
+            "interaction_id": "fixture-clarification-clarification",
+            "interaction_kind": "clarification",
+            "status": "pending",
+            "prompt": "Clarify the mission goal, constraints, and desired output before the baseline compiles execution.",
+            "response": "",
+            "required": true,
+            "recorded_at_utc": "2026-04-29T22:00:32.324543+00:00",
+            "intent_ref": "fixture-clarification-intent",
+            "approval_card_ref": "",
+            "tooling_candidate_refs": [],
+            "input_kind": "none",
+            "sensitive_input": false,
+            "redaction_policy": ""
+          }
+        ],
+        "approval_lifecycle_summary": {
+          "requested_count": 0,
+          "pending_count": 1,
+          "approved_count": 0,
+          "rejected_count": 0,
+          "expired_count": 0,
+          "revoked_count": 0,
+          "deferred_count": 0,
+          "runtime_input_request_count": 0,
+          "sensitive_input_request_count": 0,
+          "retry_request_count": 0,
+          "resume_request_count": 0
+        },
+        "events": [
+          {
+            "event_id": "fixture-clarification-intake",
+            "event_kind": "mission-intake",
+            "actor": "operator",
+            "state": "needs-clarification",
+            "detail": "fix",
+            "recorded_at_utc": "2026-04-29T22:00:32.324543+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-clarification-intent",
+            "event_kind": "mission-turn-intent",
+            "actor": "baseline",
+            "state": "needs-clarification",
+            "detail": "intent_kind=active-work; requires_approval=False",
+            "recorded_at_utc": "2026-04-29T22:00:32.324543+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-clarification-routing",
+            "event_kind": "mission-routing",
+            "actor": "baseline",
+            "state": "needs-clarification",
+            "detail": "mission_kind=active-work; next_engine_action=clarify",
+            "recorded_at_utc": "2026-04-29T22:00:32.324543+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-clarification-projection",
+            "event_kind": "mission-projection",
+            "actor": "baseline",
+            "state": "needs-clarification",
+            "detail": "projection_mode=canonical-envelope; source_of_truth=baseline-mission-control",
+            "recorded_at_utc": "2026-04-29T22:00:32.324543+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-clarification-transition-validation",
+            "event_kind": "mission-transition-validation",
+            "actor": "baseline",
+            "state": "needs-clarification",
+            "detail": "requested_action=clarify; allowed=True; reason=allowed",
+            "recorded_at_utc": "2026-04-29T22:00:32.324543+00:00",
+            "artifact_links": []
+          }
+        ],
+        "adapter_hints": {
+          "surface_model": "headless-view-model",
+          "interaction_model": "natural-language-primary",
+          "ui_policy": "consumer-owned-ui"
+        },
+        "notes": [
+          "Mission Control is a baseline-owned headless control surface, not a GUI or TUI.",
+          "Mutating execution remains blocked unless guardrails and human approval allow it."
+        ]
+      },
+      "view": {
+        "mission_id": "fixture-clarification",
+        "state": "needs-clarification",
+        "headline": "active-work: Clarification-required fixture",
+        "primary_response": "Clarify the mission goal, constraints, and desired output before the baseline compiles execution.",
+        "current_owner": "operator",
+        "needs_human_input": true,
+        "human_prompt": "Clarify the mission goal, constraints, and desired output before the baseline compiles execution.",
+        "execution_posture": "not-executed",
+        "suggested_affordances": [
+          "respond-in-natural-language",
+          "provide-approval-decision",
+          "inspect-approval-card"
+        ],
+        "visible_artifact_links": [],
+        "visible_intent": {
+          "intent_id": "fixture-clarification-intent",
+          "utterance": "fix",
+          "intent_kind": "active-work",
+          "confidence": 1.0,
+          "requires_clarification": true,
+          "requires_approval": false,
+          "expected_output": "",
+          "routing_reason": "mission_kind=active-work; next_engine_action=clarify",
+          "extracted_actions": [
+            "compile-before-execution",
+            "request-human-approval"
+          ],
+          "bounded_contexts": [],
+          "metadata": {}
+        },
+        "visible_approval_cards": [],
+        "visible_tooling_candidates": [],
+        "visible_context_stack": [],
+        "event_count": 5
+      },
+      "events": [
+        {
+          "event_id": "fixture-clarification-intake",
+          "event_kind": "mission-intake",
+          "actor": "operator",
+          "state": "needs-clarification",
+          "detail": "fix",
+          "recorded_at_utc": "2026-04-29T22:00:32.324543+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-clarification-intent",
+          "event_kind": "mission-turn-intent",
+          "actor": "baseline",
+          "state": "needs-clarification",
+          "detail": "intent_kind=active-work; requires_approval=False",
+          "recorded_at_utc": "2026-04-29T22:00:32.324543+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-clarification-routing",
+          "event_kind": "mission-routing",
+          "actor": "baseline",
+          "state": "needs-clarification",
+          "detail": "mission_kind=active-work; next_engine_action=clarify",
+          "recorded_at_utc": "2026-04-29T22:00:32.324543+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-clarification-projection",
+          "event_kind": "mission-projection",
+          "actor": "baseline",
+          "state": "needs-clarification",
+          "detail": "projection_mode=canonical-envelope; source_of_truth=baseline-mission-control",
+          "recorded_at_utc": "2026-04-29T22:00:32.324543+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-clarification-transition-validation",
+          "event_kind": "mission-transition-validation",
+          "actor": "baseline",
+          "state": "needs-clarification",
+          "detail": "requested_action=clarify; allowed=True; reason=allowed",
+          "recorded_at_utc": "2026-04-29T22:00:32.324543+00:00",
+          "artifact_links": []
+        }
+      ],
+      "summary": {
+        "mission_id": "fixture-clarification",
+        "state": "needs-clarification",
+        "mission_kind": "active-work",
+        "current_owner": "operator",
+        "needs_human_input": true,
+        "approval_required": false,
+        "mutating_execution_allowed": false,
+        "execution_posture": "not-executed",
+        "linked_capability_count": 11,
+        "turn_intent_kind": "active-work",
+        "approval_card_count": 0,
+        "pending_approval_card_count": 0,
+        "approval_lifecycle": {
+          "requested_count": 0,
+          "pending_count": 1,
+          "approved_count": 0,
+          "rejected_count": 0,
+          "expired_count": 0,
+          "revoked_count": 0,
+          "deferred_count": 0,
+          "runtime_input_request_count": 0,
+          "sensitive_input_request_count": 0,
+          "retry_request_count": 0,
+          "resume_request_count": 0
+        },
+        "tooling_candidate_count": 0,
+        "adapter_conformance_count": 1,
+        "projection_receipt_count": 1,
+        "transition_validation_count": 1,
+        "blocked_transition_count": 0,
+        "decision_receipt_count": 0,
+        "context_stack_count": 0,
+        "artifact_link_count": 0,
+        "evidence_link_count": 0,
+        "integrity_link_count": 0,
+        "approval_link_count": 0,
+        "dispatch_link_count": 0,
+        "policy_decision_link_count": 0,
+        "event_count": 5,
+        "session_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-session.json",
+        "view_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-view.json",
+        "events_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-events.json",
+        "adapter_conformance_checker": "scripts/check_mission_control_adapter_conformance.py"
+      }
+    },
+    "runtime_input": {
+      "session": {
+        "mission_id": "fixture-runtime-input",
+        "created_at_utc": "2026-04-29T22:00:32.324582+00:00",
+        "updated_at_utc": "2026-04-29T22:00:32.324582+00:00",
+        "user_input": "Analyze runtime input requirements",
+        "mission_kind": "active-work",
+        "state": "needs-runtime-input",
+        "next_engine_action": "request-approval",
+        "current_owner": "operator",
+        "approval_required": true,
+        "mutating_execution_allowed": false,
+        "execution_posture": "not-executed",
+        "intent_summary": "Runtime input fixture",
+        "bounded_contexts": [
+          "runtime-input"
+        ],
+        "linked_capabilities": [
+          "requirement-dialogue",
+          "execution-compiler",
+          "workflow-runtime",
+          "guardrail-control-taxonomy",
+          "agent-continuation-state",
+          "agent-run-result",
+          "harness-session-view",
+          "workflow-trace-envelope",
+          "sandbox-workspace",
+          "sandbox-session",
+          "workspace-bootstrap"
+        ],
+        "artifact_links": [],
+        "turn_intent": {
+          "intent_id": "fixture-runtime-input-intent",
+          "utterance": "Analyze runtime input requirements",
+          "intent_kind": "active-work",
+          "confidence": 1.0,
+          "requires_clarification": false,
+          "requires_approval": true,
+          "expected_output": "",
+          "routing_reason": "mission_kind=active-work; next_engine_action=request-approval",
+          "extracted_actions": [
+            "compile-before-execution",
+            "request-human-approval"
+          ],
+          "bounded_contexts": [
+            "runtime-input"
+          ],
+          "metadata": {}
+        },
+        "approval_cards": [
+          {
+            "approval_id": "fixture-runtime-input-execution-approval",
+            "approval_kind": "execution",
+            "status": "pending",
+            "title": "Approve active mission execution",
+            "prompt": "Approve the exact active-work boundary before any mutating execution is allowed.",
+            "exact_invocation": "",
+            "risk_level": "medium",
+            "guardrail_refs": [
+              "guardrail-control-taxonomy"
+            ],
+            "required_inputs": [],
+            "expires_at_utc": "",
+            "decision_ref": "",
+            "lifecycle_status": "requested",
+            "metadata": {}
+          }
+        ],
+        "tooling_candidates": [],
+        "adapter_conformance": [
+          {
+            "adapter_id": "fixture-runtime-input-baseline-adapter",
+            "consumer_ref": "baseline",
+            "source_surface": "mission_control",
+            "conformance_status": "baseline-generated",
+            "checked_at_utc": "2026-04-29T22:00:32.324582+00:00",
+            "covered_fields": [
+              "session",
+              "view",
+              "events",
+              "turn_intent",
+              "approval_cards",
+              "tooling_candidates",
+              "artifact_links"
+            ],
+            "missing_fields": [],
+            "notes": [
+              "Consumer adapters can replace this record with repo-specific conformance evidence."
+            ]
+          }
+        ],
+        "projection_receipts": [
+          {
+            "projection_id": "fixture-runtime-input-projection",
+            "source_of_truth": "baseline-mission-control",
+            "source_ref": "mission:fixture-runtime-input",
+            "projection_mode": "canonical-envelope",
+            "freshness_ref": "",
+            "source_hash": "",
+            "projected_at_utc": "2026-04-29T22:00:32.324582+00:00",
+            "canonical_envelope": true,
+            "notes": [
+              "Baseline-generated missions are canonical envelopes; consumer adapters can publish read-only projections."
+            ]
+          }
+        ],
+        "transition_validations": [
+          {
+            "validation_id": "fixture-runtime-input-transition-awaiting-human-approval-request-approval",
+            "from_state": "awaiting-human-approval",
+            "requested_action": "request-approval",
+            "to_state": "awaiting-human-approval",
+            "allowed": false,
+            "reason": "transition-not-allowed",
+            "required_approval_ref": "fixture-runtime-input-execution-approval",
+            "guardrail_refs": [
+              "guardrail-control-taxonomy"
+            ]
+          }
+        ],
+        "decision_receipts": [],
+        "context_stack": [
+          {
+            "frame_id": "fixture-runtime-input-context-1",
+            "frame_kind": "bounded-context",
+            "title": "runtime-input",
+            "status": "active",
+            "context_ref": "runtime-input",
+            "artifact_ref": "",
+            "parent_frame_ref": "",
+            "summary": "Mission bounded context: runtime-input",
+            "metadata": {}
+          }
+        ],
+        "human_interactions": [
+          {
+            "interaction_id": "fixture-runtime-input-request",
+            "interaction_kind": "runtime-input",
+            "status": "pending",
+            "prompt": "Provide the non-sensitive runtime target identifier required to continue.",
+            "response": "",
+            "required": true,
+            "recorded_at_utc": "2026-04-29T22:00:32.324582+00:00",
+            "intent_ref": "fixture-runtime-input-intent",
+            "approval_card_ref": "",
+            "tooling_candidate_refs": [],
+            "input_kind": "runtime-target",
+            "sensitive_input": false,
+            "redaction_policy": ""
+          }
+        ],
+        "approval_lifecycle_summary": {
+          "requested_count": 1,
+          "pending_count": 1,
+          "approved_count": 0,
+          "rejected_count": 0,
+          "expired_count": 0,
+          "revoked_count": 0,
+          "deferred_count": 0,
+          "runtime_input_request_count": 1,
+          "sensitive_input_request_count": 0,
+          "retry_request_count": 0,
+          "resume_request_count": 0
+        },
+        "events": [
+          {
+            "event_id": "fixture-runtime-input-intake",
+            "event_kind": "mission-intake",
+            "actor": "operator",
+            "state": "awaiting-human-approval",
+            "detail": "Analyze runtime input requirements",
+            "recorded_at_utc": "2026-04-29T22:00:32.324582+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-runtime-input-intent",
+            "event_kind": "mission-turn-intent",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "intent_kind=active-work; requires_approval=True",
+            "recorded_at_utc": "2026-04-29T22:00:32.324582+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-runtime-input-routing",
+            "event_kind": "mission-routing",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "mission_kind=active-work; next_engine_action=request-approval",
+            "recorded_at_utc": "2026-04-29T22:00:32.324582+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-runtime-input-projection",
+            "event_kind": "mission-projection",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "projection_mode=canonical-envelope; source_of_truth=baseline-mission-control",
+            "recorded_at_utc": "2026-04-29T22:00:32.324582+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-runtime-input-transition-validation",
+            "event_kind": "mission-transition-validation",
+            "actor": "baseline",
+            "state": "awaiting-human-approval",
+            "detail": "requested_action=request-approval; allowed=False; reason=transition-not-allowed",
+            "recorded_at_utc": "2026-04-29T22:00:32.324582+00:00",
+            "artifact_links": []
+          }
+        ],
+        "adapter_hints": {
+          "surface_model": "headless-view-model",
+          "interaction_model": "natural-language-primary",
+          "ui_policy": "consumer-owned-ui"
+        },
+        "notes": [
+          "Mission Control is a baseline-owned headless control surface, not a GUI or TUI.",
+          "Mutating execution remains blocked unless guardrails and human approval allow it."
+        ]
+      },
+      "view": {
+        "mission_id": "fixture-runtime-input",
+        "state": "needs-runtime-input",
+        "headline": "active-work: Runtime input fixture",
+        "primary_response": "Provide the non-sensitive runtime target identifier required to continue.",
+        "current_owner": "operator",
+        "needs_human_input": true,
+        "human_prompt": "Provide the non-sensitive runtime target identifier required to continue.",
+        "execution_posture": "not-executed",
+        "suggested_affordances": [
+          "respond-in-natural-language",
+          "provide-approval-decision",
+          "inspect-approval-card"
+        ],
+        "visible_artifact_links": [],
+        "visible_intent": {
+          "intent_id": "fixture-runtime-input-intent",
+          "utterance": "Analyze runtime input requirements",
+          "intent_kind": "active-work",
+          "confidence": 1.0,
+          "requires_clarification": false,
+          "requires_approval": true,
+          "expected_output": "",
+          "routing_reason": "mission_kind=active-work; next_engine_action=request-approval",
+          "extracted_actions": [
+            "compile-before-execution",
+            "request-human-approval"
+          ],
+          "bounded_contexts": [
+            "runtime-input"
+          ],
+          "metadata": {}
+        },
+        "visible_approval_cards": [
+          {
+            "approval_id": "fixture-runtime-input-execution-approval",
+            "approval_kind": "execution",
+            "status": "pending",
+            "title": "Approve active mission execution",
+            "prompt": "Approve the exact active-work boundary before any mutating execution is allowed.",
+            "exact_invocation": "",
+            "risk_level": "medium",
+            "guardrail_refs": [
+              "guardrail-control-taxonomy"
+            ],
+            "required_inputs": [],
+            "expires_at_utc": "",
+            "decision_ref": "",
+            "lifecycle_status": "requested",
+            "metadata": {}
+          }
+        ],
+        "visible_tooling_candidates": [],
+        "visible_context_stack": [
+          {
+            "frame_id": "fixture-runtime-input-context-1",
+            "frame_kind": "bounded-context",
+            "title": "runtime-input",
+            "status": "active",
+            "context_ref": "runtime-input",
+            "artifact_ref": "",
+            "parent_frame_ref": "",
+            "summary": "Mission bounded context: runtime-input",
+            "metadata": {}
+          }
+        ],
+        "event_count": 5
+      },
+      "events": [
+        {
+          "event_id": "fixture-runtime-input-intake",
+          "event_kind": "mission-intake",
+          "actor": "operator",
+          "state": "awaiting-human-approval",
+          "detail": "Analyze runtime input requirements",
+          "recorded_at_utc": "2026-04-29T22:00:32.324582+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-runtime-input-intent",
+          "event_kind": "mission-turn-intent",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "intent_kind=active-work; requires_approval=True",
+          "recorded_at_utc": "2026-04-29T22:00:32.324582+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-runtime-input-routing",
+          "event_kind": "mission-routing",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "mission_kind=active-work; next_engine_action=request-approval",
+          "recorded_at_utc": "2026-04-29T22:00:32.324582+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-runtime-input-projection",
+          "event_kind": "mission-projection",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "projection_mode=canonical-envelope; source_of_truth=baseline-mission-control",
+          "recorded_at_utc": "2026-04-29T22:00:32.324582+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-runtime-input-transition-validation",
+          "event_kind": "mission-transition-validation",
+          "actor": "baseline",
+          "state": "awaiting-human-approval",
+          "detail": "requested_action=request-approval; allowed=False; reason=transition-not-allowed",
+          "recorded_at_utc": "2026-04-29T22:00:32.324582+00:00",
+          "artifact_links": []
+        }
+      ],
+      "summary": {
+        "mission_id": "fixture-runtime-input",
+        "state": "needs-runtime-input",
+        "mission_kind": "active-work",
+        "current_owner": "operator",
+        "needs_human_input": true,
+        "approval_required": true,
+        "mutating_execution_allowed": false,
+        "execution_posture": "not-executed",
+        "linked_capability_count": 11,
+        "turn_intent_kind": "active-work",
+        "approval_card_count": 1,
+        "pending_approval_card_count": 1,
+        "approval_lifecycle": {
+          "requested_count": 1,
+          "pending_count": 1,
+          "approved_count": 0,
+          "rejected_count": 0,
+          "expired_count": 0,
+          "revoked_count": 0,
+          "deferred_count": 0,
+          "runtime_input_request_count": 1,
+          "sensitive_input_request_count": 0,
+          "retry_request_count": 0,
+          "resume_request_count": 0
+        },
+        "tooling_candidate_count": 0,
+        "adapter_conformance_count": 1,
+        "projection_receipt_count": 1,
+        "transition_validation_count": 1,
+        "blocked_transition_count": 1,
+        "decision_receipt_count": 0,
+        "context_stack_count": 1,
+        "artifact_link_count": 0,
+        "evidence_link_count": 0,
+        "integrity_link_count": 0,
+        "approval_link_count": 0,
+        "dispatch_link_count": 0,
+        "policy_decision_link_count": 0,
+        "event_count": 5,
+        "session_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-session.json",
+        "view_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-view.json",
+        "events_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-events.json",
+        "adapter_conformance_checker": "scripts/check_mission_control_adapter_conformance.py"
+      }
+    },
+    "sensitive_input_request": {
+      "session": {
+        "mission_id": "fixture-sensitive-input",
+        "created_at_utc": "2026-04-29T22:00:32.324638+00:00",
+        "updated_at_utc": "2026-04-29T22:00:32.324638+00:00",
+        "user_input": "Prepare sensitive input request without storing the value",
+        "mission_kind": "dialogue",
+        "state": "needs-sensitive-input",
+        "next_engine_action": "answer",
+        "current_owner": "operator",
+        "approval_required": false,
+        "mutating_execution_allowed": false,
+        "execution_posture": "not-executed",
+        "intent_summary": "Sensitive input fixture",
+        "bounded_contexts": [
+          "redacted-input"
+        ],
+        "linked_capabilities": [
+          "requirement-dialogue",
+          "execution-compiler",
+          "workflow-runtime",
+          "guardrail-control-taxonomy",
+          "agent-continuation-state",
+          "agent-run-result",
+          "harness-session-view",
+          "workflow-trace-envelope",
+          "sandbox-workspace",
+          "sandbox-session",
+          "workspace-bootstrap"
+        ],
+        "artifact_links": [],
+        "turn_intent": {
+          "intent_id": "fixture-sensitive-input-intent",
+          "utterance": "Prepare sensitive input request without storing the value",
+          "intent_kind": "dialogue",
+          "confidence": 1.0,
+          "requires_clarification": false,
+          "requires_approval": false,
+          "expected_output": "",
+          "routing_reason": "mission_kind=dialogue; next_engine_action=answer",
+          "extracted_actions": [],
+          "bounded_contexts": [
+            "redacted-input"
+          ],
+          "metadata": {}
+        },
+        "approval_cards": [],
+        "tooling_candidates": [],
+        "adapter_conformance": [
+          {
+            "adapter_id": "fixture-sensitive-input-baseline-adapter",
+            "consumer_ref": "baseline",
+            "source_surface": "mission_control",
+            "conformance_status": "baseline-generated",
+            "checked_at_utc": "2026-04-29T22:00:32.324638+00:00",
+            "covered_fields": [
+              "session",
+              "view",
+              "events",
+              "turn_intent",
+              "approval_cards",
+              "tooling_candidates",
+              "artifact_links"
+            ],
+            "missing_fields": [],
+            "notes": [
+              "Consumer adapters can replace this record with repo-specific conformance evidence."
+            ]
+          }
+        ],
+        "projection_receipts": [
+          {
+            "projection_id": "fixture-sensitive-input-projection",
+            "source_of_truth": "baseline-mission-control",
+            "source_ref": "mission:fixture-sensitive-input",
+            "projection_mode": "canonical-envelope",
+            "freshness_ref": "",
+            "source_hash": "",
+            "projected_at_utc": "2026-04-29T22:00:32.324638+00:00",
+            "canonical_envelope": true,
+            "notes": [
+              "Baseline-generated missions are canonical envelopes; consumer adapters can publish read-only projections."
+            ]
+          }
+        ],
+        "transition_validations": [
+          {
+            "validation_id": "fixture-sensitive-input-transition-ready-answer",
+            "from_state": "ready",
+            "requested_action": "answer",
+            "to_state": "ready",
+            "allowed": false,
+            "reason": "transition-not-allowed",
+            "required_approval_ref": "",
+            "guardrail_refs": []
+          }
+        ],
+        "decision_receipts": [],
+        "context_stack": [
+          {
+            "frame_id": "fixture-sensitive-input-context-1",
+            "frame_kind": "bounded-context",
+            "title": "redacted-input",
+            "status": "active",
+            "context_ref": "redacted-input",
+            "artifact_ref": "",
+            "parent_frame_ref": "",
+            "summary": "Mission bounded context: redacted-input",
+            "metadata": {}
+          }
+        ],
+        "human_interactions": [
+          {
+            "interaction_id": "fixture-sensitive-input-request",
+            "interaction_kind": "sensitive-input-request",
+            "status": "pending",
+            "prompt": "Request a sensitive value through the consumer-owned secure input channel; do not persist the value.",
+            "response": "",
+            "required": true,
+            "recorded_at_utc": "2026-04-29T22:00:32.324638+00:00",
+            "intent_ref": "fixture-sensitive-input-intent",
+            "approval_card_ref": "",
+            "tooling_candidate_refs": [],
+            "input_kind": "secret",
+            "sensitive_input": true,
+            "redaction_policy": "consumer-secure-channel-only"
+          }
+        ],
+        "approval_lifecycle_summary": {
+          "requested_count": 0,
+          "pending_count": 1,
+          "approved_count": 0,
+          "rejected_count": 0,
+          "expired_count": 0,
+          "revoked_count": 0,
+          "deferred_count": 0,
+          "runtime_input_request_count": 0,
+          "sensitive_input_request_count": 1,
+          "retry_request_count": 0,
+          "resume_request_count": 0
+        },
+        "events": [
+          {
+            "event_id": "fixture-sensitive-input-intake",
+            "event_kind": "mission-intake",
+            "actor": "operator",
+            "state": "ready",
+            "detail": "Prepare sensitive input request without storing the value",
+            "recorded_at_utc": "2026-04-29T22:00:32.324638+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-sensitive-input-intent",
+            "event_kind": "mission-turn-intent",
+            "actor": "baseline",
+            "state": "ready",
+            "detail": "intent_kind=dialogue; requires_approval=False",
+            "recorded_at_utc": "2026-04-29T22:00:32.324638+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-sensitive-input-routing",
+            "event_kind": "mission-routing",
+            "actor": "baseline",
+            "state": "ready",
+            "detail": "mission_kind=dialogue; next_engine_action=answer",
+            "recorded_at_utc": "2026-04-29T22:00:32.324638+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-sensitive-input-projection",
+            "event_kind": "mission-projection",
+            "actor": "baseline",
+            "state": "ready",
+            "detail": "projection_mode=canonical-envelope; source_of_truth=baseline-mission-control",
+            "recorded_at_utc": "2026-04-29T22:00:32.324638+00:00",
+            "artifact_links": []
+          },
+          {
+            "event_id": "fixture-sensitive-input-transition-validation",
+            "event_kind": "mission-transition-validation",
+            "actor": "baseline",
+            "state": "ready",
+            "detail": "requested_action=answer; allowed=False; reason=transition-not-allowed",
+            "recorded_at_utc": "2026-04-29T22:00:32.324638+00:00",
+            "artifact_links": []
+          }
+        ],
+        "adapter_hints": {
+          "surface_model": "headless-view-model",
+          "interaction_model": "natural-language-primary",
+          "ui_policy": "consumer-owned-ui"
+        },
+        "notes": [
+          "Mission Control is a baseline-owned headless control surface, not a GUI or TUI.",
+          "Mutating execution remains blocked unless guardrails and human approval allow it."
+        ]
+      },
+      "view": {
+        "mission_id": "fixture-sensitive-input",
+        "state": "needs-sensitive-input",
+        "headline": "dialogue: Sensitive input fixture",
+        "primary_response": "Request a sensitive value through the consumer-owned secure input channel; do not persist the value.",
+        "current_owner": "operator",
+        "needs_human_input": true,
+        "human_prompt": "Request a sensitive value through the consumer-owned secure input channel; do not persist the value.",
+        "execution_posture": "not-executed",
+        "suggested_affordances": [
+          "respond-in-natural-language",
+          "provide-approval-decision",
+          "inspect-approval-card"
+        ],
+        "visible_artifact_links": [],
+        "visible_intent": {
+          "intent_id": "fixture-sensitive-input-intent",
+          "utterance": "Prepare sensitive input request without storing the value",
+          "intent_kind": "dialogue",
+          "confidence": 1.0,
+          "requires_clarification": false,
+          "requires_approval": false,
+          "expected_output": "",
+          "routing_reason": "mission_kind=dialogue; next_engine_action=answer",
+          "extracted_actions": [],
+          "bounded_contexts": [
+            "redacted-input"
+          ],
+          "metadata": {}
+        },
+        "visible_approval_cards": [],
+        "visible_tooling_candidates": [],
+        "visible_context_stack": [
+          {
+            "frame_id": "fixture-sensitive-input-context-1",
+            "frame_kind": "bounded-context",
+            "title": "redacted-input",
+            "status": "active",
+            "context_ref": "redacted-input",
+            "artifact_ref": "",
+            "parent_frame_ref": "",
+            "summary": "Mission bounded context: redacted-input",
+            "metadata": {}
+          }
+        ],
+        "event_count": 5
+      },
+      "events": [
+        {
+          "event_id": "fixture-sensitive-input-intake",
+          "event_kind": "mission-intake",
+          "actor": "operator",
+          "state": "ready",
+          "detail": "Prepare sensitive input request without storing the value",
+          "recorded_at_utc": "2026-04-29T22:00:32.324638+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-sensitive-input-intent",
+          "event_kind": "mission-turn-intent",
+          "actor": "baseline",
+          "state": "ready",
+          "detail": "intent_kind=dialogue; requires_approval=False",
+          "recorded_at_utc": "2026-04-29T22:00:32.324638+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-sensitive-input-routing",
+          "event_kind": "mission-routing",
+          "actor": "baseline",
+          "state": "ready",
+          "detail": "mission_kind=dialogue; next_engine_action=answer",
+          "recorded_at_utc": "2026-04-29T22:00:32.324638+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-sensitive-input-projection",
+          "event_kind": "mission-projection",
+          "actor": "baseline",
+          "state": "ready",
+          "detail": "projection_mode=canonical-envelope; source_of_truth=baseline-mission-control",
+          "recorded_at_utc": "2026-04-29T22:00:32.324638+00:00",
+          "artifact_links": []
+        },
+        {
+          "event_id": "fixture-sensitive-input-transition-validation",
+          "event_kind": "mission-transition-validation",
+          "actor": "baseline",
+          "state": "ready",
+          "detail": "requested_action=answer; allowed=False; reason=transition-not-allowed",
+          "recorded_at_utc": "2026-04-29T22:00:32.324638+00:00",
+          "artifact_links": []
+        }
+      ],
+      "summary": {
+        "mission_id": "fixture-sensitive-input",
+        "state": "needs-sensitive-input",
+        "mission_kind": "dialogue",
+        "current_owner": "operator",
+        "needs_human_input": true,
+        "approval_required": false,
+        "mutating_execution_allowed": false,
+        "execution_posture": "not-executed",
+        "linked_capability_count": 11,
+        "turn_intent_kind": "dialogue",
+        "approval_card_count": 0,
+        "pending_approval_card_count": 0,
+        "approval_lifecycle": {
+          "requested_count": 0,
+          "pending_count": 1,
+          "approved_count": 0,
+          "rejected_count": 0,
+          "expired_count": 0,
+          "revoked_count": 0,
+          "deferred_count": 0,
+          "runtime_input_request_count": 0,
+          "sensitive_input_request_count": 1,
+          "retry_request_count": 0,
+          "resume_request_count": 0
+        },
+        "tooling_candidate_count": 0,
+        "adapter_conformance_count": 1,
+        "projection_receipt_count": 1,
+        "transition_validation_count": 1,
+        "blocked_transition_count": 1,
+        "decision_receipt_count": 0,
+        "context_stack_count": 1,
+        "artifact_link_count": 0,
+        "evidence_link_count": 0,
+        "integrity_link_count": 0,
+        "approval_link_count": 0,
+        "dispatch_link_count": 0,
+        "policy_decision_link_count": 0,
+        "event_count": 5,
+        "session_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-session.json",
+        "view_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-view.json",
+        "events_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-events.json",
+        "adapter_conformance_checker": "scripts/check_mission_control_adapter_conformance.py"
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+[workflow_editor]
+version = "1.0"
+recorded_at_utc = "2026-04-17T00:00:00+00:00"
+source_release = "baseline-visual-workflow-editor-v1"
+default_layout_kind = "lane-topology"
+default_node_width = 220
+default_node_height = 96
+default_horizontal_gap = 240
+default_vertical_gap = 132
+
+[policy]
+writeback_posture = "proposal-only"
+requires_orchestrator_review = true
+allowed_operations = [
+  "insert-human-checkpoint",
+  "toggle-speculative-branch",
+  "reorder-sequential-lane",
+  "annotate-slice-ownership",
+  "mark-validation-lane",
+]
+notes = [
+  "FUT-07 turns the visual workflow editor into a governed baseline contract instead of a future-only idea.",
+  "The editor is graph-grounded and local-only: it reads and writes baseline artifacts, not remote workflow services.",
+  "Any topology change remains review-gated; visual editing does not bypass planner, policy, or approval authority.",
+]

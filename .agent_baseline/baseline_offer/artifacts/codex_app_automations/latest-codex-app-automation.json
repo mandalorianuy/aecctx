@@ -1,0 +1,52 @@
+{
+  "automation_id": "baseline-thread-reuse-pass",
+  "thread_id": "baseline-aut-01-thread",
+  "workflow_id": "baseline-aut-01-workflow",
+  "session_id": "baseline-aut-01-sample",
+  "continuation_id": "baseline-aut-01-continuation",
+  "recorded_at_utc": "2026-04-16T00:00:00+00:00",
+  "status": "scheduled",
+  "schedule_kind": "thread-reuse",
+  "wake_reason": "follow-up",
+  "next_wake_at_utc": "2026-04-17T12:00:00+00:00",
+  "resumable": true,
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/workflows/states/session-2026-04-16t144359-887417-0000-persist-workflow-runtime-contracts.json",
+    "artifacts/agent_baseline/workflows/resume_requests/session-2026-04-16t144359-887417-0000-persist-workflow-runtime-contracts.json"
+  ],
+  "notes": [
+    "Canonical AUT-01 sample for repo-owned artifact governance."
+  ],
+  "summary": {
+    "session_id": "baseline-aut-01-sample",
+    "binding_count": 1,
+    "scheduled_count": 1,
+    "paused_count": 0,
+    "completed_count": 0,
+    "thread_reuse_count": 1,
+    "resumable_count": 1,
+    "unique_thread_count": 1,
+    "unique_workflow_count": 1,
+    "latest_status": "scheduled",
+    "latest_schedule_kind": "thread-reuse",
+    "latest_thread_id": "baseline-aut-01-thread",
+    "status_counts": {
+      "scheduled": 1
+    },
+    "schedule_kind_counts": {
+      "thread-reuse": 1
+    },
+    "wake_reason_counts": {
+      "follow-up": 1
+    },
+    "artifact_ref_preview": [],
+    "artifact_ref": "artifacts/agent_baseline/codex_app_automations/latest-codex-app-automation.json"
+  },
+  "contract_family": "codex-app-automation",
+  "contract_major": 1,
+  "schema_version": "codex-app-automation/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/codex_app_automations/sessions/baseline-aut-01-sample/baseline-thread-reuse-pass.json"
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baseline.local/schemas/hos-capability-packages.schema.json",
+  "title": "HOS capability_packages Artifact",
+  "type": "object",
+  "required": [
+    "manifest_id",
+    "packages",
+    "summary"
+  ],
+  "properties": {
+    "manifest_id": {
+      "type": "string"
+    },
+    "packages": {
+      "type": "array"
+    },
+    "summary": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

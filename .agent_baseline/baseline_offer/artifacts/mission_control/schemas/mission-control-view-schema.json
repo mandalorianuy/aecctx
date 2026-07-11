@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baseline.local/schemas/mission-control-view.schema.json",
+  "title": "Mission Control View",
+  "type": "object",
+  "schema_version": "mission-control/v2",
+  "required": [
+    "mission_id",
+    "state",
+    "headline",
+    "current_owner",
+    "needs_human_input",
+    "event_count"
+  ],
+  "properties": {
+    "mission_id": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "headline": {
+      "type": "string"
+    },
+    "primary_response": {
+      "type": "string"
+    },
+    "current_owner": {
+      "type": "string"
+    },
+    "needs_human_input": {
+      "type": "boolean"
+    },
+    "human_prompt": {
+      "type": "string"
+    },
+    "execution_posture": {
+      "type": "string"
+    },
+    "suggested_affordances": {
+      "$ref": "#/$defs/stringArray"
+    },
+    "visible_artifact_links": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "visible_intent": {
+      "type": "object"
+    },
+    "visible_approval_cards": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "visible_tooling_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "visible_context_stack": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "event_count": {
+      "type": "integer"
+    }
+  },
+  "$defs": {
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

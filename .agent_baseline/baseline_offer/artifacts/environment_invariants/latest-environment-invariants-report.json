@@ -1,0 +1,308 @@
+{
+  "report_id": "baseline-environment-invariants",
+  "session_id": "baseline-wave2-session",
+  "generated_at_utc": "2026-04-29T22:00:32.463702+00:00",
+  "comparison_mode": "synthetic-executor-swap",
+  "primary_executor_runtime_id": "",
+  "comparison_executor_runtime_id": "codex-cli-executor-swap",
+  "checks": [
+    {
+      "invariant_id": "continuity-posture",
+      "category": "continuity",
+      "status": "passed",
+      "compared_fields": [
+        "checkpoint_state",
+        "resume_posture",
+        "approval_checkpoint_count",
+        "requires_operator_action"
+      ],
+      "mismatched_fields": [],
+      "primary_evidence": {
+        "checkpoint_state": "",
+        "resume_posture": "",
+        "approval_checkpoint_count": 0,
+        "requires_operator_action": false
+      },
+      "comparison_evidence": {
+        "checkpoint_state": "",
+        "resume_posture": "",
+        "approval_checkpoint_count": 0,
+        "requires_operator_action": false
+      },
+      "notes": [
+        "Checkpoint, resume, and operator-action posture are swap-stable environment truths."
+      ]
+    },
+    {
+      "invariant_id": "projection-semantics",
+      "category": "projection",
+      "status": "passed",
+      "compared_fields": [
+        "visible_surface_count",
+        "hidden_surface_count",
+        "selected_skill_count",
+        "selected_plugin_count",
+        "selected_context_source_count",
+        "permission_posture"
+      ],
+      "mismatched_fields": [],
+      "primary_evidence": {
+        "visible_surface_count": 0,
+        "hidden_surface_count": 13,
+        "selected_skill_count": 0,
+        "selected_plugin_count": 0,
+        "selected_context_source_count": 1,
+        "permission_posture": {
+          "path_policy": "",
+          "operator_approval_required": false,
+          "approval_required": true,
+          "control_count": 0,
+          "blocking_control_count": 0,
+          "human_approval_count": 0,
+          "local_mcp_count": 1,
+          "remote_mcp_count": 1
+        }
+      },
+      "comparison_evidence": {
+        "visible_surface_count": 0,
+        "hidden_surface_count": 13,
+        "selected_skill_count": 0,
+        "selected_plugin_count": 0,
+        "selected_context_source_count": 1,
+        "permission_posture": {
+          "path_policy": "",
+          "operator_approval_required": false,
+          "approval_required": true,
+          "control_count": 0,
+          "blocking_control_count": 0,
+          "human_approval_count": 0,
+          "local_mcp_count": 1,
+          "remote_mcp_count": 1
+        }
+      },
+      "notes": [
+        "Visible-vs-hidden surface semantics and selected context counts should survive executor replacement."
+      ]
+    },
+    {
+      "invariant_id": "operator-summary-semantics",
+      "category": "operator-summary",
+      "status": "passed",
+      "compared_fields": [
+        "environment_kind",
+        "workspace_id",
+        "component_count",
+        "active_layer_count",
+        "status"
+      ],
+      "mismatched_fields": [],
+      "primary_evidence": {
+        "environment_kind": "baseline-harness-environment",
+        "workspace_id": "",
+        "component_count": 4,
+        "active_layer_count": 3,
+        "status": "closed"
+      },
+      "comparison_evidence": {
+        "environment_kind": "baseline-harness-environment",
+        "workspace_id": "",
+        "component_count": 4,
+        "active_layer_count": 3,
+        "status": "closed"
+      },
+      "notes": [
+        "The operator environment summary is the environment-first surface; its composition semantics must stay stable."
+      ]
+    },
+    {
+      "invariant_id": "portability-posture",
+      "category": "portability",
+      "status": "passed",
+      "compared_fields": [
+        "taxonomy_id",
+        "applicable_role_count",
+        "consumer_publishable_count",
+        "runtime_artifact_exists_count"
+      ],
+      "mismatched_fields": [],
+      "primary_evidence": {
+        "taxonomy_id": "baseline-environment-portability",
+        "applicable_role_count": 6,
+        "consumer_publishable_count": 14,
+        "runtime_artifact_exists_count": 16
+      },
+      "comparison_evidence": {
+        "taxonomy_id": "baseline-environment-portability",
+        "applicable_role_count": 6,
+        "consumer_publishable_count": 14,
+        "runtime_artifact_exists_count": 16
+      },
+      "notes": [
+        "Portable versus local-only classification should not depend on the selected executor implementation."
+      ]
+    },
+    {
+      "invariant_id": "promotion-surface",
+      "category": "promotion",
+      "status": "passed",
+      "compared_fields": [
+        "status",
+        "promoted_from_trace",
+        "actionable_target_count",
+        "regression_target_count",
+        "target_surface_counts"
+      ],
+      "mismatched_fields": [],
+      "primary_evidence": {
+        "status": "",
+        "promoted_from_trace": false,
+        "actionable_target_count": 0,
+        "regression_target_count": 0,
+        "target_surface_counts": {}
+      },
+      "comparison_evidence": {
+        "status": "",
+        "promoted_from_trace": false,
+        "actionable_target_count": 0,
+        "regression_target_count": 0,
+        "target_surface_counts": {}
+      },
+      "notes": [
+        "Promotion candidate counts and status should remain readable after executor swaps."
+      ]
+    },
+    {
+      "invariant_id": "artifact-readability",
+      "category": "artifacts",
+      "status": "failed",
+      "compared_fields": [
+        "environment_envelope_artifact",
+        "execution_projection_artifact",
+        "continuation_state_artifact",
+        "agent_run_result_artifact",
+        "environment_portability_artifact",
+        "context_lineage_artifact",
+        "environment_operator_summary_artifact"
+      ],
+      "mismatched_fields": [
+        "continuation_state_artifact",
+        "agent_run_result_artifact"
+      ],
+      "primary_evidence": {
+        "environment_envelope_artifact": {
+          "artifact_ref": "artifacts/agent_baseline/environment_envelope/baseline-environment-envelope.json",
+          "exists": true
+        },
+        "execution_projection_artifact": {
+          "artifact_ref": "artifacts/agent_baseline/execution_projection/baseline-execution-projection.json",
+          "exists": true
+        },
+        "continuation_state_artifact": {
+          "artifact_ref": "",
+          "exists": false
+        },
+        "agent_run_result_artifact": {
+          "artifact_ref": "",
+          "exists": false
+        },
+        "environment_portability_artifact": {
+          "artifact_ref": "artifacts/agent_baseline/environment_portability/baseline-environment-portability.json",
+          "exists": true
+        },
+        "context_lineage_artifact": {
+          "artifact_ref": "artifacts/agent_baseline/context_lineage/baseline-context-lineage.json",
+          "exists": true
+        },
+        "environment_operator_summary_artifact": {
+          "artifact_ref": "artifacts/agent_baseline/environment_operator_summary/baseline-operator-environment-summary.json",
+          "exists": true
+        }
+      },
+      "comparison_evidence": {},
+      "notes": [
+        "Artifact readability must remain stable across harness/executor swaps because operator and replay surfaces depend on the same governed refs."
+      ]
+    }
+  ],
+  "checked_artifact_refs": [
+    "artifacts/agent_baseline/environment_envelope/baseline-environment-envelope.json",
+    "artifacts/agent_baseline/execution_projection/baseline-execution-projection.json",
+    "None",
+    "None",
+    "artifacts/agent_baseline/environment_portability/baseline-environment-portability.json",
+    "artifacts/agent_baseline/context_lineage/baseline-context-lineage.json",
+    "artifacts/agent_baseline/environment_operator_summary/baseline-operator-environment-summary.json"
+  ],
+  "swap_conformance": {
+    "conformance_id": "harness-swap-environment-conformance",
+    "swap_model": "sandbox+harness+execution-provider",
+    "dimensions": {
+      "sandbox-session": {
+        "status": "passed",
+        "stable_truths": [
+          "checkpoint_state",
+          "resume_posture",
+          "restore_boundary"
+        ],
+        "primary_artifact_ref": "artifacts/agent_baseline/sandbox_sessions/latest-sandbox-session.json",
+        "comparison_artifact_ref": "artifacts/agent_baseline/sandbox_sessions/latest-sandbox-session.json",
+        "notes": [
+          "Sandbox continuity is a warm environment truth and must remain readable after harness swaps."
+        ]
+      },
+      "harness-session": {
+        "status": "passed",
+        "stable_truths": [
+          "session_id",
+          "key_artifacts",
+          "operator_summary",
+          "replay_links"
+        ],
+        "primary_artifact_ref": "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+        "checked_artifact_roles": [
+          "agent_run_result_artifact",
+          "context_lineage_artifact",
+          "continuation_state_artifact",
+          "environment_envelope_artifact",
+          "environment_operator_summary_artifact",
+          "environment_portability_artifact",
+          "execution_projection_artifact"
+        ],
+        "notes": [
+          "Harness identity and artifact readability are evaluated separately from concrete executor choice."
+        ]
+      },
+      "execution-provider": {
+        "status": "passed",
+        "stable_truths": [
+          "selected_executor_runtime_id",
+          "selected_provider_id",
+          "permission_posture"
+        ],
+        "primary_runtime_id": "",
+        "comparison_runtime_id": "codex-cli-executor-swap",
+        "primary_provider_id": "",
+        "comparison_provider_id": "codex_cli_local_swap",
+        "notes": [
+          "Provider identity may change, but projected environment semantics must remain stable."
+        ]
+      }
+    },
+    "dimension_statuses": {
+      "sandbox-session": "passed",
+      "harness-session": "passed",
+      "execution-provider": "passed"
+    },
+    "dimension_count": 3,
+    "passed_dimension_count": 3,
+    "warning_dimension_count": 0,
+    "failed_check_count": 1,
+    "swap_stable": false
+  },
+  "notes": [
+    "ENV-02 freezes which environment truths are expected to survive executor replacement.",
+    "The canonical report uses a synthetic executor-swap comparison to keep invariants focused on environment semantics rather than one concrete runtime implementation.",
+    "HOS-01 expands the invariant report into an explicit harness-swap conformance surface across sandbox session, harness session, and execution-provider dimensions.",
+    "Canonical ENV-02 sample for repo-owned artifact governance."
+  ]
+}

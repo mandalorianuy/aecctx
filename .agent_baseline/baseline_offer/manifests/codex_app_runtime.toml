@@ -1,0 +1,305 @@
+[codex_app_runtime]
+version = "1.0"
+runtime_id = "codex-app"
+label = "Codex App Runtime"
+source_release = "codex-for-almost-everything"
+release_date = "2026-04-16"
+source_url = "https://openai.com/index/codex-for-almost-everything/"
+default_surface_id = "desktop-shell"
+notes = [
+  "This manifest models Codex app/runtime capabilities that are now part of the baseline platform surface but not yet all represented as baseline-owned deep contracts.",
+  "The manifest does not change Codex CLI orchestration authority; it records the expanded app/runtime surface so later contracts can land under governance instead of consumer-local heuristics.",
+]
+
+[surfaces.desktop-shell]
+label = "Desktop shell"
+surface_kind = "app-shell"
+default_enabled = true
+operator_visible = true
+capability_ids = [
+  "multi_terminal",
+  "file_preview",
+  "summary_pane",
+  "review_comments",
+  "browser",
+  "computer_use",
+  "plugin_inventory",
+  "thread_automations",
+  "memory",
+  "image_generation",
+]
+notes = [
+  "Primary desktop/app surface where operator-visible Codex capabilities now converge.",
+]
+
+[surfaces.remote-workspace]
+label = "Remote workspace"
+surface_kind = "remote-workspace"
+default_enabled = false
+operator_visible = true
+capability_ids = ["ssh_devbox"]
+notes = [
+  "Remote workspace access must remain governed by explicit workspace identity and trust posture contracts.",
+]
+
+[surfaces.continuity]
+label = "Continuity"
+surface_kind = "continuity"
+default_enabled = true
+operator_visible = true
+capability_ids = ["thread_automations", "memory"]
+notes = [
+  "Thread reuse, automation continuity, and memory should integrate with workflow and governance instead of bypassing baseline state.",
+]
+
+[surfaces.extensibility]
+label = "Extensibility"
+surface_kind = "integration"
+default_enabled = true
+operator_visible = true
+capability_ids = ["plugin_inventory", "review_comments"]
+notes = [
+  "Plugin and review surfaces should be discoverable as app/runtime capabilities before deeper integration contracts land.",
+]
+
+[capabilities.multi_terminal]
+label = "Multiple terminals"
+capability_class = "terminal"
+availability = "available"
+summary = "Codex app supports multiple terminal contexts and richer terminal orchestration than the current Codex CLI-only baseline model."
+operator_visible = true
+consumer_sync_required = false
+artifact_backed = false
+policy_required = true
+surface_ids = ["desktop-shell"]
+artifact_kinds = []
+follow_on_capabilities = []
+authorities = [
+  "Represent terminal multiplicity as explicit runtime posture rather than implicit shell state.",
+]
+constraints = [
+  "Do not create per-agent shell forks in baseline.",
+]
+notes = [
+  "This capability is admitted in APP-01 so consumers stop assuming a single terminal context is the only supported posture.",
+]
+
+[capabilities.file_preview]
+label = "File preview"
+capability_class = "preview"
+availability = "available"
+summary = "Codex app can preview files and richer local artifacts directly from the app surface."
+operator_visible = true
+consumer_sync_required = false
+artifact_backed = false
+policy_required = true
+surface_ids = ["desktop-shell"]
+artifact_kinds = []
+follow_on_capabilities = []
+authorities = [
+  "Expose file preview as an app/runtime capability so consumers can distinguish preview support from baseline-owned artifact contracts.",
+]
+constraints = [
+  "Baseline should not encode product-specific preview UI behavior.",
+]
+notes = [
+  "Preview support is app-native, but baseline should still advertise it as part of the runtime surface.",
+]
+
+[capabilities.summary_pane]
+label = "Summary pane"
+capability_class = "summary"
+availability = "available"
+summary = "Codex app exposes richer summary-side surfaces that can complement baseline shell and replay summaries."
+operator_visible = true
+consumer_sync_required = true
+artifact_backed = false
+policy_required = true
+surface_ids = ["desktop-shell"]
+artifact_kinds = []
+follow_on_capabilities = []
+authorities = [
+  "Consumers should treat summary-pane presence as an app/runtime capability and not as justification to duplicate baseline summaries locally.",
+]
+constraints = [
+  "Baseline remains the source of truth for governed operator summaries.",
+]
+notes = [
+  "APP-01 records summary-pane posture so future shell surfacing can map onto it intentionally.",
+]
+
+[capabilities.review_comments]
+label = "Review comments"
+capability_class = "review"
+availability = "available"
+summary = "Codex app can work directly with review-comment style surfaces exposed through developer workflows."
+operator_visible = true
+consumer_sync_required = true
+artifact_backed = false
+policy_required = true
+surface_ids = ["desktop-shell", "extensibility"]
+artifact_kinds = []
+follow_on_capabilities = []
+authorities = [
+  "Model review-comment capability as app/runtime posture without embedding GitHub-specific heuristics into baseline.",
+]
+constraints = [
+  "Product-specific review culture or provider-specific semantics remain out of baseline.",
+]
+notes = [
+  "This capability is intentionally inventory-level in APP-01; deeper reusable review-thread contracts can land later without forcing local consumer heuristics first.",
+]
+
+[capabilities.browser]
+label = "In-app browser"
+capability_class = "browser"
+availability = "available"
+summary = "Codex app now includes a browser surface that should be represented as a governed baseline capability instead of opaque external state."
+operator_visible = true
+consumer_sync_required = true
+artifact_backed = true
+policy_required = true
+surface_ids = ["desktop-shell"]
+artifact_kinds = ["browser-session", "page-annotation", "browser-screenshot"]
+follow_on_capabilities = ["WEB-01"]
+authorities = [
+  "Admit browser interaction as a governed runtime capability.",
+]
+constraints = [
+  "Do not treat browser execution as an unmanaged side effect.",
+]
+notes = [
+  "WEB-01 will add deeper contracts and replay-grade artifacts for browser sessions and page annotations.",
+]
+
+[capabilities.computer_use]
+label = "Computer use"
+capability_class = "computer-use"
+availability = "available"
+summary = "Codex app supports computer-use style interaction that baseline must later represent through trace and policy contracts."
+operator_visible = true
+consumer_sync_required = true
+artifact_backed = true
+policy_required = true
+surface_ids = ["desktop-shell"]
+artifact_kinds = ["desktop-action-trace", "desktop-screenshot"]
+follow_on_capabilities = ["WEB-01"]
+authorities = [
+  "Admit desktop/computer-use interaction as governed runtime posture.",
+]
+constraints = [
+  "Desktop interaction must remain policy-aware and auditable.",
+]
+notes = [
+  "WEB-01 will carry the deep trace/audit surface for this capability.",
+]
+
+[capabilities.plugin_inventory]
+label = "Plugin inventory"
+capability_class = "integration"
+availability = "available"
+summary = "Codex app exposes a broader plugin/app integration inventory than the baseline currently models."
+operator_visible = true
+consumer_sync_required = true
+artifact_backed = true
+policy_required = true
+surface_ids = ["desktop-shell", "extensibility"]
+artifact_kinds = ["plugin-catalog"]
+follow_on_capabilities = ["PLG-01"]
+authorities = [
+  "Expose live plugin/app capability posture through baseline-owned catalogs and routing hints.",
+]
+constraints = [
+  "Do not land provider-specific plugin behavior in baseline.",
+]
+notes = [
+  "PLG-01 will ingest the live app/plugin inventory into governed baseline surfaces.",
+]
+
+[capabilities.thread_automations]
+label = "Thread automations"
+capability_class = "automation"
+availability = "available"
+summary = "Codex app can reuse threads and automation context over time; baseline must bridge that into workflow/runtime state."
+operator_visible = true
+consumer_sync_required = true
+artifact_backed = true
+policy_required = true
+surface_ids = ["desktop-shell", "continuity"]
+artifact_kinds = ["automation-continuation", "thread-resume"]
+follow_on_capabilities = ["AUT-01"]
+authorities = [
+  "Bridge app automations into baseline workflow and resume posture instead of treating them as unmanaged external continuity.",
+]
+constraints = [
+  "Automation continuity must not bypass approval and workflow gates.",
+]
+notes = [
+  "AUT-01 will connect thread reuse to baseline workflow/runtime artifacts.",
+]
+
+[capabilities.memory]
+label = "App memory"
+capability_class = "memory"
+availability = "available"
+summary = "Codex app now exposes memory and preference continuity signals that should feed governed baseline memory rather than uncontrolled writeback."
+operator_visible = true
+consumer_sync_required = true
+artifact_backed = true
+policy_required = true
+surface_ids = ["desktop-shell", "continuity"]
+artifact_kinds = ["memory-adapter-summary", "memory-import-candidate"]
+follow_on_capabilities = ["MEM-05"]
+authorities = [
+  "Admit app memory as governed input to baseline memory and workflow systems.",
+]
+constraints = [
+  "No uncontrolled self-modifying memory path.",
+]
+notes = [
+  "MEM-05 will turn app memory into governed baseline memory candidates and summaries.",
+]
+
+[capabilities.image_generation]
+label = "Image generation"
+capability_class = "creative"
+availability = "available"
+summary = "Codex app can generate images and should expose prompt/run/result provenance through governed baseline artifacts."
+operator_visible = true
+consumer_sync_required = true
+artifact_backed = true
+policy_required = true
+surface_ids = ["desktop-shell"]
+artifact_kinds = ["image-generation-request", "image-generation-result"]
+follow_on_capabilities = ["IMG-01"]
+authorities = [
+  "Treat image generation as a first-class baseline workflow surface rather than an ad hoc side tool.",
+]
+constraints = [
+  "Keep provenance, policy, and consumer-sync posture explicit.",
+]
+notes = [
+  "IMG-01 will introduce the shared contract family for image-generation workflow artifacts.",
+]
+
+[capabilities.ssh_devbox]
+label = "SSH and devboxes"
+capability_class = "remote-workspace"
+availability = "available"
+summary = "Codex app can operate against SSH/devbox style remote workspaces that baseline should model explicitly."
+operator_visible = true
+consumer_sync_required = true
+artifact_backed = true
+policy_required = true
+surface_ids = ["remote-workspace"]
+artifact_kinds = ["remote-workspace-descriptor", "remote-session-summary"]
+follow_on_capabilities = ["SSH-01"]
+authorities = [
+  "Represent remote workspace identity, trust, and provenance through contracts instead of ambient shell context.",
+]
+constraints = [
+  "Remote execution must remain bounded by explicit trust posture and workspace identity.",
+]
+notes = [
+  "SSH-01 will add the deep remote-workspace contract and artifact lineage.",
+]

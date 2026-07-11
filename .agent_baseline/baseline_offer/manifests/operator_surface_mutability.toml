@@ -1,0 +1,99 @@
+[operator_surface_mutability]
+schema_version = "1.0"
+description = "Baseline-owned operator surface ownership and mutability contract for shell, Mission Control, environment, and execution-facing fields."
+notes = [
+  "HOS-10 prevents UI agents from guessing whether a field is display-only, actionable, writeback-enabled, or consumer-owned.",
+  "This contract is headless; consumer repos still own GUI/TUI rendering and domain-specific interaction design.",
+]
+
+[[surface_fields]]
+surface_id = "shell"
+field_path = "defaults.command_namespace"
+owner = "consumer-overlay"
+mutability = "consumer-owned"
+actionability = "configure"
+writeback_enabled = true
+consumer_owned = true
+source_refs = ["manifests/meta_agent_specialization_profiles.toml"]
+notes = ["Consumers may specialize command namespace through overlay/profile state."]
+
+[[surface_fields]]
+surface_id = "shell"
+field_path = "defaults.default_panel"
+owner = "consumer-overlay"
+mutability = "consumer-owned"
+actionability = "configure"
+writeback_enabled = true
+consumer_owned = true
+source_refs = ["manifests/meta_agent_specialization_profiles.toml"]
+
+[[surface_fields]]
+surface_id = "mission_control"
+field_path = "session.state"
+owner = "baseline"
+mutability = "display-only"
+actionability = "none"
+writeback_enabled = false
+consumer_owned = false
+source_refs = ["manifests/mission_control.toml"]
+
+[[surface_fields]]
+surface_id = "mission_control"
+field_path = "view.suggested_affordances"
+owner = "baseline"
+mutability = "actionable"
+actionability = "human-selection"
+writeback_enabled = false
+consumer_owned = false
+source_refs = ["manifests/mission_control.toml"]
+
+[[surface_fields]]
+surface_id = "mission_control"
+field_path = "approval_cards"
+owner = "baseline-contract-consumer-enforced"
+mutability = "actionable"
+actionability = "approval-decision"
+writeback_enabled = true
+consumer_owned = false
+source_refs = ["manifests/mission_control.toml"]
+notes = ["Baseline owns the card shape; consumer runtimes own enforcement."]
+
+[[surface_fields]]
+surface_id = "environment"
+field_path = "invariants.swap_conformance_passed"
+owner = "baseline"
+mutability = "display-only"
+actionability = "none"
+writeback_enabled = false
+consumer_owned = false
+source_refs = ["manifests/environment_invariants.toml"]
+
+[[surface_fields]]
+surface_id = "environment"
+field_path = "promotion_pipeline.candidates"
+owner = "baseline"
+mutability = "actionable"
+actionability = "promotion-review"
+writeback_enabled = true
+consumer_owned = false
+source_refs = ["manifests/environment_promotion_pipeline.toml"]
+
+[[surface_fields]]
+surface_id = "workspace_boundary_guard"
+field_path = "path_decisions"
+owner = "baseline"
+mutability = "display-only"
+actionability = "none"
+writeback_enabled = false
+consumer_owned = false
+source_refs = ["manifests/workspace_boundary_guard.toml"]
+
+[[surface_fields]]
+surface_id = "durable_outputs"
+field_path = "outputs"
+owner = "baseline"
+mutability = "display-only"
+actionability = "open-artifact"
+writeback_enabled = false
+consumer_owned = false
+source_refs = ["manifests/durable_outputs.toml"]

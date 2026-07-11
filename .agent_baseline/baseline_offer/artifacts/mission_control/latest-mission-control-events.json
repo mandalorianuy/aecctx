@@ -1,0 +1,218 @@
+{
+  "mission_id": "baseline-mission-control",
+  "state": "ready",
+  "events": [
+    {
+      "event_id": "baseline-mission-control-intake",
+      "event_kind": "mission-intake",
+      "actor": "operator",
+      "state": "ready",
+      "detail": "Plan a Codex-like headless mission control flow for a baseline consumer UI without mutating execution.",
+      "recorded_at_utc": "2026-04-29T22:00:32.265012+00:00",
+      "artifact_links": [
+        {
+          "artifact_ref": "artifacts/agent_baseline/workflow_trace_envelope/baseline-workflow-trace-envelope.json",
+          "artifact_kind": "workflow-trace",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "",
+          "dispatch_ref": "",
+          "policy_decision_ref": "",
+          "metadata": {}
+        },
+        {
+          "artifact_ref": "artifacts/agent_baseline/guardrail_controls/latest-guardrail-control-taxonomy.json",
+          "artifact_kind": "guardrail-controls",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "",
+          "dispatch_ref": "",
+          "policy_decision_ref": "baseline-policy-review",
+          "metadata": {}
+        },
+        {
+          "artifact_ref": "artifacts/agent_baseline/continuation_state/latest-agent-continuation-state.json",
+          "artifact_kind": "continuation-state",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "baseline-approval-boundary",
+          "dispatch_ref": "",
+          "policy_decision_ref": "",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "event_id": "baseline-mission-control-intent",
+      "event_kind": "mission-turn-intent",
+      "actor": "baseline",
+      "state": "ready",
+      "detail": "intent_kind=analysis; requires_approval=False",
+      "recorded_at_utc": "2026-04-29T22:00:32.265012+00:00",
+      "artifact_links": [
+        {
+          "artifact_ref": "artifacts/agent_baseline/workflow_trace_envelope/baseline-workflow-trace-envelope.json",
+          "artifact_kind": "workflow-trace",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "",
+          "dispatch_ref": "",
+          "policy_decision_ref": "",
+          "metadata": {}
+        },
+        {
+          "artifact_ref": "artifacts/agent_baseline/guardrail_controls/latest-guardrail-control-taxonomy.json",
+          "artifact_kind": "guardrail-controls",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "",
+          "dispatch_ref": "",
+          "policy_decision_ref": "baseline-policy-review",
+          "metadata": {}
+        },
+        {
+          "artifact_ref": "artifacts/agent_baseline/continuation_state/latest-agent-continuation-state.json",
+          "artifact_kind": "continuation-state",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "baseline-approval-boundary",
+          "dispatch_ref": "",
+          "policy_decision_ref": "",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "event_id": "baseline-mission-control-routing",
+      "event_kind": "mission-routing",
+      "actor": "baseline",
+      "state": "ready",
+      "detail": "mission_kind=analysis; next_engine_action=answer-or-plan",
+      "recorded_at_utc": "2026-04-29T22:00:32.265012+00:00",
+      "artifact_links": [
+        {
+          "artifact_ref": "artifacts/agent_baseline/workflow_trace_envelope/baseline-workflow-trace-envelope.json",
+          "artifact_kind": "workflow-trace",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "",
+          "dispatch_ref": "",
+          "policy_decision_ref": "",
+          "metadata": {}
+        },
+        {
+          "artifact_ref": "artifacts/agent_baseline/guardrail_controls/latest-guardrail-control-taxonomy.json",
+          "artifact_kind": "guardrail-controls",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "",
+          "dispatch_ref": "",
+          "policy_decision_ref": "baseline-policy-review",
+          "metadata": {}
+        },
+        {
+          "artifact_ref": "artifacts/agent_baseline/continuation_state/latest-agent-continuation-state.json",
+          "artifact_kind": "continuation-state",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "baseline-approval-boundary",
+          "dispatch_ref": "",
+          "policy_decision_ref": "",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "event_id": "baseline-mission-control-projection",
+      "event_kind": "mission-projection",
+      "actor": "baseline",
+      "state": "ready",
+      "detail": "projection_mode=canonical-envelope; source_of_truth=baseline-mission-control",
+      "recorded_at_utc": "2026-04-29T22:00:32.265012+00:00",
+      "artifact_links": [
+        {
+          "artifact_ref": "artifacts/agent_baseline/workflow_trace_envelope/baseline-workflow-trace-envelope.json",
+          "artifact_kind": "workflow-trace",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "",
+          "dispatch_ref": "",
+          "policy_decision_ref": "",
+          "metadata": {}
+        },
+        {
+          "artifact_ref": "artifacts/agent_baseline/guardrail_controls/latest-guardrail-control-taxonomy.json",
+          "artifact_kind": "guardrail-controls",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "",
+          "dispatch_ref": "",
+          "policy_decision_ref": "baseline-policy-review",
+          "metadata": {}
+        },
+        {
+          "artifact_ref": "artifacts/agent_baseline/continuation_state/latest-agent-continuation-state.json",
+          "artifact_kind": "continuation-state",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "baseline-approval-boundary",
+          "dispatch_ref": "",
+          "policy_decision_ref": "",
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "event_id": "baseline-mission-control-transition-validation",
+      "event_kind": "mission-transition-validation",
+      "actor": "baseline",
+      "state": "ready",
+      "detail": "requested_action=answer-or-plan; allowed=False; reason=transition-not-allowed",
+      "recorded_at_utc": "2026-04-29T22:00:32.265012+00:00",
+      "artifact_links": [
+        {
+          "artifact_ref": "artifacts/agent_baseline/workflow_trace_envelope/baseline-workflow-trace-envelope.json",
+          "artifact_kind": "workflow-trace",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "",
+          "dispatch_ref": "",
+          "policy_decision_ref": "",
+          "metadata": {}
+        },
+        {
+          "artifact_ref": "artifacts/agent_baseline/guardrail_controls/latest-guardrail-control-taxonomy.json",
+          "artifact_kind": "guardrail-controls",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "",
+          "dispatch_ref": "",
+          "policy_decision_ref": "baseline-policy-review",
+          "metadata": {}
+        },
+        {
+          "artifact_ref": "artifacts/agent_baseline/continuation_state/latest-agent-continuation-state.json",
+          "artifact_kind": "continuation-state",
+          "evidence_ref": "",
+          "integrity_hash": "",
+          "approval_ref": "baseline-approval-boundary",
+          "dispatch_ref": "",
+          "policy_decision_ref": "",
+          "metadata": {}
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "mission_id": "baseline-mission-control",
+    "state": "ready",
+    "event_count": 5,
+    "events_artifact_ref": "artifacts/agent_baseline/mission_control/latest-mission-control-events.json"
+  },
+  "contract_family": "mission-control",
+  "contract_major": 2,
+  "schema_version": "mission-control/v2",
+  "contract_revision": 6,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major"
+}

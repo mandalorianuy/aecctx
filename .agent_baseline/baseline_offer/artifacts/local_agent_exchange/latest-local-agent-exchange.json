@@ -1,0 +1,412 @@
+{
+  "catalog_id": "baseline-local-agent-exchange",
+  "recorded_at_utc": "2026-04-17T00:00:00+00:00",
+  "source_release": "baseline-local-a2a-v1",
+  "default_exchange_policy": "manager-mediated-local-only",
+  "cards": [
+    {
+      "agent_id": "baseline-autofix-worker",
+      "display_name": "Baseline Autofix Worker",
+      "role": "autofix",
+      "availability": "available",
+      "local_endpoint_kind": "bounded-worker-lane",
+      "handoff_mode": "bounded-handoff",
+      "workspace_scope": "repo-local",
+      "capability_ids": [
+        "autofix",
+        "bounded-execution"
+      ],
+      "task_types": [
+        "autofix"
+      ],
+      "notes": [
+        "Produces bounded autofix outputs subject to review and approval."
+      ]
+    },
+    {
+      "agent_id": "baseline-executor-worker",
+      "display_name": "Baseline Executor Worker",
+      "role": "implementation",
+      "availability": "available",
+      "local_endpoint_kind": "bounded-worker-lane",
+      "handoff_mode": "bounded-handoff",
+      "workspace_scope": "repo-local",
+      "capability_ids": [
+        "bounded-execution",
+        "context-reduction"
+      ],
+      "task_types": [
+        "implementation",
+        "docs",
+        "architecture"
+      ],
+      "notes": [
+        "Used for bounded sequential execution lanes."
+      ]
+    },
+    {
+      "agent_id": "baseline-primary-worker",
+      "display_name": "Baseline Primary Worker",
+      "role": "parallel-primary",
+      "availability": "available",
+      "local_endpoint_kind": "bounded-worker-lane",
+      "handoff_mode": "bounded-handoff",
+      "workspace_scope": "repo-local",
+      "capability_ids": [
+        "bounded-execution",
+        "parallel-primary"
+      ],
+      "task_types": [
+        "release",
+        "triage"
+      ],
+      "notes": [
+        "Primary execution lane for parallel graph shapes."
+      ]
+    },
+    {
+      "agent_id": "baseline-review-investigator",
+      "display_name": "Baseline Review Investigator",
+      "role": "review-investigation",
+      "availability": "available",
+      "local_endpoint_kind": "review-lane",
+      "handoff_mode": "review-return",
+      "workspace_scope": "repo-local",
+      "capability_ids": [
+        "review-investigation",
+        "review-authority"
+      ],
+      "task_types": [
+        "review"
+      ],
+      "notes": [
+        "Review-heavy evidence collection lane under orchestrator control."
+      ]
+    },
+    {
+      "agent_id": "baseline-review-owner",
+      "display_name": "Baseline Review Owner",
+      "role": "review-owner",
+      "availability": "available",
+      "local_endpoint_kind": "review-lane",
+      "handoff_mode": "review-return",
+      "workspace_scope": "repo-local",
+      "capability_ids": [
+        "review-authority"
+      ],
+      "task_types": [
+        "review",
+        "autofix",
+        "release"
+      ],
+      "notes": [
+        "Owns merge and review posture for delegated outputs."
+      ]
+    },
+    {
+      "agent_id": "baseline-triage-worker",
+      "display_name": "Baseline Triage Worker",
+      "role": "triage",
+      "availability": "available",
+      "local_endpoint_kind": "bounded-worker-lane",
+      "handoff_mode": "bounded-handoff",
+      "workspace_scope": "repo-local",
+      "capability_ids": [
+        "triage",
+        "risk-screening"
+      ],
+      "task_types": [
+        "triage",
+        "autofix"
+      ],
+      "notes": [
+        "Evidence-first triage lane before bounded autofix."
+      ]
+    },
+    {
+      "agent_id": "baseline-validation-worker",
+      "display_name": "Baseline Validation Worker",
+      "role": "validation",
+      "availability": "available",
+      "local_endpoint_kind": "validation-lane",
+      "handoff_mode": "review-return",
+      "workspace_scope": "repo-local",
+      "capability_ids": [
+        "validation",
+        "review-authority"
+      ],
+      "task_types": [
+        "review",
+        "release",
+        "autofix",
+        "triage"
+      ],
+      "notes": [
+        "Keeps validation as a bounded dedicated lane."
+      ]
+    },
+    {
+      "agent_id": "codex-orchestrator",
+      "display_name": "Codex Orchestrator",
+      "role": "orchestrator",
+      "availability": "available",
+      "local_endpoint_kind": "orchestrator-control-plane",
+      "handoff_mode": "manager-mediated",
+      "workspace_scope": "repo-local",
+      "capability_ids": [
+        "planning",
+        "workflow-editing",
+        "review-authority"
+      ],
+      "task_types": [
+        "plan",
+        "review",
+        "architecture",
+        "docs",
+        "triage",
+        "release"
+      ],
+      "notes": [
+        "Orchestrator-of-record for bounded baseline execution."
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "autofix",
+      "summary": "Produce bounded candidate fixes under review-owned merge posture.",
+      "task_types": [
+        "autofix"
+      ],
+      "exchange_modes": [
+        "bounded-handoff",
+        "review-return"
+      ],
+      "operator_visible": true,
+      "approval_required": true,
+      "artifact_families": [
+        "execution-compiler",
+        "validation-results",
+        "review-lifecycle"
+      ]
+    },
+    {
+      "capability_id": "bounded-execution",
+      "summary": "Execute bounded implementation lanes using approved tools, paths, and runtime posture.",
+      "task_types": [
+        "implementation",
+        "release",
+        "autofix",
+        "triage"
+      ],
+      "exchange_modes": [
+        "bounded-handoff"
+      ],
+      "operator_visible": true,
+      "approval_required": false,
+      "artifact_families": [
+        "execution-compiler",
+        "execution-graph"
+      ]
+    },
+    {
+      "capability_id": "context-reduction",
+      "summary": "Consume graph-grounded reduced context packs without reopening the full repo surface.",
+      "task_types": [
+        "implementation",
+        "review",
+        "architecture"
+      ],
+      "exchange_modes": [
+        "bounded-handoff"
+      ],
+      "operator_visible": true,
+      "approval_required": false,
+      "artifact_families": [
+        "structural-graph",
+        "execution-compiler"
+      ]
+    },
+    {
+      "capability_id": "parallel-primary",
+      "summary": "Own the primary bounded branch when the planner opens a parallel topology.",
+      "task_types": [
+        "release",
+        "triage"
+      ],
+      "exchange_modes": [
+        "bounded-handoff"
+      ],
+      "operator_visible": true,
+      "approval_required": false,
+      "artifact_families": [
+        "execution-graph",
+        "workflow-editor-state"
+      ]
+    },
+    {
+      "capability_id": "planning",
+      "summary": "Compile plans, runtime posture, and execution boundaries.",
+      "task_types": [
+        "plan",
+        "architecture",
+        "docs"
+      ],
+      "exchange_modes": [
+        "manager-mediated"
+      ],
+      "operator_visible": true,
+      "approval_required": false,
+      "artifact_families": [
+        "execution-compiler",
+        "workflow-plan"
+      ]
+    },
+    {
+      "capability_id": "review-authority",
+      "summary": "Own review, merge gating, and human checkpoint posture for delegated outputs.",
+      "task_types": [
+        "review",
+        "release",
+        "autofix"
+      ],
+      "exchange_modes": [
+        "review-return"
+      ],
+      "operator_visible": true,
+      "approval_required": true,
+      "artifact_families": [
+        "review-lifecycle",
+        "harness-session-view",
+        "workflow-state"
+      ]
+    },
+    {
+      "capability_id": "review-investigation",
+      "summary": "Collect evidence and findings for review-heavy slices without taking merge authority.",
+      "task_types": [
+        "review"
+      ],
+      "exchange_modes": [
+        "review-return"
+      ],
+      "operator_visible": true,
+      "approval_required": false,
+      "artifact_families": [
+        "review-lifecycle",
+        "harness-session-view"
+      ]
+    },
+    {
+      "capability_id": "risk-screening",
+      "summary": "Screen for cost, risk, and approval posture before opening additional lanes.",
+      "task_types": [
+        "triage",
+        "release",
+        "autofix"
+      ],
+      "exchange_modes": [
+        "manager-mediated",
+        "review-return"
+      ],
+      "operator_visible": true,
+      "approval_required": true,
+      "artifact_families": [
+        "execution-compiler",
+        "workflow-editor-state"
+      ]
+    },
+    {
+      "capability_id": "triage",
+      "summary": "Assess failures, blockers, and next-safe bounded actions.",
+      "task_types": [
+        "triage",
+        "autofix"
+      ],
+      "exchange_modes": [
+        "bounded-handoff",
+        "review-return"
+      ],
+      "operator_visible": true,
+      "approval_required": false,
+      "artifact_families": [
+        "execution-compiler",
+        "validation-results"
+      ]
+    },
+    {
+      "capability_id": "validation",
+      "summary": "Run bounded validation and feed review-owned results back to the orchestrator.",
+      "task_types": [
+        "review",
+        "release",
+        "autofix",
+        "triage"
+      ],
+      "exchange_modes": [
+        "review-return"
+      ],
+      "operator_visible": true,
+      "approval_required": false,
+      "artifact_families": [
+        "validation-results",
+        "harness-session-view"
+      ]
+    },
+    {
+      "capability_id": "workflow-editing",
+      "summary": "Adjust workflow topology through governed visual workflow editor operations.",
+      "task_types": [
+        "plan",
+        "architecture",
+        "review"
+      ],
+      "exchange_modes": [
+        "manager-mediated",
+        "review-return"
+      ],
+      "operator_visible": true,
+      "approval_required": true,
+      "artifact_families": [
+        "workflow-editor-state",
+        "workflow-plan",
+        "execution-graph"
+      ]
+    }
+  ],
+  "notes": [
+    "FUT-05 turns local-only A2A compatibility into governed agent cards and capability exchange without making remote inter-agent networking part of the baseline core.",
+    "Agent cards remain local and repo-owned; they do not imply hosted discovery, network transport, or specialization coupling.",
+    "The Execution Compiler may consume these cards to enrich delegation posture, but the orchestrator remains the integration authority of record."
+  ],
+  "summary": {
+    "catalog_id": "baseline-local-agent-exchange",
+    "default_exchange_policy": "manager-mediated-local-only",
+    "card_count": 8,
+    "capability_count": 11,
+    "local_only_card_count": 8,
+    "manager_mediated_card_count": 1,
+    "handoff_capable_card_count": 8,
+    "operator_visible_capability_count": 11,
+    "approval_required_capability_count": 4,
+    "task_type_count": 8,
+    "artifact_family_count": 9,
+    "agent_ids": [
+      "baseline-autofix-worker",
+      "baseline-executor-worker",
+      "baseline-primary-worker",
+      "baseline-review-investigator",
+      "baseline-review-owner",
+      "baseline-triage-worker",
+      "baseline-validation-worker",
+      "codex-orchestrator"
+    ],
+    "artifact_ref": "artifacts/agent_baseline/local_agent_exchange/latest-local-agent-exchange.json"
+  },
+  "contract_family": "local-agent-exchange",
+  "contract_major": 1,
+  "schema_version": "local-agent-exchange/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major"
+}

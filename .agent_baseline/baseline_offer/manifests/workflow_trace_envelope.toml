@@ -1,0 +1,7 @@
+[workflow_trace_envelope]
+version = "1.0"
+source_release = "openai-agents-sdk-apr-2026-assessment"
+notes = [
+  "OBS-02 groups workflow runs, approvals, handoffs, tools, and eval evidence into one inspectable trace envelope.",
+  "The baseline remains local-first; grouped traces are artifact-backed and provider-neutral."
+]

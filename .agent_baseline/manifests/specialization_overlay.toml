@@ -1,0 +1,35 @@
+# Managed by codex-agent-baseline meta-agent tooling.
+# Description: Specialization overlay manifest composed on top of the baseline shell contract.
+# Editable policy: You may change [overlay], [labels], [defaults], [visibility], and any [[commands]]/[[panels]] contributions. Keep contract_bundle_id pinned unless an approved bundle upgrade is performed. If you keep managed preset values untouched, sync may reseed them when the specialization profile changes.
+# Changes outside the documented policy may be overwritten on sync.
+[profile]
+profile_id = "builder"
+label = "Builder"
+description = "Builder-centric posture for repos that prioritize implementation, compile-time flows, and approval orchestration."
+recommended_for = ["builder-centric repos", "implementation-heavy products", "compiler-forward products"]
+
+[overlay]
+meta_agent_id = "aecctx"
+overlay_id = "aecctx-overlay"
+specialization_kind = "builder"
+specialization_profile_id = "builder"
+contract_bundle_id = "baseline-shared-v1"
+domain_pack_id = "aecctx-domain-pack-v1"
+policy_pack_id = "aecctx-policy-pack-v1"
+runtime_pack_id = "aecctx-runtime-pack-v1"
+repo_overlay_id = "aecctx-repo-overlay-v1"
+
+[labels]
+display_name = "AECCTX"
+
+[defaults]
+command_namespace = "build"
+default_panel = "approvals"
+operator_label = "Aecctx Builder"
+short_name = "Aecctx"
+
+[visibility]
+show_runtime = true
+show_approvals = true
+show_graphs = true
+show_review_center = true

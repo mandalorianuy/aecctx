@@ -1,0 +1,51 @@
+{
+  "image_run_id": "baseline-image-generation-pass",
+  "session_id": "baseline-img-01-session",
+  "recorded_at_utc": "2026-04-16T00:00:00+00:00",
+  "source_release": "codex-for-almost-everything",
+  "request_kind": "generate",
+  "prompt_summary": "Generate a canonical image summarizing baseline contract lineage.",
+  "model_id": "gpt-image-1",
+  "status": "completed",
+  "policy_posture": "policy-reviewed",
+  "output_artifacts": [
+    {
+      "artifact_ref": "artifacts/agent_baseline/codex_app_images/generated/baseline-image-generation-pass.png",
+      "media_kind": "png",
+      "provenance_kind": "generated-image",
+      "prompt_origin": "operator-request",
+      "policy_reviewed": true
+    }
+  ],
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/codex_app_runtime/latest-codex-app-runtime.json",
+    "artifacts/agent_baseline/shell_contracts/latest-meta-agent-contract.json"
+  ],
+  "notes": [
+    "Canonical IMG-01 sample for repo-owned artifact governance."
+  ],
+  "summary": {
+    "workflow_count": 1,
+    "image_run_id": "baseline-image-generation-pass",
+    "session_id": "baseline-img-01-session",
+    "request_kind_counts": {
+      "generate": 1
+    },
+    "status_counts": {
+      "completed": 1
+    },
+    "generate_request_count": 1,
+    "edit_request_count": 0,
+    "completed_workflow_count": 1,
+    "output_artifact_count": 1,
+    "policy_reviewed_output_count": 1,
+    "artifact_ref": "artifacts/agent_baseline/codex_app_images/latest-codex-app-image-workflow.json"
+  },
+  "contract_family": "codex-app-image-workflow",
+  "contract_major": 1,
+  "schema_version": "codex-app-image-workflow/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/codex_app_images/baseline-image-generation-pass.json"
+}

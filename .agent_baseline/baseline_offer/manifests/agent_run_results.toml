@@ -1,0 +1,8 @@
+[agent_run_results]
+version = "1.0"
+source_release = "openai-agents-sdk-apr-2026-assessment"
+notes = [
+  "RST-01 normalizes final output, replay-ready history, and current-owner posture as a baseline-owned run result surface.",
+  "Result normalization must stay provider-neutral and artifact-backed rather than relying on hosted continuation ids or opaque runtime logs."
+]
+

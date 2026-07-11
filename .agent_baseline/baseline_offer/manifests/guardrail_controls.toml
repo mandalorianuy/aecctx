@@ -1,0 +1,8 @@
+[guardrail_controls]
+version = "1.0"
+source_release = "openai-agents-sdk-apr-2026-assessment"
+notes = [
+  "GRD-01 separates automated input/output/handoff controls from tool-boundary surfacing and human approvals.",
+  "Human approvals are a distinct control point and must not be collapsed into automated guardrail counts."
+]
+

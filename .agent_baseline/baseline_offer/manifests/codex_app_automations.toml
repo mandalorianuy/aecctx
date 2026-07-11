@@ -1,0 +1,25 @@
+[codex_app_automations]
+version = "1.0"
+runtime_id = "codex-app"
+source_release = "codex-for-almost-everything"
+release_date = "2026-04-16"
+source_url = "https://openai.com/index/codex-for-almost-everything/"
+default_schedule_kind = "thread-reuse"
+
+[statuses]
+allowed = ["scheduled", "paused", "completed", "cancelled"]
+default = "scheduled"
+
+[schedule_kinds]
+allowed = ["thread-reuse", "follow-up", "manual-resume", "weekly-review"]
+thread_reuse_kinds = ["thread-reuse"]
+resumable_kinds = ["thread-reuse", "follow-up", "manual-resume"]
+
+[policy]
+require_linked_workflow_artifact = true
+resumable_requires_thread_id = true
+resumable_requires_continuation_id = true
+notes = [
+  "Automation and thread continuity must remain attached to baseline workflow and resume artifacts.",
+  "AUT-01 models app automation reuse as a governed binding instead of ambient app continuity.",
+]

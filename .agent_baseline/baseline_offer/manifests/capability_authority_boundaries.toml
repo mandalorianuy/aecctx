@@ -1,0 +1,8 @@
+[capability_authority_boundaries]
+schema_version = "1.0"
+description = "Baseline-owned authority boundary snapshot for reusable capabilities, runtime tools, discovered tools, and consumer-overlay posture."
+notes = [
+  "HOS-04 makes capability authority explicit before a run treats a discovered surface as usable.",
+  "This contract is descriptive and does not grant execution authority by itself.",
+]
+

@@ -1,0 +1,154 @@
+{
+  "profile_id": "baseline-execution-compiler-governance-prompt-section-profile",
+  "requirement_id": "baseline-execution-compiler-governance",
+  "generated_at_utc": "2026-04-29T22:00:32.171895+00:00",
+  "compiler_version": "baseline-execution-compiler/v1",
+  "sections": [
+    {
+      "section_id": "platform-instructions",
+      "title": "Platform Instructions",
+      "precedence": 10,
+      "volatility": "stable",
+      "cache_profile": "persistent-cache",
+      "selected": true,
+      "source_refs": [
+        "AGENTS.md",
+        "artifacts/agent_baseline/instruction_memory/sets/instruction-set-baseline-execution-compiler-governance.json"
+      ],
+      "authority_role": "baseline-and-repo-instruction-authority",
+      "rationale": "Global and repo instructions outrank generated context and should be cacheable unless files change."
+    },
+    {
+      "section_id": "requirement-objective",
+      "title": "Requirement Objective",
+      "precedence": 20,
+      "volatility": "turn-volatile",
+      "cache_profile": "no-cache",
+      "selected": true,
+      "source_refs": [
+        "baseline-execution-compiler-governance",
+        "baseline-execution-compiler-governance-bridge"
+      ],
+      "authority_role": "approved-requirement-authority",
+      "rationale": "Approved mission intent is the active turn authority and must not be hidden by stale cached context."
+    },
+    {
+      "section_id": "authority-docs",
+      "title": "Authority Documents",
+      "precedence": 30,
+      "volatility": "workspace-stable",
+      "cache_profile": "content-addressable-cache",
+      "selected": true,
+      "source_refs": [
+        "AGENTS.md",
+        "docs/contract_versioning.md",
+        "docs/surface_closure_register.md",
+        "artifacts/agent_baseline/graphs/compiler-slice.json"
+      ],
+      "authority_role": "repo-authority-docs",
+      "rationale": "Authority docs are durable workspace context, but their ordering remains below explicit requirement intent."
+    },
+    {
+      "section_id": "current-working-context",
+      "title": "Current Working Context",
+      "precedence": 40,
+      "volatility": "turn-volatile",
+      "cache_profile": "no-cache",
+      "selected": true,
+      "source_refs": [
+        "AGENTS.md",
+        "docs/contract_versioning.md",
+        "docs/surface_closure_register.md",
+        "artifacts/agent_baseline/graphs/structural/baseline-execution-compiler-governance-structural.json",
+        "artifacts/agent_baseline/instruction_memory/sets/instruction-set-baseline-execution-compiler-governance.json",
+        "artifacts/agent_baseline/graphs/compiler-slice.json"
+      ],
+      "authority_role": "current-run-context",
+      "rationale": "Selected files and recent changes are hot context for the current run and should not be reused blindly."
+    },
+    {
+      "section_id": "continuity-and-memory",
+      "title": "Continuity And Memory",
+      "precedence": 50,
+      "volatility": "session-continuity",
+      "cache_profile": "session-cache",
+      "selected": true,
+      "source_refs": [
+        "artifacts/agent_baseline/instruction_memory/sets/instruction-set-baseline-execution-compiler-governance.json"
+      ],
+      "authority_role": "reviewed-continuity-context",
+      "rationale": "Continuity can shape the run but must remain below direct requirement and hot workspace context."
+    },
+    {
+      "section_id": "tools-skills-runtime",
+      "title": "Tools, Skills, And Runtime",
+      "precedence": 60,
+      "volatility": "runtime-discovered",
+      "cache_profile": "runtime-cache",
+      "selected": true,
+      "source_refs": [
+        "rg",
+        "python3",
+        "browser",
+        "files",
+        "github",
+        "artifacts/agent_baseline/codex_app_plugins/baseline-codex-app-plugin-catalog.json",
+        "AGENTS.md",
+        "docs/contract_versioning.md",
+        "docs/surface_closure_register.md",
+        "artifacts/agent_baseline/graphs/compiler-slice.json",
+        "artifacts/agent_baseline/graphs/structural/baseline-execution-compiler-governance-structural.json"
+      ],
+      "authority_role": "execution-surface-description",
+      "rationale": "Tool and skill availability informs execution posture but does not override human-approved scope."
+    },
+    {
+      "section_id": "validation-and-guardrails",
+      "title": "Validation And Guardrails",
+      "precedence": 70,
+      "volatility": "turn-volatile",
+      "cache_profile": "no-cache",
+      "selected": true,
+      "source_refs": [
+        "Do not widen scope beyond the approved bounded contexts without explicit approval.",
+        "Keep the slice local-only and non-deployable.",
+        "python3 -m unittest discover -s tests -v",
+        "baseline-execution-compiler-governance-validation-1",
+        "baseline-execution-compiler-governance-validation-2",
+        "baseline-execution-compiler-governance-validation-3",
+        "baseline-execution-compiler-governance-validation-4",
+        "baseline-execution-compiler-governance-validation-5",
+        "baseline-execution-compiler-governance-success-coverage",
+        "baseline-execution-compiler-governance-success-criterion-1",
+        "baseline-execution-compiler-governance-success-criterion-2",
+        "baseline-execution-compiler-governance-success-criterion-3",
+        "baseline-execution-compiler-governance-risk-review"
+      ],
+      "authority_role": "safety-and-verification-controls",
+      "rationale": "Validation and guardrail controls are late prompt sections because they constrain execution after scope is known."
+    },
+    {
+      "section_id": "expected-outputs",
+      "title": "Expected Outputs",
+      "precedence": 80,
+      "volatility": "turn-volatile",
+      "cache_profile": "no-cache",
+      "selected": true,
+      "source_refs": [
+        "implementation delta summary",
+        "validation-ready code changes",
+        "Tracked latest artifacts are generated from baseline-owned APIs.",
+        "No tracked latest artifact keeps test-only identifiers.",
+        "Contract and surface-closure governance remain green after refresh.",
+        "Canonical latest artifacts are refreshed from baseline-owned APIs and no tracked latest artifact carries test-only identifiers."
+      ],
+      "authority_role": "deliverable-contract",
+      "rationale": "Expected outputs define closeout behavior, not upstream authority or context selection."
+    }
+  ],
+  "notes": [
+    "HOS-03 makes prompt section precedence, volatility, and cache posture explicit instead of leaving prompt assembly as an opaque string.",
+    "The profile is advisory and descriptive; it does not grant execution authority or replace requirement approval.",
+    "HOS-03 records prompt section precedence, volatility, and cache posture for the compiled execution pack."
+  ]
+}

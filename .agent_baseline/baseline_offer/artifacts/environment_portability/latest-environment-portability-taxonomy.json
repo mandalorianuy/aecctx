@@ -1,0 +1,340 @@
+{
+  "taxonomy_id": "baseline-environment-portability",
+  "recorded_at_utc": "2026-04-29T22:00:32.441367+00:00",
+  "source_release": "agent-environment-engineering-apr-2026",
+  "entries": [
+    {
+      "role_id": "workspace_bootstrap_artifact",
+      "label": "Workspace bootstrap",
+      "contract_family": "workspace-bootstrap",
+      "runtime_artifact_ref": "artifacts/agent_baseline/workspace_bootstrap/latest-workspace-bootstrap.json",
+      "runtime_tags": [
+        "portable-authored"
+      ],
+      "consumer_offer_tags": [
+        "portable-authored",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/workspace_bootstrap/latest-workspace-bootstrap.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Workspace instructions are authored state that can travel between compatible repos."
+      ]
+    },
+    {
+      "role_id": "sandbox_workspace_artifact",
+      "label": "Sandbox workspace",
+      "contract_family": "sandbox-workspace",
+      "runtime_artifact_ref": "artifacts/agent_baseline/sandbox_workspaces/latest-sandbox-workspace.json",
+      "runtime_tags": [
+        "portable-adaptive"
+      ],
+      "consumer_offer_tags": [
+        "portable-adaptive",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/sandbox_workspaces/latest-sandbox-workspace.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Workspace posture adapts to the repo and runtime, but its shape is reusable and publishable."
+      ]
+    },
+    {
+      "role_id": "sandbox_session_artifact",
+      "label": "Sandbox session",
+      "contract_family": "sandbox-session",
+      "runtime_artifact_ref": "artifacts/agent_baseline/sandbox_sessions/latest-sandbox-session.json",
+      "runtime_tags": [
+        "rehydratable-runtime",
+        "local-only"
+      ],
+      "consumer_offer_tags": [
+        "rehydratable-runtime",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/sandbox_sessions/latest-sandbox-session.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Runtime session state can rehydrate, but live instances stay local to the originating environment."
+      ]
+    },
+    {
+      "role_id": "instruction_set_artifact",
+      "label": "Instruction set",
+      "contract_family": "instruction-memory",
+      "runtime_artifact_ref": "artifacts/agent_baseline/instruction_memory/sets/latest-instruction-set.json",
+      "runtime_tags": [
+        "portable-adaptive",
+        "local-only"
+      ],
+      "consumer_offer_tags": [],
+      "consumer_offer_relative_path": null,
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": false,
+      "notes": [
+        "Instruction sets are continuity helpers derived from repo-local execution context."
+      ]
+    },
+    {
+      "role_id": "chronicle_artifact",
+      "label": "Session chronicle",
+      "contract_family": "session-chronicle",
+      "runtime_artifact_ref": "artifacts/agent_baseline/session_chronicle/latest-session-chronicle.json",
+      "runtime_tags": [
+        "audit-only",
+        "local-only"
+      ],
+      "consumer_offer_tags": [],
+      "consumer_offer_relative_path": null,
+      "runtime_artifact_exists": false,
+      "consumer_offer_published": false,
+      "notes": [
+        "Chronicle artifacts remain local replay/audit state rather than baseline-offer publication."
+      ]
+    },
+    {
+      "role_id": "memory_governance_artifact",
+      "label": "Memory governance",
+      "contract_family": "instruction-memory",
+      "runtime_artifact_ref": "artifacts/agent_baseline/instruction_memory/summaries/latest-governance-summary.json",
+      "runtime_tags": [
+        "portable-adaptive",
+        "local-only"
+      ],
+      "consumer_offer_tags": [],
+      "consumer_offer_relative_path": null,
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": false,
+      "notes": [
+        "Governance posture is repo-local derived state and should not be exported as baseline offer state."
+      ]
+    },
+    {
+      "role_id": "continuation_state_artifact",
+      "label": "Continuation state",
+      "contract_family": "agent-continuation-state",
+      "runtime_artifact_ref": "artifacts/agent_baseline/continuation_state/latest-agent-continuation-state.json",
+      "runtime_tags": [
+        "rehydratable-runtime",
+        "local-only"
+      ],
+      "consumer_offer_tags": [
+        "rehydratable-runtime",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/continuation_state/latest-agent-continuation-state.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Continuation can rehydrate, but active ownership stays tied to the local originating environment."
+      ]
+    },
+    {
+      "role_id": "agent_run_result_artifact",
+      "label": "Agent run result",
+      "contract_family": "agent-run-result",
+      "runtime_artifact_ref": "artifacts/agent_baseline/agent_run_results/latest-agent-run-result.json",
+      "runtime_tags": [
+        "audit-only",
+        "local-only"
+      ],
+      "consumer_offer_tags": [
+        "audit-only",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/agent_run_results/latest-agent-run-result.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Run results are primarily audit surfaces; published offer copies are canonical samples rather than live runtime state."
+      ]
+    },
+    {
+      "role_id": "guardrail_controls_artifact",
+      "label": "Guardrail controls",
+      "contract_family": "guardrail-control-taxonomy",
+      "runtime_artifact_ref": "artifacts/agent_baseline/guardrail_controls/latest-guardrail-control-taxonomy.json",
+      "runtime_tags": [
+        "portable-authored"
+      ],
+      "consumer_offer_tags": [
+        "portable-authored",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/guardrail_controls/latest-guardrail-control-taxonomy.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Guardrail control taxonomy is authored reusable policy state."
+      ]
+    },
+    {
+      "role_id": "execution_projection_artifact",
+      "label": "Execution projection",
+      "contract_family": "execution-projection-receipt",
+      "runtime_artifact_ref": "artifacts/agent_baseline/execution_projection/latest-execution-projection-receipt.json",
+      "runtime_tags": [
+        "audit-only",
+        "local-only"
+      ],
+      "consumer_offer_tags": [
+        "audit-only",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/execution_projection/latest-execution-projection-receipt.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Projection receipts describe one run's surfaced execution boundary and remain audit-primary."
+      ]
+    },
+    {
+      "role_id": "context_lineage_artifact",
+      "label": "Context lineage",
+      "contract_family": "context-lineage-record",
+      "runtime_artifact_ref": "artifacts/agent_baseline/context_lineage/latest-context-lineage-record.json",
+      "runtime_tags": [
+        "audit-only",
+        "local-only"
+      ],
+      "consumer_offer_tags": [
+        "audit-only",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/context_lineage/latest-context-lineage-record.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Context lineage is replay/audit state for one run and is not the live environment itself."
+      ]
+    },
+    {
+      "role_id": "workflow_trace_envelope_artifact",
+      "label": "Workflow trace envelope",
+      "contract_family": "workflow-trace-envelope",
+      "runtime_artifact_ref": "artifacts/agent_baseline/workflow_trace_envelope/latest-workflow-trace-envelope.json",
+      "runtime_tags": [
+        "audit-only",
+        "local-only"
+      ],
+      "consumer_offer_tags": [
+        "audit-only",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/workflow_trace_envelope/latest-workflow-trace-envelope.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Workflow traces remain audit-first runtime state."
+      ]
+    },
+    {
+      "role_id": "environment_envelope_artifact",
+      "label": "Environment envelope",
+      "contract_family": "environment-envelope",
+      "runtime_artifact_ref": "artifacts/agent_baseline/environment_envelope/latest-environment-envelope.json",
+      "runtime_tags": [
+        "audit-only",
+        "local-only"
+      ],
+      "consumer_offer_tags": [
+        "audit-only",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/environment_envelope/latest-environment-envelope.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Environment envelope is a composed audit boundary for one runtime environment state."
+      ]
+    },
+    {
+      "role_id": "environment_portability_artifact",
+      "label": "Environment portability taxonomy",
+      "contract_family": "environment-portability-taxonomy",
+      "runtime_artifact_ref": "artifacts/agent_baseline/environment_portability/latest-environment-portability-taxonomy.json",
+      "runtime_tags": [
+        "portable-authored",
+        "local-only"
+      ],
+      "consumer_offer_tags": [
+        "portable-authored",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/environment_portability/latest-environment-portability-taxonomy.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "The taxonomy is authored baseline policy, but the tracked artifact in this repo remains local canonical state."
+      ]
+    },
+    {
+      "role_id": "environment_operator_summary_artifact",
+      "label": "Operator environment summary",
+      "contract_family": "operator-environment-summary",
+      "runtime_artifact_ref": "artifacts/agent_baseline/environment_operator_summary/latest-operator-environment-summary.json",
+      "runtime_tags": [
+        "audit-only",
+        "local-only"
+      ],
+      "consumer_offer_tags": [
+        "audit-only",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/environment_operator_summary/latest-operator-environment-summary.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Operator environment summaries are run-scoped operator surfaces and remain audit-first state."
+      ]
+    },
+    {
+      "role_id": "environment_invariants_artifact",
+      "label": "Environment invariants report",
+      "contract_family": "environment-invariants-report",
+      "runtime_artifact_ref": "artifacts/agent_baseline/environment_invariants/latest-environment-invariants-report.json",
+      "runtime_tags": [
+        "audit-only",
+        "local-only"
+      ],
+      "consumer_offer_tags": [
+        "audit-only",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/environment_invariants/latest-environment-invariants-report.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Invariant reports freeze swap-stable environment semantics for audit and operator review."
+      ]
+    },
+    {
+      "role_id": "environment_promotion_pipeline_artifact",
+      "label": "Environment promotion pipeline",
+      "contract_family": "environment-promotion-pipeline",
+      "runtime_artifact_ref": "artifacts/agent_baseline/environment_promotion_pipeline/latest-environment-promotion-pipeline.json",
+      "runtime_tags": [
+        "audit-only",
+        "local-only"
+      ],
+      "consumer_offer_tags": [
+        "audit-only",
+        "consumer-publishable"
+      ],
+      "consumer_offer_relative_path": ".agent_baseline/baseline_offer/artifacts/environment_promotion_pipeline/latest-environment-promotion-pipeline.json",
+      "runtime_artifact_exists": true,
+      "consumer_offer_published": true,
+      "notes": [
+        "Promotion pipeline records stay review-first audit state and must not auto-mutate durable capabilities."
+      ]
+    }
+  ],
+  "notes": [
+    "ENV-05 makes packaging and portability classes explicit instead of leaving them implied across adjacent families.",
+    "Runtime-local posture and consumer-publishable baseline-offer posture are related but intentionally distinct.",
+    "Canonical ENV-05 sample for repo-owned artifact governance."
+  ]
+}

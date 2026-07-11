@@ -1,0 +1,101 @@
+{
+  "continuation_id": "baseline-agent-continuation",
+  "session_id": "baseline-wave2-session",
+  "recorded_at_utc": "2026-04-29T22:00:30.463156+00:00",
+  "lifecycle_state": "closed",
+  "checkpoint_state": "awaiting-approval",
+  "resume_posture": "awaiting-approval",
+  "current_owner": "operator",
+  "approval_required": true,
+  "required_pending_count": 1,
+  "workflow_resume_request_ref": "artifacts/agent_baseline/workflows/resume_requests/latest-workflow-resume-request.json",
+  "workflow_resume_result_ref": "artifacts/agent_baseline/workflows/resume_results/latest-workflow-resume-result.json",
+  "pause_reasons": [
+    {
+      "reason_id": "baseline-wave2-session-execution-checkpoint",
+      "source_kind": "execution-checkpoint",
+      "blocking": false,
+      "detail": "Operator checkpoint was satisfied and execution resumed.",
+      "artifact_ref": "artifacts/agent_baseline/harness/checkpoints/latest-execution-checkpoints.json"
+    },
+    {
+      "reason_id": "baseline-wave2-session-approval-pending",
+      "source_kind": "approval",
+      "blocking": true,
+      "detail": "Human checkpoint summary still requires operator acknowledgement before execution can continue.",
+      "artifact_ref": "artifacts/agent_baseline/harness/checkpoints/latest-human-checkpoints.json"
+    },
+    {
+      "reason_id": "baseline-wave2-session-compiler-blocker-1",
+      "source_kind": "compiler-blocker",
+      "blocking": true,
+      "detail": "Operator approval is required before destructive tool execution.",
+      "artifact_ref": null
+    }
+  ],
+  "approval_checkpoints": [
+    {
+      "checkpoint_id": "baseline-human-checkpoint-1",
+      "label": "Human checkpoint 1",
+      "status": "pending",
+      "required": true,
+      "reason": "Harness human checkpoint summary requires operator acknowledgement.",
+      "artifact_ref": "artifacts/agent_baseline/harness/checkpoints/latest-human-checkpoints.json"
+    },
+    {
+      "checkpoint_id": "baseline-human-checkpoint-2",
+      "label": "Human checkpoint 2",
+      "status": "satisfied",
+      "required": true,
+      "reason": "Harness human checkpoint summary requires operator acknowledgement.",
+      "artifact_ref": "artifacts/agent_baseline/harness/checkpoints/latest-human-checkpoints.json"
+    }
+  ],
+  "continuity_artifacts": [
+    "artifacts/agent_baseline/workflows/states/latest-workflow-state.json",
+    "artifacts/agent_baseline/workflows/resume_requests/latest-workflow-resume-request.json",
+    "artifacts/agent_baseline/workflows/resume_results/latest-workflow-resume-result.json",
+    "artifacts/agent_baseline/harness/checkpoints/latest-human-checkpoints.json",
+    "artifacts/agent_baseline/harness/checkpoints/latest-execution-checkpoints.json",
+    "artifacts/agent_baseline/sandbox_sessions/latest-sandbox-session.json"
+  ],
+  "next_turn_carry_forward": [
+    "recommended_action:",
+    "checkpoint_state:awaiting-approval",
+    "resume_posture:awaiting-approval",
+    "compiler_blocker:Operator approval is required before destructive tool execution.",
+    "last_checkpoint_reason:Operator checkpoint was satisfied and execution resumed."
+  ],
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/workflows/states/latest-workflow-state.json",
+    "artifacts/agent_baseline/workflows/resume_requests/latest-workflow-resume-request.json",
+    "artifacts/agent_baseline/workflows/resume_results/latest-workflow-resume-result.json",
+    "artifacts/agent_baseline/harness/checkpoints/latest-human-checkpoints.json",
+    "artifacts/agent_baseline/harness/checkpoints/latest-execution-checkpoints.json",
+    "artifacts/agent_baseline/sandbox_sessions/latest-sandbox-session.json",
+    "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+    "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+    "artifacts/agent_baseline/shell_contracts/latest-meta-agent-contract.json"
+  ],
+  "notes": [
+    "Canonical RST-02 sample for repo-owned artifact governance."
+  ],
+  "summary": {
+    "continuation_id": "baseline-agent-continuation",
+    "session_id": "baseline-wave2-session",
+    "checkpoint_state": "awaiting-approval",
+    "resume_posture": "awaiting-approval",
+    "current_owner": "operator",
+    "pause_reason_count": 3,
+    "approval_checkpoint_count": 2,
+    "carry_forward_count": 5,
+    "requires_operator_action": true,
+    "artifact_ref": "artifacts/agent_baseline/continuation_state/latest-agent-continuation-state.json"
+  },
+  "contract_family": "agent-continuation-state",
+  "contract_major": 1,
+  "schema_version": "agent-continuation-state/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major"
+}

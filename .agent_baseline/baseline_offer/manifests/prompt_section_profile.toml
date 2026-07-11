@@ -1,0 +1,31 @@
+[prompt_section_profile]
+version = "1.0"
+source_release = "holaos-environment-contract-hardening-apr-2026"
+notes = [
+  "HOS-03 makes prompt section precedence, volatility, and cache posture explicit instead of leaving prompt assembly as an opaque string.",
+  "The profile is advisory and descriptive; it does not grant execution authority or replace requirement approval.",
+]
+
+[precedence]
+platform_instructions = 10
+requirement_objective = 20
+authority_docs = 30
+current_working_context = 40
+continuity_and_memory = 50
+tools_skills_runtime = 60
+validation_and_guardrails = 70
+expected_outputs = 80
+
+[volatility]
+stable = "Stable instruction or policy inputs that can be cached until their source files change."
+workspace_stable = "Workspace-authored authority docs that can be content-addressed and reused across turns."
+turn_volatile = "Current-turn intent, context, validation, and output expectations that should not be reused blindly."
+session_continuity = "Warm continuity state carried across the current session or resumed workflow."
+runtime_discovered = "Runtime/tool/skill availability discovered for the current execution surface."
+
+[cache_profiles]
+persistent_cache = "Safe to cache until source content changes."
+content_addressable_cache = "Safe to cache by source hash or artifact digest."
+session_cache = "Safe only inside the same session or resumed workflow lineage."
+runtime_cache = "Safe only for the active runtime/capability snapshot."
+no_cache = "Do not cache across mission turns unless regenerated from current authoritative inputs."

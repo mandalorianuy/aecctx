@@ -1,0 +1,218 @@
+{
+  "promotion_id": "baseline-trace-eval-promotion",
+  "session_id": "baseline-wave2-session",
+  "recorded_at_utc": "2026-04-29T22:00:32.531127+00:00",
+  "envelope_id": "baseline-workflow-trace-envelope",
+  "suite_id": "baseline-wave4-eval-suite",
+  "run_id": "baseline-wave4-eval-run",
+  "run_status": "warn",
+  "promoted_from_trace": true,
+  "graders": [
+    {
+      "grader_id": "baseline-wave4-grade-trajectory",
+      "grader_kind": "trace-grade",
+      "target_surface": "workflow",
+      "status": "passed",
+      "score": 92.0,
+      "detail": "Trace shows explicit lifecycle closure and replay-ready lineage.",
+      "criterion_id": "trajectory",
+      "scenario_kind": "",
+      "artifact_refs": [
+        "artifacts/agent_baseline/evals/agent_traces/baseline-wave4-agent-trace.json",
+        "artifacts/agent_baseline/harness/results/baseline-wave2-execution-result.json"
+      ]
+    },
+    {
+      "grader_id": "baseline-wave4-grade-tool-use",
+      "grader_kind": "trace-grade",
+      "target_surface": "tools",
+      "status": "passed",
+      "score": 86.0,
+      "detail": "Selected tools stayed bounded and operator-readable.",
+      "criterion_id": "tool_use",
+      "scenario_kind": "",
+      "artifact_refs": [
+        "artifacts/agent_baseline/execution_compiler/latest-execution-compiler-artifact.json"
+      ]
+    },
+    {
+      "grader_id": "baseline-wave4-grade-response-quality",
+      "grader_kind": "trace-grade",
+      "target_surface": "prompt",
+      "status": "warn",
+      "score": 78.0,
+      "detail": "Operator summary is adequate but still worth targeted regression tracking.",
+      "criterion_id": "response_quality",
+      "scenario_kind": "",
+      "artifact_refs": [
+        "artifacts/agent_baseline/harness/results/baseline-wave2-last-message.md"
+      ]
+    },
+    {
+      "grader_id": "baseline-wave4-grade-review-quality",
+      "grader_kind": "trace-grade",
+      "target_surface": "guardrails",
+      "status": "warn",
+      "score": 74.0,
+      "detail": "Review posture surfaced the approval boundary but still requires explicit operator sign-off.",
+      "criterion_id": "review_quality",
+      "scenario_kind": "",
+      "artifact_refs": [
+        "artifacts/agent_baseline/guardrail_controls/latest-guardrail-control-taxonomy.json"
+      ]
+    },
+    {
+      "grader_id": "baseline-wave4-grade-routing",
+      "grader_kind": "trace-grade",
+      "target_surface": "routing",
+      "status": "passed",
+      "score": 88.0,
+      "detail": "Routing stayed on the local codex executor with bounded provider posture.",
+      "criterion_id": "routing_provider_choice",
+      "scenario_kind": "",
+      "artifact_refs": [
+        "artifacts/agent_baseline/execution_compiler/latest-execution-compiler-artifact.json"
+      ]
+    },
+    {
+      "grader_id": "baseline-wave4-sim-user",
+      "grader_kind": "simulation",
+      "target_surface": "guardrails",
+      "status": "warn",
+      "score": 76.0,
+      "detail": "Human approval path remains intentionally visible to the operator.",
+      "criterion_id": "",
+      "scenario_kind": "user-simulation",
+      "artifact_refs": [
+        "artifacts/agent_baseline/guardrail_controls/latest-guardrail-control-taxonomy.json"
+      ]
+    },
+    {
+      "grader_id": "baseline-wave4-sim-environment",
+      "grader_kind": "simulation",
+      "target_surface": "observability",
+      "status": "passed",
+      "score": 84.0,
+      "detail": "Trace and artifact lineage remain inspectable across workflow surfaces.",
+      "criterion_id": "",
+      "scenario_kind": "environment-simulation",
+      "artifact_refs": [
+        "artifacts/agent_baseline/workflow_trace_envelope/latest-workflow-trace-envelope.json"
+      ]
+    },
+    {
+      "grader_id": "baseline-wave4-sim-routing",
+      "grader_kind": "simulation",
+      "target_surface": "routing",
+      "status": "passed",
+      "score": 90.0,
+      "detail": "Routing benchmark stayed aligned with baseline runtime policy.",
+      "criterion_id": "",
+      "scenario_kind": "routing-benchmark",
+      "artifact_refs": [
+        "artifacts/agent_baseline/orchestration_taxonomy/latest-workflow-orchestration-taxonomy.json"
+      ]
+    }
+  ],
+  "regression_targets": [
+    {
+      "target_id": "baseline-wave2-session-guardrails-regression-target",
+      "target_surface": "guardrails",
+      "status": "watch",
+      "signal_count": 2,
+      "actionable_signal_count": 2,
+      "source_grader_ids": [
+        "baseline-wave4-grade-review-quality",
+        "baseline-wave4-sim-user"
+      ],
+      "notes": [
+        "Promotes trace inspection into a formal regression target.",
+        "actionable=2"
+      ]
+    },
+    {
+      "target_id": "baseline-wave2-session-observability-regression-target",
+      "target_surface": "observability",
+      "status": "stable",
+      "signal_count": 1,
+      "actionable_signal_count": 0,
+      "source_grader_ids": [
+        "baseline-wave4-sim-environment"
+      ],
+      "notes": [
+        "Promotes trace inspection into a formal regression target."
+      ]
+    },
+    {
+      "target_id": "baseline-wave2-session-prompt-regression-target",
+      "target_surface": "prompt",
+      "status": "watch",
+      "signal_count": 1,
+      "actionable_signal_count": 1,
+      "source_grader_ids": [
+        "baseline-wave4-grade-response-quality"
+      ],
+      "notes": [
+        "Promotes trace inspection into a formal regression target.",
+        "actionable=1"
+      ]
+    },
+    {
+      "target_id": "baseline-wave2-session-routing-regression-target",
+      "target_surface": "routing",
+      "status": "stable",
+      "signal_count": 2,
+      "actionable_signal_count": 0,
+      "source_grader_ids": [
+        "baseline-wave4-grade-routing",
+        "baseline-wave4-sim-routing"
+      ],
+      "notes": [
+        "Promotes trace inspection into a formal regression target."
+      ]
+    },
+    {
+      "target_id": "baseline-wave2-session-tools-regression-target",
+      "target_surface": "tools",
+      "status": "stable",
+      "signal_count": 1,
+      "actionable_signal_count": 0,
+      "source_grader_ids": [
+        "baseline-wave4-grade-tool-use"
+      ],
+      "notes": [
+        "Promotes trace inspection into a formal regression target."
+      ]
+    },
+    {
+      "target_id": "baseline-wave2-session-workflow-regression-target",
+      "target_surface": "workflow",
+      "status": "stable",
+      "signal_count": 1,
+      "actionable_signal_count": 0,
+      "source_grader_ids": [
+        "baseline-wave4-grade-trajectory"
+      ],
+      "notes": [
+        "Promotes trace inspection into a formal regression target."
+      ]
+    }
+  ],
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/workflow_trace_envelope/baseline-workflow-trace-envelope.json",
+    "artifacts/agent_baseline/evals/agent_traces/baseline-wave4-agent-trace.json",
+    "artifacts/agent_baseline/evals/suites/baseline-wave4-eval-suite.json",
+    "artifacts/agent_baseline/evals/baseline-wave4-eval-run.json",
+    "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json"
+  ],
+  "notes": [
+    "Canonical EVA-04 sample for repo-owned artifact governance."
+  ],
+  "contract_family": "trace-eval-promotion",
+  "contract_major": 1,
+  "schema_version": "trace-eval-promotion/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "snapshot_id": "latest"
+}

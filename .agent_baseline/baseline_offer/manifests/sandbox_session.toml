@@ -1,0 +1,28 @@
+[sandbox_session]
+version = "1.0"
+source_release = "openai-agents-sdk-apr-2026-assessment"
+notes = [
+  "SBX-02 defines resumable sandbox-session continuity as an explicit baseline contract instead of ambient hosted continuation state.",
+  "Checkpoint restore boundaries must describe what survives rehydration and what needs operator reacquisition.",
+]
+
+[restore_boundary]
+strategy = "artifact-backed-resume"
+restorable_state_fields = [
+  "lifecycle_state",
+  "workflow_summary",
+  "instruction_memory_summary",
+  "human_checkpoint_summary",
+  "execution_checkpoint_summary",
+  "interoperability_summary",
+  "policy_summary",
+]
+non_restorable_state_fields = [
+  "ambient_shell_handles",
+  "live_subprocesses",
+  "provider_socket_sessions",
+]
+notes = [
+  "The baseline may interoperate with hosted continuation ids, but those ids are not the primary source of truth.",
+  "Artifact-backed restore remains the canonical baseline continuity path.",
+]

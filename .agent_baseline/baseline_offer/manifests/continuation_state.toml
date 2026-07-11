@@ -1,0 +1,8 @@
+[continuation_state]
+version = "1.0"
+source_release = "openai-agents-sdk-apr-2026-assessment"
+notes = [
+  "RST-02 turns approvals, pause reasons, checkpoint posture, and next-turn carry-forward into an explicit baseline continuation contract.",
+  "Hosted continuation handles may interoperate with this surface, but they are not the primary source of truth."
+]
+

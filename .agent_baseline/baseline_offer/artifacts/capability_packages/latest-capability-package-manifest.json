@@ -1,0 +1,2024 @@
+{
+  "manifest_id": "baseline-execution-compiler-governance-capability-package-manifest",
+  "recorded_at_utc": "2026-04-29T22:00:32.150515+00:00",
+  "schema_version": "capability-package-manifest/v1",
+  "packages": [
+    {
+      "package_id": "agent_run_results-package",
+      "capability_id": "agent_run_results",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "status",
+        "result_mode",
+        "current_owner",
+        "replay_event_count",
+        "validation_artifact_count",
+        "agent_run_result_artifact",
+        "agent_run_result_summary"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/agent_run_results.py",
+        "docs/agent_run_results.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "artifact_retention-package",
+      "capability_id": "artifact_retention",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "artifact_retention",
+        "retention-policies",
+        "retention-candidates"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/artifact_retention.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "audit-package",
+      "capability_id": "audit",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/audit.py",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "capability_authority-package",
+      "capability_id": "capability_authority",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "entry_count",
+        "enabled_count",
+        "stale_count",
+        "execution_authority_count",
+        "consumer_overlay_allowed_count"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/capability_authority.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/capability_authority_boundaries.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "capability_packages-package",
+      "capability_id": "capability_packages",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "package_count",
+        "healthy_count",
+        "active_count",
+        "tool_surface_count",
+        "output_ref_count",
+        "consumer_sync_published_count"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/capability_packages.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/capability_packages.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "codex_app_automations-package",
+      "capability_id": "codex_app_automations",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "thread_reuse",
+        "workflow_continuation",
+        "wake_posture",
+        "resume_binding",
+        "replay_lineage"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/codex_app_automations.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_automations.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "codex_app_images-package",
+      "capability_id": "codex_app_images",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "image_request_kind",
+        "image_run_status",
+        "image_output_provenance",
+        "policy_posture",
+        "consumer_sync_posture"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/codex_app_images.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_images.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "codex_app_interactions-package",
+      "capability_id": "codex_app_interactions",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "browser",
+        "computer_use",
+        "page_annotations",
+        "action_trace",
+        "screenshot_artifacts",
+        "replay_lineage",
+        "policy_posture"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/codex_app_interactions.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_interactions.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "codex_app_memory-package",
+      "capability_id": "codex_app_memory",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "memory_signal_import",
+        "candidate_creation",
+        "approval_required_writeback",
+        "memory_lineage",
+        "governance_posture"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/codex_app_memory.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_memory.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "codex_app_plugins-package",
+      "capability_id": "codex_app_plugins",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "plugin_inventory",
+        "route_hints",
+        "selection_posture",
+        "policy_required_capabilities"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/codex_app_plugins.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_plugins.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "codex_app_remote_workspaces-package",
+      "capability_id": "codex_app_remote_workspaces",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "remote_workspace_identity",
+        "trust_posture",
+        "ssh_context",
+        "devbox_context",
+        "remote_artifact_provenance"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/codex_app_remote_workspaces.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_remote_workspaces.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "codex_app_runtime-package",
+      "capability_id": "codex_app_runtime",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "codex_app_runtime",
+        "browser",
+        "computer_use",
+        "thread_automations",
+        "plugin_inventory",
+        "memory",
+        "ssh_devbox",
+        "image_generation",
+        "multi_terminal",
+        "file_preview",
+        "summary_pane",
+        "review_comments"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/codex_app_runtime.py",
+        "docs/codex_app_runtime.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "context_lineage-package",
+      "capability_id": "context_lineage",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "selected_source_count",
+        "discarded_source_count",
+        "temperature_counts",
+        "selected_refs_preview",
+        "discarded_refs_preview"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/context_lineage.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/context_lineage.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "continuation_state-package",
+      "capability_id": "continuation_state",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "checkpoint_state",
+        "resume_posture",
+        "current_owner",
+        "pause_reason_count",
+        "approval_checkpoint_count",
+        "carry_forward_count",
+        "continuation_state_artifact",
+        "continuation_state_summary"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/continuation_state.py",
+        "docs/continuation_state.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "contract_semantics-package",
+      "capability_id": "contract_semantics",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/contract_semantics.py",
+        "docs/contract_versioning.md",
+        "AGENTS.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "contract_versioning-package",
+      "capability_id": "contract_versioning",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/contract_versioning.py",
+        "docs/contract_versioning.md",
+        "AGENTS.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "durable_outputs-package",
+      "capability_id": "durable_outputs",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "output_count",
+        "report_count",
+        "lineage_ref_count",
+        "durable_count"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/durable_outputs.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/durable_outputs.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "environment_envelope-package",
+      "capability_id": "environment_envelope",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "layer_counts",
+        "contract_families",
+        "projection_id",
+        "trace_envelope_id"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/environment_envelope.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/environment_envelope.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "environment_invariants-package",
+      "capability_id": "environment_invariants",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "check_count",
+        "passed_count",
+        "failed_count",
+        "swap_stable",
+        "swap_conformance_passed",
+        "swap_dimension_count",
+        "checked_artifact_count"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/environment_invariants.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/environment_invariants.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "environment_operator_summary-package",
+      "capability_id": "environment_operator_summary",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "component_count",
+        "checkpoint_state",
+        "visible_surface_count",
+        "result_status",
+        "promotion_candidate_count",
+        "consumer_publishable_count"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/environment_operator_summary.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/environment_operator_summary.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "environment_portability-package",
+      "capability_id": "environment_portability",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "runtime_tag_counts",
+        "consumer_offer_tag_counts",
+        "consumer_publishable_count",
+        "applicable_role_ids"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/environment_portability.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/environment_portability.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "environment_promotion_pipeline-package",
+      "capability_id": "environment_promotion_pipeline",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "status",
+        "review_required",
+        "auto_promotion_blocked",
+        "candidate_count",
+        "pending_candidate_count",
+        "accepted_candidate_count",
+        "candidate_kind_counts"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/environment_promotion_pipeline.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/environment_promotion_pipeline.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "eval_runtime-package",
+      "capability_id": "eval_runtime",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "eval_summary",
+        "eval_run_artifact",
+        "eval_suite_artifact",
+        "agent_trace_artifact",
+        "latest-eval-run.json"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/eval_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/evals.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "execution_compiler-package",
+      "capability_id": "execution_compiler",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "package-level-shared-contract",
+      "tool_surfaces": [
+        "compiler_artifact",
+        "latest-execution-compiler-artifact.json"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/execution_compiler.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md",
+        "docs/architecture.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "execution_graph-package",
+      "capability_id": "execution_graph",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "build_execution_graph_overview"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/execution_graph.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "execution_projection-package",
+      "capability_id": "execution_projection",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "visible_surface_ids",
+        "unprojected_surface_ids",
+        "selected_provider_id",
+        "orchestration_shape"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/execution_projection.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/execution_projection.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "external_runtime_contracts-package",
+      "capability_id": "external_runtime_contracts",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "package-level-shared-contract",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/external_runtime_contracts.py",
+        "REFERENCES.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "fallback_defaults-package",
+      "capability_id": "fallback_defaults",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/fallback_defaults.py",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "guardrail_controls-package",
+      "capability_id": "guardrail_controls",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "control_count",
+        "control_point_count",
+        "blocking_control_count",
+        "human_approval_count",
+        "tool_control_count",
+        "guardrail_controls_artifact",
+        "guardrail_controls_summary"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/guardrail_controls.py",
+        "docs/guardrail_controls.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "gui_shell-package",
+      "capability_id": "gui_shell",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/gui_shell.py",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "harness_links-package",
+      "capability_id": "harness_links",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "linkage_summary",
+        "session_linkage"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/harness_links.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "harness_runtime-package",
+      "capability_id": "harness_runtime",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/harness_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "harness_session_view-package",
+      "capability_id": "harness_session_view",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "build_harness_session_view",
+        "load_harness_session_view_contract",
+        "stage_guardrails",
+        "trace_summary",
+        "approvals",
+        "validation",
+        "interoperability",
+        "policy",
+        "memory",
+        "workflow",
+        "result",
+        "continuation",
+        "guardrail_controls",
+        "routing",
+        "orchestration",
+        "workflow_trace",
+        "evaluation",
+        "eval_promotion",
+        "promotion_pipeline",
+        "environment",
+        "skills",
+        "links",
+        "timestamps"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/harness_session_view.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/contract_versioning.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "hos_adoption-package",
+      "capability_id": "hos_adoption",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "conformance_status",
+        "covered_contract_count",
+        "missing_contract_count",
+        "issue_contract_count",
+        "checker"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/hos_adoption.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/hos_adoption_conformance.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "instruction_memory-package",
+      "capability_id": "instruction_memory",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "instruction_memory_summary",
+        "memory_governance_summary",
+        "instruction_set_artifact"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/instruction_memory.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "interoperability_plane-package",
+      "capability_id": "interoperability_plane",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "interoperability_summary",
+        "interoperability_artifact"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/interoperability_plane.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "learning_runtime-package",
+      "capability_id": "learning_runtime",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "learning_runtime",
+        "learning-prefer",
+        "latest-learning-report.json"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/learning_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "local_agent_exchange-package",
+      "capability_id": "local_agent_exchange",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "agent_cards",
+        "capability_exchange",
+        "manager_mediated_posture",
+        "local_only_handoffs"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/local_agent_exchange.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/local_agent_exchange.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "mcp_app_extensions-package",
+      "capability_id": "mcp_app_extensions",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "artifact_viewers",
+        "operator_widgets",
+        "panel_bindings",
+        "extension_policy_posture"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/mcp_app_extensions.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/mcp_app_extensions.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "memory_runtime-package",
+      "capability_id": "memory_runtime",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "package-level-shared-contract",
+      "tool_surfaces": [
+        "instruction_memory_summary",
+        "chronicle_summary",
+        "memory_governance_summary"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/memory_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md",
+        "docs/architecture.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "meta_agent_tooling-package",
+      "capability_id": "meta_agent_tooling",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "package-level-shared-contract",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/meta_agent_tooling.py",
+        "docs/meta_agent_tooling.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md",
+        "manifests/meta_agent_specialization_profiles.toml",
+        "README.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "mission_control-package",
+      "capability_id": "mission_control",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "mission_id",
+        "state",
+        "mission_kind",
+        "current_owner",
+        "needs_human_input",
+        "approval_required",
+        "mutating_execution_allowed",
+        "execution_posture",
+        "turn_intent_kind",
+        "approval_card_count",
+        "pending_approval_card_count",
+        "approval_lifecycle",
+        "tooling_candidate_count",
+        "adapter_conformance_count",
+        "adapter_conformance_checker",
+        "projection_receipt_count",
+        "transition_validation_count",
+        "blocked_transition_count",
+        "decision_receipt_count",
+        "context_stack_count",
+        "artifact_link_count",
+        "evidence_link_count",
+        "integrity_link_count",
+        "approval_link_count",
+        "dispatch_link_count",
+        "policy_decision_link_count",
+        "mission_control_view_artifact",
+        "mission_control_events_artifact"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/mission_control.py",
+        "docs/mission_control.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "operator_surface_mutability-package",
+      "capability_id": "operator_surface_mutability",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "field_count",
+        "display_only_count",
+        "actionable_count",
+        "writeback_enabled_count",
+        "consumer_owned_count"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/operator_surface_mutability.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/operator_surface_mutability.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "orchestration_taxonomy-package",
+      "capability_id": "orchestration_taxonomy",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "graph_shape",
+        "route_kind",
+        "delegation_mode",
+        "branch_count",
+        "explicit_branch_owner_count",
+        "ownership_transfer_handoff_count",
+        "orchestration_taxonomy_artifact",
+        "orchestration_summary"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/orchestration_taxonomy.py",
+        "docs/orchestration_taxonomy.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "policy_plane-package",
+      "capability_id": "policy_plane",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "policy_summary",
+        "policy_artifact"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/policy_plane.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "prompt_section_profile-package",
+      "capability_id": "prompt_section_profile",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "section_count",
+        "selected_section_count",
+        "volatility_counts",
+        "cache_profile_counts",
+        "highest_authority_section_id"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/prompt_section_profile.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/prompt_section_profile.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "provider_broker-package",
+      "capability_id": "provider_broker",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "package-level-shared-contract",
+      "tool_surfaces": [
+        "provider_catalog_snapshot",
+        "latest-provider-catalog.json"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/provider_broker.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "provider_runtime-package",
+      "capability_id": "provider_runtime",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/provider_runtime.py",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "requirement_dialogue_manager-package",
+      "capability_id": "requirement_dialogue_manager",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "package-level-shared-contract",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/requirement_dialogue_manager.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md",
+        "docs/architecture.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "requirement_memory_contracts-package",
+      "capability_id": "requirement_memory_contracts",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "package-level-shared-contract",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/requirement_memory_contracts.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/contract_versioning.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "requirement_spec-package",
+      "capability_id": "requirement_spec",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "package-level-shared-contract",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/requirement_spec.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/contract_versioning.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "review_core-package",
+      "capability_id": "review_core",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "review_summary",
+        "classification",
+        "stage_status"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/review_core.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "runtime_activation-package",
+      "capability_id": "runtime_activation",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "runtime_activation",
+        "activation-review-ready",
+        "latest-runtime-activation-report.json"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/runtime_activation.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "runtime_broker-package",
+      "capability_id": "runtime_broker",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "runtime_broker_summary",
+        "runtime_decision_artifact",
+        "selected_executor_runtime_id"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/runtime_broker.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md",
+        "docs/architecture.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "runtime_budget-package",
+      "capability_id": "runtime_budget",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/runtime_budget.py",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "runtime_continuity-package",
+      "capability_id": "runtime_continuity",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "same_run_ref_count",
+        "session_continuity_ref_count",
+        "durable_memory_candidate_count",
+        "durable_skill_candidate_count",
+        "promotion_blocked"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/runtime_continuity.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/runtime_continuity.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "runtime_performance-package",
+      "capability_id": "runtime_performance",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "artifacts/agent_baseline/runtime_performance/latest-summary.json"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/runtime_performance.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "runtime_provider_calibration-package",
+      "capability_id": "runtime_provider_calibration",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "runtime_provider_calibration",
+        "latest-runtime-provider-calibration.json"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/runtime_provider_calibration.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "runtime_registry-package",
+      "capability_id": "runtime_registry",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "runtime_registry",
+        "latest-runtime-registry.json"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/runtime_registry.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "runtime_safe_mode-package",
+      "capability_id": "runtime_safe_mode",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/runtime_safe_mode.py",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "sandbox_sessions-package",
+      "capability_id": "sandbox_sessions",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "checkpoint_state",
+        "continuation_posture",
+        "current_owner",
+        "requires_operator_reapproval",
+        "sandbox_session_artifact",
+        "sandbox_session_summary"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/sandbox_sessions.py",
+        "docs/sandbox_sessions.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "sandbox_workspaces-package",
+      "capability_id": "sandbox_workspaces",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "mount_count",
+        "persisted_output_count",
+        "operator_approval_required",
+        "path_policy",
+        "sandbox_workspace_artifact",
+        "sandbox_workspace_summary"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/sandbox_workspaces.py",
+        "docs/sandbox_workspaces.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "security_posture-package",
+      "capability_id": "security_posture",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "security_posture",
+        "security-posture",
+        "latest-security-posture.json"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/security_posture.py",
+        "docs/security_posture.md",
+        "manifests/security_posture.toml",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "session_chronicle-package",
+      "capability_id": "session_chronicle",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "chronicle_summary",
+        "chronicle_artifact",
+        "chronicle_index_artifact"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/session_chronicle.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "session_history-package",
+      "capability_id": "session_history",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/session_history.py",
+        "docs/bootstrap_scope.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "shadow_mode-package",
+      "capability_id": "shadow_mode",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/shadow_mode.py",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "shared_models-package",
+      "capability_id": "shared_models",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/models.py",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "shell_contracts-package",
+      "capability_id": "shell_contracts",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "shell_contract",
+        "latest-meta-agent-contract.json"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/shell_contracts.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "shell_runtime-package",
+      "capability_id": "shell_runtime",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "shell_runtime",
+        "latest-gui-shell-runtime.json",
+        "latest-cli-shell-runtime.json"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/shell_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "skill_grants-package",
+      "capability_id": "skill_grants",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "receipt_count",
+        "granted_count",
+        "selected_count",
+        "authority_widening_count"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/skill_grants.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/skill_grants.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "skill_marketplace-package",
+      "capability_id": "skill_marketplace",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "package-level-shared-contract",
+      "tool_surfaces": [
+        "skill_marketplace",
+        "skills",
+        "trusted-skills"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/skill_marketplace.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "structural_graph-package",
+      "capability_id": "structural_graph",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "build_structural_graph_overview",
+        "graph_retrieval_summary",
+        "graph-fusions",
+        "graph-hotspot-overlays",
+        "graph-staleness",
+        "blast-radius"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/structural_graph.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "surface_closure_governance-package",
+      "capability_id": "surface_closure_governance",
+      "lifecycle_state": "internal",
+      "health_status": "healthy",
+      "ownership": "baseline-internal",
+      "surface_class": "internal-only-helper",
+      "tool_surfaces": [],
+      "output_refs": [
+        "packages/agent_baseline/surface_closure.py",
+        "docs/surface_closure_register.md",
+        "AGENTS.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "tool_taxonomy-package",
+      "capability_id": "tool_taxonomy",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "discovery_class_counts",
+        "local_mcp_count",
+        "remote_mcp_count",
+        "deferred_surface_ids"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/tool_taxonomy.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/tool_taxonomy.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "trace_eval_promotion-package",
+      "capability_id": "trace_eval_promotion",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "promotion_id",
+        "grader_count",
+        "regression_target_count",
+        "actionable_target_count",
+        "target_surface_counts",
+        "trace_eval_promotion_artifact",
+        "trace_eval_promotion_summary"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/trace_eval_promotion.py",
+        "docs/trace_eval_promotion.md",
+        "docs/evals.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "validation_results-package",
+      "capability_id": "validation_results",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "validation_summary"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/validation_results.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "workflow_editor-package",
+      "capability_id": "workflow_editor",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "visual_editor_state",
+        "editable_operations",
+        "layout_posture",
+        "review_gated_writeback"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/workflow_editor.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/workflow_editor.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "workflow_runtime-package",
+      "capability_id": "workflow_runtime",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "workflow_summary",
+        "workflow_plan_artifact",
+        "workflow_state_artifact",
+        "workflow_resume_request_artifact",
+        "workflow_resume_result_artifact"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/workflow_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": false,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "workflow_trace_envelope-package",
+      "capability_id": "workflow_trace_envelope",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "envelope_id",
+        "group_count",
+        "grouped_event_count",
+        "linked_session_count",
+        "approval_event_count",
+        "handoff_event_count",
+        "tool_event_count",
+        "workflow_trace_envelope_artifact",
+        "workflow_trace_envelope_summary"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/workflow_trace_envelope.py",
+        "docs/workflow_trace_envelope.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "workspace_bootstrap-package",
+      "capability_id": "workspace_bootstrap",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "shell/session-visible-contract",
+      "tool_surfaces": [
+        "instruction_entrypoint",
+        "task_file_count",
+        "skill_root_count",
+        "preferred_path_mode"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/workspace_bootstrap.py",
+        "docs/workspace_bootstrap.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    },
+    {
+      "package_id": "workspace_boundary_guard-package",
+      "capability_id": "workspace_boundary_guard",
+      "lifecycle_state": "active",
+      "health_status": "healthy",
+      "ownership": "baseline",
+      "surface_class": "operator-visible-summary-contract",
+      "tool_surfaces": [
+        "allowed_root_count",
+        "path_decision_count",
+        "command_decision_count",
+        "rejected_path_count",
+        "rejected_command_count",
+        "boundary_clean"
+      ],
+      "output_refs": [
+        "packages/agent_baseline/workspace_boundary_guard.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/workspace_boundary_guard.md",
+        "docs/surface_closure_register.md"
+      ],
+      "consumer_sync_published": true,
+      "notes": [
+        "Derived from surface closure target; package is descriptive and does not execute."
+      ]
+    }
+  ],
+  "notes": [
+    "HOS-08 treats reusable capabilities as descriptive packages without importing marketplace or product app behavior.",
+    "A capability package is not execution authority; it records lifecycle, health, ownership, and consumer-visible outputs for baseline contracts."
+  ],
+  "summary": {
+    "manifest_id": "baseline-execution-compiler-governance-capability-package-manifest",
+    "package_count": 81,
+    "healthy_count": 81,
+    "active_count": 68,
+    "tool_surface_count": 322,
+    "output_ref_count": 397,
+    "consumer_sync_published_count": 38,
+    "artifact_ref": "artifacts/agent_baseline/capability_packages/latest-capability-package-manifest.json"
+  },
+  "contract_family": "capability-package-manifest",
+  "contract_major": 1,
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/capability_packages/baseline-execution-compiler-governance-capability-package-manifest.json"
+}

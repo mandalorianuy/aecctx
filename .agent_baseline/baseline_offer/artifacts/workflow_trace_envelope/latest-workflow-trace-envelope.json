@@ -1,0 +1,109 @@
+{
+  "envelope_id": "baseline-workflow-trace-envelope",
+  "session_id": "baseline-wave2-session",
+  "workflow_id": "baseline-wave4-workflow",
+  "recorded_at_utc": "2026-04-29T22:00:32.255782+00:00",
+  "lifecycle_state": "closed",
+  "current_stage": "output",
+  "linked_session_ids": [],
+  "linked_eval_run_ids": [
+    "baseline-wave4-eval-suite"
+  ],
+  "groups": [
+    {
+      "group_kind": "workflow-runs",
+      "label": "Workflow runs and lifecycle grouping",
+      "event_count": 1,
+      "stage_count": 2,
+      "status_counts": {
+        "closed": 1
+      },
+      "artifact_refs": [
+        "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+        "artifacts/agent_baseline/workflows/states/latest-workflow-state.json",
+        "artifacts/agent_baseline/workflows/resume_requests/latest-workflow-resume-request.json",
+        "artifacts/agent_baseline/workflows/resume_results/latest-workflow-resume-result.json"
+      ],
+      "notes": [
+        "Groups current and linked workflow runs under one envelope."
+      ]
+    },
+    {
+      "group_kind": "approvals",
+      "label": "Approvals and checkpoints",
+      "event_count": 5,
+      "stage_count": 1,
+      "status_counts": {
+        "approval-required": 1
+      },
+      "artifact_refs": [
+        "artifacts/agent_baseline/harness/checkpoints/latest-human-checkpoints.json",
+        "artifacts/agent_baseline/harness/checkpoints/latest-execution-checkpoints.json"
+      ],
+      "notes": [
+        "Captures explicit approval and pause/resume boundaries."
+      ]
+    },
+    {
+      "group_kind": "handoffs",
+      "label": "Handoffs and ownership transfer",
+      "event_count": 3,
+      "stage_count": 1,
+      "status_counts": {
+        "approval-required": 1
+      },
+      "artifact_refs": [],
+      "notes": [
+        "Groups manager-first delegation and ownership-transfer handoff evidence."
+      ]
+    },
+    {
+      "group_kind": "tools",
+      "label": "Tool, resource, and prompt activity",
+      "event_count": 6,
+      "stage_count": 2,
+      "status_counts": {
+        "observed": 1
+      },
+      "artifact_refs": [
+        "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+        "artifacts/agent_baseline/execution_compiler/latest-execution-compiler-artifact.json"
+      ],
+      "notes": [
+        "Groups tool/resource/template activity into one inspectable trace surface."
+      ]
+    },
+    {
+      "group_kind": "evaluation",
+      "label": "Trace-linked evaluation and regression loop",
+      "event_count": 16,
+      "stage_count": 1,
+      "status_counts": {
+        "warn": 1
+      },
+      "artifact_refs": [
+        "artifacts/agent_baseline/evals/agent_traces/baseline-wave4-agent-trace.json",
+        "artifacts/agent_baseline/evals/suites/baseline-wave4-eval-suite.json",
+        "artifacts/agent_baseline/evals/baseline-wave4-eval-run.json"
+      ],
+      "notes": [
+        "Groups trace grading and regression evidence under the same workflow trace envelope."
+      ]
+    }
+  ],
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+    "artifacts/agent_baseline/workflows/states/latest-workflow-state.json",
+    "artifacts/agent_baseline/evals/baseline-wave4-eval-run.json"
+  ],
+  "notes": [
+    "Canonical OBS-02 sample for repo-owned artifact governance."
+  ],
+  "contract_family": "workflow-trace-envelope",
+  "contract_major": 1,
+  "schema_version": "workflow-trace-envelope/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "snapshot_id": "latest"
+}

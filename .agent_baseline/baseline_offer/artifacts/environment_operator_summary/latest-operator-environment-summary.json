@@ -1,0 +1,90 @@
+{
+  "summary_id": "baseline-operator-environment-summary",
+  "session_id": "baseline-wave2-session",
+  "generated_at_utc": "2026-04-29T22:00:32.446504+00:00",
+  "environment_kind": "baseline-harness-environment",
+  "lifecycle_state": "closed",
+  "status": "closed",
+  "workspace_id": "",
+  "component_count": 4,
+  "active_layer_count": 3,
+  "continuity_posture": {
+    "continuation_id": "",
+    "checkpoint_state": "",
+    "resume_posture": "",
+    "current_owner": "",
+    "pause_reason_count": 0,
+    "approval_checkpoint_count": 0,
+    "requires_operator_action": false
+  },
+  "projection_posture": {
+    "projection_id": "baseline-execution-projection",
+    "visible_surface_count": 0,
+    "hidden_surface_count": 13,
+    "selected_skill_count": 0,
+    "selected_plugin_count": 0,
+    "selected_context_source_count": 1,
+    "selected_executor_runtime_id": "",
+    "selected_provider_id": "",
+    "permission_posture": {
+      "path_policy": "",
+      "operator_approval_required": false,
+      "approval_required": true,
+      "control_count": 0,
+      "blocking_control_count": 0,
+      "human_approval_count": 0,
+      "local_mcp_count": 1,
+      "remote_mcp_count": 1
+    }
+  },
+  "result_posture": {
+    "result_id": "",
+    "status": "",
+    "result_mode": "",
+    "current_owner": "",
+    "final_output_present": false,
+    "validation_artifact_count": 0,
+    "review_status": "",
+    "execution_classification": ""
+  },
+  "promotion_posture": {
+    "promotion_id": "",
+    "status": "",
+    "promoted_from_trace": false,
+    "actionable_target_count": 0,
+    "regression_target_count": 0,
+    "target_surface_counts": {}
+  },
+  "portability_posture": {
+    "taxonomy_id": "baseline-environment-portability",
+    "applicable_role_count": 6,
+    "consumer_publishable_count": 14,
+    "runtime_artifact_exists_count": 16,
+    "runtime_tag_counts": {
+      "rehydratable-runtime": 1,
+      "local-only": 6,
+      "audit-only": 4,
+      "portable-authored": 1
+    },
+    "consumer_offer_tag_counts": {
+      "rehydratable-runtime": 1,
+      "consumer-publishable": 6,
+      "audit-only": 4,
+      "portable-authored": 1
+    }
+  },
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/environment_envelope/baseline-environment-envelope.json",
+    "artifacts/agent_baseline/execution_projection/baseline-execution-projection.json",
+    "None",
+    "None",
+    "artifacts/agent_baseline/environment_portability/baseline-environment-portability.json",
+    "artifacts/agent_baseline/context_lineage/baseline-context-lineage.json",
+    "None"
+  ],
+  "notes": [
+    "ENV-06 defines one explicit operator-facing environment summary rather than requiring operators to reconstruct environment posture from adjacent contracts.",
+    "The summary remains compositional: environment envelope, projection, continuation, results, portability, and promotion stay independently governed families.",
+    "Canonical ENV-06 sample for repo-owned artifact governance."
+  ]
+}

@@ -1,0 +1,5 @@
+[runtime_continuity]
+schema_version = "1.0"
+description = "Separates same-run/session continuity from reviewed durable memory and skill promotion candidates."
+notes = ["HOS-06 blocks implicit durable memory promotion from runtime continuity."]
+

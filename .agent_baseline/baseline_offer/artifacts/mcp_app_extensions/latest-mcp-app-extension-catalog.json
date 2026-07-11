@@ -1,0 +1,219 @@
+{
+  "catalog_id": "baseline-mcp-app-extension-catalog",
+  "recorded_at_utc": "2026-04-17T00:00:00+00:00",
+  "source_release": "baseline-local-mcp-apps-v1",
+  "default_surface": "gui",
+  "extensions": [
+    {
+      "extension_id": "execution-compiler-viewer",
+      "display_name": "Execution Compiler Viewer",
+      "extension_kind": "artifact-viewer",
+      "surface": "gui",
+      "panel_id": "runtime",
+      "widget_slot": "detail",
+      "target_artifact_family": "execution-compiler",
+      "operator_visible": true,
+      "policy_posture": "baseline",
+      "linked_capability_ids": [
+        "EXC-02",
+        "EXC-04"
+      ],
+      "notes": [
+        "Viewer for compiler pack posture, delegation, and context budgets."
+      ]
+    },
+    {
+      "extension_id": "harness-session-viewer",
+      "display_name": "Harness Session Viewer",
+      "extension_kind": "artifact-viewer",
+      "surface": "gui",
+      "panel_id": "sessions",
+      "widget_slot": "detail",
+      "target_artifact_family": "harness-session-view",
+      "operator_visible": true,
+      "policy_posture": "baseline",
+      "linked_capability_ids": [
+        "HAR-01",
+        "SHELL-03"
+      ],
+      "notes": [
+        "Viewer for session lifecycle, approvals, validation, and trace summary."
+      ]
+    },
+    {
+      "extension_id": "local-agent-exchange-viewer",
+      "display_name": "Local Agent Exchange Viewer",
+      "extension_kind": "artifact-viewer",
+      "surface": "gui",
+      "panel_id": "runtime",
+      "widget_slot": "detail",
+      "target_artifact_family": "local-agent-exchange",
+      "operator_visible": true,
+      "policy_posture": "baseline",
+      "linked_capability_ids": [
+        "FUT-05"
+      ],
+      "notes": [
+        "Viewer for local-only agent cards and capability exchange posture."
+      ]
+    },
+    {
+      "extension_id": "runtime-posture-widget",
+      "display_name": "Runtime Posture Widget",
+      "extension_kind": "operator-widget",
+      "surface": "gui",
+      "panel_id": "runtime",
+      "widget_slot": "header",
+      "target_artifact_family": "runtime-registry",
+      "operator_visible": true,
+      "policy_posture": "baseline",
+      "linked_capability_ids": [
+        "APP-01",
+        "PLG-01",
+        "FUT-06"
+      ],
+      "notes": [
+        "Widget for runtime, plugin, and extension posture counts."
+      ]
+    },
+    {
+      "extension_id": "structural-graph-viewer",
+      "display_name": "Structural Graph Viewer",
+      "extension_kind": "artifact-viewer",
+      "surface": "gui",
+      "panel_id": "graphs",
+      "widget_slot": "detail",
+      "target_artifact_family": "structural-graph",
+      "operator_visible": true,
+      "policy_posture": "baseline",
+      "linked_capability_ids": [
+        "SCG-03",
+        "SCG-04",
+        "SCG-05",
+        "SCG-06",
+        "SCG-07"
+      ],
+      "notes": [
+        "Viewer for structural graph retrieval, hotspot overlays, and staleness posture."
+      ]
+    },
+    {
+      "extension_id": "validation-results-viewer",
+      "display_name": "Validation Results Viewer",
+      "extension_kind": "artifact-viewer",
+      "surface": "gui",
+      "panel_id": "approvals",
+      "widget_slot": "detail",
+      "target_artifact_family": "validation-results",
+      "operator_visible": true,
+      "policy_posture": "baseline",
+      "linked_capability_ids": [
+        "OBS-01",
+        "HAR-01"
+      ],
+      "notes": [
+        "Viewer for validation artifact posture."
+      ]
+    },
+    {
+      "extension_id": "workflow-editor-viewer",
+      "display_name": "Workflow Editor Viewer",
+      "extension_kind": "artifact-viewer",
+      "surface": "gui",
+      "panel_id": "graphs",
+      "widget_slot": "primary",
+      "target_artifact_family": "workflow-editor-state",
+      "operator_visible": true,
+      "policy_posture": "review-required",
+      "linked_capability_ids": [
+        "SWR-01",
+        "SWR-05",
+        "SWR-06",
+        "FUT-07"
+      ],
+      "notes": [
+        "Viewer for visual workflow topology and editable operations."
+      ]
+    },
+    {
+      "extension_id": "workflow-topology-widget",
+      "display_name": "Workflow Topology Widget",
+      "extension_kind": "operator-widget",
+      "surface": "gui",
+      "panel_id": "graphs",
+      "widget_slot": "header",
+      "target_artifact_family": "workflow-editor-state",
+      "operator_visible": true,
+      "policy_posture": "review-required",
+      "linked_capability_ids": [
+        "SWR-01",
+        "SWR-02",
+        "SWR-03",
+        "SWR-04",
+        "FUT-07"
+      ],
+      "notes": [
+        "Widget for graph shape, checkpoints, and editable-operation posture."
+      ]
+    }
+  ],
+  "notes": [
+    "FUT-06 turns local-only MCP Apps patterns into a governed baseline catalog for artifact viewers and operator widgets.",
+    "Extensions remain local UX bindings over baseline-owned artifacts; they do not imply specialization-specific product widgets.",
+    "Artifact viewers and widgets must bind to baseline contract families or summaries, not ambient filesystem assumptions."
+  ],
+  "summary": {
+    "catalog_id": "baseline-mcp-app-extension-catalog",
+    "default_surface": "gui",
+    "extension_count": 8,
+    "artifact_viewer_count": 6,
+    "operator_widget_count": 2,
+    "artifact_viewers": [
+      "execution-compiler-viewer",
+      "harness-session-viewer",
+      "local-agent-exchange-viewer",
+      "structural-graph-viewer",
+      "validation-results-viewer",
+      "workflow-editor-viewer"
+    ],
+    "operator_widgets": [
+      "runtime-posture-widget",
+      "workflow-topology-widget"
+    ],
+    "operator_visible_count": 8,
+    "artifact_family_count": 7,
+    "panel_count": 4,
+    "panel_bindings": [
+      "approvals",
+      "graphs",
+      "runtime",
+      "sessions"
+    ],
+    "extension_policy_posture": [
+      "baseline",
+      "review-required"
+    ],
+    "artifact_families": [
+      "execution-compiler",
+      "harness-session-view",
+      "local-agent-exchange",
+      "runtime-registry",
+      "structural-graph",
+      "validation-results",
+      "workflow-editor-state"
+    ],
+    "panel_ids": [
+      "approvals",
+      "graphs",
+      "runtime",
+      "sessions"
+    ],
+    "artifact_ref": "artifacts/agent_baseline/mcp_app_extensions/latest-mcp-app-extension-catalog.json"
+  },
+  "contract_family": "mcp-app-extension-catalog",
+  "contract_major": 1,
+  "schema_version": "mcp-app-extension-catalog/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major"
+}

@@ -1,0 +1,48 @@
+{
+  "pipeline_id": "baseline-environment-promotion-pipeline",
+  "session_id": "baseline-wave2-session",
+  "generated_at_utc": "2026-04-29T22:00:32.466459+00:00",
+  "status": "watch",
+  "current_owner": "review",
+  "review_required": false,
+  "auto_promotion_blocked": true,
+  "run_result_id": "",
+  "trace_promotion_id": "",
+  "candidates": [
+    {
+      "candidate_id": "baseline-wave2-session-memory-promotion-candidate",
+      "candidate_kind": "memory",
+      "source_surface": "results",
+      "source_target_id": "",
+      "review_state": "watch",
+      "summary": "Promote reviewed run outcomes and eval evidence into durable memory only after explicit acceptance.",
+      "linked_proposal_artifact": "",
+      "linked_acceptance_artifact": "",
+      "durable_artifact_ref": "",
+      "source_artifact_refs": [
+        "artifacts/agent_baseline/evals/baseline-wave4-eval-run.json",
+        "artifacts/agent_baseline/shell_contracts/latest-meta-agent-contract.json"
+      ],
+      "notes": [
+        "review_follow_up_count=0",
+        "actionable_target_count=0"
+      ]
+    }
+  ],
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/evals/baseline-wave4-eval-run.json",
+    "artifacts/agent_baseline/evals/suites/baseline-wave4-eval-suite.json",
+    "artifacts/agent_baseline/shell_contracts/latest-meta-agent-contract.json",
+    "artifacts/agent_baseline/environment_operator_summary/baseline-operator-environment-summary.json"
+  ],
+  "notes": [
+    "Canonical reviewed environment-promotion pipeline snapshot for ENV-07."
+  ],
+  "contract_family": "environment-promotion-pipeline",
+  "contract_major": 1,
+  "schema_version": "environment-promotion-pipeline/v1",
+  "contract_revision": 2,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "snapshot_id": "latest"
+}

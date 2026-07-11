@@ -1,0 +1,35 @@
+{
+  "record_id": "baseline-execution-compiler-governance-durable-output-artifacts",
+  "recorded_at_utc": "2026-04-29T22:00:32.117500+00:00",
+  "schema_version": "durable-output-artifacts/v1",
+  "outputs": [
+    {
+      "output_id": "baseline-execution-compiler-governance-operator-report",
+      "output_kind": "operator-report",
+      "title": "Operator Report",
+      "artifact_ref": "artifacts/agent_baseline/durable_outputs/baseline-execution-compiler-governance-operator-report.md",
+      "source_lineage_refs": [
+        "None"
+      ],
+      "preview_ref": "artifacts/agent_baseline/durable_outputs/baseline-execution-compiler-governance-operator-report.md",
+      "retention_posture": "durable"
+    }
+  ],
+  "notes": [
+    "HOS-09 records durable reports, previews, and source lineage."
+  ],
+  "summary": {
+    "record_id": "baseline-execution-compiler-governance-durable-output-artifacts",
+    "output_count": 1,
+    "report_count": 1,
+    "lineage_ref_count": 1,
+    "durable_count": 1,
+    "artifact_ref": "artifacts/agent_baseline/durable_outputs/latest-durable-output-artifacts.json"
+  },
+  "contract_family": "durable-output-artifacts",
+  "contract_major": 1,
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/durable_outputs/baseline-execution-compiler-governance-durable-output-artifacts.json"
+}

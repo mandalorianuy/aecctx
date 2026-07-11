@@ -1,0 +1,86 @@
+[codex_app_interactions]
+version = "1.0"
+runtime_id = "codex-app"
+label = "Codex App Browser and Computer Use"
+source_release = "codex-for-almost-everything"
+release_date = "2026-04-16"
+source_url = "https://openai.com/index/codex-for-almost-everything/"
+default_surface_kind = "browser"
+notes = [
+  "WEB-01 freezes the reusable browser and computer-use interaction artifact shape.",
+  "The contract stays baseline-owned and neutral; specialization repos consume the exported summaries without inventing local semantics.",
+]
+
+[surface_kinds.browser]
+label = "In-app Browser"
+operator_visible = true
+page_aware = true
+summary = "Native Codex browser actions and page comments."
+
+[surface_kinds.computer_use]
+label = "Computer Use"
+operator_visible = true
+page_aware = false
+summary = "Background computer-use actions against desktop apps."
+
+[annotation_kinds.comment]
+label = "Comment"
+summary = "Inline operator comment attached to a page or UI target."
+
+[annotation_kinds.highlight]
+label = "Highlight"
+summary = "Visible emphasis over a page or UI target."
+
+[annotation_kinds.bounding_box]
+label = "Bounding Box"
+summary = "Coordinate-based selection over a browser or desktop capture."
+
+[action_kinds.navigate]
+label = "Navigate"
+surface_kinds = ["browser"]
+reason_required = false
+destructive = false
+
+[action_kinds.click]
+label = "Click"
+surface_kinds = ["browser", "computer_use"]
+reason_required = true
+destructive = false
+
+[action_kinds.type]
+label = "Type"
+surface_kinds = ["browser", "computer_use"]
+reason_required = true
+destructive = false
+
+[action_kinds.scroll]
+label = "Scroll"
+surface_kinds = ["browser", "computer_use"]
+reason_required = false
+destructive = false
+
+[action_kinds.hotkey]
+label = "Hotkey"
+surface_kinds = ["computer_use"]
+reason_required = true
+destructive = false
+
+[action_kinds.capture_screenshot]
+label = "Capture Screenshot"
+surface_kinds = ["browser", "computer_use"]
+reason_required = false
+destructive = false
+
+[action_kinds.open_file]
+label = "Open File"
+surface_kinds = ["computer_use"]
+reason_required = true
+destructive = false
+
+[policy]
+review_recommended_action_kinds = ["hotkey", "open_file", "type"]
+restricted_action_kinds = ["hotkey"]
+notes = [
+  "Reason-required posture is frozen at the action kind layer for v1.",
+  "Review-recommended actions should surface in operator summaries and replay lineage.",
+]

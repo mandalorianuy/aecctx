@@ -1,0 +1,92 @@
+{
+  "interaction_id": "baseline-browser-annotation-pass",
+  "session_id": "baseline-web-01-sample",
+  "thread_id": "baseline-web-01-thread",
+  "recorded_at_utc": "2026-04-16T00:00:00+00:00",
+  "surface_kind": "browser",
+  "status": "completed",
+  "page_url": "http://localhost:4173/",
+  "page_title": "Canonical Codex app browser sample",
+  "origin_kind": "localhost",
+  "target_app": "codex-browser",
+  "annotations": [
+    {
+      "annotation_id": "baseline-browser-annotation-1",
+      "annotation_kind": "comment",
+      "target_label": "primary-cta",
+      "note": "Canonical browser annotation sample for WEB-01 governance."
+    }
+  ],
+  "actions": [
+    {
+      "action_id": "baseline-browser-action-1",
+      "action_kind": "navigate",
+      "surface_kind": "browser",
+      "target": "http://localhost:4173/",
+      "result_status": "succeeded",
+      "recorded_at_utc": "2026-04-16T00:00:00+00:00",
+      "reason": "",
+      "input_preview": "",
+      "destructive": false
+    },
+    {
+      "action_id": "baseline-browser-action-2",
+      "action_kind": "click",
+      "surface_kind": "browser",
+      "target": "primary-cta",
+      "result_status": "succeeded",
+      "recorded_at_utc": "2026-04-16T00:00:00+00:00",
+      "reason": "Canonical browser interaction sample for replay-grade lineage.",
+      "input_preview": "",
+      "destructive": false
+    }
+  ],
+  "screenshots": [
+    {
+      "artifact_ref": "artifacts/agent_baseline/codex_app_interactions/screenshots/baseline-browser-annotation-pass.png",
+      "label": "Canonical browser capture",
+      "capture_kind": "viewport",
+      "recorded_at_utc": "2026-04-16T00:00:00+00:00"
+    }
+  ],
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/shell_contracts/latest-meta-agent-contract.json",
+    "artifacts/agent_baseline/codex_app_runtime/latest-codex-app-runtime.json"
+  ],
+  "notes": [
+    "Canonical WEB-01 sample for repo-owned artifact governance."
+  ],
+  "summary": {
+    "session_id": "baseline-web-01-sample",
+    "interaction_count": 1,
+    "browser_interaction_count": 1,
+    "computer_use_interaction_count": 0,
+    "annotation_count": 1,
+    "screenshot_count": 1,
+    "browser_action_count": 2,
+    "computer_use_action_count": 0,
+    "destructive_action_count": 0,
+    "reason_required_count": 1,
+    "review_recommended_action_count": 0,
+    "restricted_action_count": 0,
+    "unique_page_count": 1,
+    "latest_surface_kind": "browser",
+    "latest_status": "completed",
+    "action_kind_counts": {
+      "navigate": 1,
+      "click": 1
+    },
+    "annotation_kind_counts": {
+      "comment": 1
+    },
+    "artifact_ref_preview": [],
+    "artifact_ref": "artifacts/agent_baseline/codex_app_interactions/latest-codex-app-interaction.json"
+  },
+  "contract_family": "codex-app-interaction",
+  "contract_major": 1,
+  "schema_version": "codex-app-interaction/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/codex_app_interactions/sessions/baseline-web-01-sample/baseline-browser-annotation-pass.json"
+}

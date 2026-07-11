@@ -1,0 +1,25 @@
+[sandbox_workspaces]
+version = "1.0"
+source_release = "openai-agents-sdk-apr-2026-assessment"
+notes = [
+  "SBX-01 defines a provider-neutral sandbox workspace shape for local, remote, or hosted execution surfaces.",
+  "Mounted inputs, persisted outputs, and durable-vs-ephemeral boundaries must be explicit contract state.",
+]
+
+[defaults]
+workspace_kind = "local"
+provider_kind = "local-shell"
+root_access_mode = "read-write"
+filesystem_access = "workspace-write"
+network_access = "provider-managed"
+process_execution = "enabled"
+package_installation = "operator-approved"
+source_control_write = "workspace-only"
+operator_approval_required = true
+posture_notes = [
+  "Provider-specific sandbox IDs may exist, but the baseline contract stays provider-neutral.",
+]
+
+[boundaries]
+ephemeral_paths = [".codex/tmp", ".sandbox/tmp", ".cache"]
+durable_paths = [".agents", "artifacts/agent_baseline", "docs", "manifests", "packages"]

@@ -1,0 +1,15 @@
+[environment_operator_summary]
+version = "1.0"
+default_summary_id = "baseline-operator-environment-summary"
+notes = [
+  "ENV-06 defines one explicit operator-facing environment summary rather than requiring operators to reconstruct environment posture from adjacent contracts.",
+  "The summary remains compositional: environment envelope, projection, continuation, results, portability, and promotion stay independently governed families.",
+]
+
+[sections]
+composition = ["environment-envelope"]
+continuity = ["agent-continuation-state"]
+projection = ["execution-projection-receipt", "context-lineage-record"]
+results = ["agent-run-result"]
+promotion = ["trace-eval-promotion"]
+portability = ["environment-portability-taxonomy"]

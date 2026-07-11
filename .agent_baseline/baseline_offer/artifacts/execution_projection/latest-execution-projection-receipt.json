@@ -1,0 +1,256 @@
+{
+  "projection_id": "baseline-execution-projection",
+  "session_id": "baseline-wave2-session",
+  "requirement_id": "baseline-execution-compiler-governance",
+  "recorded_at_utc": "2026-04-29T22:00:32.419424+00:00",
+  "orchestrator_runtime_id": "",
+  "selected_executor_runtime_id": "",
+  "selected_provider_id": "",
+  "orchestration_shape": "",
+  "ownership_mode": "",
+  "approval_required": true,
+  "visible_surface_ids": [],
+  "unprojected_surface_ids": [
+    "builtin:local_command_runner",
+    "builtin:workspace_patch_apply",
+    "builtin:workspace_search",
+    "deferred:remote_mcp_discovery",
+    "deferred:tool_search",
+    "mcp:baseline-remote-discovery",
+    "mcp:baseline-workspace",
+    "plugin:browser",
+    "plugin:files",
+    "plugin:github",
+    "skill:baseline-meta-agent-bootstrap",
+    "skill:baseline-meta-agent-discovery",
+    "skill:baseline-meta-agent-sync"
+  ],
+  "surfaces": [
+    {
+      "surface_id": "builtin:local_command_runner",
+      "discovery_class": "built-in",
+      "channel_kind": "none",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "local-execution",
+      "aliases": [
+        "local_command_runner",
+        "python3",
+        "pytest",
+        "make",
+        "bash",
+        "sh",
+        "uv",
+        "run_validation_command"
+      ],
+      "notes": [
+        "Covers bounded local command execution under baseline policy review."
+      ]
+    },
+    {
+      "surface_id": "builtin:workspace_patch_apply",
+      "discovery_class": "built-in",
+      "channel_kind": "none",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "workspace-write",
+      "aliases": [
+        "workspace_patch_apply",
+        "workspace_write_guarded",
+        "apply_patch"
+      ],
+      "notes": [
+        "Covers explicit write surfaces that mutate the local workspace under policy posture."
+      ]
+    },
+    {
+      "surface_id": "builtin:workspace_search",
+      "discovery_class": "built-in",
+      "channel_kind": "none",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "repo-search",
+      "aliases": [
+        "workspace_search",
+        "rg",
+        "workspace_read",
+        "search_repo"
+      ],
+      "notes": [
+        "Covers bounded workspace search and low-risk inspection surfaces."
+      ]
+    },
+    {
+      "surface_id": "deferred:remote_mcp_discovery",
+      "discovery_class": "deferred-discovery",
+      "channel_kind": "remote",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "remote-mcp",
+      "aliases": [
+        "remote_mcp_discovery",
+        "remote_mcp",
+        "remote-mcp"
+      ],
+      "notes": [
+        "Keeps remote MCP discovery explicit without making hosted/provider-managed state authoritative for the baseline."
+      ]
+    },
+    {
+      "surface_id": "deferred:tool_search",
+      "discovery_class": "deferred-discovery",
+      "channel_kind": "none",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "catalog-search",
+      "aliases": [
+        "tool_search",
+        "tool_search",
+        "tool-search"
+      ],
+      "notes": [
+        "Models tool-search style discovery when the initial tool surface is not yet selected."
+      ]
+    },
+    {
+      "surface_id": "mcp:baseline-remote-discovery",
+      "discovery_class": "mcp",
+      "channel_kind": "remote",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "external",
+      "aliases": [
+        "baseline-remote-discovery",
+        "Baseline Remote MCP Discovery",
+        "external",
+        "https"
+      ],
+      "notes": [
+        "This is a governed remote MCP discovery surface, not a baseline-managed deployment.",
+        "Remote MCP remains interoperable and approval-bound rather than authoritative baseline state."
+      ]
+    },
+    {
+      "surface_id": "mcp:baseline-workspace",
+      "discovery_class": "mcp",
+      "channel_kind": "local",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "workspace",
+      "aliases": [
+        "baseline-workspace",
+        "Baseline Workspace Interop",
+        "workspace",
+        "local-manifest"
+      ],
+      "notes": [
+        "Baseline uses a local manifest-backed interoperability plane and does not require a hosted MCP deployment.",
+        "Servers in this catalog define reusable interoperability posture, not specialization semantics."
+      ]
+    },
+    {
+      "surface_id": "plugin:browser",
+      "discovery_class": "plugin",
+      "channel_kind": "none",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "interactive-web",
+      "aliases": [
+        "browser",
+        "interactive-web",
+        "browser-navigation",
+        "viewport-capture"
+      ],
+      "notes": []
+    },
+    {
+      "surface_id": "plugin:files",
+      "discovery_class": "plugin",
+      "channel_kind": "none",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "workspace-inspection",
+      "aliases": [
+        "files",
+        "workspace-inspection",
+        "file-preview"
+      ],
+      "notes": []
+    },
+    {
+      "surface_id": "plugin:github",
+      "discovery_class": "plugin",
+      "channel_kind": "none",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "repo-intelligence",
+      "aliases": [
+        "github",
+        "repo-intelligence",
+        "issue-triage",
+        "pr-summary"
+      ],
+      "notes": []
+    },
+    {
+      "surface_id": "skill:baseline-meta-agent-bootstrap",
+      "discovery_class": "skill",
+      "channel_kind": "none",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "repo-local-skill",
+      "aliases": [
+        "baseline-meta-agent-bootstrap",
+        ".agents/skills/baseline-meta-agent-bootstrap"
+      ],
+      "notes": []
+    },
+    {
+      "surface_id": "skill:baseline-meta-agent-discovery",
+      "discovery_class": "skill",
+      "channel_kind": "none",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "repo-local-skill",
+      "aliases": [
+        "baseline-meta-agent-discovery",
+        ".agents/skills/baseline-meta-agent-discovery"
+      ],
+      "notes": []
+    },
+    {
+      "surface_id": "skill:baseline-meta-agent-sync",
+      "discovery_class": "skill",
+      "channel_kind": "none",
+      "projected": false,
+      "projection_reason": "available-but-not-projected",
+      "route_hint": "repo-local-skill",
+      "aliases": [
+        "baseline-meta-agent-sync",
+        ".agents/skills/baseline-meta-agent-sync"
+      ],
+      "notes": []
+    }
+  ],
+  "selected_skill_ids": [],
+  "selected_plugin_ids": [],
+  "selected_prompt_template_ids": [],
+  "selected_resource_ids": [],
+  "selected_context_refs": [],
+  "permission_posture": {
+    "path_policy": "",
+    "operator_approval_required": false,
+    "approval_required": true,
+    "control_count": 0,
+    "blocking_control_count": 0,
+    "human_approval_count": 0,
+    "local_mcp_count": 1,
+    "remote_mcp_count": 1
+  },
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/execution_compiler/latest-execution-compiler-artifact.json"
+  ],
+  "notes": [
+    "Canonical ENV-03 sample for repo-owned artifact governance."
+  ]
+}

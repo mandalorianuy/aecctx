@@ -1,0 +1,24 @@
+[workspace_bootstrap]
+version = "1.0"
+source_release = "openai-agents-sdk-apr-2026-assessment"
+default_bootstrap_id = "baseline-workspace"
+notes = [
+  "WS-01 turns workspace instructions into a runtime-readable baseline contract instead of ambient repo convention.",
+  "Authority files, task files, and skills roots must be discoverable without consumer-local prompt glue.",
+]
+
+[discovery]
+authority_files = ["AGENTS.md", "prompt.md"]
+task_file_patterns = ["TASK.md", "TASKS.md", "docs/tasks/**/*.md", "docs/backlog.md", "docs/delivery_board.md", "docs/roadmap.md"]
+skill_roots = [".agents/skills"]
+
+[path_policy]
+preferred_path_mode = "repo-relative"
+repo_root_anchor_required = true
+allow_absolute_repo_paths = true
+allow_external_absolute_paths = false
+prohibited_patterns = ["../", "~/", "/tmp/"]
+notes = [
+  "Workspace instructions should prefer repo-relative references so the same contract survives local, remote, and sandboxed execution.",
+  "Render layers may expand repo-owned paths later, but workspace-authored instructions should stay repo-anchored first.",
+]

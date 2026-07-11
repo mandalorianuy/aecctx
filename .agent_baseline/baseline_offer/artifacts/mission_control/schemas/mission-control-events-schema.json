@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baseline.local/schemas/mission-control-events.schema.json",
+  "title": "Mission Control Events",
+  "type": "object",
+  "schema_version": "mission-control/v2",
+  "required": [
+    "mission_id",
+    "state",
+    "events",
+    "summary"
+  ],
+  "properties": {
+    "mission_id": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "summary": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

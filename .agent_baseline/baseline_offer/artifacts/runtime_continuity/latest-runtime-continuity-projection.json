@@ -1,0 +1,34 @@
+{
+  "projection_id": "baseline-execution-compiler-governance-runtime-continuity",
+  "recorded_at_utc": "2026-04-29T22:00:32.107348+00:00",
+  "requirement_id": "baseline-execution-compiler-governance",
+  "schema_version": "runtime-continuity-projection/v1",
+  "same_run_refs": [
+    "None",
+    "artifacts/agent_baseline/instruction_memory/sets/instruction-set-baseline-execution-compiler-governance.json"
+  ],
+  "session_continuity_refs": [],
+  "durable_memory_candidate_refs": [],
+  "durable_skill_candidate_refs": [],
+  "reviewed_durable_refs": [],
+  "promotion_blocked": true,
+  "notes": [
+    "HOS-06 separates runtime/session continuity from reviewed durable memory promotion."
+  ],
+  "summary": {
+    "projection_id": "baseline-execution-compiler-governance-runtime-continuity",
+    "same_run_ref_count": 2,
+    "session_continuity_ref_count": 0,
+    "durable_memory_candidate_count": 0,
+    "durable_skill_candidate_count": 0,
+    "reviewed_durable_ref_count": 0,
+    "promotion_blocked": true,
+    "artifact_ref": "artifacts/agent_baseline/runtime_continuity/latest-runtime-continuity-projection.json"
+  },
+  "contract_family": "runtime-continuity-projection",
+  "contract_major": 1,
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/runtime_continuity/baseline-execution-compiler-governance-runtime-continuity.json"
+}

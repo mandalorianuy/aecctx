@@ -1,0 +1,37 @@
+[mission_control]
+version = "1.0"
+source_release = "codex-like-headless-mission-control-apr-2026"
+notes = [
+  "MC-01..MC-09 define a headless baseline-owned Mission Control layer for Codex-like natural-language missions.",
+  "Mission Control publishes session, view-model, and event-stream contracts for consumer-owned UIs without adding baseline GUI/TUI behavior.",
+  "Mutating execution remains blocked unless guardrails and human approval allow it.",
+  "Mission Control carries typed turn intent, exact approval-card, and tooling-candidate contracts so consumers do not encode these seams as prompt-only conventions.",
+  "Mission Control carries adapter conformance, projection receipts, transition validations, decision receipts, and context stack frames so consumers can migrate without inventing proof formats.",
+  "Mission Control publishes JSON schemas, canonical HITL fixtures, adapter conformance checks, a consumer-facing checker wrapper, tooling provenance refs, and approval lifecycle summaries for consumer adapter migration.",
+  "Mission artifact links carry domain-neutral evidence, approval, dispatch, policy-decision, integrity-hash, and metadata slots so consumer adapters do not lose audit fidelity."
+]
+
+[mission_control.public_interfaces]
+session_contract = "mission-control"
+view_model_artifact = "artifacts/agent_baseline/mission_control/latest-mission-control-view.json"
+event_stream_artifact = "artifacts/agent_baseline/mission_control/latest-mission-control-events.json"
+session_schema_artifact = "artifacts/agent_baseline/mission_control/schemas/mission-control-session-schema.json"
+view_schema_artifact = "artifacts/agent_baseline/mission_control/schemas/mission-control-view-schema.json"
+events_schema_artifact = "artifacts/agent_baseline/mission_control/schemas/mission-control-events-schema.json"
+hitl_fixture_artifact = "artifacts/agent_baseline/mission_control/fixtures/mission-control-hitl-fixtures.json"
+ui_ownership = "consumer-owned"
+interaction_model = "natural-language-primary"
+artifact_link_model = "typed-domain-neutral"
+turn_intent_model = "typed-domain-neutral"
+approval_card_model = "exact-human-checkpoint"
+tooling_candidate_model = "typed-domain-neutral"
+adapter_conformance_model = "projection-proof"
+projection_receipt_model = "source-of-truth"
+transition_validator_model = "deterministic-state-machine"
+decision_receipt_model = "approval-tool-rationale"
+context_stack_model = "headless-context-lineage"
+schema_model = "json-schema-compatible"
+hitl_fixture_model = "canonical-non-empty"
+adapter_conformance_checker = "scripts/check_mission_control_adapter_conformance.py"
+tooling_provenance_model = "source-validation-dryrun-fixture-activation"
+approval_lifecycle_model = "normalized-summary"

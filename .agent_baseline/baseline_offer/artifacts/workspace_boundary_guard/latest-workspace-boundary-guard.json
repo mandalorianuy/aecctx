@@ -1,0 +1,74 @@
+{
+  "guard_id": "baseline-execution-compiler-governance-workspace-boundary-guard",
+  "recorded_at_utc": "2026-04-29T22:00:32.093732+00:00",
+  "repo_root": "/Users/facundo/desarrollo/codex-agent-baseline",
+  "schema_version": "workspace-boundary-guard/v1",
+  "allowed_roots": [
+    "/Users/facundo/desarrollo/codex-agent-baseline"
+  ],
+  "path_decisions": [
+    {
+      "path_ref": "AGENTS.md",
+      "normalized_ref": "AGENTS.md",
+      "allowed": true,
+      "decision_reason": "inside-repo-root"
+    },
+    {
+      "path_ref": "docs/contract_versioning.md",
+      "normalized_ref": "docs/contract_versioning.md",
+      "allowed": true,
+      "decision_reason": "inside-repo-root"
+    },
+    {
+      "path_ref": "docs/surface_closure_register.md",
+      "normalized_ref": "docs/surface_closure_register.md",
+      "allowed": true,
+      "decision_reason": "inside-repo-root"
+    },
+    {
+      "path_ref": "artifacts/agent_baseline/graphs/structural/baseline-execution-compiler-governance-structural.json",
+      "normalized_ref": "artifacts/agent_baseline/graphs/structural/baseline-execution-compiler-governance-structural.json",
+      "allowed": true,
+      "decision_reason": "inside-repo-root"
+    },
+    {
+      "path_ref": "artifacts/agent_baseline/instruction_memory/sets/instruction-set-baseline-execution-compiler-governance.json",
+      "normalized_ref": "artifacts/agent_baseline/instruction_memory/sets/instruction-set-baseline-execution-compiler-governance.json",
+      "allowed": true,
+      "decision_reason": "inside-repo-root"
+    },
+    {
+      "path_ref": "artifacts/agent_baseline/graphs/compiler-slice.json",
+      "normalized_ref": "artifacts/agent_baseline/graphs/compiler-slice.json",
+      "allowed": true,
+      "decision_reason": "inside-repo-root"
+    }
+  ],
+  "command_decisions": [
+    {
+      "command": "python3 -m unittest discover -s tests -v",
+      "normalized_command": "python3 -m unittest discover -s tests -v",
+      "allowed": true,
+      "decision_reason": "normalized-single-command"
+    }
+  ],
+  "notes": [
+    "HOS-07 records repo-root path checks and command normalization for the compiled execution pack."
+  ],
+  "summary": {
+    "guard_id": "baseline-execution-compiler-governance-workspace-boundary-guard",
+    "allowed_root_count": 1,
+    "path_decision_count": 6,
+    "command_decision_count": 1,
+    "rejected_path_count": 0,
+    "rejected_command_count": 0,
+    "boundary_clean": true,
+    "artifact_ref": "artifacts/agent_baseline/workspace_boundary_guard/latest-workspace-boundary-guard.json"
+  },
+  "contract_family": "workspace-boundary-guard",
+  "contract_major": 1,
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/workspace_boundary_guard/baseline-execution-compiler-governance-workspace-boundary-guard.json"
+}

@@ -1,0 +1,17 @@
+[codex_app_memory]
+version = "1.0"
+runtime_id = "codex-app"
+source_release = "codex-for-almost-everything"
+release_date = "2026-04-16"
+source_url = "https://openai.com/index/codex-for-almost-everything/"
+
+[signal_kinds]
+allowed = ["preference", "correction", "context"]
+
+[policy]
+candidate_only_import = true
+approval_required_for_writeback = true
+notes = [
+  "MEM-05 imports Codex app memory as governed baseline candidates instead of implicit writeback.",
+  "App memory may inform repo/session behavior, but approvals stay inside baseline governance.",
+]

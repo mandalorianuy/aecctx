@@ -1,0 +1,168 @@
+{
+  "taxonomy_id": "baseline-guardrail-controls",
+  "session_id": "baseline-wave2-session",
+  "recorded_at_utc": "2026-04-29T22:00:30.471934+00:00",
+  "lifecycle_state": "closed",
+  "controls": [
+    {
+      "control_id": "baseline-wave2-session-guardrail-1",
+      "control_point": "input",
+      "source_kind": "guardrail",
+      "source_stage": "input",
+      "name": "input-scope-check",
+      "status": "passed",
+      "severity": "info",
+      "blocking": false,
+      "detail": "Input scope stayed within baseline-owned platform surfaces.",
+      "artifact_refs": [
+        "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+        "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json"
+      ]
+    },
+    {
+      "control_id": "baseline-wave2-session-guardrail-2",
+      "control_point": "output",
+      "source_kind": "guardrail",
+      "source_stage": "output",
+      "name": "output-governance-check",
+      "status": "warning",
+      "severity": "warning",
+      "blocking": false,
+      "detail": "Output requires explicit operator sign-off before publication.",
+      "artifact_refs": [
+        "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+        "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json"
+      ]
+    },
+    {
+      "control_id": "baseline-wave2-session-tripwire-1",
+      "control_point": "handoff",
+      "source_kind": "tripwire",
+      "source_stage": "handoff",
+      "name": "handoff-review-tripwire",
+      "status": "triggered",
+      "severity": "warning",
+      "blocking": true,
+      "detail": "Handoff path crossed a human approval boundary.",
+      "artifact_refs": [
+        "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+        "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+        "artifacts/agent_baseline/shell_contracts/latest-meta-agent-contract.json"
+      ]
+    },
+    {
+      "control_id": "baseline-wave2-session-human-approval",
+      "control_point": "human-approval",
+      "source_kind": "approval",
+      "source_stage": "checkpoint",
+      "name": "human-approval-gate",
+      "status": "pending",
+      "severity": "warning",
+      "blocking": true,
+      "detail": "Human approvals are surfaced as a distinct control point, not collapsed into automated guardrails.",
+      "artifact_refs": [
+        "artifacts/agent_baseline/harness/checkpoints/latest-human-checkpoints.json"
+      ]
+    },
+    {
+      "control_id": "baseline-wave2-session-tool-boundary",
+      "control_point": "tool",
+      "source_kind": "tool-boundary",
+      "source_stage": "execution",
+      "name": "selected-tool-boundary",
+      "status": "observed",
+      "severity": "info",
+      "blocking": false,
+      "detail": "Execution pack bounded this run to 2 explicit tools.",
+      "artifact_refs": [
+        "artifacts/agent_baseline/execution_compiler/latest-execution-compiler-artifact.json"
+      ]
+    }
+  ],
+  "control_points": [
+    {
+      "control_point": "input",
+      "control_count": 1,
+      "blocking_count": 0,
+      "warning_count": 0,
+      "failed_count": 0,
+      "source_kind_counts": {
+        "guardrail": 1
+      }
+    },
+    {
+      "control_point": "execution",
+      "control_count": 0,
+      "blocking_count": 0,
+      "warning_count": 0,
+      "failed_count": 0,
+      "source_kind_counts": {}
+    },
+    {
+      "control_point": "output",
+      "control_count": 1,
+      "blocking_count": 0,
+      "warning_count": 1,
+      "failed_count": 0,
+      "source_kind_counts": {
+        "guardrail": 1
+      }
+    },
+    {
+      "control_point": "handoff",
+      "control_count": 1,
+      "blocking_count": 1,
+      "warning_count": 1,
+      "failed_count": 0,
+      "source_kind_counts": {
+        "tripwire": 1
+      }
+    },
+    {
+      "control_point": "tool",
+      "control_count": 1,
+      "blocking_count": 0,
+      "warning_count": 0,
+      "failed_count": 0,
+      "source_kind_counts": {
+        "tool-boundary": 1
+      }
+    },
+    {
+      "control_point": "human-approval",
+      "control_count": 1,
+      "blocking_count": 1,
+      "warning_count": 1,
+      "failed_count": 0,
+      "source_kind_counts": {
+        "approval": 1
+      }
+    }
+  ],
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+    "artifacts/agent_baseline/harness/session_views/latest-harness-session-view.json",
+    "artifacts/agent_baseline/shell_contracts/latest-meta-agent-contract.json",
+    "artifacts/agent_baseline/harness/checkpoints/latest-human-checkpoints.json",
+    "artifacts/agent_baseline/execution_compiler/latest-execution-compiler-artifact.json"
+  ],
+  "notes": [
+    "Canonical GRD-01 sample for repo-owned artifact governance."
+  ],
+  "summary": {
+    "taxonomy_id": "baseline-guardrail-controls",
+    "session_id": "baseline-wave2-session",
+    "control_count": 5,
+    "control_point_count": 6,
+    "blocking_control_count": 2,
+    "human_approval_count": 1,
+    "tool_control_count": 1,
+    "artifact_ref": "artifacts/agent_baseline/guardrail_controls/latest-guardrail-control-taxonomy.json"
+  },
+  "contract_family": "guardrail-control-taxonomy",
+  "contract_major": 1,
+  "schema_version": "guardrail-control-taxonomy/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major"
+}

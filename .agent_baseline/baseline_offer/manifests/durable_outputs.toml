@@ -1,0 +1,5 @@
+[durable_outputs]
+schema_version = "1.0"
+description = "Describes durable report and output artifacts with source lineage and preview references."
+notes = ["HOS-09 makes agent-authored deliverables durable, inspectable, and lineage-backed."]
+

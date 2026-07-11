@@ -1,0 +1,81 @@
+[codex_app_plugins]
+version = "1.0"
+runtime_id = "codex-app"
+source_release = "codex-for-almost-everything"
+release_date = "2026-04-16"
+source_url = "https://openai.com/index/codex-for-almost-everything/"
+default_selection_policy = "policy-reviewed"
+
+[plugin_kinds]
+allowed = ["native-app-surface", "connector", "workspace-extension"]
+
+[selection_postures]
+allowed = ["default-enabled", "policy-reviewed", "disabled-by-default"]
+
+[trust_levels]
+allowed = ["baseline", "review-required", "restricted"]
+
+[policy]
+selection_summary_required = true
+route_hint_required = true
+notes = [
+  "PLG-01 models app/plugin inventory as a governed baseline catalog instead of ambient product knowledge.",
+  "Baseline may expose plugin posture and routing hints, but not plugin-specific business semantics.",
+]
+
+[plugins.browser]
+display_name = "Browser"
+plugin_kind = "native-app-surface"
+availability = "available"
+trust_level = "baseline"
+selection_posture = "default-enabled"
+route_hint = "interactive-web"
+capability_ids = ["browser-navigation", "viewport-capture"]
+
+[plugins.github]
+display_name = "GitHub"
+plugin_kind = "connector"
+availability = "available"
+trust_level = "review-required"
+selection_posture = "policy-reviewed"
+route_hint = "repo-intelligence"
+capability_ids = ["pr-summary", "issue-triage"]
+
+[plugins.files]
+display_name = "Files"
+plugin_kind = "workspace-extension"
+availability = "available"
+trust_level = "baseline"
+selection_posture = "default-enabled"
+route_hint = "workspace-inspection"
+capability_ids = ["file-preview"]
+
+[capabilities.browser-navigation]
+plugin_id = "browser"
+operator_visible = true
+policy_required = false
+summary = "Navigate and inspect browser pages through the Codex app surface."
+
+[capabilities.viewport-capture]
+plugin_id = "browser"
+operator_visible = true
+policy_required = false
+summary = "Capture viewport context for operator review and replay."
+
+[capabilities.pr-summary]
+plugin_id = "github"
+operator_visible = true
+policy_required = true
+summary = "Read pull-request context through a governed connector."
+
+[capabilities.issue-triage]
+plugin_id = "github"
+operator_visible = true
+policy_required = true
+summary = "Inspect issue metadata through a governed connector."
+
+[capabilities.file-preview]
+plugin_id = "files"
+operator_visible = true
+policy_required = false
+summary = "Open and preview workspace files from the Codex app shell."

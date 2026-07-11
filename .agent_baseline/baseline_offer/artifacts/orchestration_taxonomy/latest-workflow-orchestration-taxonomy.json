@@ -1,0 +1,181 @@
+{
+  "taxonomy_id": "baseline-workflow-orchestration-taxonomy",
+  "session_id": "baseline-wave3-session",
+  "requirement_id": "baseline-execution-compiler-governance",
+  "recorded_at_utc": "2026-04-16T00:00:00+00:00",
+  "graph_shape": "multi-agent-sequential",
+  "route_kind": "sequential-manager-mediated",
+  "transport_handoff_kind": "bounded-handoff-transport",
+  "delegation_mode": "manager-mediated-tool-delegation",
+  "planner_runtime_id": "codex-cli-orchestrator",
+  "executor_runtime_id": "codex-cli-executor",
+  "direct_subagent_handoffs_allowed": false,
+  "orchestration_classes": [
+    "manager-owned-bounded-specialist-call",
+    "ownership-transfer-handoff",
+    "multi-agent-sequential"
+  ],
+  "selected_agent_ids": [
+    "baseline-executor-worker"
+  ],
+  "planner_decision_types": [
+    "execution-shape",
+    "branching-policy",
+    "risk-budget-controls",
+    "slice-ownership"
+  ],
+  "review_owner_agent_ids": [
+    "baseline-review-owner"
+  ],
+  "explicit_branch_owner_count": 8,
+  "active_slice_count": 7,
+  "branch_count": 7,
+  "sequential_branch_count": 1,
+  "parallel_branch_count": 0,
+  "speculative_branch_count": 0,
+  "review_branch_count": 2,
+  "human_checkpoint_count": 0,
+  "manager_owned_specialist_call_count": 1,
+  "ownership_transfer_handoff_count": 1,
+  "blocked_handoff_count": 0,
+  "collision_policy_count": 8,
+  "ownership_lanes": [
+    {
+      "node_id": "baseline-execution-compiler-governance-approved-requirement",
+      "lane_id": "None",
+      "node_kind": "requirement",
+      "owner_agent_id": "codex-orchestrator",
+      "owner_role": "orchestrator",
+      "active_slice_id": "baseline-execution-compiler-governance:approved-requirement",
+      "collision_policy": "frozen-approved-contract",
+      "requires_human_approval": false
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-evidence",
+      "lane_id": "evidence",
+      "node_kind": "evidence",
+      "owner_agent_id": "codex-orchestrator",
+      "owner_role": "orchestrator",
+      "active_slice_id": "baseline-execution-compiler-governance:evidence",
+      "collision_policy": "read-only-evidence-aggregation",
+      "requires_human_approval": false
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-risk-budget-control",
+      "lane_id": "control",
+      "node_kind": "control",
+      "owner_agent_id": "codex-orchestrator",
+      "owner_role": "orchestrator",
+      "active_slice_id": "baseline-execution-compiler-governance:control",
+      "collision_policy": "single-writer-control-plane",
+      "requires_human_approval": false
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-runtime-routing",
+      "lane_id": "control",
+      "node_kind": "routing",
+      "owner_agent_id": "codex-orchestrator",
+      "owner_role": "orchestrator",
+      "active_slice_id": "baseline-execution-compiler-governance:control",
+      "collision_policy": "single-writer-routing",
+      "requires_human_approval": false
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-validation",
+      "lane_id": "validation",
+      "node_kind": "validation",
+      "owner_agent_id": "codex-orchestrator",
+      "owner_role": "review-owner",
+      "active_slice_id": "baseline-execution-compiler-governance:validation",
+      "collision_policy": "manager-reviewed-validation",
+      "requires_human_approval": false
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-worker-sequential-1",
+      "lane_id": "sequential-1",
+      "node_kind": "execution",
+      "owner_agent_id": "baseline-executor-worker",
+      "owner_role": "implementation",
+      "active_slice_id": "baseline-execution-compiler-governance:sequential-1",
+      "collision_policy": "lane-owned-write-scope",
+      "requires_human_approval": false
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-review-owner",
+      "lane_id": "review",
+      "node_kind": "review",
+      "owner_agent_id": "codex-orchestrator",
+      "owner_role": "review-owner",
+      "active_slice_id": "baseline-execution-compiler-governance:review",
+      "collision_policy": "manager-reviewed-integration",
+      "requires_human_approval": false
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-sequential-retry-window",
+      "lane_id": "retry",
+      "node_kind": "retry",
+      "owner_agent_id": "codex-orchestrator",
+      "owner_role": "retry-owner",
+      "active_slice_id": "baseline-execution-compiler-governance:retry",
+      "collision_policy": "retry-window-bounded",
+      "requires_human_approval": false
+    }
+  ],
+  "handoff_classes": [
+    {
+      "handoff_id": "baseline-executor-worker_handoff",
+      "handoff_kind": "bounded-handoff-transport",
+      "source_agent_id": "codex-orchestrator",
+      "target_agent_id": "baseline-executor-worker",
+      "approval_requirement": "orchestrator-review-required",
+      "approval_state": "approved",
+      "status": "active"
+    }
+  ],
+  "source_artifacts": [
+    "artifacts/agent_baseline/execution_compiler/latest-execution-compiler-artifact.json"
+  ],
+  "notes": [
+    "Canonical ORC-01/02 sample for repo-owned artifact governance."
+  ],
+  "summary": {
+    "artifact_ref": "artifacts/agent_baseline/orchestration_taxonomy/latest-workflow-orchestration-taxonomy.json",
+    "graph_shape": "multi-agent-sequential",
+    "route_kind": "sequential-manager-mediated",
+    "transport_handoff_kind": "bounded-handoff-transport",
+    "delegation_mode": "manager-mediated-tool-delegation",
+    "direct_subagent_handoffs_allowed": false,
+    "orchestration_classes": [
+      "manager-owned-bounded-specialist-call",
+      "ownership-transfer-handoff",
+      "multi-agent-sequential"
+    ],
+    "selected_agent_count": 1,
+    "manager_owned_specialist_call_count": 1,
+    "ownership_transfer_handoff_count": 1,
+    "blocked_handoff_count": 0,
+    "explicit_branch_owner_count": 8,
+    "active_slice_count": 7,
+    "branch_count": 7,
+    "sequential_branch_count": 1,
+    "parallel_branch_count": 0,
+    "speculative_branch_count": 0,
+    "review_branch_count": 2,
+    "human_checkpoint_count": 0,
+    "review_owner_count": 1,
+    "planner_decision_types": [
+      "execution-shape",
+      "branching-policy",
+      "risk-budget-controls",
+      "slice-ownership"
+    ],
+    "source_artifact_count": 1
+  },
+  "contract_family": "workflow-orchestration-taxonomy",
+  "contract_major": 1,
+  "schema_version": "workflow-orchestration-taxonomy/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/orchestration_taxonomy/baseline-workflow-orchestration-taxonomy.json"
+}

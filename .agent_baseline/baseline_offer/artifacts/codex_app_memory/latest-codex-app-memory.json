@@ -1,0 +1,56 @@
+{
+  "import_id": "baseline-memory-import-pass",
+  "recorded_at_utc": "2026-04-16T00:00:00+00:00",
+  "source_release": "codex-for-almost-everything",
+  "signals": [
+    {
+      "signal_id": "baseline-memory-pref-1",
+      "signal_kind": "preference",
+      "scope": "repo",
+      "subtype": "operator-preference",
+      "summary": "Prefer concise validation summaries for operator-facing Codex app follow-ups.",
+      "content": {
+        "preference": "concise-validation"
+      },
+      "confidence": 0.82
+    },
+    {
+      "signal_id": "baseline-memory-correction-1",
+      "signal_kind": "correction",
+      "scope": "session",
+      "subtype": "routing-correction",
+      "summary": "Prefer file preview before browser use when local artifacts already exist.",
+      "content": {
+        "correction": "prefer-file-preview"
+      },
+      "confidence": 0.74
+    }
+  ],
+  "candidate_ids": [
+    "codex-app-memory-baseline-memory-import-pass-baseline-memory-pref-1",
+    "codex-app-memory-baseline-memory-import-pass-baseline-memory-correction-1"
+  ],
+  "notes": [
+    "Canonical MEM-05 sample for repo-owned artifact governance."
+  ],
+  "summary": {
+    "import_id": "baseline-memory-import-pass",
+    "signal_count": 2,
+    "preference_signal_count": 1,
+    "correction_signal_count": 1,
+    "context_signal_count": 0,
+    "candidate_count": 2,
+    "signal_kind_counts": {
+      "preference": 1,
+      "correction": 1
+    },
+    "artifact_ref": "artifacts/agent_baseline/codex_app_memory/latest-codex-app-memory.json"
+  },
+  "contract_family": "codex-app-memory-adapter",
+  "contract_major": 1,
+  "schema_version": "codex-app-memory-adapter/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/codex_app_memory/baseline-memory-import-pass.json"
+}

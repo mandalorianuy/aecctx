@@ -1,0 +1,11 @@
+[execution_projection]
+version = "1.0"
+projection_scope = "per-run"
+notes = [
+  "ENV-03 makes per-run visible and callable posture explicit instead of leaving it inferred from execution-pack internals and adjacent summaries.",
+  "The receipt is compositional: it records what the baseline projected for one run without replacing tool taxonomy, guardrail, routing, or orchestration families.",
+]
+
+[surface_classes]
+projected = "selected-by-execution-pack"
+available = "available-but-not-projected"

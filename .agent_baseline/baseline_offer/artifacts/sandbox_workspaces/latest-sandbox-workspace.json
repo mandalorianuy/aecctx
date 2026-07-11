@@ -1,0 +1,180 @@
+{
+  "workspace_id": "baseline-sandbox-workspace",
+  "session_id": "baseline-sbx-01-session",
+  "recorded_at_utc": "2026-04-29T22:00:30.433775+00:00",
+  "source_release": "openai-agents-sdk-apr-2026-assessment",
+  "workspace_kind": "local",
+  "provider_kind": "local-shell",
+  "root_path": "/Users/facundo/desarrollo/codex-agent-baseline",
+  "path_policy": "repo-relative",
+  "mounts": [
+    {
+      "mount_id": "workspace-root",
+      "source_ref": "/Users/facundo/desarrollo/codex-agent-baseline",
+      "target_path": ".",
+      "source_kind": "workspace-root",
+      "access_mode": "read-write",
+      "persistence_scope": "durable",
+      "required": true,
+      "notes": [
+        "Primary sandbox workspace root."
+      ]
+    },
+    {
+      "mount_id": "authority-1",
+      "source_ref": "AGENTS.md",
+      "target_path": "AGENTS.md",
+      "source_kind": "authority",
+      "access_mode": "read-only",
+      "persistence_scope": "durable",
+      "required": true,
+      "notes": [
+        "Primary workspace operating instructions."
+      ]
+    },
+    {
+      "mount_id": "task-1",
+      "source_ref": "docs/backlog.md",
+      "target_path": "docs/backlog.md",
+      "source_kind": "task-file",
+      "access_mode": "read-only",
+      "persistence_scope": "durable",
+      "required": false,
+      "notes": [
+        "Repo task or planning file discovered from the workspace bootstrap manifest."
+      ]
+    },
+    {
+      "mount_id": "task-2",
+      "source_ref": "docs/delivery_board.md",
+      "target_path": "docs/delivery_board.md",
+      "source_kind": "task-file",
+      "access_mode": "read-only",
+      "persistence_scope": "durable",
+      "required": false,
+      "notes": [
+        "Repo task or planning file discovered from the workspace bootstrap manifest."
+      ]
+    },
+    {
+      "mount_id": "task-3",
+      "source_ref": "docs/roadmap.md",
+      "target_path": "docs/roadmap.md",
+      "source_kind": "task-file",
+      "access_mode": "read-only",
+      "persistence_scope": "durable",
+      "required": false,
+      "notes": [
+        "Repo task or planning file discovered from the workspace bootstrap manifest."
+      ]
+    },
+    {
+      "mount_id": "skills-1",
+      "source_ref": ".agents/skills",
+      "target_path": ".agents/skills",
+      "source_kind": "skills-root",
+      "access_mode": "read-only",
+      "persistence_scope": "durable",
+      "required": false,
+      "notes": [
+        "Workspace-local skill root available to the runtime."
+      ]
+    }
+  ],
+  "persisted_outputs": [
+    {
+      "output_id": "output-1",
+      "artifact_ref": "artifacts/agent_baseline/execution_compiler/latest-execution-compiler-artifact.json",
+      "output_kind": "execution_compiler",
+      "persistence_scope": "durable",
+      "sync_required": true,
+      "notes": [
+        "Persisted sandbox output tracked through baseline artifacts."
+      ]
+    },
+    {
+      "output_id": "output-2",
+      "artifact_ref": "artifacts/agent_baseline/meta_agent_tooling/latest-baseline-meta-agent-catalog.json",
+      "output_kind": "meta_agent_tooling",
+      "persistence_scope": "durable",
+      "sync_required": true,
+      "notes": [
+        "Persisted sandbox output tracked through baseline artifacts."
+      ]
+    },
+    {
+      "output_id": "output-3",
+      "artifact_ref": "artifacts/agent_baseline/shell_contracts/latest-meta-agent-contract.json",
+      "output_kind": "shell_contracts",
+      "persistence_scope": "durable",
+      "sync_required": true,
+      "notes": [
+        "Persisted sandbox output tracked through baseline artifacts."
+      ]
+    }
+  ],
+  "capability_posture": {
+    "filesystem_access": "workspace-write",
+    "network_access": "provider-managed",
+    "process_execution": "enabled",
+    "package_installation": "operator-approved",
+    "source_control_write": "workspace-only",
+    "operator_approval_required": true,
+    "notes": [
+      "Provider-specific sandbox IDs may exist, but the baseline contract stays provider-neutral."
+    ]
+  },
+  "ephemeral_boundary": {
+    "boundary_id": "baseline-sbx-01-session-ephemeral",
+    "path_refs": [
+      ".codex/tmp",
+      ".sandbox/tmp",
+      ".cache"
+    ],
+    "persistence_scope": "ephemeral",
+    "notes": [
+      "Ephemeral sandbox state may be re-created on resume."
+    ]
+  },
+  "durable_boundary": {
+    "boundary_id": "baseline-sbx-01-session-durable",
+    "path_refs": [
+      ".agents",
+      "artifacts/agent_baseline",
+      "docs",
+      "manifests",
+      "packages"
+    ],
+    "persistence_scope": "durable",
+    "notes": [
+      "Durable sandbox state is expected to survive handoff and replay."
+    ]
+  },
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/workspace_bootstrap/latest-workspace-bootstrap.json",
+    "artifacts/agent_baseline/codex_app_remote_workspaces/latest-codex-app-remote-workspace.json"
+  ],
+  "notes": [
+    "Canonical SBX-01 sample for repo-owned artifact governance."
+  ],
+  "summary": {
+    "workspace_id": "baseline-sandbox-workspace",
+    "workspace_kind": "local",
+    "provider_kind": "local-shell",
+    "mount_count": 6,
+    "required_mount_count": 2,
+    "persisted_output_count": 3,
+    "durable_output_count": 3,
+    "sync_required_output_count": 3,
+    "operator_approval_required": true,
+    "path_policy": "repo-relative",
+    "artifact_ref": "artifacts/agent_baseline/sandbox_workspaces/latest-sandbox-workspace.json"
+  },
+  "contract_family": "sandbox-workspace",
+  "contract_major": 1,
+  "schema_version": "sandbox-workspace/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/sandbox_workspaces/baseline-sandbox-workspace.json"
+}

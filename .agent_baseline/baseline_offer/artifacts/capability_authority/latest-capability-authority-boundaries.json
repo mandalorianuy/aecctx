@@ -1,0 +1,2094 @@
+{
+  "snapshot_id": "baseline-capability-authority-boundaries",
+  "recorded_at_utc": "2026-05-05T12:37:16.250534+00:00",
+  "schema_version": "capability-authority-boundaries/v1",
+  "entries": [
+    {
+      "capability_id": "agent_run_results",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "agent-run-result",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/agent_run_results.py",
+        "docs/agent_run_results.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "agent_stack_composition",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "agent-stack-composition",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/agent_stack_composition.py",
+        "docs/agent_stack_composition.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md",
+        "manifests/agent_stack_composition.toml"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "agentic_memory_evolution",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "agentic-memory-evolution",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/agentic_memory_evolution.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/agentic_memory_evolution.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "artifact_retention",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "artifact-retention",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/artifact_retention.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "audit",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/audit.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/audit.py",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "baseline_consumer_offer",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "baseline-consumer-offer",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/baseline_consumer_offer.py",
+        "docs/workbench_transition_hardening.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md",
+        "manifests/baseline_consumer_offer.toml"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "baseline_hardening",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "baseline-hardening-review",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/baseline_hardening.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/baseline_hardening.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "builtin:local_command_runner",
+      "surface_kind": "built-in",
+      "authority_owner": "baseline",
+      "authority_source": "local-execution",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": true,
+      "consumer_overlay_allowed": false,
+      "source_refs": [],
+      "notes": [
+        "Covers bounded local command execution under baseline policy review.",
+        "selection_posture=policy-reviewed"
+      ]
+    },
+    {
+      "capability_id": "builtin:workspace_patch_apply",
+      "surface_kind": "built-in",
+      "authority_owner": "baseline",
+      "authority_source": "workspace-write",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": true,
+      "consumer_overlay_allowed": false,
+      "source_refs": [],
+      "notes": [
+        "Covers explicit write surfaces that mutate the local workspace under policy posture.",
+        "selection_posture=policy-reviewed"
+      ]
+    },
+    {
+      "capability_id": "builtin:workspace_search",
+      "surface_kind": "built-in",
+      "authority_owner": "baseline",
+      "authority_source": "repo-search",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": true,
+      "consumer_overlay_allowed": false,
+      "source_refs": [],
+      "notes": [
+        "Covers bounded workspace search and low-risk inspection surfaces.",
+        "selection_posture=default-enabled"
+      ]
+    },
+    {
+      "capability_id": "capability_authority",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "capability-authority-boundaries",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/capability_authority.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/capability_authority_boundaries.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "capability_packages",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "capability-package-manifest",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/capability_packages.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/capability_packages.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "codex_app_automations",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "codex-app-automation",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/codex_app_automations.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_automations.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "codex_app_images",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "codex-app-image-workflow",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/codex_app_images.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_images.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "codex_app_interactions",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "codex-app-interaction",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/codex_app_interactions.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_interactions.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "codex_app_memory",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "codex-app-memory-adapter",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/codex_app_memory.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_memory.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "codex_app_plugins",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "codex-app-plugin-catalog",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/codex_app_plugins.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_plugins.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "codex_app_remote_workspaces",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "codex-app-remote-workspace",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/codex_app_remote_workspaces.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/codex_app_remote_workspaces.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "codex_app_runtime",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "codex-app-runtime",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/codex_app_runtime.py",
+        "docs/codex_app_runtime.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "context_lineage",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "context-lineage-record",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/context_lineage.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/context_lineage.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "continuation_state",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "agent-continuation-state",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/continuation_state.py",
+        "docs/continuation_state.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "contract_semantics",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/contract_semantics.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/contract_semantics.py",
+        "docs/contract_versioning.md",
+        "AGENTS.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "contract_versioning",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/contract_versioning.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/contract_versioning.py",
+        "docs/contract_versioning.md",
+        "AGENTS.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "deferred:remote_mcp_discovery",
+      "surface_kind": "deferred-discovery",
+      "authority_owner": "discovered-tool",
+      "authority_source": "remote-mcp",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [],
+      "notes": [
+        "Keeps remote MCP discovery explicit without making hosted/provider-managed state authoritative for the baseline.",
+        "selection_posture=discover-on-demand"
+      ]
+    },
+    {
+      "capability_id": "deferred:tool_search",
+      "surface_kind": "deferred-discovery",
+      "authority_owner": "discovered-tool",
+      "authority_source": "catalog-search",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [],
+      "notes": [
+        "Models tool-search style discovery when the initial tool surface is not yet selected.",
+        "selection_posture=discover-on-demand"
+      ]
+    },
+    {
+      "capability_id": "durable_outputs",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "durable-output-artifacts",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/durable_outputs.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/durable_outputs.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "environment_envelope",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "environment-envelope",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/environment_envelope.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/environment_envelope.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "environment_invariants",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "environment-invariants-report",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/environment_invariants.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/environment_invariants.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "environment_operator_summary",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "operator-environment-summary",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/environment_operator_summary.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/environment_operator_summary.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "environment_portability",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "environment-portability-taxonomy",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/environment_portability.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/environment_portability.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "environment_promotion_pipeline",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "environment-promotion-pipeline",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/environment_promotion_pipeline.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/environment_promotion_pipeline.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "eval_runtime",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "eval-runtime",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/eval_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/evals.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "execution_compiler",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "execution-compiler",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/execution_compiler.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md",
+        "docs/architecture.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "execution_graph",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "execution-graph",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/execution_graph.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "execution_projection",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "execution-projection-receipt",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/execution_projection.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/execution_projection.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "external_runtime_contracts",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "external-runtime-contracts",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/external_runtime_contracts.py",
+        "REFERENCES.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "fallback_defaults",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/fallback_defaults.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/fallback_defaults.py",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "goal_mode",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "goal-mode",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/goal_mode.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/goal_mode.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "guardrail_controls",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "guardrail-control-taxonomy",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/guardrail_controls.py",
+        "docs/guardrail_controls.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "gui_shell",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/gui_shell.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/gui_shell.py",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "harness_links",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "harness-links",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/harness_links.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "harness_runtime",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/harness_runtime.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/harness_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "harness_session_view",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "harness-session-view",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/harness_session_view.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/contract_versioning.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "hos_adoption",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "hos-adoption-conformance",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/hos_adoption.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/hos_adoption_conformance.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "instruction_memory",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "instruction-memory",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/instruction_memory.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "interoperability_plane",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "interoperability-plane",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/interoperability_plane.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "learning_runtime",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "learning-runtime",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/learning_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "local_agent_exchange",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "local-agent-exchange",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/local_agent_exchange.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/local_agent_exchange.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "mcp:baseline-remote-discovery",
+      "surface_kind": "mcp",
+      "authority_owner": "runtime-tool",
+      "authority_source": "external",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": true,
+      "consumer_overlay_allowed": false,
+      "source_refs": [],
+      "notes": [
+        "This is a governed remote MCP discovery surface, not a baseline-managed deployment.",
+        "Remote MCP remains interoperable and approval-bound rather than authoritative baseline state.",
+        "selection_posture=discover-on-demand"
+      ]
+    },
+    {
+      "capability_id": "mcp:baseline-workspace",
+      "surface_kind": "mcp",
+      "authority_owner": "runtime-tool",
+      "authority_source": "workspace",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": true,
+      "consumer_overlay_allowed": false,
+      "source_refs": [],
+      "notes": [
+        "Baseline uses a local manifest-backed interoperability plane and does not require a hosted MCP deployment.",
+        "Servers in this catalog define reusable interoperability posture, not specialization semantics.",
+        "selection_posture=discover-on-demand"
+      ]
+    },
+    {
+      "capability_id": "mcp_app_extensions",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "mcp-app-extension-catalog",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/mcp_app_extensions.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/mcp_app_extensions.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "memory_runtime",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "memory-runtime",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/memory_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md",
+        "docs/architecture.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "meta_agent_tooling",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "meta-agent-tooling-catalog",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/meta_agent_tooling.py",
+        "docs/meta_agent_tooling.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md",
+        "manifests/meta_agent_specialization_profiles.toml",
+        "README.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "mission_control",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "mission-control",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": true,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/mission_control.py",
+        "docs/mission_control.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "operator_surface_mutability",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "operator-surface-mutability",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/operator_surface_mutability.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/operator_surface_mutability.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "orchestration_taxonomy",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "workflow-orchestration-taxonomy",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/orchestration_taxonomy.py",
+        "docs/orchestration_taxonomy.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "persona_skill_contracts",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "persona-skill-operating-contracts",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/persona_skill_contracts.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/persona_skill_contracts.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "planning_dispatch_kernel",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "planning-dispatch-kernel",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/planning_dispatch_kernel.py",
+        "docs/planning_dispatch_kernel.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md",
+        "manifests/planning_dispatch_kernel.toml"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "plugin:browser",
+      "surface_kind": "plugin",
+      "authority_owner": "runtime-plugin",
+      "authority_source": "interactive-web",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": true,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "artifacts/agent_baseline/codex_app_plugins/baseline-codex-app-plugin-catalog.json"
+      ],
+      "notes": [
+        "selection_posture=default-enabled"
+      ]
+    },
+    {
+      "capability_id": "plugin:files",
+      "surface_kind": "plugin",
+      "authority_owner": "runtime-plugin",
+      "authority_source": "workspace-inspection",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": true,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "artifacts/agent_baseline/codex_app_plugins/baseline-codex-app-plugin-catalog.json"
+      ],
+      "notes": [
+        "selection_posture=default-enabled"
+      ]
+    },
+    {
+      "capability_id": "plugin:github",
+      "surface_kind": "plugin",
+      "authority_owner": "runtime-plugin",
+      "authority_source": "repo-intelligence",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": true,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "artifacts/agent_baseline/codex_app_plugins/baseline-codex-app-plugin-catalog.json"
+      ],
+      "notes": [
+        "selection_posture=policy-reviewed"
+      ]
+    },
+    {
+      "capability_id": "policy_plane",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "policy-plane",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/policy_plane.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "profile_bootstrap",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "profile-bootstrap-tooling",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/profile_bootstrap.py",
+        "docs/profile_bootstrap_tooling.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md",
+        "manifests/profile_bootstrap.toml"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "project_aware_operation",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "project-aware-operation",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/project_aware_operation.py",
+        "docs/project_aware_operation.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md",
+        "manifests/project_aware_operation.toml"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "prompt_section_profile",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "prompt-section-profile",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/prompt_section_profile.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/prompt_section_profile.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "provider_broker",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "provider-broker",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/provider_broker.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "provider_runtime",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/provider_runtime.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/provider_runtime.py",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "requirement_dialogue_manager",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "requirement-dialogue",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/requirement_dialogue_manager.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md",
+        "docs/architecture.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "requirement_memory_contracts",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "requirement-retrieval-bundle",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/requirement_memory_contracts.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/contract_versioning.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "requirement_spec",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "requirement-spec",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/requirement_spec.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/contract_versioning.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "review_core",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "review-lifecycle",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/review_core.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "runnable_harness",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "runnable-agent-harness",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/runnable_harness.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/runnable_harness.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "runtime_activation",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "runtime-activation",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/runtime_activation.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "runtime_broker",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "runtime-broker",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/runtime_broker.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md",
+        "docs/architecture.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "runtime_budget",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/runtime_budget.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/runtime_budget.py",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "runtime_continuity",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "runtime-continuity-projection",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/runtime_continuity.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/runtime_continuity.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "runtime_performance",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "runtime-performance",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/runtime_performance.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "runtime_provider_calibration",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "runtime-provider-calibration",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/runtime_provider_calibration.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "runtime_registry",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "runtime-registry",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/runtime_registry.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "runtime_safe_mode",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/runtime_safe_mode.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/runtime_safe_mode.py",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "sandbox_sessions",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "sandbox-session",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/sandbox_sessions.py",
+        "docs/sandbox_sessions.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "sandbox_workspaces",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "sandbox-workspace",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/sandbox_workspaces.py",
+        "docs/sandbox_workspaces.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "security_posture",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "security-posture",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/security_posture.py",
+        "docs/security_posture.md",
+        "manifests/security_posture.toml",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "session_chronicle",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "session-chronicle",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/session_chronicle.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "session_history",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/session_history.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/session_history.py",
+        "docs/bootstrap_scope.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "shadow_mode",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/shadow_mode.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/shadow_mode.py",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "shared_models",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/models.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/models.py",
+        "docs/architecture.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "shell_contracts",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "meta-agent-contract",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/shell_contracts.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "shell_runtime",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "shell-runtime-state",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/shell_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "skill:baseline-meta-agent-bootstrap",
+      "surface_kind": "skill",
+      "authority_owner": "baseline",
+      "authority_source": "repo-local-skill",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "artifacts/agent_baseline/meta_agent_tooling/latest-baseline-meta-agent-catalog.json"
+      ],
+      "notes": [
+        "selection_posture=manual"
+      ]
+    },
+    {
+      "capability_id": "skill:baseline-meta-agent-discovery",
+      "surface_kind": "skill",
+      "authority_owner": "baseline",
+      "authority_source": "repo-local-skill",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "artifacts/agent_baseline/meta_agent_tooling/latest-baseline-meta-agent-catalog.json"
+      ],
+      "notes": [
+        "selection_posture=manual"
+      ]
+    },
+    {
+      "capability_id": "skill:baseline-meta-agent-sync",
+      "surface_kind": "skill",
+      "authority_owner": "baseline",
+      "authority_source": "repo-local-skill",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "artifacts/agent_baseline/meta_agent_tooling/latest-baseline-meta-agent-catalog.json"
+      ],
+      "notes": [
+        "selection_posture=manual"
+      ]
+    },
+    {
+      "capability_id": "skill_grants",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "skill-grant-receipts",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/skill_grants.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/skill_grants.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "skill_marketplace",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "skill-marketplace",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/skill_marketplace.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "structural_graph",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "structural-graph",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/structural_graph.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "surface_closure_governance",
+      "surface_kind": "internal-only-helper",
+      "authority_owner": "baseline",
+      "authority_source": "packages/agent_baseline/surface_closure.py",
+      "enabled": false,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": false,
+      "source_refs": [
+        "packages/agent_baseline/surface_closure.py",
+        "docs/surface_closure_register.md",
+        "AGENTS.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "tool_taxonomy",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "tool-taxonomy",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/tool_taxonomy.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/tool_taxonomy.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "trace_eval_promotion",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "trace-eval-promotion",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/trace_eval_promotion.py",
+        "docs/trace_eval_promotion.md",
+        "docs/evals.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "validation_results",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "validation-results",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/validation_results.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "workbench_support",
+      "surface_kind": "package-level-shared-contract",
+      "authority_owner": "baseline",
+      "authority_source": "generic-agent-workbench-support",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/workbench_support.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/workbench_support.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "workflow_editor",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "workflow-editor-state",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/workflow_editor.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/workflow_editor.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "workflow_runtime",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "workflow-runtime",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/workflow_runtime.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "workflow_trace_envelope",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "workflow-trace-envelope",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/workflow_trace_envelope.py",
+        "docs/workflow_trace_envelope.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "workspace_bootstrap",
+      "surface_kind": "shell/session-visible-contract",
+      "authority_owner": "baseline",
+      "authority_source": "workspace-bootstrap",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/workspace_bootstrap.py",
+        "docs/workspace_bootstrap.md",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    },
+    {
+      "capability_id": "workspace_boundary_guard",
+      "surface_kind": "operator-visible-summary-contract",
+      "authority_owner": "baseline",
+      "authority_source": "workspace-boundary-guard",
+      "enabled": true,
+      "stale": false,
+      "execution_authority": false,
+      "consumer_overlay_allowed": true,
+      "source_refs": [
+        "packages/agent_baseline/workspace_boundary_guard.py",
+        "docs/backlog.md",
+        "docs/coverage_matrix.md",
+        "docs/delivery_board.md",
+        "docs/workspace_boundary_guard.md",
+        "docs/surface_closure_register.md"
+      ],
+      "notes": [
+        "Surface closure target declares baseline-owned capability authority."
+      ]
+    }
+  ],
+  "notes": [
+    "HOS-04 makes capability authority explicit before a run treats a discovered surface as usable.",
+    "This contract is descriptive and does not grant execution authority by itself."
+  ],
+  "summary": {
+    "snapshot_id": "baseline-capability-authority-boundaries",
+    "entry_count": 105,
+    "enabled_count": 92,
+    "stale_count": 0,
+    "execution_authority_count": 9,
+    "consumer_overlay_allowed_count": 84,
+    "authority_owner_counts": {
+      "baseline": 98,
+      "discovered-tool": 2,
+      "runtime-tool": 2,
+      "runtime-plugin": 3
+    },
+    "surface_kind_counts": {
+      "shell/session-visible-contract": 23,
+      "package-level-shared-contract": 20,
+      "operator-visible-summary-contract": 36,
+      "internal-only-helper": 13,
+      "built-in": 3,
+      "deferred-discovery": 2,
+      "mcp": 2,
+      "plugin": 3,
+      "skill": 3
+    },
+    "artifact_ref": "artifacts/agent_baseline/capability_authority/latest-capability-authority-boundaries.json"
+  },
+  "contract_family": "capability-authority-boundaries",
+  "contract_major": 1,
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/capability_authority/baseline-capability-authority-boundaries.json"
+}

@@ -1,0 +1,59 @@
+[environment_invariants]
+version = "1.0"
+default_report_id = "baseline-environment-invariants"
+comparison_mode = "synthetic-executor-swap"
+required_artifact_roles = [
+  "environment_envelope_artifact",
+  "execution_projection_artifact",
+  "continuation_state_artifact",
+  "agent_run_result_artifact",
+  "environment_portability_artifact",
+  "context_lineage_artifact",
+  "environment_operator_summary_artifact",
+]
+notes = [
+  "ENV-02 freezes which environment truths are expected to survive executor replacement.",
+  "The canonical report uses a synthetic executor-swap comparison to keep invariants focused on environment semantics rather than one concrete runtime implementation.",
+  "HOS-01 expands the invariant report into an explicit harness-swap conformance surface across sandbox session, harness session, and execution-provider dimensions.",
+]
+
+[swap_dimensions]
+sandbox_session = "Sandbox continuity and restore boundaries should remain readable after harness or executor swaps."
+harness_session = "Harness session identity, key artifacts, operator summaries, and replay links remain the baseline environment evidence layer."
+execution_provider = "Execution provider identity may change, but projected environment semantics and operator-readable posture must remain stable."
+
+[invariants]
+continuity_fields = [
+  "checkpoint_state",
+  "resume_posture",
+  "approval_checkpoint_count",
+  "requires_operator_action",
+]
+projection_fields = [
+  "visible_surface_count",
+  "hidden_surface_count",
+  "selected_skill_count",
+  "selected_plugin_count",
+  "selected_context_source_count",
+  "permission_posture",
+]
+operator_fields = [
+  "environment_kind",
+  "workspace_id",
+  "component_count",
+  "active_layer_count",
+  "status",
+]
+portability_fields = [
+  "taxonomy_id",
+  "applicable_role_count",
+  "consumer_publishable_count",
+  "runtime_artifact_exists_count",
+]
+promotion_fields = [
+  "status",
+  "promoted_from_trace",
+  "actionable_target_count",
+  "regression_target_count",
+  "target_surface_counts",
+]

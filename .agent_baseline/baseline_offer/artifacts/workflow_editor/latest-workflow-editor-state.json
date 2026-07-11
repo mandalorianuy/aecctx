@@ -1,0 +1,277 @@
+{
+  "editor_id": "baseline-workflow-editor",
+  "session_id": "baseline-execution-compiler-governance",
+  "requirement_id": "baseline-execution-compiler-governance",
+  "recorded_at_utc": "2026-04-16T00:00:00+00:00",
+  "graph_shape": "multi-agent-sequential",
+  "layout_kind": "lane-topology",
+  "writeback_posture": "proposal-only",
+  "requires_orchestrator_review": true,
+  "source_artifact_ref": "artifacts/agent_baseline/execution_compiler/latest-execution-compiler-artifact.json",
+  "allowed_operations": [
+    "insert-human-checkpoint",
+    "toggle-speculative-branch",
+    "reorder-sequential-lane",
+    "annotate-slice-ownership",
+    "mark-validation-lane"
+  ],
+  "nodes": [
+    {
+      "node_id": "baseline-execution-compiler-governance-approved-requirement",
+      "label": "Approved requirement contract",
+      "node_kind": "requirement",
+      "status": "completed",
+      "lane_id": "orchestrator",
+      "x": 0,
+      "y": 0,
+      "width": 220,
+      "height": 96,
+      "editable": true,
+      "dependency_ids": [],
+      "notes": [
+        "Owner agent: codex-orchestrator",
+        "Collision policy: frozen-approved-contract",
+        "Outbox: ['Requirement is approved; downstream slices must stay within bounded scope.']"
+      ]
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-evidence",
+      "label": "Carry forward approved retrieval and graph evidence",
+      "node_kind": "evidence",
+      "status": "completed",
+      "lane_id": "orchestrator",
+      "x": 240,
+      "y": 0,
+      "width": 220,
+      "height": 96,
+      "editable": true,
+      "dependency_ids": [
+        "baseline-execution-compiler-governance-approved-requirement"
+      ],
+      "notes": [
+        "Owner agent: codex-orchestrator",
+        "Collision policy: read-only-evidence-aggregation",
+        "Inbox: ['Consume approved memory, graph, and learning evidence only.']",
+        "Outbox: ['Forward bounded evidence into routing and worker planning.']"
+      ]
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-risk-budget-control",
+      "label": "Apply planner budget, cost, and risk controls before worker selection",
+      "node_kind": "control",
+      "status": "proposed",
+      "lane_id": "orchestrator",
+      "x": 480,
+      "y": 0,
+      "width": 220,
+      "height": 96,
+      "editable": true,
+      "dependency_ids": [
+        "baseline-execution-compiler-governance-approved-requirement",
+        "baseline-execution-compiler-governance-evidence"
+      ],
+      "notes": [
+        "Owner agent: codex-orchestrator",
+        "Collision policy: single-writer-control-plane",
+        "Inbox: ['Review explicit risk, cost, and retry posture before opening worker lanes.']",
+        "Outbox: ['Propagate bounded planner controls to routing and slice owners.']"
+      ]
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-runtime-routing",
+      "label": "Resolve runtime/provider posture from compiler hints",
+      "node_kind": "routing",
+      "status": "proposed",
+      "lane_id": "orchestrator",
+      "x": 720,
+      "y": 0,
+      "width": 220,
+      "height": 96,
+      "editable": true,
+      "dependency_ids": [
+        "baseline-execution-compiler-governance-approved-requirement",
+        "baseline-execution-compiler-governance-evidence",
+        "baseline-execution-compiler-governance-risk-budget-control"
+      ],
+      "notes": [
+        "Owner agent: codex-orchestrator",
+        "Collision policy: single-writer-routing",
+        "Inbox: ['Accept only bounded planner controls and approved evidence.']",
+        "Outbox: ['Assign runtime posture and slice ownership before execution.']"
+      ]
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-validation",
+      "label": "Validate execution output against the requirement contract",
+      "node_kind": "validation",
+      "status": "proposed",
+      "lane_id": "review",
+      "x": 0,
+      "y": 528,
+      "width": 220,
+      "height": 96,
+      "editable": true,
+      "dependency_ids": [],
+      "notes": [
+        "Owner agent: codex-orchestrator",
+        "Collision policy: manager-reviewed-validation",
+        "Inbox: ['Collect worker outputs and verify them against success criteria.']",
+        "Outbox: ['Report validation outcome before closeout.']"
+      ]
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-worker-sequential-1",
+      "label": "Sequential worker lane 1: Baseline executor worker",
+      "node_kind": "execution",
+      "status": "ready",
+      "lane_id": "implementation",
+      "x": 0,
+      "y": 792,
+      "width": 220,
+      "height": 96,
+      "editable": true,
+      "dependency_ids": [
+        "baseline-execution-compiler-governance-runtime-routing"
+      ],
+      "notes": [
+        "Owner agent: baseline-executor-worker",
+        "Collision policy: lane-owned-write-scope",
+        "Inbox: ['Consume only the approved slice scope from the orchestrator inbox.']",
+        "Outbox: ['Return bounded artifacts to the next sequential owner.']"
+      ]
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-review-owner",
+      "label": "Review owner integrates bounded worker output",
+      "node_kind": "review",
+      "status": "proposed",
+      "lane_id": "review",
+      "x": 240,
+      "y": 528,
+      "width": 220,
+      "height": 96,
+      "editable": true,
+      "dependency_ids": [
+        "baseline-execution-compiler-governance-worker-sequential-1"
+      ],
+      "notes": [
+        "Owner agent: codex-orchestrator",
+        "Collision policy: manager-reviewed-integration",
+        "Inbox: ['Receive bounded worker output and verify merge readiness.']",
+        "Outbox: ['Pass reviewed output to validation or checkpoint.']"
+      ]
+    },
+    {
+      "node_id": "baseline-execution-compiler-governance-sequential-retry-window",
+      "label": "Bounded retry window if sequential integration fails validation",
+      "node_kind": "retry",
+      "status": "proposed",
+      "lane_id": "retry-owner",
+      "x": 0,
+      "y": 924,
+      "width": 220,
+      "height": 96,
+      "editable": true,
+      "dependency_ids": [
+        "baseline-execution-compiler-governance-review-owner"
+      ],
+      "notes": [
+        "Owner agent: codex-orchestrator",
+        "Collision policy: retry-window-bounded",
+        "Inbox: ['Retry only inside the approved path and tool scope.']",
+        "Outbox: ['Escalate after the retry budget is exhausted.']"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "baseline-execution-compiler-governance-requirement-to-evidence",
+      "source_node_id": "baseline-execution-compiler-governance-approved-requirement",
+      "target_node_id": "baseline-execution-compiler-governance-evidence",
+      "edge_kind": "grounds",
+      "label": "",
+      "editable": false
+    },
+    {
+      "edge_id": "baseline-execution-compiler-governance-evidence-to-control",
+      "source_node_id": "baseline-execution-compiler-governance-evidence",
+      "target_node_id": "baseline-execution-compiler-governance-risk-budget-control",
+      "edge_kind": "informs",
+      "label": "",
+      "editable": false
+    },
+    {
+      "edge_id": "baseline-execution-compiler-governance-requirement-to-routing",
+      "source_node_id": "baseline-execution-compiler-governance-approved-requirement",
+      "target_node_id": "baseline-execution-compiler-governance-runtime-routing",
+      "edge_kind": "authorizes",
+      "label": "",
+      "editable": false
+    },
+    {
+      "edge_id": "baseline-execution-compiler-governance-control-to-routing",
+      "source_node_id": "baseline-execution-compiler-governance-risk-budget-control",
+      "target_node_id": "baseline-execution-compiler-governance-runtime-routing",
+      "edge_kind": "gates",
+      "label": "",
+      "editable": false
+    },
+    {
+      "edge_id": "baseline-execution-compiler-governance-routing-to-sequential-1",
+      "source_node_id": "baseline-execution-compiler-governance-runtime-routing",
+      "target_node_id": "baseline-execution-compiler-governance-worker-sequential-1",
+      "edge_kind": "selects-runtime-for",
+      "label": "",
+      "editable": false
+    },
+    {
+      "edge_id": "baseline-execution-compiler-governance-sequential-to-review",
+      "source_node_id": "baseline-execution-compiler-governance-worker-sequential-1",
+      "target_node_id": "baseline-execution-compiler-governance-review-owner",
+      "edge_kind": "reviews",
+      "label": "",
+      "editable": false
+    },
+    {
+      "edge_id": "baseline-execution-compiler-governance-sequential-review-to-retry",
+      "source_node_id": "baseline-execution-compiler-governance-review-owner",
+      "target_node_id": "baseline-execution-compiler-governance-sequential-retry-window",
+      "edge_kind": "retry-of",
+      "label": "",
+      "editable": false
+    },
+    {
+      "edge_id": "baseline-execution-compiler-governance-final-to-validation",
+      "source_node_id": "baseline-execution-compiler-governance-sequential-retry-window",
+      "target_node_id": "baseline-execution-compiler-governance-validation",
+      "edge_kind": "produces-output-for",
+      "label": "",
+      "editable": false
+    }
+  ],
+  "notes": [
+    "FUT-07 turns the visual workflow editor into a governed baseline contract instead of a future-only idea.",
+    "The editor is graph-grounded and local-only: it reads and writes baseline artifacts, not remote workflow services.",
+    "Any topology change remains review-gated; visual editing does not bypass planner, policy, or approval authority.",
+    "Workflow editor state is derived from the compiler-emitted task graph seed."
+  ],
+  "summary": {
+    "editor_id": "baseline-workflow-editor",
+    "graph_shape": "multi-agent-sequential",
+    "layout_kind": "lane-topology",
+    "node_count": 8,
+    "edge_count": 8,
+    "lane_count": 4,
+    "human_checkpoint_node_count": 0,
+    "speculative_edge_count": 0,
+    "editable_operation_count": 5,
+    "requires_orchestrator_review": true,
+    "artifact_ref": "artifacts/agent_baseline/workflow_editor/latest-workflow-editor-state.json"
+  },
+  "contract_family": "workflow-editor-state",
+  "contract_major": 1,
+  "schema_version": "workflow-editor-state/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major"
+}

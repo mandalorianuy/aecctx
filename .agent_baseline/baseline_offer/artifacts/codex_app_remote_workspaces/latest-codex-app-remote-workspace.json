@@ -1,0 +1,56 @@
+{
+  "workspace_id": "baseline-ssh-devbox-pass",
+  "session_id": "baseline-ssh-01-session",
+  "recorded_at_utc": "2026-04-16T00:00:00+00:00",
+  "source_release": "codex-for-almost-everything",
+  "transport_kind": "devbox",
+  "remote_host": "devbox.example.internal",
+  "remote_root": "/workspace/repo",
+  "workspace_alias": "baseline-devbox",
+  "devbox_provider": "github-codespaces",
+  "trust_level": "managed",
+  "execution_posture": "interactive",
+  "artifact_provenance": [
+    {
+      "artifact_ref": "artifacts/agent_baseline/workflows/states/session-2026-04-16t144359-887417-0000-persist-workflow-runtime-contracts.json",
+      "provenance_kind": "remote-generated",
+      "generated_remotely": true,
+      "sync_required": true
+    }
+  ],
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/codex_app_runtime/latest-codex-app-runtime.json",
+    "artifacts/agent_baseline/shell_contracts/latest-meta-agent-contract.json"
+  ],
+  "notes": [
+    "Canonical SSH-01 sample for repo-owned artifact governance."
+  ],
+  "summary": {
+    "workspace_count": 1,
+    "workspace_id": "baseline-ssh-devbox-pass",
+    "session_id": "baseline-ssh-01-session",
+    "transport_kind_counts": {
+      "devbox": 1
+    },
+    "trust_level_counts": {
+      "managed": 1
+    },
+    "execution_posture_counts": {
+      "interactive": 1
+    },
+    "managed_workspace_count": 1,
+    "devbox_workspace_count": 1,
+    "ssh_workspace_count": 0,
+    "remote_artifact_count": 1,
+    "sync_required_artifact_count": 1,
+    "remote_generated_artifact_count": 1,
+    "artifact_ref": "artifacts/agent_baseline/codex_app_remote_workspaces/latest-codex-app-remote-workspace.json"
+  },
+  "contract_family": "codex-app-remote-workspace",
+  "contract_major": 1,
+  "schema_version": "codex-app-remote-workspace/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/codex_app_remote_workspaces/baseline-ssh-devbox-pass.json"
+}

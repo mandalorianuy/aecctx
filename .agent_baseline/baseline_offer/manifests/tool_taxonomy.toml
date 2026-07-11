@@ -1,0 +1,78 @@
+[tool_taxonomy]
+version = "1.0"
+default_search_mode = "weighted-alias-match"
+notes = [
+  "INT-02 normalizes baseline tool discovery across built-in tools, MCP servers, plugins, repo-local skills, and deferred discovery surfaces.",
+  "The taxonomy is baseline-owned vocabulary: it classifies tool surfaces and policy posture without embedding specialization semantics.",
+]
+
+[builtin_tools.workspace_search]
+display_name = "Workspace Search"
+availability = "available"
+trust_posture = "baseline"
+selection_posture = "default-enabled"
+operator_visible = true
+policy_required = false
+route_hint = "repo-search"
+aliases = ["rg", "workspace_read", "search_repo"]
+search_terms = ["search", "ripgrep", "files", "read", "inspect"]
+notes = [
+  "Covers bounded workspace search and low-risk inspection surfaces.",
+]
+
+[builtin_tools.local_command_runner]
+display_name = "Local Command Runner"
+availability = "available"
+trust_posture = "review-required"
+selection_posture = "policy-reviewed"
+operator_visible = true
+policy_required = true
+route_hint = "local-execution"
+aliases = ["python3", "pytest", "make", "bash", "sh", "uv", "run_validation_command"]
+search_terms = ["command", "validation", "test", "build", "execute", "script"]
+notes = [
+  "Covers bounded local command execution under baseline policy review.",
+]
+
+[builtin_tools.workspace_patch_apply]
+display_name = "Workspace Patch Apply"
+availability = "available"
+trust_posture = "review-required"
+selection_posture = "policy-reviewed"
+operator_visible = true
+policy_required = true
+route_hint = "workspace-write"
+aliases = ["workspace_write_guarded", "apply_patch"]
+search_terms = ["patch", "write", "edit", "modify", "guarded"]
+notes = [
+  "Covers explicit write surfaces that mutate the local workspace under policy posture.",
+]
+
+[deferred_surfaces.tool_search]
+display_name = "Deferred Tool Search"
+availability = "discoverable"
+trust_posture = "baseline"
+selection_posture = "discover-on-demand"
+operator_visible = true
+policy_required = false
+route_hint = "catalog-search"
+aliases = ["tool_search", "tool-search"]
+search_terms = ["discover", "catalog", "search", "deferred", "tool lookup"]
+notes = [
+  "Models tool-search style discovery when the initial tool surface is not yet selected.",
+]
+
+[deferred_surfaces.remote_mcp_discovery]
+display_name = "Remote MCP Discovery"
+availability = "discoverable"
+trust_posture = "review-required"
+selection_posture = "discover-on-demand"
+operator_visible = true
+policy_required = true
+route_hint = "remote-mcp"
+channel_kind = "remote"
+aliases = ["remote_mcp", "remote-mcp"]
+search_terms = ["remote", "mcp", "connector", "discovery", "approval"]
+notes = [
+  "Keeps remote MCP discovery explicit without making hosted/provider-managed state authoritative for the baseline.",
+]

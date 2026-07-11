@@ -1,0 +1,9 @@
+[workspace_boundary_guard]
+schema_version = "1.0"
+description = "Baseline-owned workspace boundary guard for command and path payloads."
+allowed_roots = []
+notes = [
+  "HOS-07 normalizes path and command payloads before execution-facing surfaces consume them.",
+  "External absolute paths and mutating/network commands are rejected unless an explicit higher-level approval path handles them.",
+]
+

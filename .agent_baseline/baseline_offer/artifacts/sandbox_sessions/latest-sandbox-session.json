@@ -1,0 +1,73 @@
+{
+  "snapshot_id": "baseline-sandbox-session",
+  "session_id": "baseline-sbx-01-session",
+  "workspace_id": "baseline-sandbox-workspace",
+  "recorded_at_utc": "2026-04-29T22:00:30.442920+00:00",
+  "lifecycle_state": "planning",
+  "checkpoint_state": "ready",
+  "continuation_posture": "fresh",
+  "current_owner": "operator",
+  "checkpoints": [],
+  "restore_boundary": {
+    "boundary_id": "baseline-sbx-01-session-restore-boundary",
+    "restore_strategy": "artifact-backed-resume",
+    "restorable_artifacts": [
+      "artifacts/agent_baseline/instruction_memory/sets/latest-instruction-set.json"
+    ],
+    "restorable_state_fields": [
+      "lifecycle_state",
+      "workflow_summary",
+      "instruction_memory_summary",
+      "human_checkpoint_summary",
+      "execution_checkpoint_summary",
+      "interoperability_summary",
+      "policy_summary"
+    ],
+    "non_restorable_state_fields": [
+      "ambient_shell_handles",
+      "live_subprocesses",
+      "provider_socket_sessions"
+    ],
+    "requires_operator_reapproval": true,
+    "notes": [
+      "The baseline may interoperate with hosted continuation ids, but those ids are not the primary source of truth.",
+      "Artifact-backed restore remains the canonical baseline continuity path."
+    ]
+  },
+  "continuity_artifacts": [
+    "artifacts/agent_baseline/instruction_memory/sets/latest-instruction-set.json"
+  ],
+  "persisted_output_refs": [
+    "artifacts/agent_baseline/meta_agent_tooling/latest-baseline-meta-agent-catalog.json",
+    "artifacts/agent_baseline/shell_contracts/latest-meta-agent-contract.json"
+  ],
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/sandbox_workspaces/latest-sandbox-workspace.json",
+    "artifacts/agent_baseline/workspace_bootstrap/latest-workspace-bootstrap.json",
+    "artifacts/agent_baseline/instruction_memory/sets/latest-instruction-set.json"
+  ],
+  "notes": [
+    "Canonical SBX-02 sample for repo-owned artifact governance."
+  ],
+  "summary": {
+    "snapshot_id": "baseline-sandbox-session",
+    "session_id": "baseline-sbx-01-session",
+    "workspace_id": "baseline-sandbox-workspace",
+    "checkpoint_state": "ready",
+    "continuation_posture": "fresh",
+    "current_owner": "operator",
+    "checkpoint_count": 0,
+    "human_checkpoint_count": 0,
+    "continuity_artifact_count": 1,
+    "persisted_output_count": 2,
+    "requires_operator_reapproval": true,
+    "artifact_ref": "artifacts/agent_baseline/sandbox_sessions/latest-sandbox-session.json"
+  },
+  "contract_family": "sandbox-session",
+  "contract_major": 1,
+  "schema_version": "sandbox-session/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/sandbox_sessions/baseline-sandbox-session.json"
+}

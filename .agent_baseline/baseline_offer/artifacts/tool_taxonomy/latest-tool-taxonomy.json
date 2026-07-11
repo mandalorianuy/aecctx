@@ -1,0 +1,418 @@
+{
+  "snapshot_id": "baseline-tool-taxonomy",
+  "recorded_at_utc": "2026-04-29T22:00:30.360494+00:00",
+  "schema_version": "1.0",
+  "default_search_mode": "weighted-alias-match",
+  "entries": [
+    {
+      "surface_id": "builtin:local_command_runner",
+      "label": "Local Command Runner",
+      "discovery_class": "built-in",
+      "channel_kind": "none",
+      "availability": "available",
+      "trust_posture": "review-required",
+      "selection_posture": "policy-reviewed",
+      "operator_visible": true,
+      "policy_required": true,
+      "route_hint": "local-execution",
+      "aliases": [
+        "local_command_runner",
+        "python3",
+        "pytest",
+        "make",
+        "bash",
+        "sh",
+        "uv",
+        "run_validation_command"
+      ],
+      "search_terms": [
+        "command",
+        "validation",
+        "test",
+        "build",
+        "execute",
+        "script"
+      ],
+      "artifact_refs": [],
+      "notes": [
+        "Covers bounded local command execution under baseline policy review."
+      ],
+      "metadata": {
+        "tool_id": "local_command_runner"
+      }
+    },
+    {
+      "surface_id": "builtin:workspace_patch_apply",
+      "label": "Workspace Patch Apply",
+      "discovery_class": "built-in",
+      "channel_kind": "none",
+      "availability": "available",
+      "trust_posture": "review-required",
+      "selection_posture": "policy-reviewed",
+      "operator_visible": true,
+      "policy_required": true,
+      "route_hint": "workspace-write",
+      "aliases": [
+        "workspace_patch_apply",
+        "workspace_write_guarded",
+        "apply_patch"
+      ],
+      "search_terms": [
+        "patch",
+        "write",
+        "edit",
+        "modify",
+        "guarded"
+      ],
+      "artifact_refs": [],
+      "notes": [
+        "Covers explicit write surfaces that mutate the local workspace under policy posture."
+      ],
+      "metadata": {
+        "tool_id": "workspace_patch_apply"
+      }
+    },
+    {
+      "surface_id": "builtin:workspace_search",
+      "label": "Workspace Search",
+      "discovery_class": "built-in",
+      "channel_kind": "none",
+      "availability": "available",
+      "trust_posture": "baseline",
+      "selection_posture": "default-enabled",
+      "operator_visible": true,
+      "policy_required": false,
+      "route_hint": "repo-search",
+      "aliases": [
+        "workspace_search",
+        "rg",
+        "workspace_read",
+        "search_repo"
+      ],
+      "search_terms": [
+        "search",
+        "ripgrep",
+        "files",
+        "read",
+        "inspect"
+      ],
+      "artifact_refs": [],
+      "notes": [
+        "Covers bounded workspace search and low-risk inspection surfaces."
+      ],
+      "metadata": {
+        "tool_id": "workspace_search"
+      }
+    },
+    {
+      "surface_id": "deferred:remote_mcp_discovery",
+      "label": "Remote MCP Discovery",
+      "discovery_class": "deferred-discovery",
+      "channel_kind": "remote",
+      "availability": "discoverable",
+      "trust_posture": "review-required",
+      "selection_posture": "discover-on-demand",
+      "operator_visible": true,
+      "policy_required": true,
+      "route_hint": "remote-mcp",
+      "aliases": [
+        "remote_mcp_discovery",
+        "remote_mcp",
+        "remote-mcp"
+      ],
+      "search_terms": [
+        "remote",
+        "mcp",
+        "connector",
+        "discovery",
+        "approval"
+      ],
+      "artifact_refs": [],
+      "notes": [
+        "Keeps remote MCP discovery explicit without making hosted/provider-managed state authoritative for the baseline."
+      ],
+      "metadata": {
+        "surface_id": "remote_mcp_discovery"
+      }
+    },
+    {
+      "surface_id": "deferred:tool_search",
+      "label": "Deferred Tool Search",
+      "discovery_class": "deferred-discovery",
+      "channel_kind": "none",
+      "availability": "discoverable",
+      "trust_posture": "baseline",
+      "selection_posture": "discover-on-demand",
+      "operator_visible": true,
+      "policy_required": false,
+      "route_hint": "catalog-search",
+      "aliases": [
+        "tool_search",
+        "tool_search",
+        "tool-search"
+      ],
+      "search_terms": [
+        "discover",
+        "catalog",
+        "search",
+        "deferred",
+        "tool lookup"
+      ],
+      "artifact_refs": [],
+      "notes": [
+        "Models tool-search style discovery when the initial tool surface is not yet selected."
+      ],
+      "metadata": {
+        "surface_id": "tool_search"
+      }
+    },
+    {
+      "surface_id": "mcp:baseline-remote-discovery",
+      "label": "Baseline Remote MCP Discovery",
+      "discovery_class": "mcp",
+      "channel_kind": "remote",
+      "availability": "discoverable",
+      "trust_posture": "review-required",
+      "selection_posture": "discover-on-demand",
+      "operator_visible": true,
+      "policy_required": true,
+      "route_hint": "external",
+      "aliases": [
+        "baseline-remote-discovery",
+        "Baseline Remote MCP Discovery",
+        "external",
+        "https"
+      ],
+      "search_terms": [
+        "https://modelcontextprotocol.io/specification/2025-03-26/server/tools"
+      ],
+      "artifact_refs": [],
+      "notes": [
+        "This is a governed remote MCP discovery surface, not a baseline-managed deployment.",
+        "Remote MCP remains interoperable and approval-bound rather than authoritative baseline state."
+      ],
+      "metadata": {
+        "server_id": "baseline-remote-discovery",
+        "scope": "external",
+        "transport": "https",
+        "auth_mode": "approval_required",
+        "supports_list_changed": true
+      }
+    },
+    {
+      "surface_id": "mcp:baseline-workspace",
+      "label": "Baseline Workspace Interop",
+      "discovery_class": "mcp",
+      "channel_kind": "local",
+      "availability": "discoverable",
+      "trust_posture": "baseline",
+      "selection_posture": "discover-on-demand",
+      "operator_visible": true,
+      "policy_required": false,
+      "route_hint": "workspace",
+      "aliases": [
+        "baseline-workspace",
+        "Baseline Workspace Interop",
+        "workspace",
+        "local-manifest"
+      ],
+      "search_terms": [
+        "https://modelcontextprotocol.io/specification/2025-03-26/server/tools",
+        "https://modelcontextprotocol.io/specification/2025-03-26/server/resources",
+        "https://modelcontextprotocol.io/specification/2025-03-26/server/prompts",
+        "workspace-root"
+      ],
+      "artifact_refs": [],
+      "notes": [
+        "Baseline uses a local manifest-backed interoperability plane and does not require a hosted MCP deployment.",
+        "Servers in this catalog define reusable interoperability posture, not specialization semantics."
+      ],
+      "metadata": {
+        "server_id": "baseline-workspace",
+        "scope": "workspace",
+        "transport": "local-manifest",
+        "auth_mode": "local_trust",
+        "supports_list_changed": true
+      }
+    },
+    {
+      "surface_id": "plugin:browser",
+      "label": "Browser",
+      "discovery_class": "plugin",
+      "channel_kind": "none",
+      "availability": "available",
+      "trust_posture": "baseline",
+      "selection_posture": "default-enabled",
+      "operator_visible": true,
+      "policy_required": false,
+      "route_hint": "interactive-web",
+      "aliases": [
+        "browser",
+        "interactive-web",
+        "browser-navigation",
+        "viewport-capture"
+      ],
+      "search_terms": [
+        "native-app-surface",
+        "browser-navigation",
+        "viewport-capture"
+      ],
+      "artifact_refs": [
+        "artifacts/agent_baseline/codex_app_plugins/baseline-codex-app-plugin-catalog.json"
+      ],
+      "notes": [],
+      "metadata": {
+        "plugin_id": "browser",
+        "plugin_kind": "native-app-surface"
+      }
+    },
+    {
+      "surface_id": "plugin:files",
+      "label": "Files",
+      "discovery_class": "plugin",
+      "channel_kind": "none",
+      "availability": "available",
+      "trust_posture": "baseline",
+      "selection_posture": "default-enabled",
+      "operator_visible": true,
+      "policy_required": false,
+      "route_hint": "workspace-inspection",
+      "aliases": [
+        "files",
+        "workspace-inspection",
+        "file-preview"
+      ],
+      "search_terms": [
+        "workspace-extension",
+        "file-preview"
+      ],
+      "artifact_refs": [
+        "artifacts/agent_baseline/codex_app_plugins/baseline-codex-app-plugin-catalog.json"
+      ],
+      "notes": [],
+      "metadata": {
+        "plugin_id": "files",
+        "plugin_kind": "workspace-extension"
+      }
+    },
+    {
+      "surface_id": "plugin:github",
+      "label": "GitHub",
+      "discovery_class": "plugin",
+      "channel_kind": "none",
+      "availability": "available",
+      "trust_posture": "review-required",
+      "selection_posture": "policy-reviewed",
+      "operator_visible": true,
+      "policy_required": true,
+      "route_hint": "repo-intelligence",
+      "aliases": [
+        "github",
+        "repo-intelligence",
+        "issue-triage",
+        "pr-summary"
+      ],
+      "search_terms": [
+        "connector",
+        "issue-triage",
+        "pr-summary"
+      ],
+      "artifact_refs": [
+        "artifacts/agent_baseline/codex_app_plugins/baseline-codex-app-plugin-catalog.json"
+      ],
+      "notes": [],
+      "metadata": {
+        "plugin_id": "github",
+        "plugin_kind": "connector"
+      }
+    },
+    {
+      "surface_id": "skill:baseline-meta-agent-bootstrap",
+      "label": "Baseline Meta-Agent Bootstrap",
+      "discovery_class": "skill",
+      "channel_kind": "none",
+      "availability": "available",
+      "trust_posture": "baseline",
+      "selection_posture": "manual",
+      "operator_visible": true,
+      "policy_required": false,
+      "route_hint": "repo-local-skill",
+      "aliases": [
+        "baseline-meta-agent-bootstrap",
+        ".agents/skills/baseline-meta-agent-bootstrap"
+      ],
+      "search_terms": [
+        "Initialize a new meta-agent repo with baseline shell integration, overlay manifests, governance state, and checker tooling.",
+        ".agents/skills/baseline-meta-agent-bootstrap"
+      ],
+      "artifact_refs": [
+        "artifacts/agent_baseline/meta_agent_tooling/latest-baseline-meta-agent-catalog.json"
+      ],
+      "notes": [],
+      "metadata": {
+        "skill_id": "baseline-meta-agent-bootstrap",
+        "relative_path": ".agents/skills/baseline-meta-agent-bootstrap"
+      }
+    },
+    {
+      "surface_id": "skill:baseline-meta-agent-discovery",
+      "label": "Baseline Meta-Agent Discovery",
+      "discovery_class": "skill",
+      "channel_kind": "none",
+      "availability": "available",
+      "trust_posture": "baseline",
+      "selection_posture": "manual",
+      "operator_visible": true,
+      "policy_required": false,
+      "route_hint": "repo-local-skill",
+      "aliases": [
+        "baseline-meta-agent-discovery",
+        ".agents/skills/baseline-meta-agent-discovery"
+      ],
+      "search_terms": [
+        "Audit an existing meta-agent repo against the baseline offer, bundles, overlay seams, and governance.",
+        ".agents/skills/baseline-meta-agent-discovery"
+      ],
+      "artifact_refs": [
+        "artifacts/agent_baseline/meta_agent_tooling/latest-baseline-meta-agent-catalog.json"
+      ],
+      "notes": [],
+      "metadata": {
+        "skill_id": "baseline-meta-agent-discovery",
+        "relative_path": ".agents/skills/baseline-meta-agent-discovery"
+      }
+    },
+    {
+      "surface_id": "skill:baseline-meta-agent-sync",
+      "label": "Baseline Meta-Agent Sync",
+      "discovery_class": "skill",
+      "channel_kind": "none",
+      "availability": "available",
+      "trust_posture": "baseline",
+      "selection_posture": "manual",
+      "operator_visible": true,
+      "policy_required": false,
+      "route_hint": "repo-local-skill",
+      "aliases": [
+        "baseline-meta-agent-sync",
+        ".agents/skills/baseline-meta-agent-sync"
+      ],
+      "search_terms": [
+        "Refresh an existing meta-agent repo against the current baseline catalog while preserving supported overlay customizations.",
+        ".agents/skills/baseline-meta-agent-sync"
+      ],
+      "artifact_refs": [
+        "artifacts/agent_baseline/meta_agent_tooling/latest-baseline-meta-agent-catalog.json"
+      ],
+      "notes": [],
+      "metadata": {
+        "skill_id": "baseline-meta-agent-sync",
+        "relative_path": ".agents/skills/baseline-meta-agent-sync"
+      }
+    }
+  ],
+  "notes": [
+    "INT-02 normalizes baseline tool discovery across built-in tools, MCP servers, plugins, repo-local skills, and deferred discovery surfaces.",
+    "The taxonomy is baseline-owned vocabulary: it classifies tool surfaces and policy posture without embedding specialization semantics."
+  ]
+}

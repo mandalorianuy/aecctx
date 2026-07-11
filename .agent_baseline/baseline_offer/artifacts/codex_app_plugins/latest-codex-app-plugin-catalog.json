@@ -1,0 +1,120 @@
+{
+  "catalog_id": "baseline-codex-app-plugin-catalog",
+  "recorded_at_utc": "2026-04-16T00:00:00+00:00",
+  "source_release": "codex-for-almost-everything",
+  "default_selection_policy": "policy-reviewed",
+  "plugins": [
+    {
+      "plugin_id": "browser",
+      "display_name": "Browser",
+      "plugin_kind": "native-app-surface",
+      "availability": "available",
+      "trust_level": "baseline",
+      "selection_posture": "default-enabled",
+      "route_hint": "interactive-web",
+      "capability_ids": [
+        "browser-navigation",
+        "viewport-capture"
+      ]
+    },
+    {
+      "plugin_id": "files",
+      "display_name": "Files",
+      "plugin_kind": "workspace-extension",
+      "availability": "available",
+      "trust_level": "baseline",
+      "selection_posture": "default-enabled",
+      "route_hint": "workspace-inspection",
+      "capability_ids": [
+        "file-preview"
+      ]
+    },
+    {
+      "plugin_id": "github",
+      "display_name": "GitHub",
+      "plugin_kind": "connector",
+      "availability": "available",
+      "trust_level": "review-required",
+      "selection_posture": "policy-reviewed",
+      "route_hint": "repo-intelligence",
+      "capability_ids": [
+        "pr-summary",
+        "issue-triage"
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "browser-navigation",
+      "plugin_id": "browser",
+      "operator_visible": true,
+      "policy_required": false,
+      "summary": "Navigate and inspect browser pages through the Codex app surface."
+    },
+    {
+      "capability_id": "file-preview",
+      "plugin_id": "files",
+      "operator_visible": true,
+      "policy_required": false,
+      "summary": "Open and preview workspace files from the Codex app shell."
+    },
+    {
+      "capability_id": "issue-triage",
+      "plugin_id": "github",
+      "operator_visible": true,
+      "policy_required": true,
+      "summary": "Inspect issue metadata through a governed connector."
+    },
+    {
+      "capability_id": "pr-summary",
+      "plugin_id": "github",
+      "operator_visible": true,
+      "policy_required": true,
+      "summary": "Read pull-request context through a governed connector."
+    },
+    {
+      "capability_id": "viewport-capture",
+      "plugin_id": "browser",
+      "operator_visible": true,
+      "policy_required": false,
+      "summary": "Capture viewport context for operator review and replay."
+    }
+  ],
+  "notes": [
+    "PLG-01 models app/plugin inventory as a governed baseline catalog instead of ambient product knowledge.",
+    "Baseline may expose plugin posture and routing hints, but not plugin-specific business semantics."
+  ],
+  "summary": {
+    "catalog_id": "baseline-codex-app-plugin-catalog",
+    "default_selection_policy": "policy-reviewed",
+    "plugin_count": 3,
+    "capability_count": 5,
+    "available_plugin_count": 3,
+    "default_enabled_plugin_count": 2,
+    "policy_reviewed_plugin_count": 1,
+    "operator_visible_capability_count": 5,
+    "policy_required_capability_count": 2,
+    "plugin_kind_counts": {
+      "native-app-surface": 1,
+      "workspace-extension": 1,
+      "connector": 1
+    },
+    "trust_level_counts": {
+      "baseline": 2,
+      "review-required": 1
+    },
+    "route_hint_counts": {
+      "interactive-web": 1,
+      "workspace-inspection": 1,
+      "repo-intelligence": 1
+    },
+    "artifact_ref": "artifacts/agent_baseline/codex_app_plugins/latest-codex-app-plugin-catalog.json"
+  },
+  "contract_family": "codex-app-plugin-catalog",
+  "contract_major": 1,
+  "schema_version": "codex-app-plugin-catalog/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/codex_app_plugins/baseline-codex-app-plugin-catalog.json"
+}

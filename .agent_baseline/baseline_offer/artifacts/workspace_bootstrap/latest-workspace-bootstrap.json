@@ -1,0 +1,126 @@
+{
+  "bootstrap_id": "baseline-workspace-bootstrap",
+  "recorded_at_utc": "2026-04-29T22:00:30.424884+00:00",
+  "repo_root": "/Users/facundo/desarrollo/codex-agent-baseline",
+  "instruction_entrypoint": "AGENTS.md",
+  "authority_file_refs": [
+    "AGENTS.md"
+  ],
+  "task_file_refs": [
+    "docs/backlog.md",
+    "docs/delivery_board.md",
+    "docs/roadmap.md"
+  ],
+  "skill_root_refs": [
+    ".agents/skills"
+  ],
+  "instruction_sources": [
+    {
+      "source_id": "authority-1",
+      "path_ref": "AGENTS.md",
+      "source_kind": "authority",
+      "required": true,
+      "exists": true,
+      "runtime_readable": true,
+      "notes": [
+        "Primary workspace operating instructions."
+      ]
+    },
+    {
+      "source_id": "authority-2",
+      "path_ref": "prompt.md",
+      "source_kind": "authority",
+      "required": true,
+      "exists": false,
+      "runtime_readable": false,
+      "notes": [
+        "Primary workspace operating instructions."
+      ]
+    },
+    {
+      "source_id": "task-1",
+      "path_ref": "docs/backlog.md",
+      "source_kind": "task-file",
+      "required": false,
+      "exists": true,
+      "runtime_readable": true,
+      "notes": [
+        "Repo task or planning file discovered from the workspace bootstrap manifest."
+      ]
+    },
+    {
+      "source_id": "task-2",
+      "path_ref": "docs/delivery_board.md",
+      "source_kind": "task-file",
+      "required": false,
+      "exists": true,
+      "runtime_readable": true,
+      "notes": [
+        "Repo task or planning file discovered from the workspace bootstrap manifest."
+      ]
+    },
+    {
+      "source_id": "task-3",
+      "path_ref": "docs/roadmap.md",
+      "source_kind": "task-file",
+      "required": false,
+      "exists": true,
+      "runtime_readable": true,
+      "notes": [
+        "Repo task or planning file discovered from the workspace bootstrap manifest."
+      ]
+    },
+    {
+      "source_id": "skills-1",
+      "path_ref": ".agents/skills",
+      "source_kind": "skills-root",
+      "required": false,
+      "exists": true,
+      "runtime_readable": true,
+      "notes": [
+        "Workspace-local skill root available to the runtime."
+      ]
+    }
+  ],
+  "path_policy": {
+    "preferred_path_mode": "repo-relative",
+    "repo_root_anchor_required": true,
+    "allow_absolute_repo_paths": true,
+    "allow_external_absolute_paths": false,
+    "prohibited_patterns": [
+      "../",
+      "~/",
+      "/tmp/"
+    ],
+    "notes": [
+      "Workspace instructions should prefer repo-relative references so the same contract survives local, remote, and sandboxed execution.",
+      "Render layers may expand repo-owned paths later, but workspace-authored instructions should stay repo-anchored first."
+    ]
+  },
+  "linked_artifact_refs": [],
+  "notes": [
+    "WS-01 turns workspace instructions into a runtime-readable baseline contract instead of ambient repo convention.",
+    "Authority files, task files, and skills roots must be discoverable without consumer-local prompt glue."
+  ],
+  "summary": {
+    "bootstrap_id": "baseline-workspace-bootstrap",
+    "instruction_entrypoint": "AGENTS.md",
+    "authority_file_count": 1,
+    "task_file_count": 3,
+    "skill_root_count": 1,
+    "instruction_source_count": 6,
+    "runtime_readable_source_count": 5,
+    "missing_required_count": 1,
+    "preferred_path_mode": "repo-relative",
+    "repo_root_anchor_required": true,
+    "allow_external_absolute_paths": false,
+    "artifact_ref": "artifacts/agent_baseline/workspace_bootstrap/latest-workspace-bootstrap.json"
+  },
+  "contract_family": "workspace-bootstrap",
+  "contract_major": 1,
+  "schema_version": "workspace-bootstrap/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/workspace_bootstrap/baseline-workspace-bootstrap.json"
+}

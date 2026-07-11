@@ -1,0 +1,151 @@
+{
+  "envelope_id": "baseline-environment-envelope",
+  "session_id": "baseline-wave2-session",
+  "recorded_at_utc": "2026-04-29T22:00:32.432352+00:00",
+  "environment_kind": "baseline-harness-environment",
+  "workspace_id": "",
+  "continuation_id": "",
+  "result_id": "",
+  "projection_id": "baseline-execution-projection",
+  "trace_envelope_id": "baseline-workflow-trace-envelope",
+  "components": [
+    {
+      "layer": "continuity",
+      "component_id": "sandbox-session",
+      "contract_family": "sandbox-session",
+      "artifact_ref": "artifacts/agent_baseline/sandbox_sessions/latest-sandbox-session.json",
+      "summary": {}
+    },
+    {
+      "layer": "projection",
+      "component_id": "execution-projection",
+      "contract_family": "execution-projection-receipt",
+      "artifact_ref": "artifacts/agent_baseline/execution_projection/baseline-execution-projection.json",
+      "summary": {
+        "projection_id": "baseline-execution-projection",
+        "session_id": "baseline-wave2-session",
+        "requirement_id": "baseline-execution-compiler-governance",
+        "selected_executor_runtime_id": "",
+        "selected_provider_id": "",
+        "orchestration_shape": "",
+        "ownership_mode": "",
+        "approval_required": true,
+        "visible_surface_count": 0,
+        "unprojected_surface_count": 13,
+        "selected_skill_count": 0,
+        "selected_plugin_count": 0,
+        "selected_prompt_template_count": 0,
+        "selected_resource_count": 0,
+        "selected_context_count": 0,
+        "visible_surface_ids": [],
+        "unprojected_surface_ids_preview": [
+          "builtin:local_command_runner",
+          "builtin:workspace_patch_apply",
+          "builtin:workspace_search",
+          "deferred:remote_mcp_discovery",
+          "deferred:tool_search",
+          "mcp:baseline-remote-discovery"
+        ],
+        "permission_posture": {
+          "path_policy": "",
+          "operator_approval_required": false,
+          "approval_required": true,
+          "control_count": 0,
+          "blocking_control_count": 0,
+          "human_approval_count": 0,
+          "local_mcp_count": 1,
+          "remote_mcp_count": 1
+        },
+        "artifact_ref": "artifacts/agent_baseline/execution_projection/latest-execution-projection-receipt.json"
+      }
+    },
+    {
+      "layer": "projection",
+      "component_id": "tool-taxonomy",
+      "contract_family": "tool-taxonomy",
+      "artifact_ref": "artifacts/agent_baseline/tool_taxonomy/latest-tool-taxonomy.json",
+      "summary": {
+        "snapshot_id": "baseline-tool-taxonomy",
+        "entry_count": 13,
+        "discovery_class_counts": {
+          "built-in": 3,
+          "deferred-discovery": 2,
+          "mcp": 2,
+          "plugin": 3,
+          "skill": 3
+        },
+        "channel_kind_counts": {
+          "none": 10,
+          "remote": 2,
+          "local": 1
+        },
+        "selection_posture_counts": {
+          "policy-reviewed": 3,
+          "default-enabled": 3,
+          "discover-on-demand": 4,
+          "manual": 3
+        },
+        "trust_posture_counts": {
+          "review-required": 5,
+          "baseline": 8
+        },
+        "built_in_count": 3,
+        "mcp_count": 2,
+        "local_mcp_count": 1,
+        "remote_mcp_count": 1,
+        "plugin_count": 3,
+        "skill_count": 3,
+        "deferred_discovery_count": 2,
+        "operator_visible_count": 13,
+        "policy_required_count": 5,
+        "selected_entry_count": 0,
+        "selected_builtin_count": 0,
+        "selected_plugin_count": 0,
+        "selected_skill_count": 0,
+        "selected_policy_required_count": 0,
+        "selected_surface_ids": [],
+        "deferred_surface_ids": [
+          "deferred:remote_mcp_discovery",
+          "deferred:tool_search"
+        ],
+        "unresolved_selected_tool_ids": [],
+        "artifact_ref": "artifacts/agent_baseline/tool_taxonomy/latest-tool-taxonomy.json"
+      }
+    },
+    {
+      "layer": "observability",
+      "component_id": "workflow-trace-envelope",
+      "contract_family": "workflow-trace-envelope",
+      "artifact_ref": "artifacts/agent_baseline/workflow_trace_envelope/baseline-workflow-trace-envelope.json",
+      "summary": {
+        "envelope_id": "baseline-workflow-trace-envelope",
+        "workflow_id": "baseline-wave4-workflow",
+        "group_count": 5,
+        "grouped_event_count": 31,
+        "linked_session_count": 0,
+        "linked_eval_run_count": 1,
+        "approval_event_count": 5,
+        "handoff_event_count": 3,
+        "tool_event_count": 6,
+        "evaluation_event_count": 16,
+        "linked_artifact_count": 3,
+        "group_kinds": [
+          "workflow-runs",
+          "approvals",
+          "handoffs",
+          "tools",
+          "evaluation"
+        ]
+      }
+    }
+  ],
+  "linked_artifact_refs": [
+    "artifacts/agent_baseline/sandbox_sessions/latest-sandbox-session.json",
+    "artifacts/agent_baseline/execution_projection/baseline-execution-projection.json",
+    "artifacts/agent_baseline/tool_taxonomy/latest-tool-taxonomy.json",
+    "artifacts/agent_baseline/workflow_trace_envelope/baseline-workflow-trace-envelope.json"
+  ],
+  "notes": [
+    "Canonical ENV-01 sample for repo-owned artifact governance."
+  ]
+}

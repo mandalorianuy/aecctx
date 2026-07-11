@@ -1,0 +1,13 @@
+# Managed by codex-agent-baseline meta-agent tooling.
+[baseline_catalog]
+family = "meta-agent-tooling-catalog"
+major = 1
+
+[profile]
+selected_profile_id = "{{selected_profile_id}}"
+
+[skillpack]
+version = "{{skillpack_version}}"
+
+[governance]
+last_synced_at_utc = "{{last_synced_at_utc}}"

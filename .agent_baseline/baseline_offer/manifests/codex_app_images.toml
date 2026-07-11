@@ -1,0 +1,25 @@
+[codex_app_images]
+version = "1.0"
+source_release = "codex-for-almost-everything"
+default_policy_posture = "policy-reviewed"
+
+[request_kinds]
+allowed = ["generate", "edit"]
+
+[statuses]
+allowed = ["queued", "in-progress", "completed", "failed"]
+
+[policy_postures]
+allowed = ["policy-reviewed", "restricted", "denied"]
+
+[media_kinds]
+allowed = ["png", "jpg", "webp"]
+
+[provenance_kinds]
+allowed = ["generated-image", "edited-image", "derived-variant"]
+
+[policy]
+notes = [
+  "Image generation must remain a governed baseline workflow surface, not an ad hoc side tool.",
+  "Prompt origin, output provenance, and policy posture must stay explicit for consumers and replay.",
+]

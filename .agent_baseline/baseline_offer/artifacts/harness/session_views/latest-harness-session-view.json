@@ -1,0 +1,571 @@
+{
+  "approvals": {
+    "approval_required": false,
+    "execution_is_paused": false,
+    "execution_pause_count": 0,
+    "execution_ready": true,
+    "execution_resume_count": 0,
+    "handoff_approval_required_count": 0,
+    "handoff_blocked_count": 0,
+    "human_checkpoint_count": 0,
+    "human_checkpoint_ids": [],
+    "required_pending_count": 0
+  },
+  "compatibility_policy": "additive-within-major",
+  "continuation": {
+    "approval_checkpoint_count": 0,
+    "carry_forward_count": 13,
+    "checkpoint_state": "ready",
+    "current_owner": "executor",
+    "pause_reason_count": 1,
+    "requires_operator_action": false,
+    "resume_posture": "fresh"
+  },
+  "contract_bundle_id": "baseline-shared-v1",
+  "contract_family": "harness-session-view",
+  "contract_major": 1,
+  "contract_revision": 9,
+  "environment": {
+    "active_layer_count": 0,
+    "applicable_role_count": 0,
+    "artifact_ref": "",
+    "checkpoint_state": "",
+    "component_count": 0,
+    "consumer_publishable_count": 0,
+    "environment_kind": "",
+    "hidden_surface_count": 0,
+    "promotion_candidate_count": 0,
+    "promotion_status": "",
+    "requires_operator_action": false,
+    "result_mode": "",
+    "result_status": "",
+    "resume_posture": "",
+    "selected_context_source_count": 0,
+    "swap_stable": false,
+    "visible_surface_count": 0,
+    "workspace_id": ""
+  },
+  "eval_promotion": {
+    "actionable_target_count": 0,
+    "grader_count": 0,
+    "promoted_from_trace": false,
+    "promotion_id": "",
+    "regression_target_count": 0,
+    "status": "",
+    "target_surface_counts": {}
+  },
+  "evaluation": {
+    "actionable_target_count": 0,
+    "average_score": 87.12,
+    "case_count": 8,
+    "fail_count": 0,
+    "grade_count": 5,
+    "pass_count": 6,
+    "promoted_from_trace": false,
+    "promotion_status": "",
+    "regression_target_count": 0,
+    "simulation_case_count": 3,
+    "status": "warn",
+    "target_surface_counts": {},
+    "trace_count": 1,
+    "warn_count": 2
+  },
+  "guardrail_controls": {
+    "blocking_control_count": 0,
+    "control_count": 13,
+    "control_point_count": 6,
+    "human_approval_count": 0,
+    "tool_control_count": 1
+  },
+  "interoperability": {
+    "list_changed_server_count": 2,
+    "prompt_count": 1,
+    "reason_required_tool_count": 0,
+    "resource_count": 3,
+    "root_count": 1,
+    "server_count": 2,
+    "tool_count": 2
+  },
+  "key_artifacts": [
+    {
+      "artifact_kind": "harness",
+      "artifact_ref": "artifacts/agent_baseline/harness/sessions/<TIMESTAMP>version-shared-contracts/session.json",
+      "exists": true,
+      "role": "session_artifact"
+    },
+    {
+      "artifact_kind": "harness",
+      "artifact_ref": "artifacts/agent_baseline/harness/traces/<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "trace_artifact"
+    },
+    {
+      "artifact_kind": "artifact",
+      "artifact_ref": "artifacts/agent_baseline/provider_broker/latest-provider-catalog.json",
+      "exists": true,
+      "role": "provider_catalog_artifact"
+    },
+    {
+      "artifact_kind": "instruction_memory",
+      "artifact_ref": "artifacts/agent_baseline/instruction_memory/sets/instruction-set-req-contract-versioning-1.json",
+      "exists": true,
+      "role": "instruction_set_artifact"
+    },
+    {
+      "artifact_kind": "instruction_memory",
+      "artifact_ref": "artifacts/agent_baseline/instruction_memory/summaries/latest-governance-summary.json",
+      "exists": true,
+      "role": "memory_governance_artifact"
+    },
+    {
+      "artifact_kind": "session_chronicle",
+      "artifact_ref": "artifacts/agent_baseline/chronicle/sessions/<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "chronicle_artifact"
+    },
+    {
+      "artifact_kind": "session_chronicle",
+      "artifact_ref": "artifacts/agent_baseline/chronicle/indexes/latest-index.json",
+      "exists": true,
+      "role": "chronicle_index_artifact"
+    },
+    {
+      "artifact_kind": "interoperability",
+      "artifact_ref": "artifacts/agent_baseline/interoperability/sessions/<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "interoperability_artifact"
+    },
+    {
+      "artifact_kind": "policy",
+      "artifact_ref": "artifacts/agent_baseline/policy/sessions/<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "policy_artifact"
+    },
+    {
+      "artifact_kind": "harness",
+      "artifact_ref": "artifacts/agent_baseline/harness/sessions/<TIMESTAMP>version-shared-contracts/human_checkpoints.json",
+      "exists": true,
+      "role": "human_checkpoints_artifact"
+    },
+    {
+      "artifact_kind": "harness",
+      "artifact_ref": "artifacts/agent_baseline/harness/sessions/<TIMESTAMP>version-shared-contracts/execution_checkpoints.json",
+      "exists": true,
+      "role": "execution_checkpoints_artifact"
+    },
+    {
+      "artifact_kind": "workflow",
+      "artifact_ref": "artifacts/agent_baseline/workflows/plans/<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "workflow_plan_artifact"
+    },
+    {
+      "artifact_kind": "workflow",
+      "artifact_ref": "artifacts/agent_baseline/workflows/states/<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "workflow_state_artifact"
+    },
+    {
+      "artifact_kind": "artifact",
+      "artifact_ref": "artifacts/agent_baseline/workspace_bootstrap/workspace-bootstrap-baseline-workspace.json",
+      "exists": true,
+      "role": "workspace_bootstrap_artifact"
+    },
+    {
+      "artifact_kind": "artifact",
+      "artifact_ref": "artifacts/agent_baseline/sandbox_workspaces/<TIMESTAMP>version-shared-contracts-workspace.json",
+      "exists": true,
+      "role": "sandbox_workspace_artifact"
+    },
+    {
+      "artifact_kind": "artifact",
+      "artifact_ref": "artifacts/agent_baseline/sandbox_sessions/sandbox-session-<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "sandbox_session_artifact"
+    },
+    {
+      "artifact_kind": "agent_run_result",
+      "artifact_ref": "artifacts/agent_baseline/agent_run_results/agent-run-result-<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "agent_run_result_artifact"
+    },
+    {
+      "artifact_kind": "continuation_state",
+      "artifact_ref": "artifacts/agent_baseline/continuation_state/agent-continuation-<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "continuation_state_artifact"
+    },
+    {
+      "artifact_kind": "guardrail_controls",
+      "artifact_ref": "artifacts/agent_baseline/guardrail_controls/guardrail-taxonomy-<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "guardrail_controls_artifact"
+    },
+    {
+      "artifact_kind": "workflow",
+      "artifact_ref": "artifacts/agent_baseline/orchestration_taxonomy/<TIMESTAMP>version-shared-contracts-workflow-orchestration-taxonomy.json",
+      "exists": true,
+      "role": "orchestration_taxonomy_artifact"
+    },
+    {
+      "artifact_kind": "context_lineage",
+      "artifact_ref": "artifacts/agent_baseline/context_lineage/<TIMESTAMP>version-shared-contracts-context-lineage.json",
+      "exists": true,
+      "role": "context_lineage_artifact"
+    },
+    {
+      "artifact_kind": "environment_envelope",
+      "artifact_ref": "artifacts/agent_baseline/environment_envelope/<TIMESTAMP>version-shared-contracts-environment-envelope.json",
+      "exists": true,
+      "role": "environment_envelope_artifact"
+    },
+    {
+      "artifact_kind": "environment_operator_summary",
+      "artifact_ref": "artifacts/agent_baseline/environment_operator_summary/<TIMESTAMP>version-shared-contracts-operator-environment-summary.json",
+      "exists": true,
+      "role": "environment_operator_summary_artifact"
+    },
+    {
+      "artifact_kind": "environment_invariants",
+      "artifact_ref": "artifacts/agent_baseline/environment_invariants/<TIMESTAMP>version-shared-contracts-environment-invariants.json",
+      "exists": true,
+      "role": "environment_invariants_artifact"
+    },
+    {
+      "artifact_kind": "environment_promotion_pipeline",
+      "artifact_ref": "artifacts/agent_baseline/environment_promotion_pipeline/<TIMESTAMP>version-shared-contracts-environment-promotion-pipeline.json",
+      "exists": true,
+      "role": "environment_promotion_pipeline_artifact"
+    },
+    {
+      "artifact_kind": "workflow_trace_envelope",
+      "artifact_ref": "artifacts/agent_baseline/workflow_trace_envelope/<TIMESTAMP>version-shared-contracts-workflow-trace-envelope.json",
+      "exists": true,
+      "role": "workflow_trace_envelope_artifact"
+    },
+    {
+      "artifact_kind": "eval",
+      "artifact_ref": "artifacts/agent_baseline/evals/agent_traces/agent-trace-<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "agent_trace_artifact"
+    },
+    {
+      "artifact_kind": "eval",
+      "artifact_ref": "artifacts/agent_baseline/evals/suites/eval-suite-session-<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "eval_suite_artifact"
+    },
+    {
+      "artifact_kind": "eval",
+      "artifact_ref": "artifacts/agent_baseline/evals/eval-session-session-trace-<TIMESTAMP>version-shared-contracts-<TIMESTAMP>json",
+      "exists": true,
+      "role": "eval_run_artifact"
+    },
+    {
+      "artifact_kind": "environment_portability",
+      "artifact_ref": "artifacts/agent_baseline/environment_portability/baseline-environment-portability.json",
+      "exists": true,
+      "role": "environment_portability_artifact"
+    },
+    {
+      "artifact_kind": "trace_eval_promotion",
+      "artifact_ref": "artifacts/agent_baseline/trace_eval_promotion/<TIMESTAMP>version-shared-contracts-trace-eval-promotion.json",
+      "exists": true,
+      "role": "trace_eval_promotion_artifact"
+    },
+    {
+      "artifact_kind": "harness",
+      "artifact_ref": "artifacts/agent_baseline/harness/sessions/<TIMESTAMP>version-shared-contracts/handoff_trace.json",
+      "exists": true,
+      "role": "handoff_trace_artifact"
+    },
+    {
+      "artifact_kind": "execution_graph",
+      "artifact_ref": "artifacts/agent_baseline/harness/execution_graphs/<TIMESTAMP>version-shared-contracts/planned.json",
+      "exists": true,
+      "role": "planned_execution_graph_artifact"
+    },
+    {
+      "artifact_kind": "runtime_broker",
+      "artifact_ref": "artifacts/agent_baseline/harness/sessions/<TIMESTAMP>version-shared-contracts/runtime_decision.json",
+      "exists": true,
+      "role": "runtime_decision_artifact"
+    },
+    {
+      "artifact_kind": "review",
+      "artifact_ref": "artifacts/agent_baseline/reviews/review-<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "review_artifact"
+    },
+    {
+      "artifact_kind": "harness",
+      "artifact_ref": "artifacts/agent_baseline/harness/sessions/<TIMESTAMP>version-shared-contracts/links.json",
+      "exists": true,
+      "role": "linkage_artifact"
+    },
+    {
+      "artifact_kind": "artifact",
+      "artifact_ref": "artifacts/agent_baseline/execution_compiler/latest-execution-compiler-artifact.json",
+      "exists": true,
+      "role": "compiler_artifact"
+    },
+    {
+      "artifact_kind": "validation_result",
+      "artifact_ref": "artifacts/agent_baseline/validation_results/validation-session-<TIMESTAMP>version-shared-contracts.json",
+      "exists": true,
+      "role": "validation_artifact:1"
+    }
+  ],
+  "lifecycle_state": "approved",
+  "links": {
+    "github_ref_count": 0,
+    "has_handoff_trace": true,
+    "linkage_artifact": null,
+    "linked_artifact_count": 22,
+    "linked_artifact_refs_preview": [
+      "artifacts/agent_baseline/harness/sessions/<TIMESTAMP>version-shared-contracts/session.json",
+      "artifacts/agent_baseline/harness/traces/<TIMESTAMP>version-shared-contracts.json",
+      "artifacts/agent_baseline/harness/sessions/<TIMESTAMP>version-shared-contracts/handoff_trace.json",
+      "artifacts/agent_baseline/provider_broker/latest-provider-catalog.json",
+      "artifacts/agent_baseline/instruction_memory/sets/instruction-set-req-contract-versioning-1.json",
+      "artifacts/agent_baseline/execution_compiler/latest-execution-compiler-artifact.json"
+    ],
+    "review_artifact_count": 1,
+    "validation_result_count": 1
+  },
+  "memory": {
+    "approved_memory_count": 0,
+    "chronicle_entry_count": 5,
+    "chronicle_matched_session_count": 1,
+    "continuity_used": true,
+    "instruction_layer_count": 6,
+    "learned_layer_count": 0,
+    "rejected_memory_count": 0,
+    "retired_memory_count": 0
+  },
+  "orchestration": {
+    "blocked_handoff_count": 0,
+    "branch_count": 7,
+    "delegation_mode": "manager-mediated-tool-delegation",
+    "direct_subagent_handoffs_allowed": false,
+    "explicit_branch_owner_count": 8,
+    "graph_shape": "multi-agent-sequential",
+    "human_checkpoint_count": 0,
+    "manager_owned_specialist_call_count": 1,
+    "orchestration_classes": [
+      "manager-owned-bounded-specialist-call",
+      "ownership-transfer-handoff",
+      "multi-agent-sequential"
+    ],
+    "ownership_transfer_handoff_count": 1,
+    "planner_decision_types": [
+      "execution-shape",
+      "branching-policy",
+      "risk-budget-controls",
+      "slice-ownership"
+    ],
+    "route_kind": "sequential-manager-mediated",
+    "source_artifact_count": 6
+  },
+  "policy": {
+    "allow_count": 4,
+    "annotate_count": 0,
+    "defer_count": 0,
+    "deny_count": 0,
+    "event_count": 4,
+    "handler_count": 2,
+    "reason_required_event_count": 0,
+    "sensitive_event_count": 0
+  },
+  "promotion_pipeline": {
+    "accepted_candidate_count": 0,
+    "auto_promotion_blocked": false,
+    "candidate_count": 0,
+    "candidate_kind_counts": {},
+    "current_owner": "",
+    "pending_candidate_count": 0,
+    "pipeline_id": "",
+    "review_required": false,
+    "status": "",
+    "watch_candidate_count": 0
+  },
+  "result": {
+    "current_owner": "review",
+    "final_output_present": false,
+    "replay_event_count": 11,
+    "result_mode": "not-run",
+    "status": "awaiting-review",
+    "validation_artifact_count": 1
+  },
+  "routing": {
+    "active_execution_allowed": true,
+    "budget_status": "at-budget",
+    "fallback_action": "codex-executor",
+    "fallback_runtime_id": "codex-cli-executor",
+    "orchestrator_runtime_id": "codex-cli-orchestrator",
+    "provider_fallback_triggered": false,
+    "recommendation_count": 8,
+    "safe_mode_enabled": true,
+    "selected_executor_runtime_id": "codex-cli-executor",
+    "selected_provider_class": "local_runtime",
+    "selected_provider_id": "codex_cli_local",
+    "within_budget": true
+  },
+  "schema_version": "harness-session-view/v1",
+  "session_id": "<TIMESTAMP>version-shared-contracts",
+  "session_summary": {
+    "codex_mode": "execute",
+    "execution_classification": "needs-review",
+    "execution_summary": "Harness session is prepared but has not executed yet.",
+    "prompt_mode": "deep",
+    "raw_intent": "version shared contracts",
+    "recommended_action": "execute",
+    "requirement_id": "req-contract-versioning-1"
+  },
+  "skills": {
+    "artifact_refs_preview": [],
+    "missing_skill_ids": [],
+    "registered_skill_count": 0,
+    "selected_skill_count": 0,
+    "selected_skill_ids": [],
+    "source_kind_counts": {},
+    "trust_level_counts": {},
+    "trusted_skill_count": 0,
+    "validation_status_counts": {}
+  },
+  "stage_guardrails": {
+    "blocking_stages": [],
+    "blocking_tripwire_count": 0,
+    "stage_order": [
+      "input",
+      "execution",
+      "review",
+      "output",
+      "handoff"
+    ],
+    "stages": [
+      {
+        "blocking": false,
+        "failed_count": 0,
+        "guardrail_count": 3,
+        "passed_count": 3,
+        "stage": "input",
+        "warning_count": 0
+      },
+      {
+        "blocking": false,
+        "failed_count": 0,
+        "guardrail_count": 2,
+        "passed_count": 2,
+        "stage": "execution",
+        "warning_count": 0
+      },
+      {
+        "blocking": false,
+        "failed_count": 0,
+        "guardrail_count": 0,
+        "passed_count": 0,
+        "stage": "review",
+        "warning_count": 0
+      },
+      {
+        "blocking": false,
+        "failed_count": 0,
+        "guardrail_count": 0,
+        "passed_count": 0,
+        "stage": "output",
+        "warning_count": 0
+      },
+      {
+        "blocking": false,
+        "failed_count": 0,
+        "guardrail_count": 1,
+        "passed_count": 1,
+        "stage": "handoff",
+        "warning_count": 0
+      }
+    ],
+    "total_failed_count": 0,
+    "total_guardrail_count": 6,
+    "total_warning_count": 0,
+    "triggered_stages": [],
+    "triggered_tripwire_count": 0
+  },
+  "status": "reviewing",
+  "summary": {
+    "key_artifact_count": 38,
+    "lifecycle_state": "approved",
+    "selected_skill_count": 0,
+    "session_id": "<TIMESTAMP>version-shared-contracts",
+    "status": "reviewing",
+    "workflow_checkpoint_count": 0
+  },
+  "timestamps": {
+    "created_at_utc": "<UTC>",
+    "current_stage": "planning",
+    "last_transition_actor": "system",
+    "last_transition_at_utc": "<UTC>",
+    "last_transition_reason": "Harness session is approved for bounded local execution without extra operator approval.",
+    "updated_at_utc": "<UTC>"
+  },
+  "trace_summary": {
+    "approval_event_count": 0,
+    "group_count": 0,
+    "grouped_event_count": 0,
+    "handoff_contract_count": 1,
+    "handoff_event_count": 0,
+    "linked_session_count": 0,
+    "review_owner_agent_count": 1,
+    "span_count": 10,
+    "spans_by_stage": {
+      "execution": 1,
+      "handoff": 2,
+      "input": 1,
+      "planning": 5,
+      "review": 1
+    },
+    "stage_count": 5,
+    "stages": [
+      "execution",
+      "handoff",
+      "input",
+      "planning",
+      "review"
+    ],
+    "tool_event_count": 0
+  },
+  "validation": {
+    "artifact_count": 1,
+    "latest_status": "planned",
+    "review_backlog_candidate_count": 0,
+    "review_blocking_finding_count": 0,
+    "review_classification": "needs-review",
+    "review_finding_count": 1,
+    "review_follow_up_count": 1,
+    "review_status": "needs-review",
+    "status_counts": {
+      "planned": 1
+    }
+  },
+  "workflow": {
+    "blocked": false,
+    "checkpoint_count": 0,
+    "completed_step_count": 6,
+    "deferred_count": 0,
+    "execution_ready": true,
+    "human_checkpoint_count": 0,
+    "injected_constraint_count": 2,
+    "plan_step_count": 6,
+    "provider_interaction_count": 1,
+    "resumable": false
+  },
+  "workflow_trace": {
+    "envelope_id": "",
+    "group_count": 0,
+    "group_kinds": [],
+    "grouped_event_count": 0,
+    "linked_eval_run_count": 0,
+    "linked_session_count": 0,
+    "workflow_id": ""
+  }
+}

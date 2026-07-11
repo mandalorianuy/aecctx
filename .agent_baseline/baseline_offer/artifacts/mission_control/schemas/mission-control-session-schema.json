@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baseline.local/schemas/mission-control-session.schema.json",
+  "title": "Mission Control Session",
+  "type": "object",
+  "schema_version": "mission-control/v2",
+  "required": [
+    "mission_id",
+    "state",
+    "mission_kind",
+    "current_owner",
+    "turn_intent",
+    "approval_cards",
+    "tooling_candidates",
+    "artifact_links",
+    "adapter_conformance",
+    "projection_receipts",
+    "transition_validations",
+    "decision_receipts",
+    "context_stack",
+    "human_interactions",
+    "approval_lifecycle_summary",
+    "events"
+  ],
+  "properties": {
+    "mission_id": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "mission_kind": {
+      "type": "string"
+    },
+    "current_owner": {
+      "type": "string"
+    },
+    "approval_required": {
+      "type": "boolean"
+    },
+    "mutating_execution_allowed": {
+      "type": "boolean"
+    },
+    "execution_posture": {
+      "type": "string"
+    },
+    "turn_intent": {
+      "type": "object"
+    },
+    "approval_cards": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "tooling_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "artifact_links": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "adapter_conformance": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "projection_receipts": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "transition_validations": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "decision_receipts": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "context_stack": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "human_interactions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "approval_lifecycle_summary": {
+      "type": "object"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "summary": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

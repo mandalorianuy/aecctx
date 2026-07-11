@@ -1,0 +1,7 @@
+[orchestration_taxonomy]
+version = "1.0"
+source_release = "openai-agents-sdk-apr-2026-assessment"
+notes = [
+  "ORC-01 publishes a baseline-owned taxonomy for manager-owned bounded specialist calls versus ownership-transfer handoffs.",
+  "ORC-02 requires the same orchestration vocabulary to stay visible across compiler, task graph, execution graph, and shell/session summaries."
+]

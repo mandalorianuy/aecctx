@@ -1,0 +1,8 @@
+[hos_adoption_conformance]
+schema_version = "1.0"
+description = "Baseline-owned checker and schemas for validating consumer HOS read-only adoption projections."
+checker = "scripts/check_hos_adoption_conformance.py"
+notes = [
+  "This checker validates HOS projection shape and baseline offer completeness only.",
+  "Consumer enforcement, UI, secrets, provider activation, and domain-specific semantics remain consumer-owned.",
+]

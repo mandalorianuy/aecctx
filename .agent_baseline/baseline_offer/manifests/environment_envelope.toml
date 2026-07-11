@@ -1,0 +1,14 @@
+[environment_envelope]
+version = "1.0"
+environment_kind = "baseline-harness-environment"
+notes = [
+  "ENV-01 composes existing baseline environment families into one explicit operating-unit summary without collapsing their family-level governance.",
+  "The envelope is a composition seam: authored workspace, adaptive memory governance, runtime continuity, per-run projection, and observability surfaces remain independently versioned.",
+]
+
+[layers]
+authored = ["workspace-bootstrap", "sandbox-workspace"]
+adaptive = ["instruction-memory-governance"]
+continuity = ["sandbox-session", "agent-continuation-state"]
+projection = ["execution-projection-receipt", "guardrail-control-taxonomy", "tool-taxonomy"]
+observability = ["agent-run-result", "workflow-trace-envelope"]

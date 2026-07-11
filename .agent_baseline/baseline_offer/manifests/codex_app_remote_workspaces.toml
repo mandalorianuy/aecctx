@@ -1,0 +1,23 @@
+[codex_app_remote_workspaces]
+version = "1.0"
+source_release = "codex-for-almost-everything"
+default_trust_level = "review-required"
+default_execution_posture = "interactive"
+
+[transport_kinds]
+allowed = ["ssh", "devbox"]
+
+[trust_levels]
+allowed = ["managed", "review-required", "untrusted"]
+
+[execution_postures]
+allowed = ["interactive", "automation", "read-only"]
+
+[provenance_kinds]
+allowed = ["remote-generated", "remote-synced", "local-mirror"]
+
+[policy]
+notes = [
+  "Remote workspace identity, trust, and provenance must remain governed baseline state instead of ambient SSH context.",
+  "Artifacts generated remotely must keep explicit sync and provenance posture.",
+]

@@ -1,0 +1,82 @@
+{
+  "aecctx_version": "0.1.0-draft",
+  "artifacts": [
+    {
+      "authoritative": false,
+      "bytes": 486,
+      "media_type": "text/markdown",
+      "path": "context/index.md",
+      "role": "agent-context",
+      "sha256": "9a9643178f0e3bdc0ddff6d55bde009caa44c410665809f250f3f75b5b1e4379"
+    },
+    {
+      "authoritative": true,
+      "bytes": 456,
+      "media_type": "application/x-ndjson",
+      "path": "diagnostics/diagnostics.jsonl",
+      "role": "diagnostics",
+      "sha256": "4269b61622cf30193dfd6bc716d4e1a4cc44eb5a35211dd3921fd9fe10bdaf72"
+    },
+    {
+      "authoritative": true,
+      "bytes": 509,
+      "media_type": "application/x-ndjson",
+      "path": "evidence/assertions.jsonl",
+      "role": "assertions",
+      "sha256": "806e5d7b443fa16b1c3f47f03a1029851fc774d099ce977beb5a201583fce067"
+    },
+    {
+      "authoritative": true,
+      "bytes": 423,
+      "media_type": "application/x-ndjson",
+      "path": "evidence/primitives.jsonl",
+      "role": "primitives",
+      "sha256": "ccf05f26ae42ccdbcbc2558db01b01b71bda2925655c87b7a79d41d4c6fc2d43"
+    },
+    {
+      "authoritative": true,
+      "bytes": 419,
+      "media_type": "application/x-ndjson",
+      "path": "model/entities.jsonl",
+      "role": "entities",
+      "sha256": "0ce033229a3ec8ffb0763580eba1bea3b3350cb2e2762ac754994432b6eecec8"
+    },
+    {
+      "authoritative": true,
+      "bytes": 1,
+      "media_type": "application/x-ndjson",
+      "path": "model/relations.jsonl",
+      "role": "relations",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "authoritative": true,
+      "bytes": 420,
+      "media_type": "application/x-ndjson",
+      "path": "sources/sources.jsonl",
+      "role": "sources",
+      "sha256": "a477e37094592276f37a0a53c37d6496bbe5425e15b53544689102426acdab6b"
+    }
+  ],
+  "capabilities": {
+    "2d_geometry": "partial",
+    "3d_geometry": "unsupported",
+    "hierarchy": "opaque",
+    "identity": "full",
+    "properties": "partial",
+    "relationships": "opaque",
+    "text": "full",
+    "validation": "full"
+  },
+  "created_at": "2026-07-11T00:00:00Z",
+  "logical_digest": "7ca4067f732dc1aed30c1be1257437ed009742e8d85f318a1ee1d0b6b6026b1b",
+  "loss_summary": ["no-3d-geometry"],
+  "package_form": "directory",
+  "package_id": "pkg_minimal_fixture",
+  "producer": {
+    "name": "aecctx-fixture",
+    "version": "0.1.0-draft"
+  },
+  "source_embedding_policy": "external",
+  "source_ids": ["src_minimal"]
+}

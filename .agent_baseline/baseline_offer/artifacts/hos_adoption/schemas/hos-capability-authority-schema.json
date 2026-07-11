@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baseline.local/schemas/hos-capability-authority.schema.json",
+  "title": "HOS capability_authority Artifact",
+  "type": "object",
+  "required": [
+    "snapshot_id",
+    "entries",
+    "summary"
+  ],
+  "properties": {
+    "snapshot_id": {
+      "type": "string"
+    },
+    "entries": {
+      "type": "array"
+    },
+    "summary": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,8 @@
+[skill_grants]
+schema_version = "1.0"
+description = "Baseline-owned receipt contract explaining why skills are visible to a run and whether visibility widened execution authority."
+notes = [
+  "HOS-05 prevents hidden skill authority widening.",
+  "Baseline skill visibility is advisory; mutating execution remains governed by guardrails and approvals.",
+]
+

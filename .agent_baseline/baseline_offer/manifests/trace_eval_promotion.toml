@@ -1,0 +1,7 @@
+[trace_eval_promotion]
+version = "1.0"
+source_release = "openai-agents-sdk-apr-2026-assessment"
+notes = [
+  "EVA-04 promotes trace inspection into explicit graders and regression targets.",
+  "Prompt, routing, tool, workflow, and guardrail improvements are first-class operator-facing follow-up surfaces."
+]

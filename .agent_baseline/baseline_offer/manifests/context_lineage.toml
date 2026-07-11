@@ -1,0 +1,19 @@
+[context_lineage]
+version = "1.0"
+source_release = "agent-environment-engineering-apr-2026"
+notes = [
+  "ENV-04 records hot, warm, and cold context provenance per run instead of leaving selection lineage implicit.",
+  "Discarded cold candidates are first-class audit state because budgeting decisions matter to replay and operator inspection.",
+  "HOS-02 extends the same temperature vocabulary into execution packs, environment summaries, Mission Control projections, and reviewed durable-memory promotion candidates.",
+]
+
+[temperature_bands]
+hot = "Current-turn workspace context such as authority docs, recent changes, and explicit working-set files."
+warm = "Continuity-bearing state reused into the run, such as instruction sets, chronicle matches, and resumable continuation artifacts."
+cold = "Durable candidate context not automatically in the active budget, such as graph-grounded retrieval candidates."
+
+[projection_targets]
+execution_pack = "Execution packs should summarize selected hot, warm, and cold context counts without embedding every candidate."
+environment_summary = "Operator environment summaries should expose temperature posture as environment truth, not hidden compiler internals."
+mission_control = "Mission Control projections may render temperature summaries, but UI ownership remains consumer-side."
+memory_promotion = "Cold candidates require review before durable memory or skill promotion."

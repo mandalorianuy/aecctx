@@ -1,0 +1,157 @@
+#!/usr/bin/env python3
+"""Deterministic repository-level checks for the AECCTX specification foundation."""
+
+from __future__ import annotations
+
+import json
+import hashlib
+import pathlib
+import sys
+
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+SPEC = ROOT / "docs/specs/aec-context-package-spec.md"
+PLUGIN_SPEC = ROOT / "docs/specs/aec-context-plugin-contract.md"
+PLAN = ROOT / "docs/implementation-plan.md"
+FIXTURE = ROOT / "fixtures/minimal-aecctx"
+
+
+def fail(message: str) -> None:
+    raise SystemExit(f"aecctx spec contract: {message}")
+
+
+def load_json(path: pathlib.Path) -> object:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        fail(f"invalid JSON at {path.relative_to(ROOT)}: {error}")
+
+
+def check_required_files() -> None:
+    required = [
+        ROOT / "AGENTS.md",
+        ROOT / "README.md",
+        ROOT / "LICENSE",
+        ROOT / "SECURITY.md",
+        ROOT / "docs/HANDOFF.md",
+        ROOT / "docs/project-governance.md",
+        ROOT / "docs/capability-matrix.md",
+        ROOT / "docs/decisions/decision-log.md",
+        ROOT / "docs/integration/woodframing-boundary.md",
+        SPEC,
+        PLUGIN_SPEC,
+        PLAN,
+        ROOT / "schemas/v0.1/manifest.schema.json",
+        ROOT / "schemas/v0.1/record.schema.json",
+    ]
+    missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
+    if missing:
+        fail(f"missing required files: {', '.join(missing)}")
+
+
+def check_authorities() -> None:
+    spec = SPEC.read_text(encoding="utf-8")
+    for phrase in [
+        "Markdown context projection",
+        "Capability and loss reporting",
+        "Value states and assertions",
+        "Consumer boundary",
+        "application-agnostic",
+    ]:
+        if phrase not in spec:
+            fail(f"package spec missing authority phrase: {phrase}")
+
+    plugin = PLUGIN_SPEC.read_text(encoding="utf-8")
+    for phrase in ["Capability and loss report", "Determinism", "Safety", "Failure behavior"]:
+        if phrase not in plugin:
+            fail(f"plugin spec missing authority phrase: {phrase}")
+
+    plan = PLAN.read_text(encoding="utf-8")
+    if plan.count("| ACX-01 | pending-next |") != 1:
+        fail("implementation plan must contain exactly one ACX-01 pending-next row")
+    if "| ACX-00 | completed |" not in plan:
+        fail("implementation plan must record ACX-00 completed")
+
+
+def check_fixture() -> None:
+    required_paths = [
+        "manifest.json",
+        "sources/sources.jsonl",
+        "evidence/primitives.jsonl",
+        "evidence/assertions.jsonl",
+        "model/entities.jsonl",
+        "model/relations.jsonl",
+        "diagnostics/diagnostics.jsonl",
+        "context/index.md",
+    ]
+    for relative in required_paths:
+        if not (FIXTURE / relative).is_file():
+            fail(f"fixture missing {relative}")
+
+    manifest = load_json(FIXTURE / "manifest.json")
+    if not isinstance(manifest, dict) or manifest.get("aecctx_version") != "0.1.0-draft":
+        fail("fixture manifest version mismatch")
+    if manifest.get("source_ids") != ["src_minimal"]:
+        fail("fixture source identity mismatch")
+
+    artifacts = manifest.get("artifacts")
+    if not isinstance(artifacts, list) or not artifacts:
+        fail("fixture manifest requires a non-empty artifact inventory")
+    digest_lines: list[bytes] = []
+    inventoried_paths: set[str] = set()
+    for artifact in artifacts:
+        if not isinstance(artifact, dict):
+            fail("fixture artifact entry must be an object")
+        relative = artifact.get("path")
+        if not isinstance(relative, str) or relative in inventoried_paths:
+            fail(f"invalid or duplicate artifact path: {relative!r}")
+        artifact_path = FIXTURE / relative
+        if not artifact_path.is_file():
+            fail(f"inventoried fixture artifact is missing: {relative}")
+        data = artifact_path.read_bytes()
+        sha256 = hashlib.sha256(data).hexdigest()
+        if artifact.get("sha256") != sha256 or artifact.get("bytes") != len(data):
+            fail(f"fixture artifact integrity mismatch: {relative}")
+        inventoried_paths.add(relative)
+        digest_lines.append(f"{relative}\0{sha256}\0{len(data)}\n".encode("utf-8"))
+    logical_digest = hashlib.sha256(b"".join(digest_lines)).hexdigest()
+    if manifest.get("logical_digest") != logical_digest:
+        fail("fixture logical digest mismatch")
+
+    if inventoried_paths != set(required_paths[1:]):
+        fail("fixture artifact inventory must cover every required non-manifest file")
+
+    record_ids: set[str] = set()
+    for path in sorted(FIXTURE.glob("**/*.jsonl")):
+        previous = ""
+        for line_number, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if not raw_line.strip():
+                continue
+            try:
+                record = json.loads(raw_line)
+            except json.JSONDecodeError as error:
+                fail(f"invalid JSONL at {path.relative_to(ROOT)}:{line_number}: {error}")
+            record_id = record.get("record_id")
+            if not isinstance(record_id, str) or not record_id:
+                fail(f"missing record_id at {path.relative_to(ROOT)}:{line_number}")
+            if record_id in record_ids:
+                fail(f"duplicate record_id: {record_id}")
+            if previous and record_id < previous:
+                fail(f"records not sorted at {path.relative_to(ROOT)}:{line_number}")
+            previous = record_id
+            record_ids.add(record_id)
+
+    if "prim_line_1" not in record_ids or "entity_line_1" not in record_ids:
+        fail("fixture does not prove evidence-to-neutral-record layering")
+
+
+def main() -> int:
+    check_required_files()
+    check_authorities()
+    check_fixture()
+    print("aecctx spec contract: ok")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

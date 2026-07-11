@@ -1,0 +1,85 @@
+{
+  "record_id": "baseline-skill-grant-receipts",
+  "recorded_at_utc": "2026-05-05T12:37:16.295058+00:00",
+  "schema_version": "skill-grant-receipts/v1",
+  "selected_skill_ids": [
+    "baseline-meta-agent-sync",
+    "consumer-danger-skill"
+  ],
+  "receipts": [
+    {
+      "skill_id": "baseline-meta-agent-discovery",
+      "source_ref": ".agents/skills/baseline-meta-agent-discovery",
+      "visibility_reason": "baseline-skillpack",
+      "precedence": 10,
+      "granted": true,
+      "authority_widened": false,
+      "widening_reason": "baseline skills are advisory instructions and do not widen execution authority by themselves",
+      "selected_for_run": false,
+      "notes": [
+        "Audit an existing baseline-integrated consumer repo against the baseline offer, bundles, overlay seams, and governance."
+      ]
+    },
+    {
+      "skill_id": "baseline-meta-agent-bootstrap",
+      "source_ref": ".agents/skills/baseline-meta-agent-bootstrap",
+      "visibility_reason": "baseline-skillpack",
+      "precedence": 11,
+      "granted": true,
+      "authority_widened": false,
+      "widening_reason": "baseline skills are advisory instructions and do not widen execution authority by themselves",
+      "selected_for_run": false,
+      "notes": [
+        "Initialize a baseline-integrated consumer repo with baseline shell integration, overlay manifests, governance state, and checker tooling."
+      ]
+    },
+    {
+      "skill_id": "baseline-meta-agent-sync",
+      "source_ref": ".agents/skills/baseline-meta-agent-sync",
+      "visibility_reason": "baseline-skillpack",
+      "precedence": 12,
+      "granted": true,
+      "authority_widened": false,
+      "widening_reason": "baseline skills are advisory instructions and do not widen execution authority by themselves",
+      "selected_for_run": true,
+      "notes": [
+        "Refresh an existing baseline-integrated consumer repo against the current baseline catalog while preserving supported overlay customizations."
+      ]
+    },
+    {
+      "skill_id": "consumer-danger-skill",
+      "source_ref": "runtime-selection",
+      "visibility_reason": "selected-but-not-baseline-skillpack",
+      "precedence": 100,
+      "granted": false,
+      "authority_widened": true,
+      "widening_reason": "selected skill is not in the baseline skillpack and requires consumer or human review",
+      "selected_for_run": true,
+      "notes": [
+        "HOS-05 prevents hidden skill authority widening."
+      ]
+    }
+  ],
+  "notes": [
+    "HOS-05 prevents hidden skill authority widening.",
+    "Baseline skill visibility is advisory; mutating execution remains governed by guardrails and approvals."
+  ],
+  "summary": {
+    "record_id": "baseline-skill-grant-receipts",
+    "receipt_count": 4,
+    "granted_count": 3,
+    "selected_count": 2,
+    "authority_widening_count": 1,
+    "selected_skill_ids": [
+      "baseline-meta-agent-sync",
+      "consumer-danger-skill"
+    ],
+    "artifact_ref": "artifacts/agent_baseline/skill_grants/latest-skill-grant-receipts.json"
+  },
+  "contract_family": "skill-grant-receipts",
+  "contract_major": 1,
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/skill_grants/baseline-skill-grant-receipts.json"
+}

@@ -1,0 +1,147 @@
+{
+  "record_id": "baseline-execution-compiler-governance-operator-surface-mutability",
+  "recorded_at_utc": "2026-04-29T22:00:32.161807+00:00",
+  "schema_version": "operator-surface-mutability/v1",
+  "fields": [
+    {
+      "surface_id": "durable_outputs",
+      "field_path": "outputs",
+      "owner": "baseline",
+      "mutability": "display-only",
+      "actionability": "open-artifact",
+      "writeback_enabled": false,
+      "consumer_owned": false,
+      "source_refs": [
+        "manifests/durable_outputs.toml"
+      ],
+      "notes": []
+    },
+    {
+      "surface_id": "environment",
+      "field_path": "invariants.swap_conformance_passed",
+      "owner": "baseline",
+      "mutability": "display-only",
+      "actionability": "none",
+      "writeback_enabled": false,
+      "consumer_owned": false,
+      "source_refs": [
+        "manifests/environment_invariants.toml"
+      ],
+      "notes": []
+    },
+    {
+      "surface_id": "environment",
+      "field_path": "promotion_pipeline.candidates",
+      "owner": "baseline",
+      "mutability": "actionable",
+      "actionability": "promotion-review",
+      "writeback_enabled": true,
+      "consumer_owned": false,
+      "source_refs": [
+        "manifests/environment_promotion_pipeline.toml"
+      ],
+      "notes": []
+    },
+    {
+      "surface_id": "mission_control",
+      "field_path": "approval_cards",
+      "owner": "baseline-contract-consumer-enforced",
+      "mutability": "actionable",
+      "actionability": "approval-decision",
+      "writeback_enabled": true,
+      "consumer_owned": false,
+      "source_refs": [
+        "manifests/mission_control.toml"
+      ],
+      "notes": [
+        "Baseline owns the card shape; consumer runtimes own enforcement."
+      ]
+    },
+    {
+      "surface_id": "mission_control",
+      "field_path": "session.state",
+      "owner": "baseline",
+      "mutability": "display-only",
+      "actionability": "none",
+      "writeback_enabled": false,
+      "consumer_owned": false,
+      "source_refs": [
+        "manifests/mission_control.toml"
+      ],
+      "notes": []
+    },
+    {
+      "surface_id": "mission_control",
+      "field_path": "view.suggested_affordances",
+      "owner": "baseline",
+      "mutability": "actionable",
+      "actionability": "human-selection",
+      "writeback_enabled": false,
+      "consumer_owned": false,
+      "source_refs": [
+        "manifests/mission_control.toml"
+      ],
+      "notes": []
+    },
+    {
+      "surface_id": "shell",
+      "field_path": "defaults.command_namespace",
+      "owner": "consumer-overlay",
+      "mutability": "consumer-owned",
+      "actionability": "configure",
+      "writeback_enabled": true,
+      "consumer_owned": true,
+      "source_refs": [
+        "manifests/meta_agent_specialization_profiles.toml"
+      ],
+      "notes": [
+        "Consumers may specialize command namespace through overlay/profile state."
+      ]
+    },
+    {
+      "surface_id": "shell",
+      "field_path": "defaults.default_panel",
+      "owner": "consumer-overlay",
+      "mutability": "consumer-owned",
+      "actionability": "configure",
+      "writeback_enabled": true,
+      "consumer_owned": true,
+      "source_refs": [
+        "manifests/meta_agent_specialization_profiles.toml"
+      ],
+      "notes": []
+    },
+    {
+      "surface_id": "workspace_boundary_guard",
+      "field_path": "path_decisions",
+      "owner": "baseline",
+      "mutability": "display-only",
+      "actionability": "none",
+      "writeback_enabled": false,
+      "consumer_owned": false,
+      "source_refs": [
+        "manifests/workspace_boundary_guard.toml"
+      ],
+      "notes": []
+    }
+  ],
+  "notes": [
+    "HOS-10 prevents UI agents from guessing whether a field is display-only, actionable, writeback-enabled, or consumer-owned.",
+    "This contract is headless; consumer repos still own GUI/TUI rendering and domain-specific interaction design."
+  ],
+  "summary": {
+    "record_id": "baseline-execution-compiler-governance-operator-surface-mutability",
+    "field_count": 9,
+    "display_only_count": 4,
+    "actionable_count": 6,
+    "writeback_enabled_count": 4,
+    "consumer_owned_count": 2,
+    "artifact_ref": "artifacts/agent_baseline/operator_surface_mutability/latest-operator-surface-mutability.json"
+  },
+  "contract_family": "operator-surface-mutability",
+  "contract_major": 1,
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/operator_surface_mutability/baseline-execution-compiler-governance-operator-surface-mutability.json"
+}

@@ -1,0 +1,52 @@
+{
+  "conformance_id": "baseline-offer-hos-adoption-conformance",
+  "checked_at_utc": "2026-04-29T22:00:32.398143+00:00",
+  "adapter_id": "baseline-offer",
+  "consumer_ref": "baseline",
+  "conformance_status": "passing",
+  "covered_contracts": [
+    "prompt_section_profile",
+    "capability_authority",
+    "skill_grants",
+    "workspace_boundary_guard",
+    "runtime_continuity",
+    "durable_outputs",
+    "capability_packages",
+    "operator_surface_mutability"
+  ],
+  "missing_contracts": [],
+  "contract_issues": {},
+  "schema_refs": [
+    "artifacts/agent_baseline/hos_adoption/schemas/hos-prompt-section-profile-schema.json",
+    "artifacts/agent_baseline/hos_adoption/schemas/hos-capability-authority-schema.json",
+    "artifacts/agent_baseline/hos_adoption/schemas/hos-skill-grants-schema.json",
+    "artifacts/agent_baseline/hos_adoption/schemas/hos-workspace-boundary-guard-schema.json",
+    "artifacts/agent_baseline/hos_adoption/schemas/hos-runtime-continuity-schema.json",
+    "artifacts/agent_baseline/hos_adoption/schemas/hos-durable-outputs-schema.json",
+    "artifacts/agent_baseline/hos_adoption/schemas/hos-capability-packages-schema.json",
+    "artifacts/agent_baseline/hos_adoption/schemas/hos-operator-surface-mutability-schema.json"
+  ],
+  "fixture_refs": [
+    "artifacts/agent_baseline/hos_adoption/fixtures/hos-baseline-offer-fixture.json"
+  ],
+  "notes": [
+    "HOS adoption conformance validates projection shape only.",
+    "Consumer enforcement, UI, secrets, provider activation, and domain semantics remain outside this checker."
+  ],
+  "summary": {
+    "conformance_id": "baseline-offer-hos-adoption-conformance",
+    "conformance_status": "passing",
+    "covered_contract_count": 8,
+    "missing_contract_count": 0,
+    "issue_contract_count": 0,
+    "checker": "scripts/check_hos_adoption_conformance.py",
+    "artifact_ref": "artifacts/agent_baseline/hos_adoption/latest-hos-adoption-conformance.json"
+  },
+  "contract_family": "hos-adoption-conformance",
+  "contract_major": 1,
+  "schema_version": "hos-adoption-conformance/v1",
+  "contract_revision": 1,
+  "contract_bundle_id": "baseline-shared-v1",
+  "compatibility_policy": "additive-within-major",
+  "artifact_ref": "artifacts/agent_baseline/hos_adoption/baseline-offer-hos-adoption-conformance.json"
+}

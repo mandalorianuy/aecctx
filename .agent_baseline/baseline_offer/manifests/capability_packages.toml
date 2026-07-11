@@ -1,0 +1,7 @@
+[capability_packages]
+schema_version = "1.0"
+description = "Baseline-owned package manifest for reusable capability lifecycle, health, tool surfaces, durable outputs, ownership, and consumer-sync publication posture."
+notes = [
+  "HOS-08 treats reusable capabilities as descriptive packages without importing marketplace or product app behavior.",
+  "A capability package is not execution authority; it records lifecycle, health, ownership, and consumer-visible outputs for baseline contracts.",
+]

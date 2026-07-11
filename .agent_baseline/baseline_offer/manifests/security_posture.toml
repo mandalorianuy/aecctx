@@ -1,0 +1,43 @@
+[security_posture]
+version = "1.0"
+posture_id = "baseline-consumer-security-posture"
+label = "Baseline Consumer Security Posture"
+description = "Neutral security posture contract for baseline-integrated consumer repositories. Product repository security policy remains outside codex-agent-baseline."
+default_mode = "warn-first"
+product_repo_adoption = "out-of-scope"
+source_authority = "codex-myai security platform"
+
+[[controls]]
+control_id = "consumer-boundary"
+label = "Consumer boundary"
+control_class = "governance"
+status = "required"
+summary = "Baseline applies only to baseline-integrated consumer repositories and must not install product security policy."
+
+[[controls]]
+control_id = "security-finding-routing"
+label = "Security finding routing"
+control_class = "routing"
+status = "required"
+summary = "Security findings stay out of generic bug-fix flows unless explicitly declassified."
+
+[[controls]]
+control_id = "warn-first-default"
+label = "Warn-first default"
+control_class = "gate-policy"
+status = "required"
+summary = "Security checks default to warning posture until a specialization explicitly opts into enforcement."
+
+[[controls]]
+control_id = "no-live-target-without-scope"
+label = "No live target without scope"
+control_class = "guardrail"
+status = "required"
+summary = "DAST, Nuclei, pentest, or authenticated live target workflows require approved target inventory and authorization."
+
+[[controls]]
+control_id = "platform-gap-loop"
+label = "Platform gap loop"
+control_class = "coverage"
+status = "recommended"
+summary = "Reusable security capability gaps should route to codex-myai, not baseline core."
