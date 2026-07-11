@@ -54,4 +54,6 @@ These commands are specification targets, not currently implemented behavior.
 ./scripts/verify.sh
 ```
 
+`verify.sh` includes the baseline integration gate and expects the baseline package or sibling checkout available to maintainers. Public CI runs `scripts/verify_portable.sh` so external contributors need no private dependency.
+
 AECCTX is licensed under Apache-2.0. See [`LICENSE`](LICENSE).

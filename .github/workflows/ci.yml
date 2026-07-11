@@ -16,4 +16,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: ./scripts/verify.sh
+      # The full verify additionally resolves the private codex-agent-baseline
+      # runtime. Public CI runs the portable contract gate; maintainers run the
+      # full baseline integration check locally before merge/release.
+      - run: ./scripts/verify_portable.sh

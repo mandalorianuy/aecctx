@@ -32,3 +32,7 @@ A release requires:
 - capability claims matched by conformance fixtures;
 - security and licensing review for every bundled adapter;
 - no executable task skipped in the active implementation plan.
+
+## CI posture
+
+Public GitHub CI runs `scripts/verify_portable.sh`, which validates the public specification, fixture integrity, JSON syntax, and repository diff hygiene without credentials. The full `scripts/verify.sh` additionally resolves the private `codex-agent-baseline` runtime and is required locally before merge and release. The committed baseline offer and integration report remain public materializations; the private baseline repository is not exposed to CI.

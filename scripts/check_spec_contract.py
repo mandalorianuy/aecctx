@@ -43,6 +43,7 @@ def check_required_files() -> None:
         PLAN,
         ROOT / "schemas/v0.1/manifest.schema.json",
         ROOT / "schemas/v0.1/record.schema.json",
+        ROOT / "scripts/verify_portable.sh",
     ]
     missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
     if missing:
