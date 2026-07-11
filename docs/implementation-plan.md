@@ -17,8 +17,8 @@ Execute only the first task with status `pending-next` or `in_progress`. Update 
 | ACX-02 | completed | Deterministic package reader/writer, hashes, source registration and opaque fallback |
 | ACX-03 | completed | Neutral record APIs, query, diff and budgeted Markdown context renderer |
 | ACX-04 | completed | IFC adapter via IfcOpenShell |
-| ACX-05 | pending-next | DXF adapter via ezdxf |
-| ACX-06 | pending | Vector/raster PDF and image evidence adapters |
+| ACX-05 | completed | DXF adapter via ezdxf |
+| ACX-06 | pending-next | Vector/raster PDF and image evidence adapters |
 | ACX-07 | pending | Geometry artifact normalization and deterministic previews |
 | ACX-08 | pending | Plugin isolation, security limits, optional MCP and signing decision |
 | ACX-09 | pending | Cross-platform conformance corpus, packaging and `0.1.0` release |
@@ -87,6 +87,8 @@ Evidence: [`docs/evidence/ACX-04.md`](evidence/ACX-04.md).
 ## ACX-05: DXF adapter
 
 Use ezdxf. Preserve versions, units, layouts, layers, blocks/inserts, xrefs, handles, text, dimensions, hatches, supported geometry and unknown tags. Do not infer walls or other domain families from raw CAD primitives.
+
+Evidence: [`docs/evidence/ACX-05.md`](evidence/ACX-05.md).
 
 ## ACX-06: PDF and image adapters
 

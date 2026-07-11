@@ -16,9 +16,11 @@ dependencies = ["jsonschema[format]>=4.23,<5"]
 aecctx = "aecctx.cli:main"
 
 [project.optional-dependencies]
+dxf = ["ezdxf>=1.4.4,<2"]
 ifc = ["ifcopenshell>=0.8.5,<0.9"]
 test = [
   "build>=1.2,<2",
+  "ezdxf>=1.4.4,<2",
   "ifcopenshell>=0.8.5,<0.9",
   "pytest>=8.3,<9",
 ]
