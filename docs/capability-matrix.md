@@ -19,7 +19,7 @@ Opaque fallback ingest is implemented in the core. Format-specific adapter value
 | Source | Identity/provenance | Properties/semantics | 2D geometry | 3D geometry | Planned task |
 |---|---|---|---|---|---|
 | Unknown binary/text | `full` registration | `opaque` with structured loss | `opaque` with structured loss | `opaque` with structured loss | ACX-02 completed |
-| IFC 2x3/4.x | Target `full` | Target `full` with unsupported preservation | Target `partial` | Target `full` tessellated plus source representation refs | ACX-04 |
+| IFC 2x3/4.x | `full` schema/GUID/class provenance | `full` when representable; dynamic `partial` with unsupported preservation | `partial` with native refs | `full` for successfully tessellated representations; dynamic `partial` on failures | ACX-04 completed |
 | ASCII/binary DXF | Target `full` | Target `partial` evidence, no automatic domain classification | Target `full` for supported entities | Target `partial` | ACX-05 |
 | Vector PDF | Target `full` | Target `partial` text/dimensions | Target `partial` per-page/viewport evidence | `unsupported` as inferred hidden geometry | ACX-06 |
 | Raster PDF/image | Target `full` | Target `partial` optional OCR/vision | Target `partial` pixels/regions, calibration explicit | `unsupported` as inferred hidden geometry | ACX-06 |

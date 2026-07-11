@@ -1,7 +1,7 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-11
-Handoff status: `ACX-03-COMPLETE`
+Handoff status: `ACX-04-COMPLETE`
 
 ## Outcome
 
@@ -12,7 +12,7 @@ The repository is ready for a dedicated implementation task. The public contract
 1. Read `AGENTS.md`.
 2. Read both normative files under `docs/specs/` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. Execute only `ACX-04`, the first `pending-next` task in `docs/implementation-plan.md`.
+4. Execute only `ACX-05`, the first `pending-next` task in `docs/implementation-plan.md`.
 5. Run `./scripts/verify.sh` before handoff.
 
 ## Fixed decisions
@@ -39,4 +39,4 @@ The repository is ready for a dedicated implementation task. The public contract
 
 ## Next implementation task
 
-`ACX-04` owns the IFC adapter via IfcOpenShell, including IFC schema/GUID/class, spatial/type/property/material/relationship evidence, placements, representations, unsupported data, validation diagnostics, and tessellated artifacts. It must not implement DXF/PDF/image adapters, generic preview conventions, MCP, or consumer mapping.
+`ACX-05` owns the DXF adapter via ezdxf, including versions, units, layouts, layers, blocks/inserts, xrefs, handles, text, dimensions, hatches, supported geometry, and unknown tags. It must not infer consumer-domain families or implement PDF/image adapters, generic previews, MCP, or consumer mapping.

@@ -16,8 +16,8 @@ Execute only the first task with status `pending-next` or `in_progress`. Update 
 | ACX-01 | completed | Python package/CLI scaffold and schema-backed validator |
 | ACX-02 | completed | Deterministic package reader/writer, hashes, source registration and opaque fallback |
 | ACX-03 | completed | Neutral record APIs, query, diff and budgeted Markdown context renderer |
-| ACX-04 | pending-next | IFC adapter via IfcOpenShell |
-| ACX-05 | pending | DXF adapter via ezdxf |
+| ACX-04 | completed | IFC adapter via IfcOpenShell |
+| ACX-05 | pending-next | DXF adapter via ezdxf |
 | ACX-06 | pending | Vector/raster PDF and image evidence adapters |
 | ACX-07 | pending | Geometry artifact normalization and deterministic previews |
 | ACX-08 | pending | Plugin isolation, security limits, optional MCP and signing decision |
@@ -81,6 +81,8 @@ Evidence: [`docs/evidence/ACX-03.md`](evidence/ACX-03.md).
 ## ACX-04: IFC adapter
 
 Use IfcOpenShell behind the plugin contract. Preserve IFC schema, GUID, class, spatial/type/property/material/relationship evidence, placements, representation references, unsupported data, validation diagnostics, and tessellated artifacts without flattening IFC semantics into mesh-only records.
+
+Evidence: [`docs/evidence/ACX-04.md`](evidence/ACX-04.md).
 
 ## ACX-05: DXF adapter
 

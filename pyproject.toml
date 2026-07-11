@@ -16,8 +16,10 @@ dependencies = ["jsonschema[format]>=4.23,<5"]
 aecctx = "aecctx.cli:main"
 
 [project.optional-dependencies]
+ifc = ["ifcopenshell>=0.8.5,<0.9"]
 test = [
   "build>=1.2,<2",
+  "ifcopenshell>=0.8.5,<0.9",
   "pytest>=8.3,<9",
 ]
 
@@ -28,7 +30,7 @@ packages = ["src/aecctx"]
 include = [
   "/src",
   "/tests",
-  "/fixtures/minimal-aecctx",
+  "/fixtures",
   "/schemas/v0.1",
   "/README.md",
   "/LICENSE",
@@ -38,4 +40,3 @@ include = [
 [tool.pytest.ini_options]
 addopts = "-q"
 testpaths = ["tests"]
-

@@ -118,3 +118,23 @@ def test_context_command_emits_index_json() -> None:
     data = json.loads(completed.stdout)["data"]
     assert data["token_estimate"] <= 600
     assert "context/index.md" in data["files"]
+
+
+def test_ingest_auto_selects_ifc_adapter(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "ifc" / "minimal-wall.ifc"
+    output = tmp_path / "wall.aecctx"
+
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(output),
+        "--form",
+        "zip",
+        "--created-at",
+        "2026-07-11T00:00:00Z",
+        "--json",
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout)["data"]["adapter"] == "ifc"
