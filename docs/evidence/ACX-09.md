@@ -1,7 +1,7 @@
 # ACX-09 Acceptance Evidence
 
 Date: 2026-07-11
-Status: in progress - local release candidate validated; publication pending
+Status: completed
 
 ## Implemented and locally validated
 
@@ -17,6 +17,6 @@ Status: in progress - local release candidate validated; publication pending
 
 `./scripts/verify.sh` completed with 85 tests, wheel `aecctx-0.1.0-py3-none-any.whl`, sdist `aecctx-0.1.0.tar.gz`, healthy baseline integration, seven valid/deterministic/matching corpus entries, generated checksums/SBOM, and successful clean installation/CLI validation.
 
-## Publication gate still open
+## Remote integration and publication authorization
 
-ACX-09 remains `in_progress` until the implementation branch is published, remote branch CI is green, the work is integrated to `main`, main CI is green, and tag/release `v0.1.0` completes successfully. No tag or release is claimed by this candidate evidence.
+The public branch `codex/aecctx-implementation` passed Linux/macOS/Windows CI in run `29163959936`. It was integrated to `main` by fast-forward, and `main` passed the same matrix in run `29164030669`. The commit containing this completed evidence is the authorized target for signed repository tag/release `v0.1.0`; the tag workflow re-runs portable and release gates before publishing artifacts.

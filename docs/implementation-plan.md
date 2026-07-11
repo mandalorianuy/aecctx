@@ -2,7 +2,7 @@
 
 Date: 2026-07-11
 Status: Active implementation authority
-Specification readiness: `0.1.0-RELEASE-CANDIDATE`
+Specification readiness: `0.1.0-IMPLEMENTED`
 
 ## Execution rule
 
@@ -21,7 +21,7 @@ Execute only the first task with status `pending-next` or `in_progress`. Update 
 | ACX-06 | completed | Vector/raster PDF and image evidence adapters |
 | ACX-07 | completed | Geometry artifact normalization and deterministic previews |
 | ACX-08 | completed | Plugin isolation, security limits, optional MCP and signing decision |
-| ACX-09 | in_progress | Cross-platform conformance corpus, packaging and `0.1.0` release |
+| ACX-09 | completed | Cross-platform conformance corpus, packaging and `0.1.0` release |
 | ACX-10 | deferred | Consumer integration template; WoodFraming-specific plan remains consumer-owned |
 
 ## ACX-00: Specification and repository foundation
@@ -112,7 +112,7 @@ Evidence: [`docs/evidence/ACX-08.md`](evidence/ACX-08.md).
 
 Publish conformance fixtures, compatibility policy, installable artifacts, checksums, SBOM, changelog, versioned documentation and release automation. Only verified capabilities may appear in release claims.
 
-Release-candidate evidence: [`docs/evidence/ACX-09.md`](evidence/ACX-09.md). Final completion requires green branch/main CI and published tag/release `v0.1.0`.
+Evidence: [`docs/evidence/ACX-09.md`](evidence/ACX-09.md). The completion commit is the authorized target for tag/release `v0.1.0`.
 
 ## ACX-10: Consumer template
 

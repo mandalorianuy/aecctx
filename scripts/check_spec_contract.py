@@ -84,6 +84,10 @@ def check_authorities() -> None:
     executable = [f"ACX-{number:02d}" for number in range(1, 10)]
     pending_next = [task for task in executable if ledger.get(task) == "pending-next"]
     in_progress = [task for task in executable if ledger.get(task) == "in_progress"]
+    if not pending_next and not in_progress:
+        if any(ledger.get(task) != "completed" for task in executable):
+            fail("implementation plan without an active task requires ACX-01 through ACX-09 completed")
+        return
     if len(pending_next) + len(in_progress) != 1:
         fail("implementation plan must contain exactly one pending-next or in_progress task")
     active = (pending_next + in_progress)[0]

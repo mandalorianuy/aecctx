@@ -1,7 +1,7 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-11
-Handoff status: `0.1.0-RELEASE-CANDIDATE`
+Handoff status: `0.1.0-IMPLEMENTED`
 
 ## Outcome
 
@@ -12,7 +12,7 @@ The repository is ready for a dedicated implementation task. The public contract
 1. Read `AGENTS.md`.
 2. Read both normative files under `docs/specs/` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. Continue only `ACX-09`, the sole `in_progress` task in `docs/implementation-plan.md`.
+4. ACX-01 through ACX-09 are complete. ACX-10 remains deferred and no additional implementation-plan task is executable in this repository.
 5. Run `./scripts/verify.sh` before handoff.
 
 ## Fixed decisions
@@ -39,4 +39,6 @@ The repository is ready for a dedicated implementation task. The public contract
 
 ## Next implementation task
 
-`ACX-09` owns the cross-platform conformance corpus, installable artifacts, checksums, SBOM, changelog, compatibility/versioned documentation and release automation. Only verified capabilities may become `0.1.0` claims; consumer mapping remains deferred.
+## Consumer integration planning entry point
+
+Another task may now begin a WoodFraming-owned integration specification from [`docs/integration/woodframing-boundary.md`](integration/woodframing-boundary.md), using the stable package/query APIs and the IFC/DXF conformance fixtures. It must be authored and accepted in the WoodFraming repository; ACX-10 remains deferred here and no WoodFraming code belongs in AECCTX.
