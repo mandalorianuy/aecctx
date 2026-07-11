@@ -107,7 +107,7 @@ class IsolatedPluginRunner:
                 raise PluginExecutionError("AECCTX_PLUGIN_TIMEOUT", "Plugin exceeded wall-time limit") from error
             stdout_size = stdout.seek(0, os.SEEK_END)
             stderr_size = stderr.seek(0, os.SEEK_END)
-            if stdout_size > self.limits.max_output_bytes or stderr_size > self.limits.max_output_bytes:
+            if stdout_size >= self.limits.max_output_bytes or stderr_size >= self.limits.max_output_bytes:
                 raise PluginExecutionError("AECCTX_PLUGIN_OUTPUT_LIMIT_EXCEEDED", "Plugin output exceeds configured byte limit")
             stdout.seek(0)
             stderr.seek(0)
@@ -121,4 +121,3 @@ class IsolatedPluginRunner:
             failure = response.get("error", {})
             raise PluginExecutionError(failure.get("code", "AECCTX_PLUGIN_FAILED"), failure.get("message", "Plugin failed"))
         return response["result"]
-

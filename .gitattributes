@@ -1,0 +1,15 @@
+* text=auto eol=lf
+
+*.aecctx binary
+*.glb binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.png binary
+*.zip binary
+
+*.dxf text eol=lf
+*.ifc text eol=lf
+*.jsonl text eol=lf
+*.obj text eol=lf
+*.pgm text eol=lf

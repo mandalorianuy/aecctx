@@ -10,7 +10,14 @@ from typing import Any, Iterable
 
 
 VERSION = "0.1.0"
-ROOT = Path(__file__).resolve().parents[2]
+
+
+def _repository_root() -> Path:
+    candidates = [Path.cwd(), *Path.cwd().parents, Path(__file__).resolve().parents[2]]
+    for candidate in candidates:
+        if (candidate / "pyproject.toml").is_file() and (candidate / "uv.lock").is_file():
+            return candidate
+    raise FileNotFoundError("release metadata generation requires a checkout containing pyproject.toml and uv.lock")
 
 
 def _requirement_name(requirement: str) -> str:
@@ -28,8 +35,9 @@ def build_release_metadata(artifacts: Iterable[str | Path], *, output_directory:
     checksum_lines = [f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}\n" for path in artifact_paths]
     checksums_path.write_text("".join(checksum_lines), encoding="utf-8")
 
-    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
-    lock = tomllib.loads((ROOT / "uv.lock").read_text(encoding="utf-8"))
+    root = _repository_root()
+    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    lock = tomllib.loads((root / "uv.lock").read_text(encoding="utf-8"))
     locked_versions = {package["name"].lower(): package["version"] for package in lock["package"] if "version" in package}
     requirements = list(project.get("dependencies", []))
     for extra_requirements in project.get("optional-dependencies", {}).values():
@@ -87,4 +95,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
