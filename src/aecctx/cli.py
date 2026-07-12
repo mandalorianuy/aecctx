@@ -103,10 +103,10 @@ def main(argv: Sequence[str] | None = None) -> int:
 
                 with open(arguments.source, "rb") as source_handle:
                     prefix = source_handle.read(64 * 1024)
-                if probe_step_iges(prefix)["confidence"] == 1.0:
-                    adapter = "step-iges"
-                elif IFCPlugin().probe(prefix)["confidence"] == 1.0:
+                if IFCPlugin().probe(prefix)["confidence"] == 1.0:
                     adapter = "ifc"
+                elif probe_step_iges(prefix)["confidence"] == 1.0:
+                    adapter = "step-iges"
                 elif DXFPlugin().probe(prefix)["confidence"] == 1.0:
                     adapter = "dxf"
                 elif PDFPlugin().probe(prefix)["confidence"] == 1.0:

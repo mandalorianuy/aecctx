@@ -28,6 +28,7 @@
           }
         },
         "version": {"const": "5.3"},
+        "version_flag": {"const": 11},
         "global_raw": {"type": "string"},
         "directory": {
           "type": "array",
@@ -50,7 +51,7 @@
       },
       "allOf": [
         {"if": {"properties": {"format": {"const": "step"}}}, "then": {"required": ["schemas", "headers", "entities"]}},
-        {"if": {"properties": {"format": {"const": "iges"}}}, "then": {"required": ["version", "global_raw", "directory"]}}
+        {"if": {"properties": {"format": {"const": "iges"}}}, "then": {"required": ["version", "version_flag", "global_raw", "directory"]}}
       ],
       "additionalProperties": false
     },
@@ -100,4 +101,3 @@
     }
   }
 }
-

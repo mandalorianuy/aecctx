@@ -8,6 +8,8 @@
 
 **Tech Stack:** Python 3.12+, existing ACX-12 provider protocol, Docker Linux arm64, `cadquery-ocp==7.9.3.1.1`/OCCT 7.9.3, JSON Schema 2020-12, existing package/record/GLB APIs, pytest.
 
+**Execution resolution:** Tasks 1-6 are complete. Live conformance showed that the reviewed low-level OCCT reader proves deterministic transfer/BREP/tessellation but does not prove XDE-to-source correlation, normalized styles/units/placements, per-root tolerances or partial-root recovery. The normative profile and ACXD-028 therefore retain those outcomes as explicit unsupported residuals; the experimental claims are narrowed to the lexical source graph, direct STEP product/assembly records and translator-derived geometry. All repository and live-provider gates passed before promotion.
+
 ## Global Constraints
 
 - Execute only ACX-17; ACX-18 remains pending.

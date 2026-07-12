@@ -181,6 +181,7 @@ def test_iges_scanner_preserves_fixed_width_directory_evidence() -> None:
         }
     ]
     assert scanned["external_references"] is False
+    assert scanned["version_flag"] == 0
 
 
 def test_probe_and_iges_scanner_reject_malformed_or_truncated_data() -> None:
@@ -211,6 +212,7 @@ def test_generated_step_iges_fixtures_are_bound_to_exact_source_profiles() -> No
     scanned_iges = worker._scan_iges(iges, max_records=1000, max_recursion_depth=64)
     assert hashlib.sha256(iges).hexdigest() == "b64f87ee6b4fea34d9d268154550a17593e587f8227670c1a78fc84b51c09321"
     assert scanned_iges["version"] == "5.3"
+    assert scanned_iges["version_flag"] == 11
     assert len(scanned_iges["directory"]) == 52
 
 

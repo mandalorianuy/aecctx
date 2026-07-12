@@ -24,7 +24,7 @@ Opaque fallback ingest is implemented in the core. Format-specific adapter value
 | Vector PDF | `full` source/page identity | `partial` text and content-stream evidence | `partial` path operators per page/viewport | `unsupported` as inferred hidden geometry | ACX-06 completed |
 | Raster PDF/image | `full` source/pixel identity | `partial` metadata; experimental `partial` English OCR under the exact ACX-15 local/replay profile; vision `unsupported` | `partial` raster regions with explicit calibration state; image pixels `full` | `unsupported` as inferred hidden geometry | ACX-06 and ACX-15 completed |
 | OBJ/STL/glTF 2.0/GLB 2.0 | `full` source/object identity | `partial` source-declared metadata; absent units/frame/CRS stay explicit | deterministic SVG preview only | `full` preserved mesh evidence plus derived GLB; optional manual registration is `partial` | ACX-07 and ACX-16 completed |
-| STEP/IGES | Target `full` | Target `partial` names/colors/assembly metadata | Target preview only | Target `full` B-Rep plus tessellation where supported | post-v0.1 |
+| STEP AP203/AP214/AP242 ed1; IGES 5.3 | `full` source-file identity; `partial` lexical entity graph | `partial` direct STEP product/assembly records; normalized XDE styles/units/placements unsupported | preview only | `partial` translator-derived OCCT BREP plus deterministic tessellation | ACX-17 experimental |
 | DWG/DGN | Adapter-specific | Adapter-specific | Adapter-specific | Adapter-specific | optional plugin, post-v0.1 |
 | RVT/proprietary BIM | Adapter-specific | Adapter-specific | Adapter-specific | Adapter-specific | optional plugin, post-v0.1 |
 
@@ -58,7 +58,7 @@ This table is a roadmap, not a support claim. Current claims in the release regi
 | Image/PDF vision | `unsupported`; no provider or output vocabulary accepted | Future inferred candidates require a new governed profile with confidence, privacy, reproducibility and evidence links | ACX-15 completed boundary; future task required |
 | Hidden/unobserved geometry | public `unsupported` boundary | Remains unsupported as source geometry; reconstruction hypotheses never become measurement authority without a future separately governed profile | ACX-15 completed |
 | Mesh units and CRS | `partial`: OBJ/STL unknowns and glTF/GLB 2.0 meters/frame are explicit; manual scale, affine matrix and similarity registration produce separate manual/derived evidence | Vendor extensions, external resources, CRS lookup/validation, survey/datum authority, mesh healing and untested formats/runtimes remain unclaimed | ACX-16 completed |
-| STEP/IGES | `unsupported`/opaque fallback | Bounded profiles preserving B-Rep/assembly evidence plus derived tessellation | ACX-17 |
+| STEP/IGES | `experimental partial`: exact source profiles through reviewed OCP/OCCT Linux-arm64 OCI or portable replay | XDE correlation, normalized styles/units/placements, source-exact BREP, other schemas/versions/platforms remain unsupported; opaque fallback remains available | ACX-17 completed |
 | DWG | `unsupported`/opaque fallback | Optional reviewed external provider with adapter-specific claims | ACX-18 |
 | RVT | `unsupported`/opaque fallback | Optional reviewed external provider with neutral BIM evidence only | ACX-19 |
 | Package authenticity/signing | integrity only; authenticity `unsupported` | Optional governed signature verification with distinct integrity, validity, trust, and authorization states | ACX-20 |

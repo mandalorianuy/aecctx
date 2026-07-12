@@ -24,6 +24,11 @@ REQUIRED_AXES = (
 CAPABILITIES = (
     "identity", "hierarchy", "properties", "relationships", "text", "2d_geometry", "3d_geometry", "materials_styles", "georeferencing", "validation",
 )
+STEP_SCHEMAS = {
+    "CONFIG_CONTROL_DESIGN",
+    "AUTOMOTIVE_DESIGN{10103032141111}",
+    "AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF{1010303442114}",
+}
 
 
 def _configuration(request: dict[str, Any]) -> dict[str, Any]:
@@ -235,12 +240,16 @@ def _scan_iges(data: bytes, *, max_records: int, max_recursion_depth: int) -> di
             }
         )
     directory.sort(key=lambda item: item["sequence"])
+    global_raw = b"".join(line[:72] for line in by_section[b"G"]).decode("ascii").rstrip()
+    global_fields = [field.strip() for field in global_raw.rstrip(";").split(",")]
+    version_flag = _iges_int(global_fields[22].encode("ascii")) if len(global_fields) > 22 else 0
     return {
         "directory": directory,
         "external_references": any(item["entity_type"] == 416 for item in directory),
         "format": "iges",
-        "global_raw": b"".join(line[:72] for line in by_section[b"G"]).decode("ascii").rstrip(),
-        "version": "5.3",
+        "global_raw": global_raw,
+        "version": "5.3" if version_flag == 11 else "unclaimed",
+        "version_flag": version_flag,
     }
 
 
@@ -406,6 +415,12 @@ def _response(request: dict[str, Any], source_path: Path, output_root: Path) -> 
         if format_name == "step"
         else _scan_iges(input_bytes, max_records=limits["max_records"], max_recursion_depth=limits["max_recursion_depth"])
     )
+    if format_name == "step":
+        normalized_schemas = {re.sub(r"\s+", "", schema) for schema in scanned["schemas"]}
+        if len(normalized_schemas) != 1 or not normalized_schemas.issubset(STEP_SCHEMAS):
+            raise ValueError("AECCTX_STEP_SCHEMA_UNCLAIMED")
+    elif scanned["version"] != "5.3":
+        raise ValueError("AECCTX_IGES_VERSION_UNCLAIMED")
     if scanned["external_references"]:
         raise ValueError("AECCTX_STEP_IGES_EXTERNAL_REFERENCE_UNRESOLVED")
     shape = _transfer(source_path, format_name)

@@ -162,8 +162,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-14 | completed | DXF source-native semantics and bounded 3D |
 | ACX-15 | completed | Experimental bounded OCR evidence; vision remains target and hidden geometry remains public unsupported |
 | ACX-16 | completed | Mesh units, calibration and CRS registration |
-| ACX-17 | in_progress | STEP/IGES adapter profiles |
-| ACX-18 | pending | Optional DWG external-provider adapter |
+| ACX-17 | completed | Experimental bounded STEP/IGES source graph and translator-derived BREP profiles |
+| ACX-18 | pending-next | Optional DWG external-provider adapter |
 | ACX-19 | pending | Optional RVT external-provider adapter |
 | ACX-20 | pending | Package authenticity and signing profile |
 | ACX-21 | pending | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
@@ -604,6 +604,8 @@ Non-scope: no authoring write-back, no self-built B-Rep kernel, no generic STEP/
 Acceptance: ACXD-019 is accepted for the chosen path; exact profiles and losses are published; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-17.md` when completed.
+
+Completion resolution: ACXD-028 selects the exact operator-built OCP/OCCT OCI provider. The portable corpus proves AP203, AP214, AP242 edition 1 and IGES 5.3 protocol/mapping determinism; the exact Linux-arm64 image proves live transfer, BREP and tessellation. Claims remain `experimental partial`. XDE/source correlation, normalized styles/units/placements, per-root tolerance summaries, partial-root recovery, source-exact BREP and other schemas/platforms remain explicit unsupported residuals rather than scaffold claims.
 
 ## ACX-18: DWG
 

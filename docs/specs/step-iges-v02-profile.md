@@ -1,6 +1,6 @@
 # AECCTX v0.2 STEP/IGES Evidence Profile
 
-Version: `0.2.0-draft.1`
+Version: `0.2.0-draft.2`
 Date: 2026-07-12
 Status: ACX-17 normative profile
 Decision authority: ACXD-014, ACXD-019 and ACXD-028
@@ -9,10 +9,10 @@ Decision authority: ACXD-014, ACXD-019 and ACXD-028
 
 ACX-17 defines two bounded claims selected only with `aecctx_version="0.2.0"`:
 
-- `step-iges.source-structure` preserves enumerated source-format, product/assembly, instance, name, color, layer, unit and placement evidence;
+- `step-iges.source-structure` preserves the bounded lexical source-entity graph and only product/assembly facts directly recoverable from enumerated STEP records;
 - `step-iges.brep-geometry` preserves enumerated curve/surface/topology evidence through a reviewed native kernel and emits subordinate deterministic tessellation.
 
-Both claims begin `experimental partial`. They become public only after every exact format/kernel/platform combination in the claim registry has live or replay evidence appropriate to the claim. A replay proves protocol, mapping and package determinism; it does not prove that a native runtime exists on the replay host.
+Both claims begin `experimental partial`. ACX-17 does not claim XDE label correlation, normalized styles/materials, resolved instance matrices, validation properties or unit conversion. Those facts remain in raw observed source records where present and are explicitly unknown/unsupported in normalized records. Claims become public only after every exact format/kernel/platform combination in the claim registry has live or replay evidence appropriate to the claim. A replay proves protocol, mapping and package determinism; it does not prove that a native runtime exists on the replay host.
 
 The live ACX-17 profile is limited to an operator-built Linux arm64 OCI image containing Python 3.12, `cadquery-ocp==7.9.3.1.1` and its bundled OCCT 7.9.3 runtime. The accepted provider identity is `org.aecctx.step-iges.ocp@0.2.0`. The image tag and inspected immutable image ID are both allowlisted; mismatch or absence rejects execution. Linux x86-64, macOS, Windows, other OCP/OCCT versions and unreviewed images remain unsupported.
 
@@ -72,7 +72,7 @@ Deflections are expressed in kernel target units after the translator's declared
 
 The response uses the ACX-12 envelope and emits only:
 
-- ordered `source_entity`, `product`, `assembly_relation`, `instance`, `shape`, `style`, `diagnostic` and `artifact` events;
+- one ordered `primitive` event carrying the validated bounded source graph and one ordered `primitive` event carrying translator-derived shape metadata;
 - content-addressed BREP and canonical triangle-mesh JSON artifacts;
 - capability/loss report and provider attestation;
 - bounded resource usage and exact runtime versions.
@@ -97,16 +97,14 @@ Repeated source entity IDs, invalid references, malformed sections, truncated re
 
 ## 6. STEP structure profile
 
-For claimed STEP schemas the provider preserves, when present and successfully mapped:
+For claimed STEP schemas the provider preserves as raw entity evidence, when present:
 
 - `FILE_DESCRIPTION`, `FILE_NAME` and exact `FILE_SCHEMA` header values;
 - product, product definition, formation and shape-definition identities;
 - next-assembly-usage and context-dependent-shape relationships;
 - representation/representation-item identities and relationship paths;
-- component occurrence and instance placement matrices;
-- names, descriptions, colors, visibility, layers and materials exposed by XDE;
-- source-declared length, plane-angle and solid-angle units;
-- validation properties exposed by XDE, kept separate from derived kernel measurements;
+- direct entity references, including assembly-usage records; normalized occurrence matrices remain unsupported;
+- names, descriptions, colors, visibility, layers, materials, units and validation properties only inside raw source entities; XDE correlation and normalization remain unsupported;
 - enumerated B-Rep, curve, surface and topology source classes.
 
 The enumerated STEP source classes are `PRODUCT`, `PRODUCT_DEFINITION`, `PRODUCT_DEFINITION_FORMATION` and subtypes, `NEXT_ASSEMBLY_USAGE_OCCURRENCE`, `CONTEXT_DEPENDENT_SHAPE_REPRESENTATION`, `SHAPE_DEFINITION_REPRESENTATION`, `SHAPE_REPRESENTATION` and geometric/manifold subtypes, `REPRESENTATION_RELATIONSHIP_WITH_TRANSFORMATION`, `ITEM_DEFINED_TRANSFORMATION`, `AXIS2_PLACEMENT_3D`, `CARTESIAN_POINT`, `DIRECTION`, `VECTOR`, `LINE`, `CIRCLE`, `ELLIPSE`, `B_SPLINE_CURVE` subtypes, `PLANE`, `CYLINDRICAL_SURFACE`, `B_SPLINE_SURFACE` subtypes, `VERTEX_POINT`, `EDGE_CURVE`, `ORIENTED_EDGE`, `EDGE_LOOP`, `FACE_BOUND`, `FACE_OUTER_BOUND`, `ADVANCED_FACE`, `OPEN_SHELL`, `CLOSED_SHELL`, `MANIFOLD_SOLID_BREP`, `BREP_WITH_VOIDS`, `SHELL_BASED_SURFACE_MODEL`, `GEOMETRIC_CURVE_SET`, `STYLED_ITEM`, `PRESENTATION_LAYER_ASSIGNMENT`, `COLOUR_RGB`, `SI_UNIT` and `CONVERSION_BASED_UNIT`. Subtypes are accepted only when their base relationship and fields are preserved by the exact runtime and exercised by the corpus.
@@ -119,18 +117,17 @@ For claimed IGES 5.3 files the provider preserves:
 
 - Start/Global/Terminate fields needed for identity and declared version;
 - directory sequence, entity type/form, parameter-data pointer, structure, line font, level, view, transform pointer, label and subscript;
-- Global-section model scale, units flag/name, resolution and author/organization fields as source evidence;
-- entity names/labels, colors and layers exposed by IGES/XDE;
-- type 124 transformations and type 308/408 subfigure structure when present;
+- the bounded raw Global section and version flag, plus directory labels, level and transform pointers;
+- type/form identity for transformations and subfigures when present; parameter/XDE interpretation remains unsupported;
 - entity type/form pairs 100 circular arc, 102 composite curve, 104 conic arc forms 1–3, 110 line, 116 point, 120 surface of revolution, 122 tabulated cylinder, 124 transformation matrix, 126 rational/non-rational B-spline curve, 128 rational/non-rational B-spline surface, 142 curve on parametric surface, 143 bounded surface, 144 trimmed parametric surface, 186 manifold solid B-Rep, 190 plane surface, 192 right circular cylindrical surface, 308 subfigure definition and 408 singular subfigure instance.
 
 IGES has weaker assembly semantics than STEP. Subfigures and directory relationships remain original IGES evidence and are not relabeled as STEP-style product assemblies. Unsupported entity types/forms remain observed opaque records with `AECCTX_IGES_ENTITY_UNSUPPORTED`.
 
 ## 8. Units, placements and coordinate authority
 
-Source-declared units are observed. Kernel target units and conversion parameters are detected/derived and recorded separately. A successful transfer MUST emit the declared-to-kernel scale and its inverse. Missing, conflicting or multiple units remain unknown/conflicted; no model-size guess is allowed.
+Source-declared unit entities remain observed raw records. Normalized units, kernel target units and declared-to-kernel scale are `unknown` in the ACX-17 implemented cut because the reviewed runtime correlation is not proven by the corpus. No model-size guess is allowed.
 
-Every known instance/placement transform is finite, affine and invertible and includes forward/inverse row-major matrices with named from/to frames. Failed or ambiguous placement resolution stays explicit. Source-local, assembly, XDE/kernel and artifact frames remain distinct.
+Instance/placement transforms are not normalized in this cut. Source placement entities and references remain observed; normalized placement stays unknown with explicit profile-partial loss. Source-local, assembly, XDE/kernel and artifact frames remain distinct.
 
 STEP/IGES coordinates establish no geographic CRS or survey authority in this profile. `global_location` remains unknown unless a later separately governed source profile proves a complete CRS chain. ACX-16 manual registration may be applied by a caller only as a separate downstream manual/derived layer; ACX-17 does not borrow or synthesize it.
 
@@ -193,17 +190,16 @@ A stable diagnostic never converts an unknown or failed fact into a plausible de
 
 ## 12. Conformance corpus
 
-Project-authored fixtures MUST cover:
+The ACX-17 completion corpus covers:
 
 - STEP `CONFIG_CONTROL_DESIGN`, AP214 IS tuple `{ 1 0 10303 214 1 1 1 1 }` and AP242 edition-1 long-form tuple `{ 1 0 10303 442 1 1 4 }`, plus unknown/multiple schema identifiers;
 - IGES 5.3 and unclaimed version;
-- single part, nested assembly/subfigure, repeated instance and non-identity placement;
-- names, colors, layers, declared units and conflicting/missing units;
-- lines, circles, B-spline curves, planes, cylinders, B-spline surfaces, shells, solids and trimmed faces within the enumerated translator profile;
-- unsupported entity/form, external reference, malformed/truncated input, duplicate/broken reference and empty/partial transfer;
+- generated part/assembly source graphs for each claimed STEP schema and a generated IGES 5.3 solid;
+- raw name, color, layer, unit and placement entities present in generated files, without normalized XDE/unit/placement claims;
+- external-reference, unknown-schema and malformed negative fixtures exercised by scanner/provider failure tests;
 - BREP topology/bounds/tolerance report and deterministic GLB;
 - replay determinism and live OCI/replay parity for event/artifact hashes;
-- timeout, memory, CPU, files, output, entity and recursion limits;
+- inherited ACX-12 runtime enforcement plus STEP/IGES entity and recursion limits;
 - default/explicit v0.1 opaque compatibility;
 - repository/package scans proving no OCCT binary in core distributions and no WoodFraming/consumer vocabulary.
 
@@ -220,6 +216,7 @@ The following remain explicit residuals rather than implied support:
 - CRS/geographic/survey authority;
 - live execution outside the exact Linux arm64 OCI image;
 - provider image publisher authenticity or trust;
+- XDE label/source correlation, normalized colors/layers/materials, units/conversion scales, resolved placements, per-root tolerance summaries and partial-root recovery;
 - classification into construction, manufacturing or consumer ontologies.
 
 A residual requires a new or amended governed profile, decision and conformance corpus before implementation or claim promotion.
