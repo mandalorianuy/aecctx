@@ -104,3 +104,37 @@ def test_public_writer_builds_valid_directory_package(minimal_package: Path, tmp
 
     assert manifest["logical_digest"] == source_manifest["logical_digest"]
     assert PackageReader(output).manifest == manifest
+
+
+def test_public_writer_builds_valid_v02_package(tmp_path: Path) -> None:
+    fixture = Path(__file__).parents[1] / "fixtures" / "v0.2" / "shared" / "minimal-v02"
+    source_manifest = json.loads((fixture / "manifest.json").read_text(encoding="utf-8"))
+    artifacts = [
+        PackageArtifact(
+            path=item["path"],
+            content=fixture / item["path"],
+            media_type=item["media_type"],
+            role=item["role"],
+            authoritative=item["authoritative"],
+        )
+        for item in source_manifest["artifacts"]
+    ]
+    output = tmp_path / "written-v02"
+
+    manifest = PackageWriter(output).write(
+        package_id=source_manifest["package_id"],
+        created_at=source_manifest["created_at"],
+        source_ids=source_manifest["source_ids"],
+        capabilities=source_manifest["capabilities"],
+        loss_summary=source_manifest["loss_summary"],
+        embedding_policy=source_manifest["source_embedding_policy"],
+        producer=source_manifest["producer"],
+        artifacts=artifacts,
+        aecctx_version="0.2.0",
+        required_extensions=[],
+        extensions=source_manifest["extensions"],
+    )
+
+    assert manifest["aecctx_version"] == "0.2.0"
+    assert manifest["required_extensions"] == []
+    assert PackageReader(output).manifest == manifest

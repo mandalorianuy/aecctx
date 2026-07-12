@@ -21,3 +21,30 @@ def test_bundled_schemas_match_normative_repository_copies() -> None:
         bundled = json.loads(root.joinpath(name).read_text(encoding="utf-8"))
         normative = json.loads((repository / name).read_text(encoding="utf-8"))
         assert bundled == normative
+
+
+def test_bundled_v02_schemas_match_normative_repository_copies() -> None:
+    root = files("aecctx.schemas.v0_2")
+    repository = Path(__file__).parents[1] / "schemas" / "v0.2"
+
+    for name in ("manifest.schema.json", "record.schema.json"):
+        bundled = json.loads(root.joinpath(name).read_text(encoding="utf-8"))
+        normative = json.loads((repository / name).read_text(encoding="utf-8"))
+        assert bundled == normative
+
+
+def test_portable_verify_checks_v02_schemas_and_claim_registry() -> None:
+    script = (Path(__file__).parents[1] / "scripts" / "verify_portable.sh").read_text(encoding="utf-8")
+
+    assert "schemas/v0.2/manifest.schema.json" in script
+    assert "schemas/v0.2/record.schema.json" in script
+    assert "conformance/v0.2/claims.json" in script
+    assert "validate_claim_registry_file" in script
+
+
+def test_sdist_includes_normative_v02_schemas_and_conformance_material() -> None:
+    project = (Path(__file__).parents[1] / "pyproject.toml").read_text(encoding="utf-8")
+
+    assert '"/schemas/v0.2"' in project
+    assert '"/conformance/v0.2"' in project
+    assert '"/fixtures/v0.2"' in project

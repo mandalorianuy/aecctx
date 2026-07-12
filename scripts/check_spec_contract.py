@@ -47,11 +47,16 @@ def check_required_files() -> None:
         ROOT / "schemas/v0.1/manifest.schema.json",
         ROOT / "schemas/v0.1/record.schema.json",
         ROOT / "schemas/v0.1/neutral-vocabulary.json",
+        ROOT / "schemas/v0.2/manifest.schema.json",
+        ROOT / "schemas/v0.2/record.schema.json",
         ROOT / "scripts/verify_portable.sh",
         ROOT / "scripts/verify_release.sh",
         ROOT / "conformance/v0.1/corpus.json",
+        ROOT / "conformance/v0.2/claims.json",
+        ROOT / "fixtures/v0.2/shared/minimal-v02/manifest.json",
         ROOT / "CHANGELOG.md",
         ROOT / "docs/compatibility.md",
+        ROOT / "docs/compatibility-v0.2.md",
         ROOT / "docs/releases/v0.1.0.md",
     ]
     missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]

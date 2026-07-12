@@ -9,6 +9,8 @@ from .records import RecordStore
 
 @dataclass(frozen=True, slots=True)
 class PackageDiff:
+    before_version: str
+    after_version: str
     before_digest: str
     after_digest: str
     added_records: tuple[str, ...]
@@ -19,6 +21,10 @@ class PackageDiff:
     loss_changed: bool
     identity_changed: bool
     producer_changed: bool
+
+    @property
+    def version_changed(self) -> bool:
+        return self.before_version != self.after_version
 
     @property
     def semantic_change(self) -> bool:
@@ -32,15 +38,18 @@ class PackageDiff:
                 self.loss_changed,
                 self.identity_changed,
                 self.producer_changed,
+                self.version_changed,
             )
         )
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "added_records": list(self.added_records),
+            "after_version": self.after_version,
             "after_digest": self.after_digest,
             "artifact_changes": self.artifact_changes,
             "before_digest": self.before_digest,
+            "before_version": self.before_version,
             "capability_changes": self.capability_changes,
             "changed_records": list(self.changed_records),
             "identity_changed": self.identity_changed,
@@ -48,6 +57,7 @@ class PackageDiff:
             "producer_changed": self.producer_changed,
             "removed_records": list(self.removed_records),
             "semantic_change": self.semantic_change,
+            "version_changed": self.version_changed,
         }
 
 
@@ -75,6 +85,8 @@ def diff_packages(before_path: str | Path, after_path: str | Path) -> PackageDif
     identity_fields = ("package_id", "source_ids", "source_embedding_policy")
     identity_changed = any(before.manifest.get(key) != after.manifest.get(key) for key in identity_fields)
     return PackageDiff(
+        before_version=str(before.manifest["aecctx_version"]),
+        after_version=str(after.manifest["aecctx_version"]),
         before_digest=before.logical_digest,
         after_digest=after.logical_digest,
         added_records=tuple(sorted(after_ids - before_ids)),
@@ -86,4 +98,3 @@ def diff_packages(before_path: str | Path, after_path: str | Path) -> PackageDif
         identity_changed=identity_changed,
         producer_changed=before.manifest.get("producer") != after.manifest.get("producer"),
     )
-

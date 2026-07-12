@@ -88,6 +88,14 @@ Status: Active
 - Decision: Caller-supplied mesh units, control points, transforms, or CRS are manual/derived assertions. Original coordinates and unknown/conflicted states remain preserved.
 - Consequence: A calibrated artifact may become usable in a declared coordinate frame without falsifying what the source itself declared.
 
+### ACXD-017: v0.2 schema and compatibility boundary
+
+- Decision: Shared observation/inference, coordinate-qualification, representation-fidelity, provider-attestation, and required-extension semantics are versioned in new `schemas/v0.2` package and record schemas. A v0.2 package uses `aecctx_version = "0.2.0"` and `record_version = "0.2"`; v0.1 schemas and packages remain immutable.
+- Compatibility: The v0.2 reference reader validates both v0.1 and v0.2 packages. A v0.1 reader is not required to accept v0.2. Optional namespaced extensions may be ignored while reading but remain part of package bytes; every declared required extension must be supported or validation fails with a stable diagnostic. Records within one package use the record version selected by its manifest.
+- Query/diff/context: Shared v0.2 fields are authoritative structured record fields and remain queryable and diffable as normal JSON. Diff reports a record change when those fields change; context may project them but never becomes their authority. Cross-version comparison is allowed after both packages validate and reports the manifest version change explicitly.
+- Consequence: Later capabilities share one typed v0.2 substrate instead of encoding normative semantics as loosely governed v0.1 extensions. Existing v0.1 package identity, query, diff, context, validation and conformance behavior remain stable.
+- Evidence: `schemas/v0.2/`, `fixtures/v0.2/shared/minimal-v02`, `conformance/v0.2/claims.json`, `docs/compatibility-v0.2.md`, and `docs/evidence/ACX-11.md`.
+
 ### ACXD-021: Quality gates express policy conformance only
 
 - Decision: The AEC Delivery Quality Gate evaluates versioned policies over authoritative AECCTX records, capabilities, loss, diagnostics, diffs, and bounded IDS requirements. Its `pass` result is not engineering approval, regulatory acceptance, construction readiness, or consumer canonical acceptance.
@@ -99,12 +107,6 @@ Status: Active
 - Consequence: AECCTX remains usable without Codex or an LLM, source content remains untrusted data, and plugin responses cannot elevate Markdown, inference, or presentation above structured evidence and policy results.
 
 ## Open decisions
-
-### ACXD-017: Post-v0.1 schema/version boundary
-
-- Owner: ACX-11.
-- Decision required: determine which observation/inference, coordinate, fidelity, and provider-attestation fields are optional v0.1 extensions and which require `0.2` schemas/events.
-- Acceptance: compatibility matrix, migration rules, old/new reader fixtures, and required-extension behavior.
 
 ### ACXD-018: Signing and trust profile
 

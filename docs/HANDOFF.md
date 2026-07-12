@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-11
-Handoff status: `0.2.0-EXPANSION-SPEC-READY`
+Handoff status: `0.2.0-ACX-11-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. The post-v0.1 capability expansion is now specified and sequenced without changing existing release claims. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 completed the bounded v0.2 shared schema and compatibility substrate without promoting later format targets. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09 are complete and ACX-10 remains deferred. Execute only ACX-11, currently `pending-next`.
+4. ACX-01 through ACX-09 and ACX-11 are complete; ACX-10 remains deferred. Execute only ACX-12, currently `pending-next`, when continuation is explicitly requested.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -31,7 +31,7 @@ AECCTX `0.1.0` remains implemented and released. The post-v0.1 capability expans
 - Targets do not change the v0.1 claim registry until conformance evidence exists.
 - Hidden/unobserved geometry remains unsupported as source evidence; reconstruction can only be an inference hypothesis.
 - Manual mesh calibration augments and never rewrites source coordinates.
-- ACX-12 is required before native, GPL, commercial, or network-backed decoder work.
+- ACX-12 is the next governed task and is required before native, GPL, commercial, or network-backed decoder work.
 - DWG/RVT remain optional provider capabilities outside the Apache-2.0 core distribution.
 - Authenticity remains unsupported until ACXD-018 and ACX-20 are complete.
 - The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
@@ -51,9 +51,9 @@ AECCTX `0.1.0` remains implemented and released. The post-v0.1 capability expans
 
 ## Next implementation task
 
-ACX-11: version the shared observation/inference, coordinate, fidelity, and provider-attestation contracts; resolve ACXD-017; add compatibility fixtures and the claim-to-conformance registry. It MUST NOT implement a format adapter or promote a capability claim.
+ACX-12: implement the reviewed external sandbox/provider foundation, including bounded protocol schemas, allowlisted descriptors, content-addressed transport, resource enforcement, network denial, process-tree termination, cleanup and adversarial conformance. It MUST NOT implement DWG, RVT, STEP/IGES or inference capability claims.
 
-Its detailed file-level deliverables, eight-step work breakdown, test matrix, non-scope and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Completion requires `docs/evidence/ACX-11.md` and explicit promotion of ACX-12.
+Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request.
 
 ## Consumer integration planning entry point
 

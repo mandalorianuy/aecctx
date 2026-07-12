@@ -42,6 +42,7 @@ Opaque fallback ingest is implemented in the core. Format-specific adapter value
 | Diff | Implemented | identity, record, artifact, capability, loss and producer changes |
 | MCP server | Optional, implemented | five read-only wrappers match stable library/CLI semantics |
 | Source mutation/write-back | Not in v0.1 | future reviewed contract |
+| v0.2 shared schema substrate | Implemented by ACX-11 | dual-version validation, typed shared evidence, required-extension and query/diff/context conformance |
 
 ## Post-v0.1 expansion targets
 

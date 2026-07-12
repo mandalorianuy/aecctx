@@ -4,6 +4,8 @@ AECCTX is an open, application-agnostic specification and local-first Python too
 
 Version **0.1.0** is implemented, packaged and covered by a public conformance corpus.
 
+The post-v0.1 implementation line is active. ACX-11 implements the bounded v0.2 shared schema/compatibility substrate; format targets remain unchanged until their owning tasks pass conformance.
+
 ## Why this exists
 
 AEC formats split information across proprietary files, open schemas, vector drawings, raster documents, geometry, properties, and relationships. Feeding those files directly to an agent is expensive and unreliable; flattening them into a single Markdown file destroys precision and provenance.
@@ -38,6 +40,7 @@ python -m pip install '.[all]'
 - Format specification: [`docs/specs/aec-context-package-spec.md`](docs/specs/aec-context-package-spec.md)
 - Plugin contract: [`docs/specs/aec-context-plugin-contract.md`](docs/specs/aec-context-plugin-contract.md)
 - Post-v0.1 expansion specification: [`docs/specs/aecctx-capability-expansion-spec.md`](docs/specs/aecctx-capability-expansion-spec.md)
+- v0.2 compatibility and migration: [`docs/compatibility-v0.2.md`](docs/compatibility-v0.2.md)
 - Capability matrix: [`docs/capability-matrix.md`](docs/capability-matrix.md)
 - Active implementation sequence: [`docs/implementation-plan.md`](docs/implementation-plan.md)
 - Handoff for the implementation task: [`docs/HANDOFF.md`](docs/HANDOFF.md)

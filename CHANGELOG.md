@@ -2,6 +2,12 @@
 
 All notable changes are documented here. AECCTX follows Semantic Versioning for the reference implementation; the format compatibility policy for 0.x is in `docs/compatibility.md`.
 
+## Unreleased
+
+- Added the ACX-11 v0.2 shared schema substrate for observation/inference, coordinate qualification, representation fidelity and provider attestation.
+- Added dual v0.1/v0.2 validation and writing, required-extension negotiation, cross-version diff metadata, publishable shared fixtures and a governed claim-to-test registry.
+- Format-specific v0.2 targets remain unchanged until their owning tasks complete conformance.
+
 ## 0.1.0 - 2026-07-11
 
 - Published the stable v0.1 directory/ZIP package, schemas, value states, capability/loss reports and validation levels.

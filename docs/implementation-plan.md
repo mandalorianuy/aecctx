@@ -156,8 +156,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-08 | completed | Plugin isolation, security limits, optional MCP and signing decision |
 | ACX-09 | completed | Cross-platform conformance corpus, packaging and `0.1.0` release |
 | ACX-10 | deferred | Consumer integration template; WoodFraming-specific plan remains consumer-owned |
-| ACX-11 | pending-next | Shared post-v0.1 schemas, compatibility contract and conformance claim registry |
-| ACX-12 | pending | Reviewed external sandbox/provider foundation |
+| ACX-11 | completed | Shared post-v0.1 schemas, compatibility contract and conformance claim registry |
+| ACX-12 | pending-next | Reviewed external sandbox/provider foundation |
 | ACX-13 | pending | IFC source-native 2D and georeferencing |
 | ACX-14 | pending | DXF source-native semantics and bounded 3D |
 | ACX-15 | pending | Optional OCR/vision evidence with explicit hidden-geometry boundary |
@@ -320,7 +320,7 @@ Acceptance:
 - public v0.1 behavior and release corpus remain unchanged;
 - `./scripts/verify.sh` passes.
 
-Evidence: `docs/evidence/ACX-11.md` when completed.
+Evidence: [`docs/evidence/ACX-11.md`](evidence/ACX-11.md).
 
 ## ACX-12: External sandbox/provider foundation
 

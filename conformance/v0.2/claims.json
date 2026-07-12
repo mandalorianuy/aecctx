@@ -1,0 +1,97 @@
+{
+  "version": "0.2.0",
+  "fixtures": [
+    {"id": "v01-minimal", "path": "fixtures/minimal-aecctx"},
+    {"id": "v02-shared", "path": "fixtures/v0.2/shared/minimal-v02"}
+  ],
+  "claims": [
+    {
+      "id": "core.v02.dual-version-validation",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.1-v0.2-core-reader",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v01-minimal", "v02-shared"],
+      "test_ids": ["tests/test_v02_compatibility.py::test_v02_package_and_optional_extension_validate", "tests/test_validation.py::test_minimal_directory_fixture_is_valid"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.required-extension-negotiation",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.2-core-reader",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v02-shared"],
+      "test_ids": ["tests/test_v02_compatibility.py::test_unknown_required_extension_is_rejected"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.inference-separation",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.2-shared-evidence",
+      "platform_scope": ["any"],
+      "provider_scope": "schema-only",
+      "fixture_ids": ["v02-shared"],
+      "test_ids": ["tests/test_v02_compatibility.py::test_inferred_record_requires_provider_inference_metadata", "tests/test_v02_records.py::test_inference_metadata_preserves_separate_confidence_and_reproducibility"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.coordinate-qualification",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.2-shared-evidence",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v02-shared"],
+      "test_ids": ["tests/test_v02_compatibility.py::test_manual_calibration_cannot_occupy_declared_units_slot", "tests/test_v02_compatibility.py::test_incomplete_transform_chain_cannot_claim_known_global_location"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.representation-fidelity",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.2-shared-evidence",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v02-shared"],
+      "test_ids": ["tests/test_v02_records.py::test_preview_fidelity_must_remain_derived", "tests/test_v02_compatibility.py::test_preview_record_cannot_claim_source_fidelity"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.provider-attestation",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.2-shared-evidence",
+      "platform_scope": ["any"],
+      "provider_scope": "schema-only",
+      "fixture_ids": ["v02-shared"],
+      "test_ids": ["tests/test_v02_records.py::test_provider_attestation_preserves_execution_boundary", "tests/test_v02_records.py::test_network_provider_attestation_requires_allowlisted_network_mode", "tests/test_v02_compatibility.py::test_network_attestation_requires_explicit_allowlisted_mode"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.query-diff-context",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.1-v0.2-core-reader",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v01-minimal", "v02-shared"],
+      "test_ids": ["tests/test_v02_fixture.py::test_v02_inference_fields_are_queryable_authoritative_records", "tests/test_v02_fixture.py::test_v02_context_projects_but_does_not_replace_inference_record", "tests/test_v02_compatibility.py::test_cross_version_diff_reports_version_change"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {"id": "sandbox.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "ifc.native-2d-georeferencing", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "dxf.semantics-3d", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "pdf-image.ocr-vision", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "mesh.units-crs", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "step-iges.brep", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "dwg.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "rvt.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "package.authenticity-signing", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "quality-gate.policy-ids", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "codex.aecctx-inspector", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null}
+  ]
+}

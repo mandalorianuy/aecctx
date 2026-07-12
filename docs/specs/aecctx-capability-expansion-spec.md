@@ -1,6 +1,6 @@
 # AECCTX Post-v0.1 Capability Expansion Specification
 
-Version: `0.2.0-draft.2`
+Version: `0.2.0-draft.3`
 Date: 2026-07-11
 Status: Planning authority; no new capability claim is implied
 
@@ -268,7 +268,11 @@ Conformance MUST cover plugin manifest validation, clean installation, MCP tool 
 
 ## 15. Compatibility and migration
 
-ACX-11 MUST decide whether new record fields/events can be expressed as optional v0.1 extensions or require `0.2` schemas. Any format-breaking change requires migration documentation, fixtures for old and new readers, required-extension negotiation, and explicit query/diff behavior across versions.
+ACXD-017 establishes a separate v0.2 schema line for the shared observation/inference, coordinate-qualification, representation-fidelity and provider-attestation semantics. A v0.2 package uses `aecctx_version = "0.2.0"` and records use `record_version = "0.2"`; v0.1 schemas and package identity remain immutable.
+
+The v0.2 reference reader MUST validate both v0.1 and v0.2. A v0.1 reader is not required to accept v0.2. Optional namespaced extensions may be ignored by a reader, but every manifest-declared required extension MUST be understood or validation fails. Record versions MUST match the manifest-selected package schema.
+
+Query, diff and context operate on validated structured records across both versions. Shared v0.2 fields remain queryable and diffable; cross-version diff reports the package-version change explicitly. Generated context remains a projection. Migration documentation and old/new reader fixtures are required before ACX-11 completes.
 
 Packages produced by optional providers MUST remain readable and diagnosable without those providers installed. A consumer lacking an optional extension may reject it only when the manifest marks it required.
 
