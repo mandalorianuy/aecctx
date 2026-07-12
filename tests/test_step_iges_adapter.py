@@ -11,6 +11,7 @@ from aecctx.adapters.step_iges import ingest_step_iges
 from aecctx.ingest import ingest_opaque
 from aecctx.package import PackageReader
 from aecctx.providers.protocol import ProviderResult
+from aecctx.providers import load_provider_replay_entry
 from aecctx.records import RecordStore
 from aecctx.step_iges import StepIgesInputError, probe_step_iges, validate_step_iges_events
 from aecctx.validation import validate_package
@@ -151,3 +152,15 @@ def test_step_iges_v02_maps_observed_structure_and_derived_geometry(tmp_path: Pa
     assert {"geometry/root-1.brep", "geometry/scene.glb"}.issubset(paths)
     assert PackageReader(output).read_bytes("geometry/scene.glb")[:4] == b"glTF"
     assert PackageReader(output).manifest["capabilities"]["3d_geometry"] == "partial"
+
+
+@pytest.mark.parametrize("entry,filename", [("ap203-part", "ap203-part.step"), ("ap214-assembly", "ap214-assembly.step"), ("ap242-part", "ap242-part.step"), ("iges53-part", "iges53-part.igs")])
+def test_step_iges_committed_replays_create_deterministic_valid_packages(tmp_path: Path, entry: str, filename: str) -> None:
+    replay = load_provider_replay_entry(ROOT / "conformance" / "v0.2" / "step-iges-corpus.json", entry)
+    source = ROOT / "fixtures" / "v0.2" / "step-iges" / filename
+    first = tmp_path / f"{entry}-a.aecctx"
+    second = tmp_path / f"{entry}-b.aecctx"
+    for output in (first, second):
+        ingest_step_iges(source, output, created_at=FIXED_TIME, package_form="zip", aecctx_version="0.2.0", provider_result=replay.result)
+        assert validate_package(output).valid
+    assert first.read_bytes() == second.read_bytes()

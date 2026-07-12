@@ -1,0 +1,40 @@
+{
+  "actions": [
+    "extract"
+  ],
+  "deterministic": true,
+  "distribution": "operator-built-oci-image",
+  "enforced_axes": {
+    "cpu": true,
+    "decompression": true,
+    "environment": true,
+    "filesystem": true,
+    "input_bytes": true,
+    "memory": true,
+    "network": true,
+    "open_files": true,
+    "output_bytes": true,
+    "process": true,
+    "process_tree": true,
+    "records": true,
+    "recursion": true,
+    "temporary_storage": true,
+    "user_permissions": true,
+    "wall_time": true
+  },
+  "enforcement_profile": "oci-docker-v1",
+  "formats": [
+    "model/step",
+    "model/iges"
+  ],
+  "license_spdx": "Apache-2.0 AND LGPL-2.1-only WITH OCCT-exception",
+  "network_mode": "disabled",
+  "platforms": [
+    "linux-container"
+  ],
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.step-iges.ocp",
+  "provider_version": "0.2.0",
+  "runtime_digest": "sha256:875cbbbc5198ae44e8957e3a90c9a8afd0dc541f01029fb5186a296e3d2a0d47",
+  "runtime_version": "python-3.12+cadquery-ocp-7.9.3.1.1+occt-7.9.3"
+}

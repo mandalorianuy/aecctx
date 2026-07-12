@@ -281,6 +281,34 @@ def test_ingest_image_v02_accepts_explicit_validated_inference_replay(tmp_path: 
     assert PackageReader(output).manifest["capabilities"]["text"] == "partial"
 
 
+def test_ingest_step_iges_v02_accepts_explicit_validated_provider_replay(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "step-iges" / "ap214-assembly.step"
+    corpus = ROOT / "conformance" / "v0.2" / "step-iges-corpus.json"
+    output = tmp_path / "step-v02.aecctx"
+
+    completed = run_cli(
+        "ingest", str(fixture), "--output", str(output), "--aecctx-version", "0.2.0",
+        "--provider-replay", str(corpus), "--provider-entry", "ap214-assembly",
+        "--created-at", "2026-07-12T00:00:00Z", "--form", "zip", "--json",
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert json.loads(completed.stdout)["data"]["adapter"] == "step-iges"
+    assert PackageReader(output).manifest["capabilities"]["3d_geometry"] == "partial"
+
+
+def test_ingest_step_iges_replay_options_are_paired_and_v02_only(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "step-iges" / "ap214-assembly.step"
+    corpus = ROOT / "conformance" / "v0.2" / "step-iges-corpus.json"
+    missing = run_cli("ingest", str(fixture), "--output", str(tmp_path / "missing"), "--provider-replay", str(corpus), "--json")
+    v01 = run_cli(
+        "ingest", str(fixture), "--output", str(tmp_path / "v01"), "--provider-replay", str(corpus),
+        "--provider-entry", "ap214-assembly", "--json",
+    )
+    assert missing.returncode == 2
+    assert v01.returncode == 2
+
+
 def test_ingest_auto_selects_dxf_adapter(tmp_path: Path) -> None:
     fixture = ROOT / "fixtures" / "dxf" / "minimal-plan.dxf"
     output = tmp_path / "plan.aecctx"

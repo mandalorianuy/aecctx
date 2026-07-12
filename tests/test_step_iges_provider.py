@@ -16,10 +16,16 @@ from aecctx.providers.step_iges import (
     step_iges_descriptor,
     step_iges_registry,
 )
-from aecctx.providers import OCIDockerProfile, ProviderLimits, ProviderRunner
+from aecctx.providers import OCIDockerProfile, ProviderLimits, ProviderRunner, validate_provider_replay_corpus
 
 
 ROOT = Path(__file__).parents[1]
+
+
+def test_step_iges_replay_corpus_is_portable_and_valid() -> None:
+    result = validate_provider_replay_corpus(ROOT / "conformance" / "v0.2" / "step-iges-corpus.json")
+    assert result["ok"] is True
+    assert {entry["id"] for entry in result["entries"]} == {"ap203-part", "ap214-assembly", "ap242-part", "iges53-part"}
 
 
 def _worker():

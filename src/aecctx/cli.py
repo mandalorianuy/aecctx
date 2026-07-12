@@ -56,10 +56,12 @@ def build_parser() -> argparse.ArgumentParser:
     ingest.add_argument("--output", required=True)
     ingest.add_argument("--form", choices=("directory", "zip"), default="directory")
     ingest.add_argument("--embedding-policy", choices=("external", "embedded", "redacted"), default="external")
-    ingest.add_argument("--adapter", choices=("auto", "opaque", "ifc", "dxf", "pdf", "image", "geometry"), default="auto")
+    ingest.add_argument("--adapter", choices=("auto", "opaque", "ifc", "dxf", "pdf", "image", "geometry", "step-iges"), default="auto")
     ingest.add_argument("--aecctx-version", choices=("0.1.0", "0.2.0"), default="0.1.0")
     ingest.add_argument("--inference-replay", help="validated provider replay corpus (v0.2 PDF/image only)")
     ingest.add_argument("--inference-entry", help="entry ID inside --inference-replay")
+    ingest.add_argument("--provider-replay", help="validated STEP/IGES provider replay corpus (v0.2 only)")
+    ingest.add_argument("--provider-entry", help="entry ID inside --provider-replay")
     ingest.add_argument("--mesh-coordinate-profile", help="manual mesh coordinate profile JSON (v0.2 geometry only)")
     ingest.add_argument("--created-at")
     ingest.add_argument("--json", action="store_true", dest="as_json")
@@ -97,10 +99,13 @@ def main(argv: Sequence[str] | None = None) -> int:
                 from .adapters.image import ImagePlugin
                 from .adapters.pdf import PDFPlugin
                 from .adapters.geometry import GeometryPlugin
+                from .step_iges import probe_step_iges
 
                 with open(arguments.source, "rb") as source_handle:
                     prefix = source_handle.read(64 * 1024)
-                if IFCPlugin().probe(prefix)["confidence"] == 1.0:
+                if probe_step_iges(prefix)["confidence"] == 1.0:
+                    adapter = "step-iges"
+                elif IFCPlugin().probe(prefix)["confidence"] == 1.0:
                     adapter = "ifc"
                 elif DXFPlugin().probe(prefix)["confidence"] == 1.0:
                     adapter = "dxf"
@@ -112,7 +117,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     adapter = "image"
                 else:
                     adapter = "opaque"
-            if arguments.aecctx_version == "0.2.0" and adapter not in {"ifc", "dxf", "pdf", "image", "geometry"}:
+            if arguments.aecctx_version == "0.2.0" and adapter not in {"ifc", "dxf", "pdf", "image", "geometry", "step-iges"}:
                 raise IngestVersionError(f"Adapter {adapter} has no governed AECCTX v0.2 profile")
             coordinate_profile = None
             if arguments.mesh_coordinate_profile:
@@ -135,6 +140,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                 from .providers import load_provider_replay_entry
 
                 inference_result = load_provider_replay_entry(arguments.inference_replay, arguments.inference_entry).result
+            if bool(arguments.provider_replay) != bool(arguments.provider_entry):
+                raise ValueError("--provider-replay and --provider-entry must be provided together")
+            step_iges_result = None
+            if arguments.provider_replay:
+                if arguments.aecctx_version != "0.2.0" or adapter != "step-iges":
+                    raise ValueError("provider replay is limited to the governed v0.2 STEP/IGES profile")
+                from .providers import load_provider_replay_entry
+                replay = load_provider_replay_entry(arguments.provider_replay, arguments.provider_entry)
+                if replay.descriptor.provider_id != "org.aecctx.step-iges.ocp":
+                    raise ValueError("provider replay does not contain the governed STEP/IGES provider")
+                step_iges_result = replay.result
             if adapter == "ifc":
                 from .adapters.ifc import ingest_ifc
 
@@ -193,6 +209,18 @@ def main(argv: Sequence[str] | None = None) -> int:
                     aecctx_version=arguments.aecctx_version,
                     coordinate_profile=coordinate_profile,
                 )
+            elif adapter == "step-iges":
+                from .adapters.step_iges import ingest_step_iges
+
+                result = ingest_step_iges(
+                    arguments.source,
+                    arguments.output,
+                    created_at=arguments.created_at,
+                    embedding_policy=arguments.embedding_policy,
+                    package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
+                    provider_result=step_iges_result,
+                )
             else:
                 result = ingest_opaque(
                     arguments.source,
@@ -213,7 +241,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "output": str(result.output),
             "package_id": result.package_id,
             "source_id": result.source_id,
-            "support": "partial" if adapter in {"ifc", "dxf", "pdf", "image", "geometry"} else "opaque",
+            "support": "partial" if adapter in {"ifc", "dxf", "pdf", "image", "geometry", "step-iges"} else "opaque",
             "adapter": adapter,
             "aecctx_version": arguments.aecctx_version,
         }

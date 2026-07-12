@@ -7,7 +7,8 @@
     {"id": "v02-ifc-acx13", "path": "fixtures/v0.2/ifc"},
     {"id": "v02-dxf-acx14", "path": "fixtures/v0.2/dxf"},
     {"id": "v02-inference-acx15", "path": "fixtures/v0.2/inference"},
-    {"id": "v02-mesh-acx16", "path": "fixtures/v0.2/mesh"}
+    {"id": "v02-mesh-acx16", "path": "fixtures/v0.2/mesh"},
+    {"id": "v02-step-iges-acx17", "path": "fixtures/v0.2/step-iges"}
   ],
   "claims": [
     {
@@ -236,7 +237,28 @@
       ],
       "evidence": "docs/evidence/ACX-16.md"
     },
-    {"id": "step-iges.brep", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {
+      "id": "step-iges.source-structure",
+      "status": "experimental",
+      "support_level": "partial",
+      "profile": "step-ap203-ap214-ap242-iges53-source-v1",
+      "platform_scope": ["linux-arm64-container-live", "any-offline-replay"],
+      "provider_scope": "org.aecctx.step-iges.ocp@0.2.0; local image ID sha256:875cbbbc5198ae44e8957e3a90c9a8afd0dc541f01029fb5186a296e3d2a0d47",
+      "fixture_ids": ["v02-step-iges-acx17"],
+      "test_ids": ["tests/test_step_iges_provider.py::test_step_iges_replay_corpus_is_portable_and_valid", "tests/test_step_iges_adapter.py::test_step_iges_v02_maps_observed_structure_and_derived_geometry"],
+      "evidence": "docs/evidence/ACX-17.md"
+    },
+    {
+      "id": "step-iges.brep-geometry",
+      "status": "experimental",
+      "support_level": "partial",
+      "profile": "occt-7.9.3-translator-derived-brep-v1",
+      "platform_scope": ["linux-arm64-container-live", "any-offline-replay"],
+      "provider_scope": "org.aecctx.step-iges.ocp@0.2.0; local image ID sha256:875cbbbc5198ae44e8957e3a90c9a8afd0dc541f01029fb5186a296e3d2a0d47",
+      "fixture_ids": ["v02-step-iges-acx17"],
+      "test_ids": ["tests/test_step_iges_provider.py::test_step_iges_live_provider_emits_source_and_derived_brep_evidence", "tests/test_step_iges_adapter.py::test_step_iges_v02_maps_observed_structure_and_derived_geometry"],
+      "evidence": "docs/evidence/ACX-17.md"
+    },
     {"id": "dwg.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "rvt.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "package.authenticity-signing", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},

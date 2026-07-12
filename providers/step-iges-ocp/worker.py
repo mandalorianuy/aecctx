@@ -409,6 +409,7 @@ def _response(request: dict[str, Any], source_path: Path, output_root: Path) -> 
     if scanned["external_references"]:
         raise ValueError("AECCTX_STEP_IGES_EXTERNAL_REFERENCE_UNRESOLVED")
     shape = _transfer(source_path, format_name)
+    (output_root / "artifacts").mkdir(parents=True, exist_ok=True)
     artifact_path = output_root / "artifacts" / "root-1.brep"
     from OCP.BRepTools import BRepTools
 
