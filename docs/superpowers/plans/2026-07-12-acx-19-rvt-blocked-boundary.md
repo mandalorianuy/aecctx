@@ -370,7 +370,7 @@ def test_source_boundary_rejects_rvt_scaffolding_and_consumer_symbols(tmp_path: 
     assert expected in validate_source_boundary(tmp_path)
 ```
 
-Build a minimal wheel ZIP and sdist tar fixture in the test, then assert rejection for `Requires-Dist: Autodesk-Revit`, `.dll`, `.exe`, `src/aecctx/adapters/rvt.py`, and any `.rvt` member other than the exact sentinel path. Assert acceptance for the real built artifacts.
+Build minimal wheel ZIP and sdist tar fixtures inside `tmp_path`, then assert rejection for `Requires-Dist: Autodesk-Revit`, `.dll`, `.exe`, `src/aecctx/adapters/rvt.py`, and any `.rvt` member other than the exact sentinel path. Unit tests MUST NOT depend on a pre-existing `dist/` because pytest runs before build in the portable gate. Acceptance of the real wheel/sdist occurs through the post-build checker invocation in Step 4.
 
 - [ ] **Step 2: Run tests and confirm RED**
 
