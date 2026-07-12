@@ -9,6 +9,7 @@
 *.zip binary
 
 *.dxf text eol=lf
+fixtures/v0.2/dxf/*-binary.dxf binary
 *.ifc text eol=lf
 *.jsonl text eol=lf
 *.obj text eol=lf
