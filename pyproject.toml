@@ -69,6 +69,7 @@ include = [
   "/fixtures",
   "/fixtures/v0.2",
   "/conformance/v0.2",
+  "/scripts",
   "/docs",
   "/schemas/v0.1",
   "/schemas/v0.2",

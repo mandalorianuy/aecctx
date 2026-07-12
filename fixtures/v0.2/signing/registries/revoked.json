@@ -1,0 +1,1 @@
+{"keys":[{"kid":"test-a","public_key":{"crv":"Ed25519","kty":"OKP","x":"Vw9PmC-Ja8vKcT0BFC0HRfwRdQgXeP6vE8v0VsB8J9U"},"revocation_status":"revoked","revoked_at":"2026-06-01T00:00:00Z","scopes":["aecctx.package.sign"],"subject":"urn:aecctx:test:rotation","valid_from":"2026-01-01T00:00:00Z","valid_until":"2027-01-01T00:00:00Z"}],"registry_version":"1"}

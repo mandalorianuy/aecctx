@@ -418,6 +418,8 @@ def test_verify_cli_exit_zero_only_for_satisfied_policy(tmp_path: Path) -> None:
 
 ### Task 7: Publishable signing corpus, portable gates and packaging proof
 
+**Checkpoint:** Completed 2026-07-12. Corpus-contract RED produced 7 expected missing-corpus/checker/fixture failures; the clean-install packaging boundary separately exposed a missing sdist checker and was corrected by including `scripts/` in the sdist. GREEN passes all 7 conformance tests and deterministically replays 24/24 signing corpus cases offline. Clean base and `[signing]` installs prove the optional dependency boundary, wheel/sdist contents include all four signing schemas and test-only material remains confined to fixtures. Full `./scripts/verify.sh` passes 411 tests with 9 optional skips, builds wheel and sdist, and passes portable, release and baseline-integration gates. The exact claim remains `target`; promotion is reserved for Task 8.
+
 **Files:**
 - Create: `fixtures/v0.2/signing/README.md`
 - Create: `fixtures/v0.2/signing/generate_fixtures.py`
@@ -435,11 +437,11 @@ def test_verify_cli_exit_zero_only_for_satisfied_policy(tmp_path: Path) -> None:
 - `validate_signing_corpus(path) -> tuple[str, ...]` returns ordered errors without signing or network side effects.
 - Fixture generator derives Ed25519 private seeds from fixed project labels with SHA-256 and writes unencrypted test-only PKCS#8; encrypted-key behavior remains an ephemeral unit test because PKCS#8 encryption bytes are randomized.
 
-- [ ] **Step 1: Write failing corpus-contract tests.** Require unique cases, only repository-relative safe paths, known expected states, complete file hashes, at least one case for every governed status/mutation and rejection of missing/duplicate/unmapped cases.
+- [x] **Step 1: Write failing corpus-contract tests.** Require unique cases, only repository-relative safe paths, known expected states, complete file hashes, at least one case for every governed status/mutation and rejection of missing/duplicate/unmapped cases.
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_conformance.py -q`; expect missing corpus/checker failures.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_conformance.py -q`; expect missing corpus/checker failures.
 
-- [ ] **Step 3: Implement deterministic fixture generation.** Use fixed labels `aecctx-acx20-test-a/b/c` to derive 32-byte seeds. Emit canonical registry/policies/bundles through public APIs, label all private material `TEST ONLY`, and fail generation if a committed file differs.
+- [x] **Step 3: Implement deterministic fixture generation.** Use fixed labels `aecctx-acx20-test-a/b/c` to derive 32-byte seeds. Emit canonical registry/policies/bundles through public APIs, label all private material `TEST ONLY`, and fail generation if a committed file differs.
 
 ```python
 seed = hashlib.sha256(f"aecctx-acx20-{label}".encode("ascii")).digest()
@@ -447,15 +449,15 @@ private_key = Ed25519PrivateKey.from_private_bytes(seed)
 private_pem = private_key.private_bytes(Encoding.PEM, PrivateFormat.PKCS8, NoEncryption())
 ```
 
-- [ ] **Step 4: Populate the complete corpus.** Include unsigned v0.1/v0.2, directory/ZIP equivalence, valid authorized, invalid, foreign statement, unknown key, unsupported algorithm, untrusted, unauthorized, not-yet-valid, expired, revoked, unknown status, rotation, 1-of-N, N-of-N, artifact/manifest/header/signature mutation, duplicate JSON, oversize and missing-extra cases.
+- [x] **Step 4: Populate the complete corpus.** Include unsigned v0.1/v0.2, directory/ZIP equivalence, valid authorized, invalid, foreign statement, unknown key, unsupported algorithm, untrusted, unauthorized, not-yet-valid, expired, revoked, unknown status, rotation, 1-of-N, N-of-N, artifact/manifest/header/signature mutation, duplicate JSON, oversize and missing-extra cases.
 
-- [ ] **Step 5: Implement the portable checker and claim mapping.** Validate schemas/hashes, execute each offline verification case, compare only governed expected fields and assert no socket call. Register the exact ACX-20 claim as `target` during implementation; promotion occurs only in Task 8.
+- [x] **Step 5: Implement the portable checker and claim mapping.** Validate schemas/hashes, execute each offline verification case, compare only governed expected fields and assert no socket call. Register the exact ACX-20 claim as `target` during implementation; promotion occurs only in Task 8.
 
-- [ ] **Step 6: Add clean-install packaging tests.** Build wheel/sdist; inspect metadata to prove no base `Requires-Dist: cryptography`; create one clean venv with base wheel and one with `[signing]`. Base venv must validate packages and return `AECCTX_SIGNING_CRYPTO_UNAVAILABLE` for sign; signing venv must execute the positive corpus. Assert all four packaged schemas are present and no private production material exists.
+- [x] **Step 6: Add clean-install packaging tests.** Build wheel/sdist; inspect metadata to prove no base `Requires-Dist: cryptography`; create one clean venv with base wheel and one with `[signing]`. Base venv must validate packages and return `AECCTX_SIGNING_CRYPTO_UNAVAILABLE` for sign; signing venv must execute the positive corpus. Assert all four packaged schemas are present and no private production material exists.
 
-- [ ] **Step 7: Wire portable verification.** Add JSON syntax, mirrored-schema checks, corpus checker and `tests/test_signing_*` to existing test discovery without weakening RVT/provider/release checks.
+- [x] **Step 7: Wire portable verification.** Add JSON syntax, mirrored-schema checks, corpus checker and `tests/test_signing_*` to existing test discovery without weakening RVT/provider/release checks.
 
-- [ ] **Step 8: Verify GREEN.** Run:
+- [x] **Step 8: Verify GREEN.** Run:
 
 ```bash
 .venv/bin/python -m pytest tests/test_signing_contract.py tests/test_signing_crypto.py \
@@ -467,7 +469,7 @@ python3 scripts/check_spec_contract.py
 
 Expected: all signing cases pass, 282 pre-ACX-20 tests remain non-regressed, wheel/sdist build and portable verification reports `ok`.
 
-- [ ] **Step 9: Commit.** Commit as `test: publish ACX-20 signing conformance corpus`.
+- [x] **Step 9: Commit.** Commit as `test: publish ACX-20 signing conformance corpus`.
 
 ### Task 8: Evidence, capability promotion, full gates and publication
 
