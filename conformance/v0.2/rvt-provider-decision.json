@@ -1,0 +1,129 @@
+{
+  "version": "0.2.0",
+  "decision": "blocked",
+  "selected_provider": null,
+  "evaluated_at": "2026-07-12",
+  "candidates": [
+    {
+      "id": "autodesk-revit-desktop",
+      "official_sources": [
+        "https://help.autodesk.com/cloudhelp/2018/ENU/Revit-API/Revit_API_Developers_Guide/Introduction/Getting_Started/Welcome_to_the_Revit_Platform_API/Installation.html"
+      ],
+      "axes": {
+        "license_entitlement": "unavailable",
+        "runtime_platform": "unavailable",
+        "sandbox_profile": "unavailable",
+        "ci_access": "unavailable",
+        "fixture_rights": "unavailable",
+        "network": "not_applicable",
+        "telemetry_retention": "not_applicable",
+        "lifecycle": "unknown"
+      },
+      "blocker_codes": [
+        "AECCTX_RVT_ENTITLEMENT_UNAVAILABLE",
+        "AECCTX_RVT_RUNTIME_UNAVAILABLE",
+        "AECCTX_RVT_SANDBOX_PROFILE_UNAVAILABLE",
+        "AECCTX_RVT_CI_UNAVAILABLE",
+        "AECCTX_RVT_FIXTURE_RIGHTS_UNAVAILABLE"
+      ],
+      "impact": "A licensed Windows Revit runtime, reviewed automation sandbox, CI access and publishable fixture rights are unavailable."
+    },
+    {
+      "id": "autodesk-aps-automation",
+      "official_sources": [
+        "https://aps.autodesk.com/en/docs/design-automation/v3/developers_guide/overview/",
+        "https://aps.autodesk.com/blog/aps-business-model-evolution"
+      ],
+      "axes": {
+        "license_entitlement": "unapproved",
+        "runtime_platform": "available",
+        "sandbox_profile": "unapproved",
+        "ci_access": "unavailable",
+        "fixture_rights": "unavailable",
+        "network": "unapproved",
+        "telemetry_retention": "unapproved",
+        "lifecycle": "unknown"
+      },
+      "blocker_codes": [
+        "AECCTX_RVT_CI_UNAVAILABLE",
+        "AECCTX_RVT_FIXTURE_RIGHTS_UNAVAILABLE",
+        "AECCTX_RVT_NETWORK_POLICY_UNAPPROVED",
+        "AECCTX_RVT_BILLING_POLICY_UNAPPROVED",
+        "AECCTX_RVT_RETENTION_POLICY_UNAPPROVED"
+      ],
+      "impact": "Application credentials, billing, egress, remote transfer, retention and jurisdiction governance are not approved."
+    },
+    {
+      "id": "oda-bimrv",
+      "official_sources": [
+        "https://www.opendesign.com/faq/bimrv",
+        "https://www.opendesign.com/products/bimrv"
+      ],
+      "axes": {
+        "license_entitlement": "unavailable",
+        "runtime_platform": "unavailable",
+        "sandbox_profile": "unavailable",
+        "ci_access": "unavailable",
+        "fixture_rights": "unavailable",
+        "network": "not_applicable",
+        "telemetry_retention": "not_applicable",
+        "lifecycle": "unknown"
+      },
+      "blocker_codes": [
+        "AECCTX_RVT_ENTITLEMENT_UNAVAILABLE",
+        "AECCTX_RVT_RUNTIME_UNAVAILABLE",
+        "AECCTX_RVT_SANDBOX_PROFILE_UNAVAILABLE",
+        "AECCTX_RVT_CI_UNAVAILABLE",
+        "AECCTX_RVT_FIXTURE_RIGHTS_UNAVAILABLE"
+      ],
+      "impact": "The separately licensed BimRv module, redistribution terms, runtime, CI and fixture-generation rights are unavailable."
+    },
+    {
+      "id": "autodesk-revit-ifc-exporter",
+      "official_sources": [
+        "https://github.com/Autodesk/revit-ifc"
+      ],
+      "axes": {
+        "license_entitlement": "available",
+        "runtime_platform": "unavailable",
+        "sandbox_profile": "unavailable",
+        "ci_access": "unavailable",
+        "fixture_rights": "unavailable",
+        "network": "not_applicable",
+        "telemetry_retention": "not_applicable",
+        "lifecycle": "unknown"
+      },
+      "blocker_codes": [
+        "AECCTX_RVT_RUNTIME_UNAVAILABLE",
+        "AECCTX_RVT_SANDBOX_PROFILE_UNAVAILABLE",
+        "AECCTX_RVT_CI_UNAVAILABLE",
+        "AECCTX_RVT_FIXTURE_RIGHTS_UNAVAILABLE"
+      ],
+      "impact": "The exporter is not a standalone RVT parser and cannot run without proprietary Revit assemblies and a licensed Revit runtime."
+    }
+  ],
+  "reopening_alternatives": [
+    {
+      "id": "licensed-local-runtime",
+      "human_authorization": "Approve a licensed local RVT runtime and its automation and redistribution terms.",
+      "required_evidence": [
+        "exact runtime and RVT versions",
+        "complete ACX-12 enforcement profile",
+        "private provider CI",
+        "publishable project-authored fixture rights",
+        "security history and lifecycle support"
+      ]
+    },
+    {
+      "id": "aps-network-provider",
+      "human_authorization": "Approve Autodesk credentials, billing, source upload, storage, retention and jurisdiction policy.",
+      "required_evidence": [
+        "reviewed ACX-12 network-provider profile",
+        "pinned engine app-bundle activity and work-item versions",
+        "input and output hash binding",
+        "timeout retry rate-limit and region policy",
+        "telemetry and source deletion evidence"
+      ]
+    }
+  ]
+}

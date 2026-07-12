@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aecctx.dev/schemas/v0.2/rvt-provider-decision.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "decision",
+    "selected_provider",
+    "evaluated_at",
+    "candidates",
+    "reopening_alternatives"
+  ],
+  "properties": {
+    "version": {"const": "0.2.0"},
+    "decision": {"const": "blocked"},
+    "selected_provider": {"type": "null"},
+    "evaluated_at": {"const": "2026-07-12"},
+    "candidates": {
+      "type": "array",
+      "minItems": 4,
+      "items": {"$ref": "#/$defs/candidate"}
+    },
+    "reopening_alternatives": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "#/$defs/reopening"}
+    }
+  },
+  "$defs": {
+    "axisState": {
+      "enum": ["available", "unavailable", "unapproved", "not_applicable", "unknown"]
+    },
+    "axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "license_entitlement",
+        "runtime_platform",
+        "sandbox_profile",
+        "ci_access",
+        "fixture_rights",
+        "network",
+        "telemetry_retention",
+        "lifecycle"
+      ],
+      "properties": {
+        "license_entitlement": {"$ref": "#/$defs/axisState"},
+        "runtime_platform": {"$ref": "#/$defs/axisState"},
+        "sandbox_profile": {"$ref": "#/$defs/axisState"},
+        "ci_access": {"$ref": "#/$defs/axisState"},
+        "fixture_rights": {"$ref": "#/$defs/axisState"},
+        "network": {"$ref": "#/$defs/axisState"},
+        "telemetry_retention": {"$ref": "#/$defs/axisState"},
+        "lifecycle": {"$ref": "#/$defs/axisState"}
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "official_sources", "axes", "blocker_codes", "impact"],
+      "properties": {
+        "id": {
+          "enum": [
+            "autodesk-revit-desktop",
+            "autodesk-aps-automation",
+            "oda-bimrv",
+            "autodesk-revit-ifc-exporter"
+          ]
+        },
+        "official_sources": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "format": "uri"}
+        },
+        "axes": {"$ref": "#/$defs/axes"},
+        "blocker_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string"}
+        },
+        "impact": {"type": "string", "minLength": 1}
+      }
+    },
+    "reopening": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "human_authorization", "required_evidence"],
+      "properties": {
+        "id": {"enum": ["licensed-local-runtime", "aps-network-provider"]},
+        "human_authorization": {"type": "string", "minLength": 1},
+        "required_evidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}
