@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aecctx.org/schemas/v0.2/step-iges-provider-event.schema.json",
+  "title": "AECCTX STEP/IGES provider event payload",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["format", "schema", "external_references"],
+      "properties": {
+        "schema": {"const": "aecctx.step-iges.source.v1"},
+        "format": {"enum": ["step", "iges"]},
+        "external_references": {"type": "boolean"},
+        "schemas": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "headers": {"type": "object"},
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "original_class", "raw", "references"],
+            "properties": {
+              "id": {"type": "integer", "minimum": 1},
+              "original_class": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
+              "component_classes": {"type": "array", "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"}, "minItems": 2},
+              "raw": {"type": "string"},
+              "references": {"type": "array", "items": {"type": "integer", "minimum": 1}, "uniqueItems": true}
+            },
+            "additionalProperties": false
+          }
+        },
+        "version": {"const": "5.3"},
+        "global_raw": {"type": "string"},
+        "directory": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sequence", "entity_type", "form", "parameter_pointer", "transform_pointer", "level", "label", "subscript"],
+            "properties": {
+              "sequence": {"type": "integer", "minimum": 1},
+              "entity_type": {"type": "integer", "minimum": 0},
+              "form": {"type": "integer", "minimum": 0},
+              "parameter_pointer": {"type": "integer", "minimum": 0},
+              "transform_pointer": {"type": "integer", "minimum": 0},
+              "level": {"type": "integer", "minimum": 0},
+              "label": {"type": "string"},
+              "subscript": {"type": "integer", "minimum": 0}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "allOf": [
+        {"if": {"properties": {"format": {"const": "step"}}}, "then": {"required": ["schemas", "headers", "entities"]}},
+        {"if": {"properties": {"format": {"const": "iges"}}}, "then": {"required": ["version", "global_raw", "directory"]}}
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": ["artifact_path", "bounds", "format", "mesh_artifact_path", "representation_fidelity", "schema", "topology", "translator_processing"],
+      "properties": {
+        "schema": {"const": "aecctx.step-iges.shape.v1"},
+        "format": {"enum": ["step", "iges"]},
+        "artifact_path": {"type": "string", "pattern": "^artifacts/[A-Za-z0-9._/-]+$"},
+        "mesh_artifact_path": {"type": "string", "pattern": "^artifacts/[A-Za-z0-9._/-]+$"},
+        "representation_fidelity": {"const": "brep-translator-derived"},
+        "translator_processing": {"const": "translator-default-observed"},
+        "bounds": {
+          "type": "object",
+          "required": ["min", "max"],
+          "properties": {
+            "min": {"$ref": "#/$defs/vector3"},
+            "max": {"$ref": "#/$defs/vector3"}
+          },
+          "additionalProperties": false
+        },
+        "topology": {
+          "type": "object",
+          "required": ["vertices", "edges", "wires", "faces", "shells", "solids"],
+          "properties": {
+            "vertices": {"type": "integer", "minimum": 0},
+            "edges": {"type": "integer", "minimum": 0},
+            "wires": {"type": "integer", "minimum": 0},
+            "faces": {"type": "integer", "minimum": 0},
+            "shells": {"type": "integer", "minimum": 0},
+            "solids": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "$defs": {
+    "vector3": {
+      "type": "array",
+      "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}],
+      "items": false,
+      "minItems": 3,
+      "maxItems": 3
+    }
+  }
+}
+
