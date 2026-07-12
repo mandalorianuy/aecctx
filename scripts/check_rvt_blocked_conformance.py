@@ -42,6 +42,21 @@ EXPECTED_SOURCES = {
     ),
     "autodesk-revit-ifc-exporter": ("https://github.com/Autodesk/revit-ifc",),
 }
+EXPECTED_RVT_FIXTURE = {"id": "v02-rvt-acx19-anti-claim", "path": "fixtures/v0.2/rvt/not-a-real-rvt.rvt"}
+EXPECTED_RVT_CLAIM = {
+    "id": "rvt.external-provider",
+    "status": "public",
+    "support_level": "unsupported",
+    "profile": "rvt-no-provider-blocked-v1",
+    "platform_scope": ["any"],
+    "provider_scope": "none",
+    "fixture_ids": ["v02-rvt-acx19-anti-claim"],
+    "test_ids": [
+        "tests/test_rvt_blocked_profile.py::test_rvt_suffix_uses_deterministic_opaque_fallback",
+        "tests/test_rvt_blocked_profile.py::test_cli_auto_does_not_promote_rvt_suffix",
+    ],
+    "evidence": "docs/evidence/ACX-19.md",
+}
 
 
 def _load_json(path: Path, label: str) -> tuple[object | None, tuple[str, ...]]:
@@ -102,6 +117,30 @@ def validate_decision(record: object) -> tuple[str, ...]:
     return tuple(sorted(set(errors)))
 
 
+def validate_claim(registry: object) -> tuple[str, ...]:
+    if not isinstance(registry, dict):
+        return ("claim registry must be an object",)
+    errors: list[str] = []
+    fixtures = registry.get("fixtures")
+    if not isinstance(fixtures, list) or EXPECTED_RVT_FIXTURE not in fixtures:
+        errors.append("RVT anti-claim fixture mapping is missing or changed")
+    claims = registry.get("claims")
+    if not isinstance(claims, list):
+        return tuple(sorted({*errors, "claim registry claims must be an array"}))
+    rvt_claims = [
+        item
+        for item in claims
+        if isinstance(item, dict) and isinstance(item.get("id"), str) and item["id"].startswith("rvt.")
+    ]
+    for claim in rvt_claims:
+        if claim.get("id") != "rvt.external-provider":
+            errors.append(f"unexpected RVT claim id: {claim['id']}")
+    blocked_claims = [item for item in rvt_claims if item.get("id") == "rvt.external-provider"]
+    if len(blocked_claims) != 1 or blocked_claims[0] != EXPECTED_RVT_CLAIM:
+        errors.append("RVT claim does not match blocked boundary")
+    return tuple(sorted(set(errors)))
+
+
 def _parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--decision", type=Path, required=True)
@@ -119,8 +158,8 @@ def main() -> int:
         collected.append(f"repository root does not exist: {arguments.root}")
     if decision is not None:
         collected.extend(validate_decision(decision))
-    if claims is not None and not isinstance(claims, dict):
-        collected.append("claim registry must be an object")
+    if claims is not None:
+        collected.extend(validate_claim(claims))
     ordered = tuple(sorted(set(collected)))
     if ordered:
         for error in ordered:

@@ -9,7 +9,8 @@
     {"id": "v02-inference-acx15", "path": "fixtures/v0.2/inference"},
     {"id": "v02-mesh-acx16", "path": "fixtures/v0.2/mesh"},
     {"id": "v02-step-iges-acx17", "path": "fixtures/v0.2/step-iges"},
-    {"id": "v02-dwg-acx18", "path": "fixtures/v0.2/dwg"}
+    {"id": "v02-dwg-acx18", "path": "fixtures/v0.2/dwg"},
+    {"id": "v02-rvt-acx19-anti-claim", "path": "fixtures/v0.2/rvt/not-a-real-rvt.rvt"}
   ],
   "claims": [
     {
@@ -278,7 +279,20 @@
       ],
       "evidence": "docs/evidence/ACX-18.md"
     },
-    {"id": "rvt.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {
+      "id": "rvt.external-provider",
+      "status": "public",
+      "support_level": "unsupported",
+      "profile": "rvt-no-provider-blocked-v1",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v02-rvt-acx19-anti-claim"],
+      "test_ids": [
+        "tests/test_rvt_blocked_profile.py::test_rvt_suffix_uses_deterministic_opaque_fallback",
+        "tests/test_rvt_blocked_profile.py::test_cli_auto_does_not_promote_rvt_suffix"
+      ],
+      "evidence": "docs/evidence/ACX-19.md"
+    },
     {"id": "package.authenticity-signing", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "quality-gate.policy-ids", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "codex.aecctx-inspector", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null}
