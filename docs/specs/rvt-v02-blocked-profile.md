@@ -2,7 +2,7 @@
 
 Version: `0.2.0-draft.1`
 Date: 2026-07-12
-Status: Proposed ACX-19 design awaiting written approval; no RVT extraction capability is implemented or claimed
+Status: Normative ACX-19 design approved 2026-07-12; no RVT extraction capability is implemented or claimed
 
 ## 1. Purpose
 

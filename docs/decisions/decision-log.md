@@ -160,7 +160,7 @@ Status: Active
 - Evidence boundary: source entities and locators remain observed. Kernel B-Rep is translator-derived and records fixed translator-processing loss; the provider emits bounded canonical triangle JSON and the core applies its existing `trimesh==4.12.2` deterministic convention to produce subordinate GLB. The completed experimental cut normalizes only direct STEP product/assembly records. Names, colors, layers, units, placements and IGES subfigure facts remain raw source records; XDE correlation, normalized styles/units/transforms, per-root tolerance summaries and partial-root recovery remain explicitly unsupported until a new governed corpus proves them. No source-exact B-Rep or consumer classification is claimed.
 - Runtime/license: the initial live claim is exact Linux arm64 OCI plus portable offline replay. OCP bindings are Apache-2.0 and OCCT is LGPL-2.1 with exception. The image is operator-built, digest-pinned, network-disabled and not distributed by core; any image distribution requires the reviewed LGPL notices/source/relinking record. No entitlement, telemetry or service dependency exists.
 - Lifecycle: a base image, architecture, provider, Python, OCP, OCCT, translator parameter or image digest change requires a new reviewed profile and corpus. Replay proves protocol/mapping, not native runtime availability.
-- Consequence: ACXD-019 is resolved only for this ACX-17 provider/profile. DWG and RVT retain separate open ACXD-019 instances. ACXB-001 continues to block unreviewed native host and other container enforcement profiles.
+- Consequence: ACXD-019 is resolved only for this ACX-17 provider/profile. At ACX-17 completion, DWG and RVT retained separate instances; those are now resolved by ACXD-029 and ACXD-030. ACXB-001 continues to block unreviewed native host and other container enforcement profiles.
 - Evidence owner: `docs/specs/step-iges-v02-profile.md`, ACX-17 provider recipe/descriptor, project-authored corpus, license/security review, tests and acceptance evidence.
 
 ### ACXD-029: Bounded DWG R2000 external LibreDWG provider
@@ -175,10 +175,14 @@ Status: Active
 - Duplicate-handle decision: a project-authored R2000 DXF converted by the reviewed LibreDWG 0.13.4 writer reproducibly emits `DICTIONARY` and `VX_CONTROL` objects sharing handle `0x11`. The provider preserves both with source-order occurrence locators, reports `AECCTX_DWG_HANDLE_CONFLICT`, and refuses to resolve any reference through a duplicated handle. Rejecting the complete source would prevent a legally generated public corpus; merging or selecting one object would invent identity.
 - Image-identity decision: Docker BuildKit provenance manifests are disabled for this operator-built single-platform image because their volatile metadata changes the locally inspected manifest-list ID across byte-identical cached builds. Review evidence binds the base digest, upstream archive SHA, Dockerfile and targeted test log directly; protocol runtime attestation remains mandatory. Two consecutive builds must inspect to the same image ID.
 - Process-ceiling decision: `oci-docker-v1` registration now carries an exact `container_pids_limit` from 1 through 4, defaulting to 1. Existing providers remain at 1. ACX-18 registers 2 because the mounted Python worker launches one fixed sequential `dwgread` child; caller commands, shells and concurrent/unbounded descendants remain prohibited. This resolves the prior mismatch between the one-PID reference profile and the governed external CLI decoder architecture without creating a provider-specific launcher bypass.
-- Consequence: the ACX-18 instance of ACXD-019 is resolved for this exact provider/profile. RVT retains its separate open ACXD-019 instance.
+- Consequence: the ACX-18 instance of ACXD-019 is resolved for this exact provider/profile. At ACX-18 completion, RVT retained a separate instance; it is now resolved by ACXD-030.
 - Evidence owner: `docs/specs/dwg-v02-profile.md`, ACX-18 provider recipe/descriptor, generated corpus, license/security review, tests and acceptance evidence.
 
-## Proposed decisions
+### ACXD-019: Restricted decoder distribution and entitlement
+
+- Resolution: ACX-17 and ACX-18 selected bounded providers through ACXD-028 and ACXD-029. ACX-19 selects no provider through ACXD-030 because no candidate satisfies license/entitlement, runtime, sandbox, CI and fixture-rights gates in the current repository.
+- Reopening requirement: any future RVT provider must record license compatibility, entitlement, redistribution, CI access, fixture rights, telemetry/network behavior, supported platforms and support lifecycle before implementation.
+- Blocking effect: RVT extraction only. ACX-19 may close as documented `blocked` while later independent tasks continue.
 
 ### ACXD-030: No admissible RVT provider for ACX-19
 
@@ -195,13 +199,6 @@ Status: Active
 - Owner: ACX-20.
 - Decision required: select the canonical signed statement, envelope/serialization, algorithm agility, signer identity model, trust-root policy, offline verification, expiry/revocation, multiple-signature, and repackaging behavior.
 - Blocking effect: authenticity/signing implementation and claims only; other capability tasks may proceed.
-
-### ACXD-019: Restricted decoder distribution and entitlement
-
-- Owner: ACX-19 written design review. ACX-17 and ACX-18 are resolved by ACXD-028 and ACXD-029.
-- Proposed resolution: accept ACXD-030 and select no RVT provider because no candidate satisfies license/entitlement, runtime, sandbox, CI and fixture-rights gates in the current repository.
-- Decision required: approve or reject `docs/specs/rvt-v02-blocked-profile.md`. Rejection must identify an authorized provider route and supply its missing entitlement, runtime, sandbox, CI, privacy and fixture-rights evidence before implementation planning.
-- Blocking effect: all RVT provider and blocked-boundary implementation. RVT extraction remains `unsupported` with opaque fallback while this decision is open.
 
 ### ACXD-023: Quality-gate policy and IDS implementation profile
 

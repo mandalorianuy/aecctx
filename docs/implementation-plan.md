@@ -658,7 +658,7 @@ Completion resolution: ACXD-029 selected only GNU LibreDWG 0.13.4 behind the exa
 
 Objective: provide optional, version-scoped RVT neutral evidence extraction through a legally reviewed ACX-12 provider.
 
-Proposed blocked profile: [`docs/specs/rvt-v02-blocked-profile.md`](specs/rvt-v02-blocked-profile.md), awaiting written approval under ACXD-019 and proposed ACXD-030. No provider or blocked-boundary implementation is authorized until approval and a detailed execution plan are recorded.
+Normative blocked profile: [`docs/specs/rvt-v02-blocked-profile.md`](specs/rvt-v02-blocked-profile.md), approved under ACXD-019 and ACXD-030. Its detailed TDD execution plan is [`docs/superpowers/plans/2026-07-12-acx-19-rvt-blocked-boundary.md`](superpowers/plans/2026-07-12-acx-19-rvt-blocked-boundary.md); no provider implementation is authorized.
 
 Decision gate: resolve the RVT ACXD-019 instance for API/service/runtime, entitlement, supported host versions/platform, automation constraints, CI, telemetry/retention, redistribution and fixture rights. If unavailable, document `blocked` and retain opaque fallback.
 
