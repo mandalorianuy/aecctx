@@ -43,6 +43,31 @@ def test_portable_verify_checks_v02_schemas_and_claim_registry() -> None:
     assert "validate_claim_registry_file" in script
 
 
+def test_portable_verify_gates_rvt_boundary_before_tests_and_after_build() -> None:
+    script = (Path(__file__).parents[1] / "scripts" / "verify_portable.sh").read_text(encoding="utf-8")
+
+    assert "schemas/v0.2/rvt-provider-decision.schema.json" in script
+    assert "conformance/v0.2/rvt-provider-decision.json" in script
+    assert script.count("scripts/check_rvt_blocked_conformance.py") == 2
+    assert script.index("scripts/check_rvt_blocked_conformance.py") < script.index('"$python_runtime" -m pytest')
+    assert script.rindex("scripts/check_rvt_blocked_conformance.py") > script.index('"$python_runtime" -m build')
+    assert "--artifact dist/aecctx-0.1.0-py3-none-any.whl" in script
+    assert "--artifact dist/aecctx-0.1.0.tar.gz" in script
+
+
+def test_spec_contract_requires_rvt_blocked_conformance_material() -> None:
+    script = (Path(__file__).parents[1] / "scripts" / "check_spec_contract.py").read_text(encoding="utf-8")
+
+    for path in (
+        "schemas/v0.2/rvt-provider-decision.schema.json",
+        "conformance/v0.2/rvt-provider-decision.json",
+        "scripts/check_rvt_blocked_conformance.py",
+        "fixtures/v0.2/rvt/not-a-real-rvt.rvt",
+        "docs/specs/rvt-v02-blocked-profile.md",
+    ):
+        assert path in script
+
+
 def test_sdist_includes_normative_v02_schemas_and_conformance_material() -> None:
     project = (Path(__file__).parents[1] / "pyproject.toml").read_text(encoding="utf-8")
 

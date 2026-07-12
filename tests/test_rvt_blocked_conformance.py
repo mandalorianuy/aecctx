@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import copy
+from io import BytesIO
 import json
 from collections.abc import Callable
 from pathlib import Path
 import subprocess
 import sys
+import tarfile
+import zipfile
 
 import pytest
 
@@ -57,22 +60,27 @@ def _run_checker(
     record: dict[str, object],
     *,
     registry: dict[str, object] | None = None,
+    root: Path = ROOT,
+    artifacts: tuple[Path, ...] = (),
 ) -> subprocess.CompletedProcess[str]:
     decision = tmp_path / "decision.json"
     claims = tmp_path / "claims.json"
     decision.write_text(json.dumps(record), encoding="utf-8")
     claims.write_text(json.dumps(registry or json.loads(CLAIMS.read_text(encoding="utf-8"))), encoding="utf-8")
+    command = [
+        sys.executable,
+        str(CHECKER),
+        "--decision",
+        str(decision),
+        "--claims",
+        str(claims),
+        "--root",
+        str(root),
+    ]
+    for artifact in artifacts:
+        command.extend(("--artifact", str(artifact)))
     return subprocess.run(
-        [
-            sys.executable,
-            str(CHECKER),
-            "--decision",
-            str(decision),
-            "--claims",
-            str(claims),
-            "--root",
-            str(ROOT),
-        ],
+        command,
         text=True,
         capture_output=True,
         check=False,
@@ -226,3 +234,107 @@ def test_rvt_claim_rejects_a_second_rvt_claim(tmp_path: Path) -> None:
 
     assert result.returncode == 1
     assert "unexpected RVT claim id: rvt.semantic-elements" in result.stderr
+
+
+@pytest.mark.parametrize(
+    ("relative", "content", "expected"),
+    [
+        ("src/aecctx/adapters/rvt.py", "def ingest_rvt(): pass\n", "RVT adapter/provider scaffolding"),
+        ("src/aecctx/providers/rvt.py", "PROVIDER = 'autodesk'\n", "RVT adapter/provider scaffolding"),
+        ("src/aecctx/consumer.py", "import WFDomain\n", "consumer symbol in executable source"),
+        ("src/aecctx/other.py", "consumer = 'woodframing'\n", "consumer symbol in executable source"),
+    ],
+)
+def test_source_boundary_rejects_rvt_scaffolding_and_consumer_symbols(
+    tmp_path: Path,
+    relative: str,
+    content: str,
+    expected: str,
+) -> None:
+    path = tmp_path / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+
+    result = _run_checker(tmp_path, _base_record(), registry=_base_registry(), root=tmp_path)
+
+    assert result.returncode == 1
+    assert expected in result.stderr
+
+
+def _write_wheel(path: Path, members: dict[str, bytes]) -> None:
+    defaults = {
+        "aecctx/__init__.py": b"",
+        "aecctx-0.1.0.dist-info/METADATA": b"Metadata-Version: 2.4\nName: aecctx\nVersion: 0.1.0\nRequires-Dist: jsonschema\n",
+    }
+    defaults.update(members)
+    with zipfile.ZipFile(path, "w") as archive:
+        for name, content in defaults.items():
+            archive.writestr(name, content)
+
+
+def _write_sdist(path: Path, members: dict[str, bytes]) -> None:
+    defaults = {
+        "aecctx-0.1.0/pyproject.toml": (
+            b'[project]\nname = "aecctx"\nversion = "0.1.0"\ndependencies = ["jsonschema"]\n'
+            b'[project.optional-dependencies]\ntest = ["pytest"]\n'
+        ),
+        "aecctx-0.1.0/src/aecctx/__init__.py": b"",
+        "aecctx-0.1.0/fixtures/v0.2/rvt/not-a-real-rvt.rvt": (
+            b"AECCTX anti-claim sentinel. This is not an Autodesk Revit RVT file.\n"
+        ),
+    }
+    defaults.update(members)
+    with tarfile.open(path, "w:gz") as archive:
+        for name, content in defaults.items():
+            info = tarfile.TarInfo(name)
+            info.size = len(content)
+            archive.addfile(info, BytesIO(content))
+
+
+def test_artifact_boundary_accepts_minimal_core_wheel_and_sdist(tmp_path: Path) -> None:
+    wheel = tmp_path / "aecctx-0.1.0-py3-none-any.whl"
+    sdist = tmp_path / "aecctx-0.1.0.tar.gz"
+    _write_wheel(wheel, {})
+    _write_sdist(sdist, {})
+
+    result = _run_checker(
+        tmp_path,
+        _base_record(),
+        registry=_base_registry(),
+        artifacts=(wheel, sdist),
+    )
+
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    ("artifact_kind", "members", "expected"),
+    [
+        (
+            "wheel",
+            {"aecctx-0.1.0.dist-info/METADATA": b"Metadata-Version: 2.4\nName: aecctx\nVersion: 0.1.0\nRequires-Dist: Autodesk-Revit\n"},
+            "prohibited core dependency",
+        ),
+        ("wheel", {"aecctx/revit-runtime.dll": b"native"}, "proprietary/native runtime member"),
+        ("sdist", {"aecctx-0.1.0/tools/revit.exe": b"native"}, "proprietary/native runtime member"),
+        ("sdist", {"aecctx-0.1.0/src/aecctx/adapters/rvt.py": b""}, "RVT adapter/provider scaffolding"),
+        ("sdist", {"aecctx-0.1.0/fixtures/v0.2/rvt/sample.rvt": b"sample"}, "unexpected RVT artifact member"),
+        ("wheel", {"../escape.py": b""}, "unsafe artifact member"),
+    ],
+)
+def test_artifact_boundary_rejects_dependencies_binaries_scaffolding_and_samples(
+    tmp_path: Path,
+    artifact_kind: str,
+    members: dict[str, bytes],
+    expected: str,
+) -> None:
+    artifact = tmp_path / ("aecctx-0.1.0-py3-none-any.whl" if artifact_kind == "wheel" else "aecctx-0.1.0.tar.gz")
+    if artifact_kind == "wheel":
+        _write_wheel(artifact, members)
+    else:
+        _write_sdist(artifact, members)
+
+    result = _run_checker(tmp_path, _base_record(), registry=_base_registry(), artifacts=(artifact,))
+
+    assert result.returncode == 1
+    assert expected in result.stderr

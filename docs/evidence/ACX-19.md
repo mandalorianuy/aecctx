@@ -30,11 +30,18 @@ Date: 2026-07-12
 
 RVT semantic extraction remains `unsupported`. Ordinary v0.1 opaque ingest preserves exact bytes, identity, provenance, capability/loss diagnostics and deterministic package identity, but emits no RVT elements, properties, relationships, geometry, units or coordinates.
 
+## Task 3 validation
+
+- `.venv/bin/python -m pytest tests/test_rvt_blocked_conformance.py tests/test_rvt_blocked_profile.py tests/test_package_data.py tests/test_claim_registry.py -q`: 45 passed.
+- `./scripts/verify_portable.sh`: 282 passed, nine expected provider/runtime skips, wheel and sdist built successfully, post-build checker passed, final `aecctx portable verify: ok`.
+- Executable-source scans reject RVT adapter/provider modules, `ingest_rvt` and WoodFraming/`WFDomain`/`WFImport` symbols without scanning governance prose.
+- Wheel/sdist scans reject prohibited dependencies, native/proprietary runtime suffixes, unsafe archive members, RVT adapter/provider/event-schema paths and every `.rvt` member except the exact anti-claim sentinel.
+- Real `dist/aecctx-0.1.0-py3-none-any.whl` and `dist/aecctx-0.1.0.tar.gz` passed the post-build distribution boundary.
+
 ## Not yet accepted
 
 The following governed work remains pending and prevents ACX-19 closure:
 
-- Task 3 source, wheel/sdist, dependency and portable-gate enforcement;
 - Task 4 full `./scripts/verify.sh`, final acceptance evidence, remote CI evidence and task promotion;
 - capability-matrix and task-ledger closure as documented `blocked`;
 - promotion of ACX-20 to `pending-next`.

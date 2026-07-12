@@ -4,11 +4,17 @@
 from __future__ import annotations
 
 import argparse
+from email import policy
+from email.parser import BytesParser
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
+import stat
 import sys
+import tarfile
+import tomllib
 from urllib.parse import urlparse
+import zipfile
 
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -57,6 +63,14 @@ EXPECTED_RVT_CLAIM = {
     ],
     "evidence": "docs/evidence/ACX-19.md",
 }
+PROHIBITED_RUNTIME_SUFFIXES = (".dll", ".dylib", ".exe", ".pyd", ".so")
+PROHIBITED_DEPENDENCY_NAMES = ("autodesk", "aps", "bimrv", "oda", "revit", "woodframing", "wfdomain", "wfimport")
+ALLOWED_RVT_MEMBER_SUFFIX = "fixtures/v0.2/rvt/not-a-real-rvt.rvt"
+PROHIBITED_CODE_SUFFIXES = (
+    "src/aecctx/adapters/rvt.py",
+    "src/aecctx/providers/rvt.py",
+    "src/aecctx/schemas/v0_2/rvt-provider-event.schema.json",
+)
 
 
 def _load_json(path: Path, label: str) -> tuple[object | None, tuple[str, ...]]:
@@ -141,11 +155,150 @@ def validate_claim(registry: object) -> tuple[str, ...]:
     return tuple(sorted(set(errors)))
 
 
+def validate_source_boundary(root: Path) -> tuple[str, ...]:
+    errors: list[str] = []
+    source_root = root / "src" / "aecctx"
+    if not source_root.is_dir():
+        return ()
+    for path in sorted(source_root.rglob("*.py")):
+        relative = path.relative_to(root).as_posix()
+        lower_relative = relative.lower()
+        if lower_relative.endswith(("src/aecctx/adapters/rvt.py", "src/aecctx/providers/rvt.py")):
+            errors.append(f"RVT adapter/provider scaffolding: {relative}")
+        try:
+            content = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as error:
+            errors.append(f"executable source unreadable: {relative}: {error}")
+            continue
+        lower_content = content.lower()
+        if "ingest_rvt" in lower_content:
+            errors.append(f"RVT adapter/provider scaffolding: {relative}")
+        if any(token in lower_content for token in ("woodframing", "wfdomain", "wfimport")):
+            errors.append(f"consumer symbol in executable source: {relative}")
+    return tuple(sorted(set(errors)))
+
+
+def _safe_member(name: str) -> bool:
+    if not name or "\\" in name:
+        return False
+    logical = PurePosixPath(name)
+    return not logical.is_absolute() and ".." not in logical.parts
+
+
+def _validate_member_name(name: str) -> tuple[str, ...]:
+    lower = name.lower()
+    errors: list[str] = []
+    if not _safe_member(name):
+        errors.append(f"unsafe artifact member: {name}")
+    if lower.endswith(PROHIBITED_RUNTIME_SUFFIXES):
+        errors.append(f"proprietary/native runtime member: {name}")
+    if lower.endswith(PROHIBITED_CODE_SUFFIXES):
+        errors.append(f"RVT adapter/provider scaffolding: {name}")
+    if lower.endswith(".rvt") and not lower.endswith(ALLOWED_RVT_MEMBER_SUFFIX):
+        errors.append(f"unexpected RVT artifact member: {name}")
+    return tuple(errors)
+
+
+def _requirement_name(requirement: str) -> str:
+    match = re.match(r"[A-Za-z0-9_.-]+", requirement)
+    return "" if match is None else match.group(0).lower().replace("_", "-")
+
+
+def _validate_requirements(requirements: list[object]) -> tuple[str, ...]:
+    errors: list[str] = []
+    for requirement in requirements:
+        if not isinstance(requirement, str):
+            errors.append("dependency metadata contains a non-string requirement")
+            continue
+        name = _requirement_name(requirement)
+        if not name or any(token in name for token in PROHIBITED_DEPENDENCY_NAMES):
+            errors.append(f"prohibited core dependency: {requirement}")
+    return tuple(errors)
+
+
+def _validate_wheel(path: Path) -> tuple[str, ...]:
+    errors: list[str] = []
+    metadata: list[bytes] = []
+    try:
+        with zipfile.ZipFile(path) as archive:
+            for info in archive.infolist():
+                errors.extend(_validate_member_name(info.filename))
+                mode = info.external_attr >> 16
+                if stat.S_ISLNK(mode):
+                    errors.append(f"unsafe artifact member: {info.filename}")
+                if info.filename.endswith(".dist-info/METADATA"):
+                    if info.file_size > 1024 * 1024:
+                        errors.append(f"wheel metadata exceeds 1 MiB: {info.filename}")
+                    else:
+                        metadata.append(archive.read(info))
+    except (OSError, zipfile.BadZipFile, RuntimeError) as error:
+        return (f"artifact unreadable: {path}: {error}",)
+    if len(metadata) != 1:
+        errors.append("wheel must contain exactly one dist-info/METADATA")
+    else:
+        message = BytesParser(policy=policy.default).parsebytes(metadata[0])
+        errors.extend(_validate_requirements(list(message.get_all("Requires-Dist", []))))
+    return tuple(sorted(set(errors)))
+
+
+def _validate_sdist(path: Path) -> tuple[str, ...]:
+    errors: list[str] = []
+    pyprojects: list[bytes] = []
+    try:
+        with tarfile.open(path, "r:*") as archive:
+            for member in archive.getmembers():
+                errors.extend(_validate_member_name(member.name))
+                if member.issym() or member.islnk() or not (member.isfile() or member.isdir()):
+                    errors.append(f"unsafe artifact member: {member.name}")
+                if member.isfile() and member.name.endswith("/pyproject.toml"):
+                    if member.size > 1024 * 1024:
+                        errors.append(f"sdist pyproject exceeds 1 MiB: {member.name}")
+                        continue
+                    handle = archive.extractfile(member)
+                    if handle is None:
+                        errors.append(f"sdist pyproject unreadable: {member.name}")
+                    else:
+                        pyprojects.append(handle.read())
+    except (OSError, tarfile.TarError) as error:
+        return (f"artifact unreadable: {path}: {error}",)
+    if len(pyprojects) != 1:
+        errors.append("sdist must contain exactly one root pyproject.toml")
+    else:
+        try:
+            project = tomllib.loads(pyprojects[0].decode("utf-8")).get("project", {})
+        except (UnicodeDecodeError, tomllib.TOMLDecodeError) as error:
+            errors.append(f"sdist pyproject invalid: {error}")
+        else:
+            requirements = list(project.get("dependencies", [])) if isinstance(project, dict) else []
+            optional = project.get("optional-dependencies", {}) if isinstance(project, dict) else {}
+            if isinstance(optional, dict):
+                for configured in optional.values():
+                    if isinstance(configured, list):
+                        requirements.extend(configured)
+            errors.extend(_validate_requirements(requirements))
+    return tuple(sorted(set(errors)))
+
+
+def validate_artifact(path: Path) -> tuple[str, ...]:
+    if not path.is_file() or path.is_symlink():
+        return (f"artifact must be a regular file: {path}",)
+    if path.suffix == ".whl":
+        return _validate_wheel(path)
+    if path.name.endswith(".tar.gz"):
+        return _validate_sdist(path)
+    return (f"unsupported artifact type: {path}",)
+
+
 def _parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--decision", type=Path, required=True)
-    parser.add_argument("--claims", type=Path, required=True)
-    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument(
+        "--decision",
+        type=Path,
+        default=REPOSITORY_ROOT / "conformance" / "v0.2" / "rvt-provider-decision.json",
+    )
+    parser.add_argument("--claims", type=Path, default=REPOSITORY_ROOT / "conformance" / "v0.2" / "claims.json")
+    parser.add_argument("--root", type=Path, default=REPOSITORY_ROOT)
+    parser.add_argument("--artifact", type=Path, action="append", default=[])
     return parser.parse_args()
 
 
@@ -156,10 +309,14 @@ def main() -> int:
     collected = [*errors, *claim_errors]
     if not arguments.root.is_dir():
         collected.append(f"repository root does not exist: {arguments.root}")
+    else:
+        collected.extend(validate_source_boundary(arguments.root))
     if decision is not None:
         collected.extend(validate_decision(decision))
     if claims is not None:
         collected.extend(validate_claim(claims))
+    for artifact in arguments.artifact:
+        collected.extend(validate_artifact(artifact))
     ordered = tuple(sorted(set(collected)))
     if ordered:
         for error in ordered:

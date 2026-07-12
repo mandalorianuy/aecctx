@@ -348,6 +348,7 @@ git commit -m "test: prove RVT opaque anti-claim boundary"
 - Modify: `scripts/check_spec_contract.py`
 - Modify: `scripts/verify_portable.sh`
 - Modify: `tests/test_package_data.py`
+- Modify: `docs/evidence/ACX-19.md`
 
 **Interfaces:**
 - Consumes: repository root and optional `--artifact` paths produced by Hatchling.
@@ -422,10 +423,12 @@ Run:
 
 Expected: focused tests PASS and final line `aecctx portable verify: ok`.
 
+Update incremental `docs/evidence/ACX-19.md` with the Task 3 focused/portable results, source/distribution protections and real wheel/sdist acceptance. Remove Task 3 from “Not yet accepted”; Task 4 full verification, closure and promotion remain explicitly pending.
+
 - [ ] **Step 6: Commit enforcement wiring**
 
 ```bash
-git add scripts/check_rvt_blocked_conformance.py scripts/check_spec_contract.py scripts/verify_portable.sh tests/test_rvt_blocked_conformance.py tests/test_rvt_blocked_profile.py tests/test_package_data.py
+git add scripts/check_rvt_blocked_conformance.py scripts/check_spec_contract.py scripts/verify_portable.sh tests/test_rvt_blocked_conformance.py tests/test_rvt_blocked_profile.py tests/test_package_data.py docs/evidence/ACX-19.md
 git commit -m "test: gate RVT blocked distribution boundary"
 ```
 
