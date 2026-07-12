@@ -17,7 +17,7 @@ from aecctx.providers.dwg import (
     dwg_descriptor,
     dwg_registry,
 )
-from aecctx.providers import OCIDockerProfile, ProviderLimits, ProviderRunner
+from aecctx.providers import OCIDockerProfile, ProviderLimits, ProviderRunner, validate_provider_replay_corpus
 
 
 ROOT = Path(__file__).parents[1]
@@ -30,6 +30,12 @@ def _worker():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def test_dwg_replay_corpus_is_portable_and_valid() -> None:
+    result = validate_provider_replay_corpus(ROOT / "conformance" / "v0.2" / "dwg-corpus.json")
+    assert result["ok"] is True
+    assert result["entries"] == [{"artifacts": 2, "id": "r2000-profile", "provider_id": DWG_PROVIDER_ID, "valid": True}]
 
 
 def test_dwg_profile_registration_pins_reviewed_runtime_and_worker() -> None:

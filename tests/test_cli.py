@@ -309,6 +309,37 @@ def test_ingest_step_iges_replay_options_are_paired_and_v02_only(tmp_path: Path)
     assert v01.returncode == 2
 
 
+def test_ingest_dwg_v02_accepts_explicit_validated_provider_replay(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "dwg" / "r2000-profile.dwg"
+    corpus = ROOT / "conformance" / "v0.2" / "dwg-corpus.json"
+    output = tmp_path / "dwg-v02.aecctx"
+
+    completed = run_cli(
+        "ingest", str(fixture), "--output", str(output), "--aecctx-version", "0.2.0",
+        "--provider-replay", str(corpus), "--provider-entry", "r2000-profile",
+        "--created-at", "2026-07-12T00:00:00Z", "--form", "zip", "--json",
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert json.loads(completed.stdout)["data"]["adapter"] == "dwg"
+    assert PackageReader(output).manifest["capabilities"]["2d_geometry"] == "partial"
+
+
+def test_ingest_dwg_replay_is_v02_only_and_provider_scoped(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "dwg" / "r2000-profile.dwg"
+    corpus = ROOT / "conformance" / "v0.2" / "dwg-corpus.json"
+    v01 = run_cli(
+        "ingest", str(fixture), "--output", str(tmp_path / "v01"), "--provider-replay", str(corpus),
+        "--provider-entry", "r2000-profile", "--json",
+    )
+    wrong = run_cli(
+        "ingest", str(fixture), "--output", str(tmp_path / "wrong"), "--adapter", "step-iges",
+        "--aecctx-version", "0.2.0", "--provider-replay", str(corpus), "--provider-entry", "r2000-profile", "--json",
+    )
+    assert v01.returncode == 2
+    assert wrong.returncode == 2
+
+
 def test_ingest_auto_selects_dxf_adapter(tmp_path: Path) -> None:
     fixture = ROOT / "fixtures" / "dxf" / "minimal-plan.dxf"
     output = tmp_path / "plan.aecctx"

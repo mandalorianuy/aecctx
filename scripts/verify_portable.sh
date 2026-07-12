@@ -21,6 +21,7 @@ fi
 "$python_runtime" -m json.tool schemas/v0.2/provider-response.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/mesh-coordinate-profile.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/step-iges-provider-event.schema.json >/dev/null
+"$python_runtime" -m json.tool schemas/v0.2/dwg-provider-event.schema.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/claims.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/provider-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/ifc-corpus.json >/dev/null
@@ -28,12 +29,14 @@ fi
 "$python_runtime" -m json.tool conformance/v0.2/inference-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/mesh-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/step-iges-corpus.json >/dev/null
+"$python_runtime" -m json.tool conformance/v0.2/dwg-corpus.json >/dev/null
 "$python_runtime" -m json.tool fixtures/minimal-aecctx/manifest.json >/dev/null
 "$python_runtime" -m json.tool fixtures/v0.2/shared/minimal-v02/manifest.json >/dev/null
 "$python_runtime" -c 'from aecctx.conformance import validate_claim_registry_file; result = validate_claim_registry_file("conformance/v0.2/claims.json"); raise SystemExit(0 if result.valid else "; ".join(result.errors))'
 "$python_runtime" -c 'from aecctx.providers import validate_provider_replay_corpus; result = validate_provider_replay_corpus("conformance/v0.2/provider-corpus.json"); raise SystemExit(0 if result["ok"] else "provider replay corpus failed")'
 "$python_runtime" -c 'from aecctx.providers import validate_provider_replay_corpus; result = validate_provider_replay_corpus("conformance/v0.2/inference-corpus.json"); raise SystemExit(0 if result["ok"] else "inference replay corpus failed")'
 "$python_runtime" -c 'from aecctx.providers import validate_provider_replay_corpus; result = validate_provider_replay_corpus("conformance/v0.2/step-iges-corpus.json"); raise SystemExit(0 if result["ok"] else "STEP/IGES replay corpus failed")'
+"$python_runtime" -c 'from aecctx.providers import validate_provider_replay_corpus; result = validate_provider_replay_corpus("conformance/v0.2/dwg-corpus.json"); raise SystemExit(0 if result["ok"] else "DWG replay corpus failed")'
 "$python_runtime" -m pytest
 "$python_runtime" -m build --wheel --sdist --outdir dist
 

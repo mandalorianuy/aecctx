@@ -8,7 +8,8 @@
     {"id": "v02-dxf-acx14", "path": "fixtures/v0.2/dxf"},
     {"id": "v02-inference-acx15", "path": "fixtures/v0.2/inference"},
     {"id": "v02-mesh-acx16", "path": "fixtures/v0.2/mesh"},
-    {"id": "v02-step-iges-acx17", "path": "fixtures/v0.2/step-iges"}
+    {"id": "v02-step-iges-acx17", "path": "fixtures/v0.2/step-iges"},
+    {"id": "v02-dwg-acx18", "path": "fixtures/v0.2/dwg"}
   ],
   "claims": [
     {
@@ -259,7 +260,24 @@
       "test_ids": ["tests/test_step_iges_provider.py::test_step_iges_live_provider_emits_source_and_derived_brep_evidence", "tests/test_step_iges_adapter.py::test_step_iges_v02_maps_observed_structure_and_derived_geometry"],
       "evidence": "docs/evidence/ACX-17.md"
     },
-    {"id": "dwg.external-provider", "status": "target", "support_level": null, "profile": "dwg-r2000-libredwg-json-dxf-v1", "platform_scope": [], "provider_scope": "planned org.aecctx.dwg.libredwg@0.2.0; exact image pending reviewed operator build", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {
+      "id": "dwg.external-provider",
+      "status": "experimental",
+      "support_level": "partial",
+      "profile": "dwg-r2000-libredwg-json-dxf-v1",
+      "platform_scope": ["linux-arm64-container-live", "any-offline-replay"],
+      "provider_scope": "org.aecctx.dwg.libredwg@0.2.0; local image ID sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1",
+      "fixture_ids": ["v02-dwg-acx18"],
+      "test_ids": [
+        "tests/test_dwg_provider.py::test_dwg_replay_corpus_is_portable_and_valid",
+        "tests/test_dwg_provider.py::test_dwg_live_provider_emits_direct_json_and_converted_dxf_evidence",
+        "tests/test_dwg_provider.py::test_dwg_live_provider_is_deterministic_for_fixed_input_and_runtime",
+        "tests/test_dwg_adapter.py::test_dwg_committed_replay_creates_deterministic_valid_package",
+        "tests/test_dwg_adapter.py::test_dwg_v01_is_byte_identical_to_opaque_ingest",
+        "tests/test_cli.py::test_ingest_dwg_v02_accepts_explicit_validated_provider_replay"
+      ],
+      "evidence": "docs/evidence/ACX-18.md"
+    },
     {"id": "rvt.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "package.authenticity-signing", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "quality-gate.policy-ids", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},

@@ -10,6 +10,7 @@
 
 *.dxf text eol=lf
 fixtures/v0.2/dxf/*-binary.dxf binary
+fixtures/v0.2/dwg/outputs/*/artifacts/*.dxf binary
 *.ifc text eol=lf
 *.jsonl text eol=lf
 *.obj text eol=lf

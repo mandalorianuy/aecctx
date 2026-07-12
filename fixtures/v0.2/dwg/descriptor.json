@@ -1,0 +1,39 @@
+{
+  "actions": [
+    "extract"
+  ],
+  "deterministic": true,
+  "distribution": "operator-built-oci-image",
+  "enforced_axes": {
+    "cpu": true,
+    "decompression": true,
+    "environment": true,
+    "filesystem": true,
+    "input_bytes": true,
+    "memory": true,
+    "network": true,
+    "open_files": true,
+    "output_bytes": true,
+    "process": true,
+    "process_tree": true,
+    "records": true,
+    "recursion": true,
+    "temporary_storage": true,
+    "user_permissions": true,
+    "wall_time": true
+  },
+  "enforcement_profile": "oci-docker-v1",
+  "formats": [
+    "image/vnd.dwg"
+  ],
+  "license_spdx": "GPL-3.0-or-later",
+  "network_mode": "disabled",
+  "platforms": [
+    "linux-container"
+  ],
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.dwg.libredwg",
+  "provider_version": "0.2.0",
+  "runtime_digest": "sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1",
+  "runtime_version": "python-3.12+libredwg-0.13.4-api1"
+}

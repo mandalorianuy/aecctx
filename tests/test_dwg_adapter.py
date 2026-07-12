@@ -13,6 +13,7 @@ from aecctx.dwg import DWGInputError, probe_dwg, validate_dwg_events
 from aecctx.ingest import CAPABILITIES, ingest_opaque
 from aecctx.package import PackageReader
 from aecctx.providers.protocol import ProviderResult
+from aecctx.providers import load_provider_replay_entry
 from aecctx.records import RecordStore
 from aecctx.validation import validate_package
 
@@ -171,4 +172,13 @@ def test_dwg_v02_zip_is_deterministic(tmp_path: Path) -> None:
     outputs = [tmp_path / "first.aecctx", tmp_path / "second.aecctx"]
     for output in outputs:
         ingest_dwg(FIXTURE, output, created_at=FIXED_TIME, package_form="zip", aecctx_version="0.2.0", provider_result=provider_result())
+    assert outputs[0].read_bytes() == outputs[1].read_bytes()
+
+
+def test_dwg_committed_replay_creates_deterministic_valid_package(tmp_path: Path) -> None:
+    replay = load_provider_replay_entry(ROOT / "conformance" / "v0.2" / "dwg-corpus.json", "r2000-profile")
+    outputs = [tmp_path / "replay-first.aecctx", tmp_path / "replay-second.aecctx"]
+    for output in outputs:
+        ingest_dwg(FIXTURE, output, created_at=FIXED_TIME, package_form="zip", aecctx_version="0.2.0", provider_result=replay.result)
+        assert validate_package(output).valid
     assert outputs[0].read_bytes() == outputs[1].read_bytes()
