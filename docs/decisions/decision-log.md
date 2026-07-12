@@ -144,6 +144,14 @@ Status: Active
 - Privacy/licensing: the selected runtime is local with no egress, telemetry or retention; Tesseract and selected English trained data are Apache-2.0. Pillow remains an isolated provider dependency under its own license. No inference dependency enters the Apache-2.0 core wheel.
 - Evidence owner: ACX-15 provider descriptor/worker/build recipe, replay corpus, mapping/adversarial tests and acceptance evidence.
 
+### ACXD-027: Bounded mesh coordinate qualification and similarity registration
+
+- Format boundary: ACX-16 claims exact coordinate metadata only for self-contained OBJ/STL and glTF/GLB 2.0 through `trimesh==4.12.2`. OBJ/STL units, axes and CRS remain unknown. glTF 2.0 contributes meters and its normative right-handed `+Y`-up/`+Z`-forward frame, but no geographic CRS. Unit guessing and external-resource resolution are prohibited.
+- Registration decision: explicit profiles support uniform scale, author-supplied invertible affine matrix, and control-point least-squares orientation-preserving similarity. Automatic affine/shear fitting and reflections are rejected. A source/manual unit or frame contradiction remains `conflicted` and emits no calibrated artifact.
+- Authority boundary: original source vertices, faces, transforms and hash remain observed and immutable. Profile records are manual; calibrated GLB/records are derived and cite both manual and observed evidence. Target CRS identifiers are preserved as manual strings and do not imply survey, datum or EPSG validation authority.
+- Compatibility: `ingest_geometry()` remains byte-identical v0.1 by default. The bounded profile requires explicit v0.2 SDK/CLI selection and an optional schema-validated profile.
+- Evidence owner: ACX-16 schema, solver, geometry adapter, project-authored corpus, claim mapping and acceptance evidence.
+
 ## Open decisions
 
 ### ACXD-018: Signing and trust profile

@@ -12,7 +12,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-14 completed
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09 and ACX-11 through ACX-15 are complete; ACX-10 remains deferred. Execute only ACX-16, currently `pending-next`, when continuation is explicitly requested.
+4. ACX-01 through ACX-09 and ACX-11 through ACX-15 are complete; ACX-10 remains deferred. Execute only ACX-16, currently `in_progress`; ACX-17 remains pending.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -54,7 +54,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-14 completed
 
 ## Next implementation task
 
-ACX-16: qualify mesh coordinates and add explicit, provenance-bearing manual unit calibration and CRS registration under ACXD-021. It must preserve original mesh coordinates, keep declared/detected/manual values separate, require reversible transforms and reject incomplete/conflicted registrations. It MUST NOT begin STEP/IGES, DWG/RVT, signing, quality-gate or consumer work.
+ACX-16: qualify mesh coordinates and add explicit, provenance-bearing manual unit calibration and CRS registration under ACXD-016, ACXD-027 and `docs/specs/mesh-coordinate-v02-profile.md`. It must preserve original mesh coordinates, keep declared/detected/manual values separate, require reversible transforms and reject incomplete/conflicted registrations. It MUST NOT begin STEP/IGES, DWG/RVT, signing, quality-gate or consumer work.
 
 Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request.
 

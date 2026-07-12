@@ -169,6 +169,8 @@ An optional provider MAY emit a reconstruction hypothesis when the visible evide
 
 ## 9. Mesh units and CRS
 
+ACXD-016, ACXD-027 and `docs/specs/mesh-coordinate-v02-profile.md` define the implemented ACX-16 boundary: exact self-contained OBJ/STL/glTF 2.0/GLB 2.0 source qualification plus explicit manual scale, matrix or similarity registration. Broader formats, extensions and survey/datum authority remain targets or non-claims.
+
 OBJ, STL, and glTF-family adapters MUST preserve declared unit/coordinate metadata where the source format or extension supplies it. When absent, units and CRS remain `unknown`; viewer convention or common practice is not evidence.
 
 AECCTX MAY accept an explicit calibration/registration profile containing scale, units, control points, transform, CRS identifiers, tolerances, and author provenance. Calibration produces derived geometry and assertions while retaining original coordinates unchanged. Conflicting source and manual metadata produces `conflicted`, not precedence by convenience.
