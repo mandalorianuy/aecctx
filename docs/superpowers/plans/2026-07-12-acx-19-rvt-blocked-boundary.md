@@ -30,6 +30,7 @@
 - Create `tests/test_rvt_blocked_conformance.py`: negative/positive checker tests.
 - Create `fixtures/v0.2/rvt/not-a-real-rvt.rvt`: project-authored anti-claim sentinel.
 - Create `tests/test_rvt_blocked_profile.py`: deterministic opaque fallback, CLI auto-detection and consumer-output checks.
+- Create `docs/evidence/ACX-19.md`: incremental `in_progress` evidence required by the public unsupported claim; Task 4 finalizes it before closure.
 - Modify `conformance/v0.2/claims.json`: replace the RVT target with one public `unsupported` boundary claim.
 - Modify `scripts/check_spec_contract.py`: require the ACX-19 schema, record, checker, sentinel and profile.
 - Modify `scripts/verify_portable.sh`: validate JSON/schema, run the checker before tests and inspect built artifacts after build.
@@ -232,6 +233,7 @@ git commit -m "test: enforce ACX-19 RVT provider decision"
 **Files:**
 - Create: `fixtures/v0.2/rvt/not-a-real-rvt.rvt`
 - Create: `tests/test_rvt_blocked_profile.py`
+- Create: `docs/evidence/ACX-19.md`
 - Modify: `conformance/v0.2/claims.json`
 - Modify: `tests/test_rvt_blocked_conformance.py`
 
@@ -316,6 +318,8 @@ Add fixture registry entry:
 
 Replace only `rvt.external-provider` with the exact claim asserted by the test. Do not add RVT versions, element classes, geometry, schemas, provider IDs or replay claims.
 
+Create `docs/evidence/ACX-19.md` with status `in_progress`, links to ACXD-030 and the blocked profile, the Task 1 commit, the Task 2 sentinel hash/tests, retained support `unsupported` with opaque fallback, and an explicit “not yet accepted” section listing Task 3 distribution gates and Task 4 full verification/promotion as pending. This file satisfies claim traceability without claiming ACX-19 completion.
+
 - [ ] **Step 5: Add claim cross-validation to the checker**
 
 `validate_claim()` must require the exact claim object above, require the sentinel fixture path, reject any other claim ID beginning with `rvt.`, and reject any non-null selected provider in the decision record. Add negative tests for `status="experimental"`, `support_level="partial"`, a versioned profile, a provider name and a second `rvt.*` claim.
@@ -329,7 +333,7 @@ Expected: all tests PASS.
 - [ ] **Step 7: Commit the unsupported boundary**
 
 ```bash
-git add fixtures/v0.2/rvt/not-a-real-rvt.rvt tests/test_rvt_blocked_profile.py tests/test_rvt_blocked_conformance.py conformance/v0.2/claims.json scripts/check_rvt_blocked_conformance.py
+git add fixtures/v0.2/rvt/not-a-real-rvt.rvt tests/test_rvt_blocked_profile.py tests/test_rvt_blocked_conformance.py conformance/v0.2/claims.json scripts/check_rvt_blocked_conformance.py docs/evidence/ACX-19.md
 git commit -m "test: prove RVT opaque anti-claim boundary"
 ```
 
@@ -427,10 +431,10 @@ git commit -m "test: gate RVT blocked distribution boundary"
 
 ---
 
-### Task 4: Acceptance evidence, blocked closure and next-task promotion
+### Task 4: Finalize acceptance evidence, blocked closure and next-task promotion
 
 **Files:**
-- Create: `docs/evidence/ACX-19.md`
+- Modify: `docs/evidence/ACX-19.md`
 - Modify: `docs/capability-matrix.md`
 - Modify: `docs/implementation-plan.md`
 - Modify: `docs/HANDOFF.md`
