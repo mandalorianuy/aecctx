@@ -1,0 +1,50 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.2/signing-key-registry.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "key": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"revocation_status": {"const": "revoked"}}, "required": ["revocation_status"]},
+          "then": {"required": ["revoked_at"]},
+          "else": {"not": {"required": ["revoked_at"]}}
+        }
+      ],
+      "properties": {
+        "kid": {"maxLength": 256, "minLength": 1, "type": "string"},
+        "public_key": {
+          "additionalProperties": false,
+          "properties": {
+            "crv": {"const": "Ed25519"},
+            "kty": {"const": "OKP"},
+            "x": {"pattern": "^[A-Za-z0-9_-]{43}$", "type": "string"}
+          },
+          "required": ["kty", "crv", "x"],
+          "type": "object"
+        },
+        "revocation_status": {"enum": ["good", "revoked", "unknown"]},
+        "revoked_at": {"format": "date-time", "type": "string"},
+        "scopes": {
+          "items": {"maxLength": 256, "minLength": 1, "type": "string"},
+          "maxItems": 64,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "subject": {"maxLength": 1024, "minLength": 1, "type": "string"},
+        "valid_from": {"format": "date-time", "type": "string"},
+        "valid_until": {"format": "date-time", "type": "string"}
+      },
+      "required": ["kid", "public_key", "subject", "valid_from", "valid_until", "revocation_status", "scopes"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "keys": {"items": {"$ref": "#/$defs/key"}, "maxItems": 1024, "minItems": 1, "type": "array", "uniqueItems": true},
+    "registry_version": {"const": "1"}
+  },
+  "required": ["registry_version", "keys"],
+  "title": "AECCTX offline signing key registry v1",
+  "type": "object"
+}

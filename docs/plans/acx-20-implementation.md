@@ -47,6 +47,8 @@
 
 ### Task 1: Closed signing schemas and public result types
 
+**Checkpoint:** Completed 2026-07-12. RED produced 14 expected missing-module/schema failures; GREEN passes 24 focused contract/package-data tests. Completion commit is the Task 1 milestone commit on `codex/acx-20-signing`.
+
 **Files:**
 - Create: `schemas/v0.2/signature-bundle.schema.json`
 - Create: `schemas/v0.2/signing-key-registry.schema.json`
@@ -65,7 +67,7 @@
 - Produces `SigningError(AECCTXError)` carrying a stable `code` and safe message.
 - Produces `validate_signing_document(value, schema_name) -> None` using packaged schemas offline.
 
-- [ ] **Step 1: Write failing public-type and schema-mirror tests.**
+- [x] **Step 1: Write failing public-type and schema-mirror tests.**
 
 ```python
 from importlib.resources import files
@@ -92,9 +94,9 @@ def test_public_and_packaged_signing_schemas_match() -> None:
     assert public == packaged
 ```
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py tests/test_package_data.py -q`; expect import/file failures for the new contract.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py tests/test_package_data.py -q`; expect import/file failures for the new contract.
 
-- [ ] **Step 3: Add four closed JSON Schemas and byte-identical mirrors.** Require `additionalProperties: false`, unique bounded arrays, UTC `date-time` strings, lowercase 64-hex digests, exact Ed25519 JWK fields, the six `key_status` values and independent trust/authorization enums. Bundle schema requires no `payload`, exactly 1..64 signatures and only `protected`/`signature` members.
+- [x] **Step 3: Add four closed JSON Schemas and byte-identical mirrors.** Require `additionalProperties: false`, unique bounded arrays, UTC `date-time` strings, lowercase 64-hex digests, exact Ed25519 JWK fields, the six `key_status` values and independent trust/authorization enums. Bundle schema requires no `payload`, exactly 1..64 signatures and only `protected`/`signature` members.
 
 ```json
 {
@@ -121,7 +123,7 @@ def test_public_and_packaged_signing_schemas_match() -> None:
 }
 ```
 
-- [ ] **Step 4: Add exact public dataclasses and state validation.** Reject constructor input outside the governed enums rather than accepting arbitrary strings.
+- [x] **Step 4: Add exact public dataclasses and state validation.** Reject constructor input outside the governed enums rather than accepting arbitrary strings.
 
 ```python
 CRYPTOGRAPHIC_STATUSES = frozenset({"valid", "invalid", "malformed", "unknown_key", "unsupported_algorithm"})
@@ -136,11 +138,11 @@ class SigningError(AECCTXError):
         self.code = code
 ```
 
-- [ ] **Step 5: Add offline schema loading.** Load only names from a fixed allowlist via `importlib.resources.files("aecctx.schemas.v0_2")`; use `Draft202012Validator` plus `FormatChecker`; sort errors by absolute path and raise `AECCTX_SIGNING_SCHEMA_INVALID` with no input dump.
+- [x] **Step 5: Add offline schema loading.** Load only names from a fixed allowlist via `importlib.resources.files("aecctx.schemas.v0_2")`; use `Draft202012Validator` plus `FormatChecker`; sort errors by absolute path and raise `AECCTX_SIGNING_SCHEMA_INVALID` with no input dump.
 
-- [ ] **Step 6: Verify GREEN and package data.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py tests/test_package_data.py -q`; expect all passing. Run `python3 -m json.tool` over all eight public/mirrored files.
+- [x] **Step 6: Verify GREEN and package data.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py tests/test_package_data.py -q`; expect all passing. Run `python3 -m json.tool` over all eight public/mirrored files.
 
-- [ ] **Step 7: Commit.**
+- [x] **Step 7: Commit.**
 
 ```bash
 git add schemas/v0.2/signature-*.schema.json schemas/v0.2/signing-*.schema.json \
