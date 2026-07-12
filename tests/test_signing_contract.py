@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import shutil
+import zipfile
 from importlib import import_module
 from importlib.resources import files
 from pathlib import Path
@@ -19,6 +22,41 @@ SCHEMA_NAMES = (
 
 def _signing():
     return import_module("aecctx.signing")
+
+
+def _signing_io():
+    return import_module("aecctx._signing_io")
+
+
+def _copy_package(tmp_path: Path, *, version: str = "0.1") -> Path:
+    source = ROOT / ("fixtures/minimal-aecctx" if version == "0.1" else "fixtures/v0.2/shared/minimal-v02")
+    target = tmp_path / f"package-{version.replace('.', '')}"
+    shutil.copytree(source, target)
+    return target
+
+
+def _manifest(path: Path) -> dict:
+    return json.loads((path / "manifest.json").read_text(encoding="utf-8"))
+
+
+def _write_manifest(path: Path, manifest: dict) -> None:
+    (path / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8")
+
+
+def _zip_package(directory: Path, archive: Path) -> Path:
+    manifest = _manifest(directory)
+    manifest["package_form"] = "zip"
+    with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as output:
+        for path in sorted(directory.rglob("*")):
+            if not path.is_file():
+                continue
+            relative = path.relative_to(directory).as_posix()
+            if relative == "manifest.json":
+                data = (json.dumps(manifest, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+            else:
+                data = path.read_bytes()
+            output.writestr(relative, data)
+    return archive
 
 
 def test_signing_limits_are_normative() -> None:
@@ -213,3 +251,178 @@ def test_schema_loader_rejects_names_outside_fixed_allowlist() -> None:
         signing.validate_signing_document({}, "../../manifest.schema.json")
 
     assert caught.value.code == "AECCTX_SIGNING_SCHEMA_UNSUPPORTED"
+
+
+def test_strict_json_rejects_duplicate_names() -> None:
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing_io().load_strict_json(b'{"kid":"a","kid":"b"}', label="registry", max_bytes=1_024)
+
+    assert caught.value.code == "AECCTX_SIGNING_JSON_DUPLICATE_KEY"
+
+
+def test_strict_json_rejects_keys_that_collide_after_nfc() -> None:
+    value = '{"\u00e9":1,"e\u0301":2}'.encode("utf-8")
+
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing_io().load_strict_json(value, label="policy", max_bytes=1_024)
+
+    assert caught.value.code == "AECCTX_SIGNING_JSON_DUPLICATE_KEY"
+
+
+@pytest.mark.parametrize("value", (b'"\xff"', b'{"value":NaN}', b'{"value":Infinity}'))
+def test_strict_json_rejects_invalid_utf8_and_non_finite_numbers(value: bytes) -> None:
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing_io().load_strict_json(value, label="bundle", max_bytes=1_024)
+
+    assert caught.value.code == "AECCTX_SIGNING_JSON_INVALID"
+
+
+def test_strict_json_enforces_byte_limit_before_parsing() -> None:
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing_io().load_strict_json(b'{"value":1}', label="policy", max_bytes=4)
+
+    assert caught.value.code == "AECCTX_SIGNING_INPUT_LIMIT_EXCEEDED"
+
+
+def test_canonical_json_normalizes_nfc_and_terminal_lf() -> None:
+    canonical = _signing_io().canonical_json_nfc({"z": "e\u0301", "a": 1}, terminal_lf=True)
+
+    assert canonical == '{"a":1,"z":"\u00e9"}\n'.encode("utf-8")
+    assert _signing_io().canonical_json_nfc({"a": 1}, terminal_lf=False) == b'{"a":1}'
+
+
+def test_base64url_round_trip_is_unpadded_and_length_checked() -> None:
+    encoded = _signing_io().base64url_encode(b"aecctx")
+
+    assert encoded == "YWVjY3R4"
+    assert _signing_io().base64url_decode(encoded, expected_bytes=6) == b"aecctx"
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing_io().base64url_decode(encoded, expected_bytes=7)
+    assert caught.value.code == "AECCTX_SIGNING_BASE64URL_INVALID"
+
+
+@pytest.mark.parametrize("value", ("YQ==", "AB", "a b", ""))
+def test_base64url_rejects_padding_noncanonical_and_invalid_values(value: str) -> None:
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing_io().base64url_decode(value)
+
+    assert caught.value.code == "AECCTX_SIGNING_BASE64URL_INVALID"
+
+
+def test_bounded_file_reader_accepts_only_regular_non_symlink_files(tmp_path: Path) -> None:
+    regular = tmp_path / "policy.json"
+    regular.write_bytes(b"{}")
+    assert _signing_io().read_bounded_regular_file(regular, max_bytes=2, label="policy") == b"{}"
+
+    symlink = tmp_path / "policy-link.json"
+    symlink.symlink_to(regular)
+    for invalid in (symlink, tmp_path):
+        with pytest.raises(_signing().SigningError) as caught:
+            _signing_io().read_bounded_regular_file(invalid, max_bytes=2, label="policy")
+        assert caught.value.code == "AECCTX_SIGNING_FILE_UNSAFE"
+
+
+def test_bounded_file_reader_rejects_oversize_before_read(tmp_path: Path) -> None:
+    path = tmp_path / "bundle.json"
+    path.write_bytes(b"12345")
+
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing_io().read_bounded_regular_file(path, max_bytes=4, label="bundle")
+
+    assert caught.value.code == "AECCTX_SIGNING_INPUT_LIMIT_EXCEEDED"
+
+
+def test_signing_statement_has_exact_v01_fields_and_terminal_lf(tmp_path: Path) -> None:
+    package = _copy_package(tmp_path)
+    manifest = _manifest(package)
+    semantic = {key: value for key, value in manifest.items() if key != "package_form"}
+    semantic_bytes = _signing_io().canonical_json_nfc(semantic, terminal_lf=True)
+
+    statement = _signing().build_signing_statement(package)
+
+    assert statement.data["aecctx_version"] == "0.1.0"
+    assert statement.data["logical_digest"] == manifest["logical_digest"]
+    assert statement.data["package_id"] == manifest["package_id"]
+    assert statement.data["profile"] == "https://aecctx.dev/signing/v1"
+    assert statement.data["required_extensions"] == ()
+    assert statement.data["semantic_manifest_sha256"] == hashlib.sha256(semantic_bytes).hexdigest()
+    assert statement.data["statement_version"] == "1"
+    assert statement.canonical_bytes.endswith(b"\n")
+    assert not statement.canonical_bytes.endswith(b"\n\n")
+    assert statement.sha256 == hashlib.sha256(statement.canonical_bytes).hexdigest()
+
+
+def test_signing_statement_data_is_recursively_immutable(tmp_path: Path) -> None:
+    statement = _signing().build_signing_statement(_copy_package(tmp_path))
+
+    with pytest.raises(TypeError):
+        statement.data["package_id"] = "mutated"
+    with pytest.raises(AttributeError):
+        statement.data["required_extensions"].append("org.example.invalid@1")
+
+
+def test_signing_statement_preserves_v02_required_extensions(tmp_path: Path) -> None:
+    package = _copy_package(tmp_path, version="0.2")
+    manifest = _manifest(package)
+
+    statement = _signing().build_signing_statement(package)
+
+    assert statement.data["aecctx_version"] == "0.2.0"
+    assert statement.data["required_extensions"] == tuple(manifest["required_extensions"])
+
+
+def test_signing_statement_is_deterministic(tmp_path: Path) -> None:
+    package = _copy_package(tmp_path)
+
+    first = _signing().build_signing_statement(package)
+    second = _signing().build_signing_statement(package)
+
+    assert first == second
+
+
+def test_directory_and_zip_equivalents_have_same_statement(tmp_path: Path) -> None:
+    directory = _copy_package(tmp_path)
+    archive = _zip_package(directory, tmp_path / "package.aecctx")
+
+    assert _signing().build_signing_statement(directory) == _signing().build_signing_statement(archive)
+
+
+def test_package_form_is_the_only_ignored_manifest_field(tmp_path: Path) -> None:
+    original = _copy_package(tmp_path)
+    form_only = tmp_path / "form-only"
+    shutil.copytree(original, form_only)
+    form_manifest = _manifest(form_only)
+    form_manifest["package_form"] = "zip"
+    _write_manifest(form_only, form_manifest)
+
+    producer_changed = tmp_path / "producer-changed"
+    shutil.copytree(original, producer_changed)
+    producer_manifest = _manifest(producer_changed)
+    producer_manifest["producer"]["version"] = "different"
+    _write_manifest(producer_changed, producer_manifest)
+
+    baseline = _signing().build_signing_statement(original)
+    assert _signing().build_signing_statement(form_only) == baseline
+    assert _signing().build_signing_statement(producer_changed) != baseline
+
+
+def test_signing_statement_rejects_duplicate_manifest_names(tmp_path: Path) -> None:
+    package = _copy_package(tmp_path)
+    manifest_path = package / "manifest.json"
+    raw = manifest_path.read_text(encoding="utf-8")
+    manifest_path.write_text('{"package_id":"shadow",' + raw.lstrip()[1:], encoding="utf-8")
+
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing().build_signing_statement(package)
+
+    assert caught.value.code == "AECCTX_SIGNING_JSON_DUPLICATE_KEY"
+
+
+def test_signing_statement_rejects_invalid_package_integrity(tmp_path: Path) -> None:
+    package = _copy_package(tmp_path)
+    (package / "context/index.md").write_text("mutated", encoding="utf-8")
+
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing().build_signing_statement(package)
+
+    assert caught.value.code == "AECCTX_SIGNING_PACKAGE_INVALID"

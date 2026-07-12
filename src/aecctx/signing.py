@@ -1,13 +1,19 @@
 from __future__ import annotations
 
 import json
+import hashlib
+from collections.abc import Mapping as MappingABC
 from dataclasses import dataclass
 from importlib.resources import files
+from pathlib import Path
+from types import MappingProxyType
 from typing import Any, Mapping
 
 from jsonschema import Draft202012Validator, FormatChecker
 
 from .errors import AECCTXError, Diagnostic
+from .package import PackageReadError, PackageReader
+from .validation import validate_package
 
 
 SIGNING_SCHEMA_NAMES = frozenset(
@@ -40,6 +46,14 @@ def _require_state(field: str, value: str, allowed: frozenset[str]) -> None:
         raise ValueError(f"{field} has an ungoverned value: {value!r}")
 
 
+def _freeze(value: Any) -> Any:
+    if isinstance(value, MappingABC):
+        return MappingProxyType({key: _freeze(item) for key, item in value.items()})
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze(item) for item in value)
+    return value
+
+
 @dataclass(frozen=True, slots=True)
 class SigningLimits:
     max_document_bytes: int = 1_048_576
@@ -59,6 +73,9 @@ class SigningStatement:
     data: Mapping[str, Any]
     canonical_bytes: bytes
     sha256: str
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "data", _freeze(self.data))
 
 
 @dataclass(frozen=True, slots=True)
@@ -155,3 +172,35 @@ def validate_signing_document(value: Any, schema_name: str) -> None:
     if errors:
         location = "/".join(str(part) for part in errors[0].absolute_path) or "$"
         raise SigningError("AECCTX_SIGNING_SCHEMA_INVALID", f"{schema_name} failed validation at {location}")
+
+
+def build_signing_statement(package_path: str | Path, *, limits: SigningLimits | None = None) -> SigningStatement:
+    from ._signing_io import canonical_json_nfc, load_strict_json
+
+    active_limits = limits or SigningLimits()
+    validation = validate_package(package_path)
+    if not validation.valid:
+        raise SigningError("AECCTX_SIGNING_PACKAGE_INVALID", "package must pass structural and integrity validation before signing")
+    try:
+        reader = PackageReader(package_path)
+        raw_manifest = reader.read_bytes("manifest.json")
+    except PackageReadError as error:
+        raise SigningError("AECCTX_SIGNING_PACKAGE_INVALID", "package manifest cannot be read safely") from error
+    manifest = load_strict_json(raw_manifest, label="manifest", max_bytes=active_limits.max_document_bytes)
+    if not isinstance(manifest, dict):
+        raise SigningError("AECCTX_SIGNING_PACKAGE_INVALID", "package manifest must contain a JSON object")
+
+    semantic_manifest = dict(manifest)
+    semantic_manifest.pop("package_form", None)
+    semantic_bytes = canonical_json_nfc(semantic_manifest, terminal_lf=True)
+    statement_data = {
+        "aecctx_version": manifest["aecctx_version"],
+        "logical_digest": manifest["logical_digest"],
+        "package_id": manifest["package_id"],
+        "profile": "https://aecctx.dev/signing/v1",
+        "required_extensions": manifest.get("required_extensions", []),
+        "semantic_manifest_sha256": hashlib.sha256(semantic_bytes).hexdigest(),
+        "statement_version": "1",
+    }
+    canonical_bytes = canonical_json_nfc(statement_data, terminal_lf=True)
+    return SigningStatement(statement_data, canonical_bytes, hashlib.sha256(canonical_bytes).hexdigest())

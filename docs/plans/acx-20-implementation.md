@@ -47,7 +47,7 @@
 
 ### Task 1: Closed signing schemas and public result types
 
-**Checkpoint:** Completed 2026-07-12. RED produced 14 expected missing-module/schema failures; GREEN passes 24 focused contract/package-data tests. Completion commit is the Task 1 milestone commit on `codex/acx-20-signing`.
+**Checkpoint:** Completed 2026-07-12. RED produced 14 expected missing-module/schema failures; GREEN passes 24 focused contract/package-data tests. Completion commit: `06b0104`.
 
 **Files:**
 - Create: `schemas/v0.2/signature-bundle.schema.json`
@@ -153,6 +153,8 @@ git commit -m "feat: define ACX-20 signing contracts"
 
 ### Task 2: Strict JSON, canonical statement and package binding
 
+**Checkpoint:** Completed 2026-07-12. Primitive RED produced 14 missing-module failures, statement RED produced 7 missing-interface failures, and the immutability review produced 2 focused failures. GREEN passes 52 signing-contract/validation/v0.2 compatibility tests. Completion commit is the Task 2 milestone commit on `codex/acx-20-signing`.
+
 **Files:**
 - Create: `src/aecctx/_signing_io.py`
 - Modify: `src/aecctx/signing.py`
@@ -165,7 +167,7 @@ git commit -m "feat: define ACX-20 signing contracts"
 - Produces `read_bounded_regular_file(path, *, max_bytes: int, label: str) -> bytes`.
 - Produces `build_signing_statement(package_path, *, limits=SigningLimits()) -> SigningStatement`.
 
-- [ ] **Step 1: Write failing duplicate/NFC/base64/file-boundary tests.** Include exact duplicate keys, two distinct keys that collide after NFC normalization, invalid UTF-8, NaN/Infinity, padded/noncanonical base64url, symlink, oversize and directory inputs.
+- [x] **Step 1: Write failing duplicate/NFC/base64/file-boundary tests.** Include exact duplicate keys, two distinct keys that collide after NFC normalization, invalid UTF-8, NaN/Infinity, padded/noncanonical base64url, symlink, oversize and directory inputs.
 
 ```python
 def test_strict_json_rejects_duplicate_names() -> None:
@@ -179,9 +181,9 @@ def test_base64url_rejects_padding() -> None:
     assert caught.value.code == "AECCTX_SIGNING_BASE64URL_INVALID"
 ```
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py -k 'strict or canonical or base64 or bounded' -q`; expect missing helper failures.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py -k 'strict or canonical or base64 or bounded' -q`; expect missing helper failures.
 
-- [ ] **Step 3: Implement strict primitives.** Use `json.loads(..., object_pairs_hook=...)`, recursively NFC-normalize keys/string values, reject normalized-key collisions, reject booleans where integers are expected through schema validation, and compare base64url decode/re-encode for canonical equality.
+- [x] **Step 3: Implement strict primitives.** Use `json.loads(..., object_pairs_hook=...)`, recursively NFC-normalize keys/string values, reject normalized-key collisions, reject booleans where integers are expected through schema validation, and compare base64url decode/re-encode for canonical equality.
 
 ```python
 def base64url_decode(value: str, *, expected_bytes: int | None = None) -> bytes:
@@ -193,7 +195,7 @@ def base64url_decode(value: str, *, expected_bytes: int | None = None) -> bytes:
     return decoded
 ```
 
-- [ ] **Step 4: Write failing statement tests.** Cover v0.1/v0.2, directory/ZIP, semantic-manifest digest, required extensions, exact terminal LF, deterministic repeat, package-form-only change preserving statement, every other manifest-field mutation changing statement, duplicate manifest key rejection and invalid-package refusal.
+- [x] **Step 4: Write failing statement tests.** Cover v0.1/v0.2, directory/ZIP, semantic-manifest digest, required extensions, exact terminal LF, deterministic repeat, package-form-only change preserving statement, every other manifest-field mutation changing statement, duplicate manifest key rejection and invalid-package refusal.
 
 ```python
 def test_package_form_is_the_only_ignored_manifest_field(tmp_path: Path) -> None:
@@ -207,7 +209,7 @@ def test_producer_mutation_changes_statement(tmp_path: Path) -> None:
     assert build_signing_statement(package).sha256 != before
 ```
 
-- [ ] **Step 5: Implement canonical statement construction.** Call `validate_package` first; then reread raw `manifest.json` through `PackageReader.read_bytes`, strict-parse it, remove only `package_form`, compute its canonical SHA-256 and construct the exact seven-field statement. Refuse any ordinary validation diagnostic with `AECCTX_SIGNING_PACKAGE_INVALID`.
+- [x] **Step 5: Implement canonical statement construction.** Call `validate_package` first; then reread raw `manifest.json` through `PackageReader.read_bytes`, strict-parse it, remove only `package_form`, compute its canonical SHA-256 and construct the exact seven-field statement. Refuse any ordinary validation diagnostic with `AECCTX_SIGNING_PACKAGE_INVALID`.
 
 ```python
 statement_data = {
@@ -221,9 +223,9 @@ statement_data = {
 }
 ```
 
-- [ ] **Step 6: Verify GREEN.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py tests/test_validation.py tests/test_v02_compatibility.py -q`; expect existing validation behavior unchanged and all new statement cases passing.
+- [x] **Step 6: Verify GREEN.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py tests/test_validation.py tests/test_v02_compatibility.py -q`; expect existing validation behavior unchanged and all new statement cases passing.
 
-- [ ] **Step 7: Commit.** Commit as `feat: build canonical ACX-20 signing statements` with only `_signing_io.py`, `signing.py` and contract tests.
+- [x] **Step 7: Commit.** Commit as `feat: build canonical ACX-20 signing statements` with only `_signing_io.py`, `signing.py` and contract tests.
 
 ### Task 3: Optional Ed25519 signing and deterministic bundle append
 
