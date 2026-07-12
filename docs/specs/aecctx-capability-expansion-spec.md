@@ -135,6 +135,8 @@ A georeferencing claim is `full` only for the explicitly bounded schema/represen
 
 ## 7. DXF semantics and 3D
 
+ACXD-026 and `docs/specs/dxf-v02-profile.md` define the implemented ACX-14 public `partial` profiles. The broader language below remains a target for DXF releases, entities and semantic structures outside that exact corpus.
+
 ### 7.1 Semantic evidence target
 
 DXF semantic support means preservation of source-native structure: entity types, handles, ownership, dictionaries, extension dictionaries, XDATA, application registry identifiers, groups, block/insert relationships, attributes, layers, layouts, materials, and other supported metadata. It does not mean construction-domain classification.

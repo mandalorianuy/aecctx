@@ -159,8 +159,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-11 | completed | Shared post-v0.1 schemas, compatibility contract and conformance claim registry |
 | ACX-12 | completed | Reviewed external sandbox/provider foundation |
 | ACX-13 | completed | IFC source-native 2D and georeferencing |
-| ACX-14 | pending-next | DXF source-native semantics and bounded 3D |
-| ACX-15 | pending | Optional OCR/vision evidence with explicit hidden-geometry boundary |
+| ACX-14 | completed | DXF source-native semantics and bounded 3D |
+| ACX-15 | pending-next | Optional OCR/vision evidence with explicit hidden-geometry boundary |
 | ACX-16 | pending | Mesh units, calibration and CRS registration |
 | ACX-17 | pending | STEP/IGES adapter profiles |
 | ACX-18 | pending | Optional DWG external-provider adapter |
@@ -432,6 +432,8 @@ Evidence: [`docs/evidence/ACX-13.md`](evidence/ACX-13.md).
 
 Objective: preserve bounded source-native DXF structure and 3D geometry without inventing domain semantics or exact-kernel support.
 
+Normative profile: [`docs/specs/dxf-v02-profile.md`](specs/dxf-v02-profile.md), accepted by ACXD-026 before implementation.
+
 Deliverables:
 
 - DXF version/entity/semantic support table tied to ezdxf versions;
@@ -466,7 +468,7 @@ Non-scope: no automatic construction semantics, no proprietary kernel bundling a
 
 Acceptance: source semantics and 3D claims map to fixtures/tests; unsupported kernel content stays explicit; `./scripts/verify.sh` passes.
 
-Evidence: `docs/evidence/ACX-14.md` when completed.
+Evidence: [`docs/evidence/ACX-14.md`](evidence/ACX-14.md).
 
 ## ACX-15: OCR, vision and reconstruction hypotheses
 

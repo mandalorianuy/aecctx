@@ -4,7 +4,7 @@ AECCTX is an open, application-agnostic specification and local-first Python too
 
 Version **0.1.0** is implemented, packaged and covered by a public conformance corpus.
 
-The post-v0.1 implementation line is active. ACX-11 implements the bounded v0.2 shared schema/compatibility substrate, ACX-12 adds the reviewed external-provider foundation, and ACX-13 adds opt-in bounded IFC 2D/georeferencing profiles. Claims remain exact and partial until their owning corpora pass.
+The post-v0.1 implementation line is active. ACX-11 implements the bounded v0.2 shared schema/compatibility substrate, ACX-12 adds the reviewed external-provider foundation, ACX-13 adds opt-in bounded IFC 2D/georeferencing profiles, and ACX-14 adds opt-in DXF source-semantics/bounded-3D profiles. Claims remain exact and partial until their owning corpora pass.
 
 ## Why this exists
 
@@ -61,14 +61,16 @@ aecctx diff revision-a.aecctx revision-b.aecctx
 
 Unknown inputs use the honest opaque fallback. IFC, DXF, PDF, image and OBJ/STL/glTF content are selected by bounded content probes; `--adapter` can make the choice explicit.
 
-The ACX-13 IFC v0.2 profile is explicit:
+The ACX-13 IFC and ACX-14 DXF v0.2 profiles are explicit:
 
 ```bash
 aecctx ingest model.ifc --output model-v02.aecctx --form zip --aecctx-version 0.2.0 --json
 aecctx validate model-v02.aecctx --json
+aecctx ingest model.dxf --output model-dxf-v02.aecctx --form zip --aecctx-version 0.2.0 --json
+aecctx validate model-dxf-v02.aecctx --json
 ```
 
-Other adapters currently reject `--aecctx-version 0.2.0` until their governed expansion task publishes a profile.
+Other adapters currently reject `--aecctx-version 0.2.0` until their governed expansion task publishes a profile. The DXF claims are partial and limited to [`docs/specs/dxf-v02-profile.md`](docs/specs/dxf-v02-profile.md); ACIS/proxy/custom interpretation and xref traversal remain unsupported.
 
 ## Python API
 

@@ -163,14 +163,39 @@ def test_ingest_ifc_v02_is_explicitly_available_from_cli(tmp_path: Path) -> None
     assert json.loads(completed.stdout)["data"]["aecctx_version"] == "0.2.0"
 
 
-def test_ingest_v02_rejects_adapter_without_governed_v02_profile(tmp_path: Path) -> None:
-    fixture = ROOT / "fixtures" / "dxf" / "minimal-plan.dxf"
+def test_ingest_dxf_v02_is_explicitly_available_from_cli(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "dxf" / "r2018-semantics-3d-ascii.dxf"
+    output = tmp_path / "dxf-v02"
 
     completed = run_cli(
         "ingest",
         str(fixture),
         "--output",
-        str(tmp_path / "dxf-v02.aecctx"),
+        str(output),
+        "--adapter",
+        "dxf",
+        "--aecctx-version",
+        "0.2.0",
+        "--created-at",
+        "2026-07-12T00:00:00Z",
+        "--json",
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    payload = json.loads(completed.stdout)
+    assert payload["data"]["adapter"] == "dxf"
+    assert payload["data"]["aecctx_version"] == "0.2.0"
+    assert PackageReader(output).manifest["aecctx_version"] == "0.2.0"
+
+
+def test_ingest_v02_rejects_adapter_without_governed_v02_profile(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "pdf" / "minimal-vector.pdf"
+
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(tmp_path / "pdf-v02.aecctx"),
         "--aecctx-version",
         "0.2.0",
         "--json",

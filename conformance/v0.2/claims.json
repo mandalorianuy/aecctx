@@ -4,7 +4,8 @@
     {"id": "v01-minimal", "path": "fixtures/minimal-aecctx"},
     {"id": "v02-shared", "path": "fixtures/v0.2/shared/minimal-v02"},
     {"id": "v02-provider-reference", "path": "fixtures/v0.2/providers"},
-    {"id": "v02-ifc-acx13", "path": "fixtures/v0.2/ifc"}
+    {"id": "v02-ifc-acx13", "path": "fixtures/v0.2/ifc"},
+    {"id": "v02-dxf-acx14", "path": "fixtures/v0.2/dxf"}
   ],
   "claims": [
     {
@@ -134,7 +135,38 @@
       ],
       "evidence": "docs/evidence/ACX-13.md"
     },
-    {"id": "dxf.semantics-3d", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {
+      "id": "dxf.source-semantics",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "dxf-r2000-r2018-source-semantics-v1",
+      "platform_scope": ["ezdxf-python-supported"],
+      "provider_scope": "ezdxf==1.4.4",
+      "fixture_ids": ["v02-dxf-acx14"],
+      "test_ids": [
+        "tests/test_dxf_v02.py::test_dxf_v02_preserves_source_native_semantic_evidence",
+        "tests/test_dxf_v02.py::test_dxf_v02_binary_and_ascii_ingest_are_profile_equivalent_and_deterministic",
+        "tests/test_dxf_v02.py::test_dxf_v02_keeps_acis_xref_and_cyclic_insert_loss_explicit",
+        "tests/test_dxf_v02.py::test_dxf_v02_malformed_and_record_limit_fail_with_stable_codes"
+      ],
+      "evidence": "docs/evidence/ACX-14.md"
+    },
+    {
+      "id": "dxf.bounded-3d",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "dxf-r2000-r2018-bounded-3d-v1",
+      "platform_scope": ["ezdxf-and-trimesh-python-supported"],
+      "provider_scope": "ezdxf==1.4.4; trimesh>=4.12,<5",
+      "fixture_ids": ["v02-dxf-acx14"],
+      "test_ids": [
+        "tests/test_dxf_v02.py::test_dxf_v02_preserves_bounded_3d_ocs_insert_transforms_and_topology",
+        "tests/test_dxf_v02.py::test_dxf_v02_binary_and_ascii_ingest_are_profile_equivalent_and_deterministic",
+        "tests/test_dxf_v02.py::test_dxf_v02_keeps_acis_xref_and_cyclic_insert_loss_explicit",
+        "tests/test_dxf_v02.py::test_dxf_v02_malformed_and_record_limit_fail_with_stable_codes"
+      ],
+      "evidence": "docs/evidence/ACX-14.md"
+    },
     {"id": "pdf-image.ocr-vision", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "mesh.units-crs", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "step-iges.brep", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},

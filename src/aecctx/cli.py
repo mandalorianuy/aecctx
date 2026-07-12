@@ -108,7 +108,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     adapter = "image"
                 else:
                     adapter = "opaque"
-            if arguments.aecctx_version == "0.2.0" and adapter != "ifc":
+            if arguments.aecctx_version == "0.2.0" and adapter not in {"ifc", "dxf"}:
                 raise IngestVersionError(f"Adapter {adapter} has no governed AECCTX v0.2 profile")
             if adapter == "ifc":
                 from .adapters.ifc import ingest_ifc
@@ -130,6 +130,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     created_at=arguments.created_at,
                     embedding_policy=arguments.embedding_policy,
                     package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
                 )
             elif adapter == "pdf":
                 from .adapters.pdf import ingest_pdf

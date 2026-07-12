@@ -15,7 +15,7 @@ Decision authority: ACXD-017
 | unknown required extension | not applicable | invalid with `AECCTX_REQUIRED_EXTENSION_UNSUPPORTED` |
 | unknown optional namespaced extension | governed by v0.1 contract | accepted as package data; retained when explicitly passed through a lossless rewrite |
 
-The reference implementation remains version `0.1.0` until the governed expansion release. Supporting v0.2 schemas in ACX-11 is a bounded compatibility capability. ACX-13 adds the first opt-in v0.2 format producer for the exact IFC profiles in `docs/specs/ifc-v02-profile.md`; it does not imply other v0.2 format adapters.
+The reference implementation remains version `0.1.0` until the governed expansion release. Supporting v0.2 schemas in ACX-11 is a bounded compatibility capability. ACX-13 and ACX-14 add opt-in v0.2 producers for the exact IFC and DXF profiles in `docs/specs/ifc-v02-profile.md` and `docs/specs/dxf-v02-profile.md`; they do not imply other v0.2 format adapters.
 
 ## Schema boundary
 
@@ -55,7 +55,7 @@ Changing only version strings is not a conforming migration when v0.2 semantic f
 
 `PackageWriter` defaults to v0.1 for compatibility. A caller must explicitly request `aecctx_version="0.2.0"` and provide v0.2 record artifacts. The writer adds sorted `required_extensions` and optional `extensions`; it does not invent evidence-class, coordinate, provider or fidelity values.
 
-`ingest_ifc()` and `aecctx ingest --aecctx-version 0.2.0` provide the ACX-13 IFC opt-in. The CLI rejects v0.2 requests for adapters whose owning task has not yet published a governed profile. Omitting the option remains v0.1 and is byte-compatible with explicit `--aecctx-version 0.1.0`.
+`ingest_ifc()`, `ingest_dxf()` and `aecctx ingest --aecctx-version 0.2.0` provide the ACX-13 IFC and ACX-14 DXF opt-ins. The CLI rejects v0.2 requests for adapters whose owning task has not yet published a governed profile. Omitting the option remains v0.1 and is byte-compatible with explicit `--aecctx-version 0.1.0`.
 
 ## Conformance material
 
@@ -63,4 +63,5 @@ Changing only version strings is not a conforming migration when v0.2 semantic f
 - v0.2 positive fixture: `fixtures/v0.2/shared/minimal-v02`;
 - dynamic negative fixtures: `tests/test_v02_compatibility.py`;
 - claim registry: `conformance/v0.2/claims.json`;
+- bounded DXF corpus: `conformance/v0.2/dxf-corpus.json`;
 - acceptance evidence: `docs/evidence/ACX-11.md`.

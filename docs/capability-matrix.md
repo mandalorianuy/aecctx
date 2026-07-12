@@ -20,7 +20,7 @@ Opaque fallback ingest is implemented in the core. Format-specific adapter value
 |---|---|---|---|---|---|
 | Unknown binary/text | `full` registration | `opaque` with structured loss | `opaque` with structured loss | `opaque` with structured loss | ACX-02 completed |
 | IFC 2x3/4.x | `full` schema/GUID/class provenance | `full` when representable; dynamic `partial` with unsupported preservation | `partial` with native refs | `full` for successfully tessellated representations; dynamic `partial` on failures | ACX-04 completed |
-| ASCII/binary DXF | `full` version/unit/layout/layer/block/handle provenance | `partial` evidence with no automatic domain classification | `full` for normalized supported entities; dynamic `partial` with exact raw-tag fallback | `partial` | ACX-05 completed |
+| ASCII/binary DXF | `full` version/unit/layout/layer/block/handle provenance | `partial` source semantics for the ACX-14 AC1015/AC1032 profile with no automatic domain classification | `full` for normalized v0.1 entities; dynamic `partial` with exact raw-tag fallback | `partial` for enumerated ACX-14 entities/transforms plus derived tessellation | ACX-05 and ACX-14 completed |
 | Vector PDF | `full` source/page identity | `partial` text and content-stream evidence | `partial` path operators per page/viewport | `unsupported` as inferred hidden geometry | ACX-06 completed |
 | Raster PDF/image | `full` source/pixel identity | `partial` metadata; OCR/vision `unsupported` without provider | `partial` raster regions with explicit calibration state; image pixels `full` | `unsupported` as inferred hidden geometry | ACX-06 completed |
 | OBJ/STL/glTF | `full` source/object identity | `partial` metadata with explicit unknown units | deterministic SVG preview only | `full` preserved mesh evidence plus derived GLB with reversible transform | ACX-07 completed |
@@ -52,8 +52,8 @@ This table is a roadmap, not a support claim. Current claims in the release regi
 |---|---|---|---|
 | IFC source-native 2D | `partial`: public for IFC2X3 TC1/IFC4 Add2 TC1 explicit 2D contexts and the polyline/indexed-line/geometric-curve-set/mapped-2D profile | Additional curves, annotations, hatches/styles and later schemas remain structured loss | ACX-13 completed |
 | IFC georeferencing | `partial`: public for explicit IFC4 Add2 TC1 `IfcMapConversion` + `IfcProjectedCRS` with compatible declared units and reversible transforms | IFC2X3 property sets, omitted/multiple/conflicted operations and later schemas remain unknown/unsupported/conflicted | ACX-13 completed |
-| DXF source semantics | `partial` | Source-native dictionaries/XDATA/ownership/material/structure evidence; no consumer classification | ACX-14 |
-| DXF 3D | `partial` | Bounded 3D entity families with OCS/transforms/topology and explicit kernel/proxy loss | ACX-14 |
+| DXF source semantics | `partial`: public for AC1015/AC1032 with `ezdxf==1.4.4`, bounded dictionaries/XRECORD, extension dictionaries, XDATA/AppID, ownership, groups, attributes, materials and block structure | Other releases/objects and custom/proxy interpretation remain raw/opaque/unsupported; no consumer classification | ACX-14 completed |
+| DXF 3D | `partial`: public for enumerated point/line/face/mesh/polyline, OCS/WCS and bounded insert transforms with derived tessellation/GLB | ACIS/proxy/custom/encrypted/external-reference and unlisted geometry remain explicit loss | ACX-14 completed |
 | Raster OCR | `unsupported` without provider | Optional OCR spans/regions with provider provenance and native-text conflict handling | ACX-15 |
 | Image/PDF vision | `unsupported` without provider | Optional inferred candidates with explicit confidence, privacy, reproducibility, and evidence links | ACX-15 |
 | Hidden/unobserved geometry | `unsupported` | Remains unsupported as source geometry; optional reconstruction hypotheses never become measurement authority | ACX-15 |

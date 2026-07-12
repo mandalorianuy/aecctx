@@ -125,6 +125,15 @@ Status: Active
 - Consequence: both IFC 2D and georeferencing remain public `partial` claims with exact schema/item/operation scope and explicit absent/empty/unsupported/failure/conflict states.
 - Evidence owner: ACX-13 fixtures, claim mappings, deterministic SVG/replay tests and acceptance evidence.
 
+### ACXD-026: Bounded DXF v0.2 profiles and opt-in emission
+
+- Decision: ACX-14 implements only the source-semantic and bounded-3D profiles enumerated in `docs/specs/dxf-v02-profile.md`, using optional `ezdxf==1.4.4`. Public fixtures are limited to project-authored `AC1015` and `AC1032` ASCII/binary inputs; other releases or ezdxf versions remain unclaimed.
+- Semantic boundary: source handles/owners, dictionaries, extension dictionaries, XDATA/application IDs, groups, attributes, materials, layouts/layers and block/insert structure remain source evidence. Normalization cites those records and never infers construction families from names or geometry.
+- Geometry boundary: only the listed point/line/face/mesh/polyline and insert/OCS profiles are source-normalized. GLB/triangles are derived tessellation with explicit fidelity, transforms and loss. ACIS solids/surfaces, proxy/custom objects, xref traversal and encrypted/protected content remain raw/opaque/unsupported.
+- Compatibility: `ingest_dxf()` remains v0.1 by default. ACX-14 behavior is explicitly selected with `aecctx_version="0.2.0"`; v0.1 fixture/package identity remains unchanged.
+- Consequence: both DXF claims remain public `partial` claims bounded by exact releases, entities, dependency version and corpus evidence.
+- Evidence owner: ACX-14 fixtures, claim mappings, deterministic replay, security/loss tests and acceptance evidence.
+
 ## Open decisions
 
 ### ACXD-018: Signing and trust profile

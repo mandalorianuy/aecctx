@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import math
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -14,6 +15,14 @@ PLUGIN_VERSION = "0.1.0"
 
 class DXFDependencyError(RuntimeError):
     code = "AECCTX_DXF_DEPENDENCY_MISSING"
+
+
+class DXFParseError(ValueError):
+    code = "AECCTX_DXF_PARSE_FAILED"
+
+
+class DXFResourceLimitError(ValueError):
+    code = "AECCTX_DXF_RESOURCE_LIMIT_EXCEEDED"
 
 
 def _ezdxf() -> tuple[Any, Any, Any]:
@@ -39,11 +48,17 @@ def _unknown(reason: str) -> dict[str, str]:
     return {"state": "unknown", "reason_code": reason}
 
 
+def _explicit_null(reason: str) -> dict[str, str]:
+    return {"state": "explicit_null", "reason_code": reason}
+
+
 def _json_value(value: Any) -> Any:
     if value is None or isinstance(value, (str, int, bool)):
         return value
     if isinstance(value, float):
         return round(value, 12)
+    if hasattr(value, "tolist"):
+        return _json_value(value.tolist())
     if isinstance(value, (tuple, list)):
         return [_json_value(item) for item in value]
     if hasattr(value, "x") and hasattr(value, "y"):
@@ -118,6 +133,155 @@ def _geometry(entity: Any) -> dict[str, Any]:
     return {"state": "unsupported", "reason_code": "AECCTX_DXF_GEOMETRY_NOT_NORMALIZED"}
 
 
+def _raw_tags(entity: Any, TagCollector: Any, dxfversion: str) -> list[dict[str, Any]]:
+    collector = TagCollector(dxfversion=dxfversion)
+    entity.export_dxf(collector)
+    return [{"code": tag.code, "value": _json_value(tag.value)} for tag in collector.tags]
+
+
+def _dictionary_entries(dictionary: Any) -> dict[str, dict[str, Any]]:
+    entries: dict[str, dict[str, Any]] = {}
+    for name, value in sorted(dictionary.items(), key=lambda item: item[0]):
+        entries[name] = {
+            "handle": value.dxf.get("handle") if hasattr(value, "dxf") else str(value),
+            "type": value.dxftype() if hasattr(value, "dxftype") else "UNRESOLVED_HANDLE",
+        }
+    return entries
+
+
+def _extension_dictionary(entity: Any) -> dict[str, Any]:
+    if not entity.has_extension_dict:
+        return _explicit_null("AECCTX_DXF_EXTENSION_DICTIONARY_NOT_PRESENT")
+    extension = entity.get_extension_dict()
+    dictionary = extension.dictionary
+    return _known(
+        {
+            "entries": _dictionary_entries(dictionary),
+            "handle": dictionary.dxf.get("handle"),
+            "owner_handle": dictionary.dxf.get("owner"),
+        }
+    )
+
+
+def _matrix44_values(matrix: Any) -> list[float]:
+    values = [float(value) for value in matrix]
+    if len(values) != 16 or not all(math.isfinite(value) for value in values):
+        raise ValueError("DXF transform matrix must contain 16 finite values")
+    return [round(value, 12) for value in values]
+
+
+def _dxf_geometry_3d(entity: Any) -> dict[str, Any] | None:
+    from ezdxf.math import Matrix44, OCS
+
+    kind = entity.dxftype()
+    dxf = entity.dxf
+    if kind == "POINT":
+        return {"coordinate_space": "wcs", "dimensionality": 3, "location": _json_value(dxf.location)}
+    if kind == "LINE":
+        return {
+            "coordinate_space": "wcs",
+            "dimensionality": 3,
+            "end": _json_value(dxf.end),
+            "start": _json_value(dxf.start),
+        }
+    if kind == "3DFACE":
+        return {
+            "coordinate_space": "wcs",
+            "dimensionality": 3,
+            "vertices": [_json_value(dxf.get(name)) for name in ("vtx0", "vtx1", "vtx2", "vtx3")],
+        }
+    if kind == "MESH":
+        return {
+            "coordinate_space": "wcs",
+            "dimensionality": 3,
+            "edges": [list(map(int, edge)) for edge in entity.edges],
+            "faces": [list(map(int, face)) for face in entity.faces],
+            "vertices": [_json_value(vertex) for vertex in entity.vertices],
+        }
+    if kind == "POLYLINE":
+        vertices = [_json_value(vertex.dxf.location) for vertex in entity.vertices]
+        if entity.is_3d_polyline:
+            return {"coordinate_space": "wcs", "dimensionality": 3, "mode": "3d-polyline", "vertices": vertices}
+        if entity.is_polygon_mesh:
+            m_count = int(entity.dxf.m_count)
+            n_count = int(entity.dxf.n_count)
+            faces = [
+                [m * n_count + n, (m + 1) * n_count + n, (m + 1) * n_count + n + 1, m * n_count + n + 1]
+                for m in range(max(0, m_count - 1))
+                for n in range(max(0, n_count - 1))
+            ]
+            return {
+                "coordinate_space": "wcs",
+                "dimensionality": 3,
+                "faces": faces,
+                "mode": "polygon-mesh",
+                "vertices": vertices,
+            }
+        if entity.is_poly_face_mesh:
+            unique_vertices: list[list[float]] = []
+            index_by_vertex: dict[tuple[float, float, float], int] = {}
+            faces: list[list[int]] = []
+            for native_face in entity.faces():
+                face: list[int] = []
+                for vertex in native_face:
+                    point = tuple(float(value) for value in vertex.dxf.location)
+                    if face and point == tuple(unique_vertices[face[0]]) and len(face) >= 3:
+                        continue
+                    if point not in index_by_vertex:
+                        index_by_vertex[point] = len(unique_vertices)
+                        unique_vertices.append([round(value, 12) for value in point])
+                    face.append(index_by_vertex[point])
+                if len(face) >= 3:
+                    faces.append(face)
+            return {
+                "coordinate_space": "wcs",
+                "dimensionality": 3,
+                "faces": faces,
+                "mode": "polyface-mesh",
+                "vertices": unique_vertices,
+            }
+        return None
+    if kind == "INSERT":
+        return {
+            "block_name": dxf.name,
+            "coordinate_space": "wcs",
+            "dimensionality": 3,
+            "extrusion": _json_value(dxf.get("extrusion", (0.0, 0.0, 1.0))),
+            "insert": _json_value(dxf.insert),
+            "insert_matrix": _matrix44_values(entity.matrix44()),
+            "nested_instances": [],
+        }
+    if kind in {"CIRCLE", "ARC", "LWPOLYLINE", "SOLID", "TRACE"}:
+        extrusion = dxf.get("extrusion", (0.0, 0.0, 1.0))
+        ocs = OCS(extrusion)
+        geometry: dict[str, Any] = {
+            "coordinate_space": "ocs",
+            "dimensionality": 3,
+            "extrusion": _json_value(extrusion),
+            "ocs_to_wcs_matrix": _matrix44_values(getattr(ocs, "matrix", Matrix44())),
+        }
+        if dxf.hasattr("center"):
+            geometry["center_ocs"] = _json_value(dxf.center)
+            geometry["center_wcs"] = _json_value(ocs.to_wcs(dxf.center))
+        if dxf.hasattr("elevation"):
+            geometry["elevation"] = _json_value(dxf.elevation)
+        return geometry
+    return None
+
+
+def _triangulate_geometry(geometry: dict[str, Any]) -> tuple[list[list[float]], list[list[int]]]:
+    vertices = [list(map(float, point)) for point in geometry.get("vertices", [])]
+    faces = geometry.get("faces", [])
+    triangles: list[list[int]] = []
+    for face in faces:
+        if len(face) < 3:
+            continue
+        triangles.extend([[int(face[0]), int(face[index]), int(face[index + 1])] for index in range(1, len(face) - 1)])
+    if not faces and len(vertices) in {3, 4}:
+        triangles = [[0, 1, 2]] + ([[0, 2, 3]] if len(vertices) == 4 else [])
+    return vertices, triangles
+
+
 class DXFPlugin:
     def describe(self) -> dict[str, Any]:
         runtime = "not-installed"
@@ -139,6 +303,10 @@ class DXFPlugin:
             "resource_limits": {"bytes": True, "records": True, "wall_time": False, "memory": False},
             "supported_extensions": [".dxf"],
             "supported_media_types": ["application/dxf", "application/x-dxf"],
+            "v02_public_profiles": {
+                "bounded_3d": "dxf-r2000-r2018-bounded-3d-v1:partial",
+                "source_semantics": "dxf-r2000-r2018-source-semantics-v1:partial",
+            },
         }
 
     def probe(self, prefix: bytes) -> dict[str, Any]:
@@ -193,6 +361,9 @@ def ingest_dxf(
     created_at: str | None = None,
     embedding_policy: str = "external",
     package_form: str = "directory",
+    aecctx_version: str = "0.1.0",
+    max_source_bytes: int = 512 * 1024 * 1024,
+    max_records: int = 1_000_000,
 ) -> IngestResult:
     ezdxf, TagCollector, acad_release = _ezdxf()
     source = Path(source_path)
@@ -201,12 +372,29 @@ def ingest_dxf(
         raise ValueError("source_path must be a regular DXF file")
     if embedding_policy not in {"external", "embedded", "redacted"}:
         raise ValueError("embedding_policy must be external, embedded, or redacted")
+    if aecctx_version not in {"0.1.0", "0.2.0"}:
+        raise ValueError("aecctx_version must be 0.1.0 or 0.2.0")
+    if max_source_bytes < 1 or max_records < 1:
+        raise ValueError("DXF safety limits must be positive")
+    if source.stat().st_size > max_source_bytes:
+        error = DXFResourceLimitError(f"DXF source exceeds {max_source_bytes} bytes")
+        error.code = "AECCTX_DXF_SOURCE_SIZE_LIMIT_EXCEEDED"
+        raise error
     source_digest, source_bytes = hash_file(source)
+    with source.open("rb") as source_stream:
+        dxf_container = "binary" if source_stream.read(22).startswith(b"AutoCAD Binary DXF") else "ascii"
     identity = source_digest[:24]
     source_id = f"src_{identity}"
     package_id = f"pkg_{identity}"
     instant = _timestamp(created_at)
-    document = ezdxf.readfile(source)
+    try:
+        document = ezdxf.readfile(source)
+    except Exception as error:
+        raise DXFParseError(f"DXF parse failed: {type(error).__name__}: {error}") from error
+    if len(document.entitydb) > max_records:
+        error = DXFResourceLimitError(f"DXF entity/object count exceeds {max_records}")
+        error.code = "AECCTX_DXF_RECORD_LIMIT_EXCEEDED"
+        raise error
     runtime_version = str(ezdxf.__version__)
     audit = document.audit()
     unit = _unit_symbol(int(document.units))
@@ -219,6 +407,12 @@ def ingest_dxf(
             if handle:
                 graphical[handle] = entity
                 container_by_handle[handle] = f"layout:{layout.name}"
+            if aecctx_version == "0.2.0" and entity.dxftype() == "INSERT":
+                for attribute in entity.attribs:
+                    attribute_handle = attribute.dxf.get("handle")
+                    if attribute_handle:
+                        graphical[attribute_handle] = attribute
+                        container_by_handle[attribute_handle] = f"layout:{layout.name}/insert:{handle}"
     for block in document.blocks:
         if block.block_record.is_any_layout:
             continue
@@ -236,9 +430,7 @@ def ingest_dxf(
         primitive_id = _stable_id("prim_dxf", source_digest, handle)
         entity_id = _stable_id("entity_dxf", source_digest, handle)
         entity_ids[handle] = entity_id
-        collector = TagCollector(dxfversion=document.dxfversion)
-        entity.export_dxf(collector)
-        raw_tags = [{"code": tag.code, "value": _json_value(tag.value)} for tag in collector.tags]
+        raw_tags = _raw_tags(entity, TagCollector, document.dxfversion)
         xdata: dict[str, list[dict[str, Any]]] = {}
         for appid in sorted(document.appids, key=lambda item: item.dxf.name):
             appid_name = appid.dxf.name
@@ -264,6 +456,27 @@ def ingest_dxf(
         }
         if xdata:
             primitive["xdata"] = xdata
+        if aecctx_version == "0.2.0":
+            owner = entity.dxf.get("owner")
+            material_handle = entity.dxf.get("material_handle")
+            primitive["owner_handle"] = _known(owner) if owner else _unknown("AECCTX_DXF_OWNER_HANDLE_NOT_RESOLVED")
+            primitive["material_handle"] = (
+                _known(material_handle) if material_handle else _explicit_null("AECCTX_DXF_MATERIAL_HANDLE_NOT_PRESENT")
+            )
+            primitive["extension_dictionary"] = _extension_dictionary(entity)
+            if entity.dxftype() in {"ATTRIB", "ATTDEF"}:
+                primitive["attribute"] = {
+                    "tag": entity.dxf.get("tag", ""),
+                    "text": entity.dxf.get("text", ""),
+                }
+            geometry_3d = _dxf_geometry_3d(entity)
+            if geometry_3d is not None:
+                primitive["geometry_3d"] = geometry_3d
+                primitive["representation_fidelity"] = {
+                    "class": "source_exact",
+                    "derived": False,
+                    "source_representation_ids": [primitive_id],
+                }
         primitives.append(primitive)
         entity_records.append(
             {
@@ -280,6 +493,220 @@ def ingest_dxf(
                 "source_refs": [{"locator": locator, "source_id": source_id}],
             }
         )
+
+    if aecctx_version == "0.2.0":
+        group_names = {group.dxf.handle: name for name, group in document.groups}
+        dictionary_names: dict[str, str] = {document.rootdict.dxf.handle: "ROOT"}
+        for dictionary in (item for item in document.objects if item.dxftype() == "DICTIONARY"):
+            for name, value in dictionary.items():
+                if hasattr(value, "dxf") and value.dxf.get("handle"):
+                    dictionary_names.setdefault(value.dxf.handle, name)
+        for native in sorted(document.objects, key=lambda item: item.dxf.get("handle", "")):
+            handle = native.dxf.get("handle")
+            if not handle:
+                continue
+            primitive_id = _stable_id("prim_dxf_object", source_digest, handle)
+            locator = f"objects/handle:{handle}"
+            primitive: dict[str, Any] = {
+                "container": _known("objects-section"),
+                "extraction_confidence": {"band": "full", "method": "ezdxf-object-tags"},
+                "extension_dictionary": _extension_dictionary(native),
+                "geometry": {"state": "unsupported", "reason_code": "AECCTX_DXF_OBJECT_HAS_NO_NORMALIZED_GEOMETRY"},
+                "handle": handle,
+                "original_class": native.dxftype(),
+                "owner_handle": _known(native.dxf.get("owner")) if native.dxf.get("owner") else _unknown("AECCTX_DXF_OWNER_HANDLE_NOT_RESOLVED"),
+                "provenance": _provenance(instant, [source_id], runtime_version, "ezdxf-object-extraction"),
+                "raw_tags": _raw_tags(native, TagCollector, document.dxfversion),
+                "record_id": primitive_id,
+                "record_type": "primitive",
+                "record_version": "0.2",
+                "source_refs": [{"locator": locator, "source_id": source_id}],
+            }
+            if native.dxftype() == "DICTIONARY":
+                primitive["dictionary"] = {
+                    "entries": _dictionary_entries(native),
+                    "hard_owned": bool(native.dxf.get("hard_owned", 0)),
+                    "name": dictionary_names.get(handle, ""),
+                }
+            elif native.dxftype() == "XRECORD":
+                primitive["xrecord_tags"] = [{"code": tag.code, "value": _json_value(tag.value)} for tag in native.tags]
+            elif native.dxftype() == "GROUP":
+                primitive["group"] = {
+                    "description": native.dxf.get("description", ""),
+                    "member_handles": sorted(native.handles()),
+                    "name": group_names.get(handle, ""),
+                    "selectable": bool(native.dxf.get("selectable", 1)),
+                }
+            elif native.dxftype() == "MATERIAL":
+                primitive["material"] = {
+                    "description": native.dxf.get("description", ""),
+                    "handle": handle,
+                    "name": native.dxf.get("name", ""),
+                }
+            primitives.append(primitive)
+
+        for appid in sorted(document.appids, key=lambda item: item.dxf.name):
+            handle = appid.dxf.get("handle")
+            if not handle:
+                continue
+            primitives.append(
+                {
+                    "application_id": {"handle": handle, "name": appid.dxf.name},
+                    "container": _known("table:APPID"),
+                    "extraction_confidence": {"band": "full", "method": "ezdxf-table-record"},
+                    "geometry": {"state": "not_applicable", "reason_code": "AECCTX_DXF_TABLE_RECORD_NOT_GEOMETRY"},
+                    "handle": handle,
+                    "original_class": "APPID",
+                    "owner_handle": _known(appid.dxf.get("owner")) if appid.dxf.get("owner") else _unknown("AECCTX_DXF_OWNER_HANDLE_NOT_RESOLVED"),
+                    "provenance": _provenance(instant, [source_id], runtime_version, "ezdxf-appid-extraction"),
+                    "raw_tags": _raw_tags(appid, TagCollector, document.dxfversion),
+                    "record_id": _stable_id("prim_dxf_appid", source_digest, handle),
+                    "record_type": "primitive",
+                    "record_version": "0.2",
+                    "source_refs": [{"locator": f"table:APPID/handle:{handle}", "source_id": source_id}],
+                }
+            )
+
+    v02_geometry_artifacts: list[PackageArtifact] = []
+    v02_3d_issues: list[tuple[str, str]] = []
+    if aecctx_version == "0.2.0":
+        from ezdxf.math import Matrix44
+
+        primitive_by_handle = {record.get("handle"): record for record in primitives if record.get("handle")}
+        mesh_vertices: list[list[float]] = []
+        mesh_faces: list[list[int]] = []
+        mesh_sources: list[str] = []
+
+        def add_mesh(entity: Any, transform: Any) -> None:
+            geometry = _dxf_geometry_3d(entity)
+            if geometry is None:
+                return
+            if entity.dxftype() == "3DFACE":
+                geometry = {"vertices": geometry["vertices"]}
+            vertices, faces = _triangulate_geometry(geometry)
+            if not vertices or not faces:
+                return
+            transformed = [_json_value(transform.transform(vertex)) for vertex in vertices]
+            offset = len(mesh_vertices)
+            mesh_vertices.extend(transformed)
+            mesh_faces.extend([[offset + index for index in face] for face in faces])
+            handle = entity.dxf.get("handle")
+            if handle:
+                mesh_sources.append(_stable_id("prim_dxf", source_digest, handle))
+
+        def walk_insert(root: Any, current: Any, transform: Any, block_path: list[str]) -> None:
+            block_name = current.dxf.name
+            if block_name in block_path:
+                v02_3d_issues.append(("AECCTX_DXF_INSERT_CYCLE", current.dxf.get("handle", block_name)))
+                return
+            next_path = [*block_path, block_name]
+            if len(next_path) > 32:
+                v02_3d_issues.append(("AECCTX_DXF_INSERT_DEPTH_LIMIT", current.dxf.get("handle", block_name)))
+                return
+            try:
+                next_transform = current.matrix44() @ transform
+                _matrix44_values(next_transform)
+            except Exception:
+                v02_3d_issues.append(("AECCTX_DXF_INSERT_TRANSFORM_UNSUPPORTED", current.dxf.get("handle", block_name)))
+                return
+            try:
+                block = document.blocks.get(block_name)
+            except Exception:
+                v02_3d_issues.append(("AECCTX_DXF_INSERT_BLOCK_MISSING", current.dxf.get("handle", block_name)))
+                return
+            root_record = primitive_by_handle.get(root.dxf.get("handle"))
+            for child in block:
+                if child.dxftype() == "INSERT":
+                    walk_insert(root, child, next_transform, next_path)
+                    continue
+                geometry = _dxf_geometry_3d(child)
+                if geometry is None:
+                    continue
+                if root_record is not None and child.dxftype() in {"3DFACE", "MESH", "POLYLINE"}:
+                    root_record["geometry_3d"]["nested_instances"].append(
+                        {
+                            "block_path": next_path,
+                            "entity_class": child.dxftype(),
+                            "entity_handle": child.dxf.get("handle"),
+                            "transform_state": "known",
+                        }
+                    )
+                add_mesh(child, next_transform)
+
+        identity = Matrix44()
+        for entity in document.modelspace():
+            if entity.dxftype() == "INSERT":
+                walk_insert(entity, entity, identity, [])
+            elif entity.dxftype() in {"3DFACE", "MESH", "POLYLINE"}:
+                add_mesh(entity, identity)
+
+        if mesh_faces:
+            import numpy
+            import trimesh
+
+            from ..geometry import export_deterministic_glb, source_to_glb_transform
+
+            source_ids = sorted(set(mesh_sources))
+            mesh_payload = {
+                "coordinate_space": "dxf-wcs",
+                "faces": mesh_faces,
+                "fidelity": "tessellated",
+                "source_record_ids": source_ids,
+                "source_to_artifact_transform": source_to_glb_transform()["source_to_glb"],
+                "tolerance": {"state": "known", "value": 1e-9, "unit": unit or "drawing-unit"},
+                "vertices": mesh_vertices,
+            }
+            mesh_bytes = canonical_json(mesh_payload)
+            mesh_path = "geometry/dxf/bounded-profile-mesh.json"
+            glb_path = "geometry/dxf/bounded-profile.glb"
+            try:
+                source_mesh = trimesh.Trimesh(
+                    vertices=numpy.asarray(mesh_vertices, dtype=float),
+                    faces=numpy.asarray(mesh_faces, dtype=int),
+                    process=False,
+                )
+                glb_bytes = export_deterministic_glb([source_mesh])
+            except Exception as error:
+                glb_bytes = b""
+                v02_3d_issues.append(("AECCTX_DXF_GLB_EXPORT_FAILED", type(error).__name__))
+            v02_geometry_artifacts.append(
+                PackageArtifact(mesh_path, mesh_bytes, "application/vnd.aecctx.dxf-mesh+json", "dxf-derived-tessellation", False)
+            )
+            artifact_refs = [
+                {
+                    "artifact_path": mesh_path,
+                    "media_type": "application/vnd.aecctx.dxf-mesh+json",
+                    "sha256": hashlib.sha256(mesh_bytes).hexdigest(),
+                }
+            ]
+            if glb_bytes:
+                v02_geometry_artifacts.append(PackageArtifact(glb_path, glb_bytes, "model/gltf-binary", "dxf-derived-glb", False))
+                artifact_refs.append(
+                    {
+                        "artifact_path": glb_path,
+                        "media_type": "model/gltf-binary",
+                        "sha256": hashlib.sha256(glb_bytes).hexdigest(),
+                    }
+                )
+            primitives.append(
+                {
+                    "artifact_refs": artifact_refs,
+                    "container": _known("dxf-derived-geometry"),
+                    "evidence_class": "derived",
+                    "extraction_confidence": {"band": "full", "method": "aecctx-deterministic-dxf-tessellation"},
+                    "original_class": "AECCTXDerivedDXFTessellation",
+                    "provenance": _provenance(instant, source_ids, runtime_version, "aecctx-deterministic-dxf-tessellation"),
+                    "record_id": _stable_id("prim_dxf_tessellation", source_digest, "bounded-profile"),
+                    "record_type": "primitive",
+                    "record_version": "0.2",
+                    "representation_fidelity": {
+                        "class": "tessellated",
+                        "derived": True,
+                        "source_representation_ids": source_ids,
+                    },
+                    "source_refs": [{"locator": "dxf-derived-geometry:bounded-profile", "source_id": source_id}],
+                }
+            )
 
     block_ids: dict[str, str] = {}
     for block in sorted(document.blocks, key=lambda item: item.name):
@@ -390,7 +817,7 @@ def ingest_dxf(
         "properties": "AECCTX_DXF_PROPERTIES_PARTIAL",
         "relationships": "AECCTX_DXF_RELATIONSHIPS_PARTIAL",
         "2d_geometry": "AECCTX_DXF_ENTITY_GEOMETRY_UNSUPPORTED",
-        "3d_geometry": "AECCTX_DXF_3D_GEOMETRY_PARTIAL",
+        "3d_geometry": "AECCTX_DXF_3D_PROFILE_PARTIAL" if aecctx_version == "0.2.0" else "AECCTX_DXF_3D_GEOMETRY_PARTIAL",
         "materials_styles": "AECCTX_DXF_STYLES_PARTIAL",
         "georeferencing": "AECCTX_DXF_GEOREFERENCING_NOT_DECLARED",
     }
@@ -427,6 +854,32 @@ def ingest_dxf(
                 "source_refs": [{"locator": "dxf-document", "source_id": source_id}],
             }
         )
+    if aecctx_version == "0.2.0":
+        for handle, entity in sorted(graphical.items()):
+            if entity.dxftype() in {"3DSOLID", "BODY", "REGION", "SURFACE"}:
+                v02_3d_issues.append(("AECCTX_DXF_ACIS_KERNEL_UNSUPPORTED", handle))
+            elif entity.dxftype() == "ACAD_PROXY_ENTITY":
+                v02_3d_issues.append(("AECCTX_DXF_PROXY_GRAPHICS_UNSUPPORTED", handle))
+        for block in sorted(document.blocks, key=lambda item: item.name):
+            if block.block_record.is_xref:
+                v02_3d_issues.append(("AECCTX_DXF_XREF_NOT_TRAVERSED", block.name))
+    for code, locator in sorted(set(v02_3d_issues)):
+        diagnostics.append(
+            {
+                "affected_count": 1,
+                "capability": "3d_geometry",
+                "code": code,
+                "fallback": "Inspect preserved DXF entity tags and source transforms.",
+                "message": f"DXF bounded 3D profile degraded at {locator}.",
+                "provenance": _provenance(instant, [source_id], runtime_version, "dxf-v02-bounded-3d"),
+                "record_id": _stable_id("diag_dxf_v02_3d", source_digest, f"{code}:{locator}"),
+                "record_type": "diagnostic",
+                "record_version": "0.2",
+                "severity": "info",
+                "source_refs": [{"locator": f"dxf-handle:{locator}", "source_id": source_id}],
+                "support_level": "partial",
+            }
+        )
     diagnostics.sort(key=lambda item: item["record_id"])
     loss_summary = [reason_codes[name] for name in CAPABILITIES if capabilities[name] != "full"]
     storage_ref = f"sources/content/{source.name}" if embedding_policy == "embedded" else None
@@ -460,6 +913,12 @@ def ingest_dxf(
     elif embedding_policy == "redacted":
         source_record["redaction_reason"] = "AECCTX_SOURCE_CONTENT_REDACTED_BY_POLICY"
 
+    if aecctx_version == "0.2.0":
+        source_record["dxf_container"] = dxf_container
+        for record in [source_record, *primitives, *assertions, *entity_records, *relations, *diagnostics]:
+            record.setdefault("evidence_class", "observed")
+            record["record_version"] = "0.2"
+
     record_sets = {
         "sources/sources.jsonl": [source_record],
         "evidence/primitives.jsonl": primitives,
@@ -478,6 +937,7 @@ def ingest_dxf(
         "Layer names and entity classes are source evidence, not consumer-domain classifications.\n"
     ).encode("utf-8")
     artifacts.append(PackageArtifact("context/index.md", context, "text/markdown", "agent-context", False))
+    artifacts.extend(v02_geometry_artifacts)
     if storage_ref:
         artifacts.append(PackageArtifact(storage_ref, source, "application/dxf", "embedded-source", True))
     manifest = PackageWriter(output, package_form=package_form).write(
@@ -489,5 +949,6 @@ def ingest_dxf(
         embedding_policy=embedding_policy,
         producer={"name": PLUGIN_ID, "version": f"{PLUGIN_VERSION}+ezdxf.{runtime_version}"},
         artifacts=artifacts,
+        aecctx_version=aecctx_version,
     )
     return IngestResult(package_id, source_id, manifest["logical_digest"], output)

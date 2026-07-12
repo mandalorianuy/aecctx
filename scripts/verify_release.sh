@@ -20,9 +20,12 @@ done
 for required in \
   "aecctx-0.1.0/conformance/v0.2/provider-corpus.json" \
   "aecctx-0.1.0/conformance/v0.2/ifc-corpus.json" \
+  "aecctx-0.1.0/conformance/v0.2/dxf-corpus.json" \
   "aecctx-0.1.0/docs/providers/provider-review-template.md" \
   "aecctx-0.1.0/docs/security/external-provider-threat-model.md" \
   "aecctx-0.1.0/docs/specs/ifc-v02-profile.md" \
+  "aecctx-0.1.0/docs/specs/dxf-v02-profile.md" \
+  "aecctx-0.1.0/fixtures/v0.2/dxf/r2018-semantics-3d-binary.dxf" \
   "aecctx-0.1.0/fixtures/v0.2/ifc/ifc4-native-2d-georef.ifc"; do
   tar -tf "${artifacts[1]}" | grep -Fxq "$required" || {
     echo "aecctx release verify: sdist missing $required" >&2
