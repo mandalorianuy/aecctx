@@ -522,6 +522,8 @@ Objective: qualify mesh coordinates honestly and support explicit, provenance-be
 
 Normative profile: [`docs/specs/mesh-coordinate-v02-profile.md`](specs/mesh-coordinate-v02-profile.md), governed by ACXD-016 and ACXD-027. Control-point registration uses an orientation-preserving uniform-scale similarity; automatic affine/shear/reflection fitting is outside the claim.
 
+Execution cut: [`docs/plans/acx-16-implementation.md`](plans/acx-16-implementation.md). It is subordinate to this plan and the normative profile; it adds no scope.
+
 Deliverables:
 
 - format-specific declared metadata extraction for OBJ/STL/glTF-family inputs where available;
