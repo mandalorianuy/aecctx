@@ -426,3 +426,207 @@ def test_signing_statement_rejects_invalid_package_integrity(tmp_path: Path) -> 
         _signing().build_signing_statement(package)
 
     assert caught.value.code == "AECCTX_SIGNING_PACKAGE_INVALID"
+
+
+def _protected_header(kid: str = "test-a", **changes: str) -> str:
+    value = {
+        "alg": "Ed25519",
+        "https://aecctx.dev/jws/statement-sha256": "a" * 64,
+        "kid": kid,
+        "typ": "aecctx-signing-statement+jws",
+    }
+    value.update(changes)
+    return _signing_io().base64url_encode(_signing_io().canonical_json_nfc(value, terminal_lf=False))
+
+
+def _bundle_bytes(*entries: dict[str, str], **extra: object) -> bytes:
+    return _signing_io().canonical_json_nfc({"signatures": list(entries), **extra}, terminal_lf=True)
+
+
+def _registry_key(kid: str = "test-a", **changes: object) -> dict[str, object]:
+    value: dict[str, object] = {
+        "kid": kid,
+        "public_key": {"kty": "OKP", "crv": "Ed25519", "x": "A" * 43},
+        "subject": f"urn:aecctx:{kid}",
+        "valid_from": "2026-01-01T00:00:00Z",
+        "valid_until": "2027-01-01T00:00:00Z",
+        "revocation_status": "good",
+        "scopes": ["aecctx.package.sign"],
+    }
+    value.update(changes)
+    return value
+
+
+def _registry_bytes(keys: list[dict[str, object]]) -> bytes:
+    return _signing_io().canonical_json_nfc({"registry_version": "1", "keys": keys}, terminal_lf=True)
+
+
+def _policy_bytes(**changes: object) -> bytes:
+    value: dict[str, object] = {
+        "policy_version": "1",
+        "verification_time": "2026-07-12T00:00:00Z",
+        "allowed_algorithms": ["Ed25519"],
+        "trusted_kids": ["test-a"],
+        "trusted_subjects": [],
+        "required_scopes": ["aecctx.package.sign"],
+        "minimum_authorized_signatures": 1,
+    }
+    value.update(changes)
+    return _signing_io().canonical_json_nfc(value, terminal_lf=True)
+
+
+def test_parse_signature_bundle_accepts_only_exact_canonical_detached_entries() -> None:
+    entry = {"protected": _protected_header(), "signature": "A" * 86}
+
+    bundle = _signing().parse_signature_bundle(_bundle_bytes(entry))
+
+    assert bundle.signatures[0].kid == "test-a"
+    assert bundle.signatures[0].algorithm == "Ed25519"
+    assert bundle.signatures[0].statement_sha256 == "a" * 64
+    assert bundle.to_bytes() == _bundle_bytes(entry)
+
+
+@pytest.mark.parametrize(
+    "data",
+    (
+        _bundle_bytes(payload="e30"),
+        _bundle_bytes({"protected": _protected_header(), "signature": "A" * 86, "header": "forbidden"}),
+        _bundle_bytes(),
+        _bundle_bytes(*({"protected": _protected_header(f"test-{index:02d}"), "signature": "A" * 86} for index in range(65))),
+        _bundle_bytes({"protected": _protected_header(), "signature": "A" * 85}),
+    ),
+)
+def test_parse_signature_bundle_rejects_closed_schema_and_limits(data: bytes) -> None:
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing().parse_signature_bundle(data)
+
+    assert caught.value.code in {"AECCTX_SIGNING_SCHEMA_INVALID", "AECCTX_SIGNING_INPUT_LIMIT_EXCEEDED"}
+
+
+@pytest.mark.parametrize(
+    "protected",
+    (
+        _protected_header(alg="EdDSA"),
+        _protected_header(typ="application/jose"),
+        _protected_header(**{"https://aecctx.dev/jws/statement-sha256": "A" * 64}),
+        _signing_io().base64url_encode(
+            _signing_io().canonical_json_nfc(
+                {
+                    "alg": "Ed25519",
+                    "https://aecctx.dev/jws/statement-sha256": "a" * 64,
+                    "kid": "test-a",
+                },
+                terminal_lf=False,
+            )
+        ),
+        _signing_io().base64url_encode(
+            _signing_io().canonical_json_nfc(
+                {
+                    "alg": "Ed25519",
+                    "https://aecctx.dev/jws/statement-sha256": "a" * 64,
+                    "kid": "test-a",
+                    "typ": "aecctx-signing-statement+jws",
+                    "jku": "https://example.invalid/key",
+                },
+                terminal_lf=False,
+            )
+        ),
+    ),
+)
+def test_parse_signature_bundle_rejects_non_profile_protected_headers(protected: str) -> None:
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing().parse_signature_bundle(_bundle_bytes({"protected": protected, "signature": "A" * 86}))
+
+    assert caught.value.code == "AECCTX_SIGNING_HEADER_INVALID"
+
+
+def test_parse_signature_bundle_rejects_noncanonical_base64_duplicate_kid_and_order() -> None:
+    cases = (
+        _bundle_bytes({"protected": _protected_header() + "=", "signature": "A" * 86}),
+        _bundle_bytes(
+            {"protected": _protected_header(), "signature": "A" * 86},
+            {"protected": _protected_header(), "signature": _signing_io().base64url_encode(b"B" * 64)},
+        ),
+        _bundle_bytes(
+            {"protected": _protected_header("test-z"), "signature": "A" * 86},
+            {"protected": _protected_header("test-a"), "signature": _signing_io().base64url_encode(b"B" * 64)},
+        ),
+    )
+    expected = (
+        "AECCTX_SIGNING_BASE64URL_INVALID",
+        "AECCTX_SIGNING_DUPLICATE_KID",
+        "AECCTX_SIGNING_BUNDLE_ORDER_INVALID",
+    )
+
+    for data, code in zip(cases, expected, strict=True):
+        with pytest.raises(_signing().SigningError) as caught:
+            _signing().parse_signature_bundle(data)
+        assert caught.value.code == code
+
+
+def test_parse_key_registry_accepts_exact_records_and_rejects_duplicate_kids() -> None:
+    registry = _signing().parse_key_registry(_registry_bytes([_registry_key()]))
+
+    assert registry.keys[0].kid == "test-a"
+    assert registry.keys[0].public_key_x == "A" * 43
+
+    duplicate = [_registry_key(), _registry_key(subject="urn:aecctx:other")]
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing().parse_key_registry(_registry_bytes(duplicate))
+    assert caught.value.code == "AECCTX_SIGNING_DUPLICATE_KID"
+
+
+@pytest.mark.parametrize(
+    "keys",
+    (
+        [_registry_key(public_key={"kty": "OKP", "crv": "Ed25519", "x": "A" * 42})],
+        [_registry_key(valid_until="2026-01-01T00:00:00Z")],
+        [_registry_key(valid_from="2027-01-01T00:00:00Z")],
+        [
+            _registry_key(
+                revocation_status="revoked",
+                revoked_at="2027-01-01T00:00:00Z",
+            )
+        ],
+        [_registry_key(unknown="forbidden")],
+        [_registry_key(valid_from="2026-01-01T00:00:00+00:00")],
+    ),
+)
+def test_parse_key_registry_rejects_invalid_records(keys: list[dict[str, object]]) -> None:
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing().parse_key_registry(_registry_bytes(keys))
+
+    assert caught.value.code in {"AECCTX_SIGNING_SCHEMA_INVALID", "AECCTX_SIGNING_REGISTRY_INVALID"}
+
+
+def test_parse_key_registry_rejects_more_than_1024_keys() -> None:
+    keys = [_registry_key(f"test-{index:04d}") for index in range(1_025)]
+
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing().parse_key_registry(_registry_bytes(keys))
+
+    assert caught.value.code == "AECCTX_SIGNING_SCHEMA_INVALID"
+
+
+def test_parse_trust_policy_accepts_exact_offline_policy() -> None:
+    policy = _signing().parse_trust_policy(_policy_bytes())
+
+    assert policy.verification_time == "2026-07-12T00:00:00Z"
+    assert policy.allowed_algorithms == ("Ed25519",)
+    assert policy.minimum_authorized_signatures == 1
+
+
+@pytest.mark.parametrize(
+    "changes",
+    (
+        {"minimum_authorized_signatures": 0},
+        {"minimum_authorized_signatures": 65},
+        {"verification_time": "2026-07-12T00:00:00+00:00"},
+        {"unknown": "forbidden"},
+    ),
+)
+def test_parse_trust_policy_rejects_threshold_timezone_and_unknown_fields(changes: dict[str, object]) -> None:
+    with pytest.raises(_signing().SigningError) as caught:
+        _signing().parse_trust_policy(_policy_bytes(**changes))
+
+    assert caught.value.code in {"AECCTX_SIGNING_SCHEMA_INVALID", "AECCTX_SIGNING_POLICY_INVALID"}

@@ -289,6 +289,8 @@ signing_input = f"{base64url_encode(canonical_json_nfc(protected, terminal_lf=Fa
 
 ### Task 4: Strict bundle, registry and trust-policy parsing
 
+**Checkpoint:** Completed 2026-07-12. Parser RED produced 25 expected missing-interface failures; lifecycle/policy RED produced 12 expected missing-interface failures. GREEN passes 74 policy/contract tests and 88 combined crypto/policy/contract tests. Full `./scripts/verify.sh` passes 371 tests with 9 optional skips, builds wheel and sdist, and passes portable, release and baseline-integration gates. Completion commit is the Task 4 milestone commit on `codex/acx-20-signing`.
+
 **Files:**
 - Modify: `src/aecctx/signing.py`
 - Modify: `tests/test_signing_contract.py`
@@ -300,11 +302,11 @@ signing_input = f"{base64url_encode(canonical_json_nfc(protected, terminal_lf=Fa
 - Produces `parse_trust_policy(data: bytes, *, limits=SigningLimits()) -> TrustPolicy`.
 - Produces `evaluate_key(key: SigningKey | None, policy: TrustPolicy | None) -> KeyPolicyEvaluation` with independent `key_status`, `trust_status`, `authorization_status` and codes.
 
-- [ ] **Step 1: Write failing parser-adversarial tests.** Cover attached `payload`, empty/excessive signatures, unprotected header, missing/unknown protected header, `EdDSA`, invalid `typ`, wrong statement digest grammar, duplicate decoded `kid`, padded base64url, wrong public/signature length, duplicate registry keys, 1,025 keys, invalid intervals, inconsistent `revoked_at`, unknown fields, invalid time zone and threshold 0/65.
+- [x] **Step 1: Write failing parser-adversarial tests.** Cover attached `payload`, empty/excessive signatures, unprotected header, missing/unknown protected header, `EdDSA`, invalid `typ`, wrong statement digest grammar, duplicate decoded `kid`, padded base64url, wrong public/signature length, duplicate registry keys, 1,025 keys, invalid intervals, inconsistent `revoked_at`, unknown fields, invalid time zone and threshold 0/65.
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py -k 'bundle or registry or policy' -q`; expect missing parser failures.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py -k 'bundle or registry or policy' -q`; expect missing parser failures.
 
-- [ ] **Step 3: Implement strict schema-first parsers.** Size-check bytes before decoding, call `load_strict_json`, validate the closed schema, decode protected headers strictly, reject all but the four exact protected names and sort/compare entries against canonical order rather than silently normalizing hostile input.
+- [x] **Step 3: Implement strict schema-first parsers.** Size-check bytes before decoding, call `load_strict_json`, validate the closed schema, decode protected headers strictly, reject all but the four exact protected names and sort/compare entries against canonical order rather than silently normalizing hostile input.
 
 ```python
 allowed_headers = {"alg", "kid", "typ", "https://aecctx.dev/jws/statement-sha256"}
@@ -312,7 +314,7 @@ if set(protected) != allowed_headers:
     raise SigningError("AECCTX_SIGNING_HEADER_INVALID", "protected header set does not match profile v1")
 ```
 
-- [ ] **Step 4: Write failing key-lifecycle/trust tests.** At exact boundary instants assert `not_yet_valid` before `valid_from`, `valid` at `valid_from`, `expired` at `valid_until`, `valid` before `revoked_at`, `revoked` at `revoked_at`, and `unknown_status` independently of trust. Assert an expired key can simultaneously be `untrusted`; an unknown `kid` and a verification without policy produce `not_evaluated`, never `unknown_status`.
+- [x] **Step 4: Write failing key-lifecycle/trust tests.** At exact boundary instants assert `not_yet_valid` before `valid_from`, `valid` at `valid_from`, `expired` at `valid_until`, `valid` before `revoked_at`, `revoked` at `revoked_at`, and `unknown_status` independently of trust. Assert an expired key can simultaneously be `untrusted`; an unknown `kid` and a verification without policy produce `not_evaluated`, never `unknown_status`.
 
 ```python
 def test_key_lifecycle_and_trust_are_independent() -> None:
@@ -322,11 +324,11 @@ def test_key_lifecycle_and_trust_are_independent() -> None:
     assert evaluation.authorization_status == "unauthorized"
 ```
 
-- [ ] **Step 5: Implement deterministic policy evaluation.** Accept `key=None` and/or `policy=None` and return `key_status`, `trust_status` and `authorization_status` all `not_evaluated`; otherwise parse RFC3339 UTC instants without consulting `datetime.now`, compute lifecycle independently, trust only registry-controlled `kid`/subject allowlists, and authorize only a trusted lifecycle-valid key whose scopes contain every required scope.
+- [x] **Step 5: Implement deterministic policy evaluation.** Accept `key=None` and/or `policy=None` and return `key_status`, `trust_status` and `authorization_status` all `not_evaluated`; otherwise parse RFC3339 UTC instants without consulting `datetime.now`, compute lifecycle independently, trust only registry-controlled `kid`/subject allowlists, and authorize only a trusted lifecycle-valid key whose scopes contain every required scope.
 
-- [ ] **Step 6: Verify GREEN.** Run `.venv/bin/python -m pytest tests/test_signing_policy.py tests/test_signing_contract.py -q`; monkeypatch the host clock and socket APIs and require unchanged results/no calls.
+- [x] **Step 6: Verify GREEN.** Run `.venv/bin/python -m pytest tests/test_signing_policy.py tests/test_signing_contract.py -q`; monkeypatch the host clock and socket APIs and require unchanged results/no calls.
 
-- [ ] **Step 7: Commit.** Commit as `feat: evaluate offline signing trust policies`.
+- [x] **Step 7: Commit.** Commit as `feat: evaluate offline signing trust policies`.
 
 ### Task 5: Multi-signature verification and separated result records
 

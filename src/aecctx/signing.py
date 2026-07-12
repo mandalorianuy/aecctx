@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 import hashlib
+import re
 import unicodedata
 from collections.abc import Mapping as MappingABC
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from importlib.resources import files
 from pathlib import Path
 from types import MappingProxyType
@@ -32,6 +34,9 @@ TRUST_STATUSES = frozenset({"trusted", "untrusted", "not_evaluated"})
 AUTHORIZATION_STATUSES = frozenset({"authorized", "unauthorized", "not_evaluated"})
 REVOCATION_STATUSES = frozenset({"good", "revoked", "unknown"})
 SIGNING_ALGORITHMS = frozenset({"Ed25519"})
+_PROTECTED_HEADERS = frozenset({"alg", "kid", "typ", "https://aecctx.dev/jws/statement-sha256"})
+_LOWER_SHA256 = re.compile(r"[0-9a-f]{64}")
+_UTC_INSTANT = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z")
 
 
 class SigningError(AECCTXError):
@@ -143,6 +148,19 @@ class TrustPolicy:
 
 
 @dataclass(frozen=True, slots=True)
+class KeyPolicyEvaluation:
+    key_status: str
+    trust_status: str
+    authorization_status: str
+    diagnostic_codes: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        _require_state("key_status", self.key_status, KEY_STATUSES)
+        _require_state("trust_status", self.trust_status, TRUST_STATUSES)
+        _require_state("authorization_status", self.authorization_status, AUTHORIZATION_STATUSES)
+
+
+@dataclass(frozen=True, slots=True)
 class SignatureVerification:
     kid: str
     algorithm: str
@@ -188,6 +206,200 @@ def validate_signing_document(value: Any, schema_name: str) -> None:
     if errors:
         location = "/".join(str(part) for part in errors[0].absolute_path) or "$"
         raise SigningError("AECCTX_SIGNING_SCHEMA_INVALID", f"{schema_name} failed validation at {location}")
+
+
+def _parse_utc_instant(value: str, *, code: str, label: str) -> datetime:
+    if _UTC_INSTANT.fullmatch(value) is None:
+        raise SigningError(code, f"{label} must be an RFC3339 UTC instant")
+    try:
+        instant = datetime.fromisoformat(value[:-1] + "+00:00")
+    except ValueError as error:
+        raise SigningError(code, f"{label} must be an RFC3339 UTC instant") from error
+    if instant.tzinfo != timezone.utc:
+        raise SigningError(code, f"{label} must be an RFC3339 UTC instant")
+    return instant
+
+
+def parse_signature_bundle(data: bytes, *, limits: SigningLimits | None = None) -> SignatureBundle:
+    from ._signing_io import base64url_decode, canonical_json_nfc, load_strict_json
+
+    active_limits = limits or SigningLimits()
+    value = load_strict_json(data, label="signature bundle", max_bytes=active_limits.max_document_bytes)
+    validate_signing_document(value, "signature-bundle.schema.json")
+    signatures = value["signatures"]
+    if len(signatures) > active_limits.max_signatures:
+        raise SigningError("AECCTX_SIGNING_INPUT_LIMIT_EXCEEDED", "signature bundle exceeds its signature limit")
+
+    entries: list[SignatureEntry] = []
+    for item in signatures:
+        protected_bytes = base64url_decode(item["protected"])
+        protected = load_strict_json(
+            protected_bytes,
+            label="protected header",
+            max_bytes=2_048,
+        )
+        if not isinstance(protected, dict) or set(protected) != _PROTECTED_HEADERS:
+            raise SigningError("AECCTX_SIGNING_HEADER_INVALID", "protected header set does not match profile v1")
+        if canonical_json_nfc(protected, terminal_lf=False) != protected_bytes:
+            raise SigningError("AECCTX_SIGNING_HEADER_INVALID", "protected header is not canonical JSON")
+        algorithm = protected["alg"]
+        kid = protected["kid"]
+        statement_sha256 = protected["https://aecctx.dev/jws/statement-sha256"]
+        if (
+            algorithm != "Ed25519"
+            or protected["typ"] != "aecctx-signing-statement+jws"
+            or not isinstance(kid, str)
+            or not isinstance(statement_sha256, str)
+            or _LOWER_SHA256.fullmatch(statement_sha256) is None
+        ):
+            raise SigningError("AECCTX_SIGNING_HEADER_INVALID", "protected header values do not match profile v1")
+        try:
+            _validate_kid(kid)
+        except SigningError as error:
+            raise SigningError("AECCTX_SIGNING_HEADER_INVALID", "protected kid is invalid") from error
+        base64url_decode(item["signature"], expected_bytes=64)
+        entries.append(SignatureEntry(item["protected"], item["signature"], kid, algorithm, statement_sha256))
+
+    kids = [entry.kid for entry in entries]
+    if len(kids) != len(set(kids)):
+        raise SigningError("AECCTX_SIGNING_DUPLICATE_KID", "signature bundle contains a duplicate kid")
+    ordered = sorted(entries, key=lambda item: (item.kid, item.protected, item.signature))
+    if entries != ordered:
+        raise SigningError("AECCTX_SIGNING_BUNDLE_ORDER_INVALID", "signature bundle entries are not canonically ordered")
+    return SignatureBundle(tuple(entries))
+
+
+def parse_key_registry(data: bytes, *, limits: SigningLimits | None = None) -> KeyRegistry:
+    from ._signing_io import base64url_decode, load_strict_json
+
+    active_limits = limits or SigningLimits()
+    value = load_strict_json(data, label="key registry", max_bytes=active_limits.max_document_bytes)
+    validate_signing_document(value, "signing-key-registry.schema.json")
+    records = value["keys"]
+    if len(records) > active_limits.max_keys:
+        raise SigningError("AECCTX_SIGNING_INPUT_LIMIT_EXCEEDED", "key registry exceeds its key limit")
+
+    keys: list[SigningKey] = []
+    seen: set[str] = set()
+    for record in records:
+        kid = record["kid"]
+        _validate_kid(kid)
+        if kid in seen:
+            raise SigningError("AECCTX_SIGNING_DUPLICATE_KID", "key registry contains a duplicate kid")
+        seen.add(kid)
+        base64url_decode(record["public_key"]["x"], expected_bytes=32)
+        valid_from = _parse_utc_instant(
+            record["valid_from"], code="AECCTX_SIGNING_REGISTRY_INVALID", label="valid_from"
+        )
+        valid_until = _parse_utc_instant(
+            record["valid_until"], code="AECCTX_SIGNING_REGISTRY_INVALID", label="valid_until"
+        )
+        if valid_from >= valid_until:
+            raise SigningError("AECCTX_SIGNING_REGISTRY_INVALID", "key validity interval must be non-empty")
+        revoked_at_value = record.get("revoked_at")
+        revoked_at = None
+        if revoked_at_value is not None:
+            revoked_at = _parse_utc_instant(
+                revoked_at_value, code="AECCTX_SIGNING_REGISTRY_INVALID", label="revoked_at"
+            )
+            if revoked_at < valid_from or revoked_at >= valid_until:
+                raise SigningError("AECCTX_SIGNING_REGISTRY_INVALID", "revoked_at must fall within the key interval")
+        scopes = tuple(record["scopes"])
+        if list(scopes) != sorted(scopes):
+            raise SigningError("AECCTX_SIGNING_REGISTRY_INVALID", "key scopes must be sorted")
+        keys.append(
+            SigningKey(
+                kid=kid,
+                public_key_x=record["public_key"]["x"],
+                subject=record["subject"],
+                valid_from=record["valid_from"],
+                valid_until=record["valid_until"],
+                revocation_status=record["revocation_status"],
+                revoked_at=revoked_at_value,
+                scopes=scopes,
+            )
+        )
+    return KeyRegistry(tuple(keys))
+
+
+def parse_trust_policy(data: bytes, *, limits: SigningLimits | None = None) -> TrustPolicy:
+    from ._signing_io import load_strict_json
+
+    active_limits = limits or SigningLimits()
+    value = load_strict_json(data, label="trust policy", max_bytes=active_limits.max_document_bytes)
+    validate_signing_document(value, "signing-trust-policy.schema.json")
+    _parse_utc_instant(
+        value["verification_time"], code="AECCTX_SIGNING_POLICY_INVALID", label="verification_time"
+    )
+    required_scopes = tuple(value["required_scopes"])
+    if list(required_scopes) != sorted(required_scopes):
+        raise SigningError("AECCTX_SIGNING_POLICY_INVALID", "required scopes must be sorted")
+    return TrustPolicy(
+        verification_time=value["verification_time"],
+        allowed_algorithms=tuple(value["allowed_algorithms"]),
+        trusted_kids=tuple(value["trusted_kids"]),
+        trusted_subjects=tuple(value["trusted_subjects"]),
+        required_scopes=required_scopes,
+        minimum_authorized_signatures=value["minimum_authorized_signatures"],
+    )
+
+
+def evaluate_key(key: SigningKey | None, policy: TrustPolicy | None) -> KeyPolicyEvaluation:
+    if key is None or policy is None:
+        return KeyPolicyEvaluation("not_evaluated", "not_evaluated", "not_evaluated", ())
+
+    verification_time = _parse_utc_instant(
+        policy.verification_time,
+        code="AECCTX_SIGNING_POLICY_INVALID",
+        label="verification_time",
+    )
+    valid_from = _parse_utc_instant(
+        key.valid_from,
+        code="AECCTX_SIGNING_REGISTRY_INVALID",
+        label="valid_from",
+    )
+    valid_until = _parse_utc_instant(
+        key.valid_until,
+        code="AECCTX_SIGNING_REGISTRY_INVALID",
+        label="valid_until",
+    )
+    if verification_time < valid_from:
+        key_status = "not_yet_valid"
+    elif verification_time >= valid_until:
+        key_status = "expired"
+    elif key.revocation_status == "revoked":
+        if key.revoked_at is None:
+            raise SigningError("AECCTX_SIGNING_REGISTRY_INVALID", "revoked key requires revoked_at")
+        revoked_at = _parse_utc_instant(
+            key.revoked_at,
+            code="AECCTX_SIGNING_REGISTRY_INVALID",
+            label="revoked_at",
+        )
+        key_status = "revoked" if verification_time >= revoked_at else "valid"
+    elif key.revocation_status == "unknown":
+        key_status = "unknown_status"
+    else:
+        key_status = "valid"
+
+    selected = key.kid in policy.trusted_kids or key.subject in policy.trusted_subjects
+    trust_status = "trusted" if key_status == "valid" and selected else "untrusted"
+    scopes_satisfied = set(policy.required_scopes).issubset(key.scopes)
+    authorization_status = "authorized" if trust_status == "trusted" and scopes_satisfied else "unauthorized"
+
+    key_codes = {
+        "not_yet_valid": "AECCTX_SIGNING_KEY_NOT_YET_VALID",
+        "expired": "AECCTX_SIGNING_KEY_EXPIRED",
+        "revoked": "AECCTX_SIGNING_KEY_REVOKED",
+        "unknown_status": "AECCTX_SIGNING_KEY_STATUS_UNKNOWN",
+    }
+    codes: list[str] = []
+    if key_status in key_codes:
+        codes.append(key_codes[key_status])
+    if trust_status == "untrusted":
+        codes.append("AECCTX_SIGNING_KEY_UNTRUSTED")
+    if authorization_status == "unauthorized":
+        codes.append("AECCTX_SIGNING_SIGNER_UNAUTHORIZED")
+    return KeyPolicyEvaluation(key_status, trust_status, authorization_status, tuple(codes))
 
 
 def build_signing_statement(package_path: str | Path, *, limits: SigningLimits | None = None) -> SigningStatement:
