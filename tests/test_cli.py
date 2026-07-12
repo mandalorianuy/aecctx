@@ -64,6 +64,14 @@ def test_version_command_is_machine_readable() -> None:
     }
 
 
+def test_root_help_registers_signing_without_removing_existing_commands() -> None:
+    completed = run_cli("--help")
+
+    assert completed.returncode == 0
+    for command in ("validate", "info", "version", "ingest", "query", "diff", "context", "sign", "verify-signatures"):
+        assert command in completed.stdout
+
+
 def test_ingest_command_creates_valid_opaque_package(tmp_path: Path) -> None:
     source = tmp_path / "source.bin"
     source.write_bytes(b"opaque")

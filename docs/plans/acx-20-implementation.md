@@ -380,6 +380,8 @@ policy_satisfied = len(authorized) >= policy.minimum_authorized_signatures
 
 ### Task 6: CLI sign/verify commands and exit contract
 
+**Checkpoint:** Completed 2026-07-12. Parser/happy-path RED produced 5 expected unknown-command failures; exit/copy RED left 1 expected missing-status-summary failure after 38 cases already passed. GREEN passes 39 signing/existing CLI tests, including atomic no-clobber, secret redaction, explicit password files and exit `0/1/2`. Manual `validate` and `info` remain unchanged and successful for the minimal v0.1 and v0.2 fixtures. Full `./scripts/verify.sh` passes 404 tests with 9 optional skips, builds wheel and sdist, and passes portable, release and baseline-integration gates. Completion commit is the Task 6 milestone commit on `codex/acx-20-signing`.
+
 **Files:**
 - Modify: `src/aecctx/cli.py`
 - Create: `tests/test_signing_cli.py`
@@ -390,7 +392,7 @@ policy_satisfied = len(authorized) >= policy.minimum_authorized_signatures
 - Adds `aecctx verify-signatures PACKAGE [--signature-bundle BUNDLE] --key-registry REGISTRY [--trust-policy POLICY] [--json]`.
 - Both commands call the public SDK only; CLI contains argument/file/output handling but no duplicate signing semantics.
 
-- [ ] **Step 1: Write failing parser and happy-path CLI tests.** Assert exact help/options, missing required arguments, sign output, append, JSON structure and SDK byte parity.
+- [x] **Step 1: Write failing parser and happy-path CLI tests.** Assert exact help/options, missing required arguments, sign output, append, JSON structure and SDK byte parity.
 
 ```python
 def test_verify_cli_exit_zero_only_for_satisfied_policy(tmp_path: Path) -> None:
@@ -400,19 +402,19 @@ def test_verify_cli_exit_zero_only_for_satisfied_policy(tmp_path: Path) -> None:
     assert json.loads(completed.stdout)["data"]["policy_evaluation"]["policy_satisfied"] is True
 ```
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_cli.py -q`; expect argparse unknown-command failures.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_cli.py -q`; expect argparse unknown-command failures.
 
-- [ ] **Step 3: Add CLI parsers and bounded reads.** Reject output that already exists; `--append-to` requires a distinct new `--output`; read every control/key/password file through `read_bounded_regular_file`; strip exactly one terminal LF from password bytes; never accept a password argument or environment fallback.
+- [x] **Step 3: Add CLI parsers and bounded reads.** Reject output that already exists; `--append-to` requires a distinct new `--output`; read every control/key/password file through `read_bounded_regular_file`; strip exactly one terminal LF from password bytes; never accept a password argument or environment fallback.
 
-- [ ] **Step 4: Implement atomic sidecar writes.** Serialize first, create a mode-0600 temporary file in the destination directory, `fsync`, then replace only the previously nonexistent output path. On error, remove temporary data and leave package/input sidecar unchanged.
+- [x] **Step 4: Implement atomic sidecar writes.** Serialize first, create a mode-0600 temporary file in the destination directory, `fsync`, then replace only the previously nonexistent output path. On error, remove temporary data and leave package/input sidecar unchanged.
 
-- [ ] **Step 5: Write failing exit/diagnostic/secret tests.** Verify sign `0/2`; verify `0` satisfied, `1` unsigned/no-policy/unsatisfied, `2` invalid package/malformed controls/missing crypto. Capture stdout/stderr and assert private key/password bytes and absolute input paths are absent.
+- [x] **Step 5: Write failing exit/diagnostic/secret tests.** Verify sign `0/2`; verify `0` satisfied, `1` unsigned/no-policy/unsatisfied, `2` invalid package/malformed controls/missing crypto. Capture stdout/stderr and assert private key/password bytes and absolute input paths are absent.
 
-- [ ] **Step 6: Implement JSON and text emission.** JSON uses the existing `{data, diagnostics, ok}` envelope. `ok` is true when evaluation executes even if exit is `1`; `policy_satisfied` remains separate. Text output states `unsigned`, counts each status axis and never says trusted/authorized unless the corresponding fields do.
+- [x] **Step 6: Implement JSON and text emission.** JSON uses the existing `{data, diagnostics, ok}` envelope. `ok` is true when evaluation executes even if exit is `1`; `policy_satisfied` remains separate. Text output states `unsigned`, counts each status axis and never says trusted/authorized unless the corresponding fields do.
 
-- [ ] **Step 7: Verify GREEN and regress existing CLI.** Run `.venv/bin/python -m pytest tests/test_signing_cli.py tests/test_cli.py -q`; run manual `aecctx validate` and `aecctx info` against both minimal fixtures to prove unchanged output.
+- [x] **Step 7: Verify GREEN and regress existing CLI.** Run `.venv/bin/python -m pytest tests/test_signing_cli.py tests/test_cli.py -q`; run manual `aecctx validate` and `aecctx info` against both minimal fixtures to prove unchanged output.
 
-- [ ] **Step 8: Commit.** Commit as `feat: expose explicit signing CLI`.
+- [x] **Step 8: Commit.** Commit as `feat: expose explicit signing CLI`.
 
 ### Task 7: Publishable signing corpus, portable gates and packaging proof
 
