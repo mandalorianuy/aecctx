@@ -25,6 +25,7 @@ The claim is partial: direct JSON objects are observed decoder evidence; DXF and
 - `python3 scripts/check_meta_agent_baseline_integration.py --fail-on-issues`: healthy, zero issues.
 - `./scripts/verify_portable.sh`: passed.
 - `./scripts/verify.sh`: passed.
+- GitHub Actions CI run `29205070763` on implementation commit `fd1f5ff`: passed on macOS, Ubuntu and Windows.
 
 ## Residuals
 
