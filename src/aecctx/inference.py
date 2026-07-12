@@ -22,6 +22,12 @@ class OCRMapping:
     diagnostics: tuple[dict[str, Any], ...]
 
 
+def canonical_ocr_pgm(width: int, height: int, grayscale_pixels: bytes) -> bytes:
+    if width < 1 or height < 1 or len(grayscale_pixels) != width * height:
+        raise ValueError("canonical OCR pixels must exactly match positive dimensions")
+    return f"P5\n{width} {height}\n255\n".encode("ascii") + grayscale_pixels
+
+
 def _stable_id(prefix: str, source_id: str, key: str) -> str:
     digest = hashlib.sha256(f"{source_id}\0{key}".encode("utf-8")).hexdigest()[:24]
     return f"{prefix}_{digest}"

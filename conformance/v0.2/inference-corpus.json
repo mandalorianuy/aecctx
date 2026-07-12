@@ -10,7 +10,7 @@
       },
       "descriptor": "fixtures/v0.2/inference/ocr-descriptor.json",
       "id": "tesseract-ocr-aecctx-15",
-      "input": "fixtures/v0.2/inference/ocr-aecctx-15.png",
+      "input": "fixtures/v0.2/inference/ocr-aecctx-15.pgm",
       "limits": {
         "cpu_seconds": 30,
         "max_decompression_ratio": 20.0,

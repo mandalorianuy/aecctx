@@ -8,9 +8,9 @@
   },
   "configuration_digest": "b7ebb0a929fdf10a59fb29e902860d8f442a5fdb4a51b385f5b73dd4dc10bfbd",
   "input": {
-    "bytes": 405,
-    "path": "input/901aea5d7dadedeaf3b0f3ae5559d511b490c14463d2b7af3d443599838f9f1b",
-    "sha256": "901aea5d7dadedeaf3b0f3ae5559d511b490c14463d2b7af3d443599838f9f1b"
+    "bytes": 45774,
+    "path": "input/02458e002754496b7682855acb99c758db9a5f1185ae609fc2624ed8b1502f60",
+    "sha256": "02458e002754496b7682855acb99c758db9a5f1185ae609fc2624ed8b1502f60"
   },
   "limits": {
     "cpu_seconds": 30,
@@ -26,5 +26,5 @@
   },
   "protocol_version": "0.2",
   "provider_id": "org.aecctx.ocr.tesseract-tsv",
-  "request_id": "0ba03d398835118b0a703b6e9c590e0e120e29f1022458041d6f77a1b288572c"
+  "request_id": "6a6c5bbbd4203773d4f81f1ddd8a6e04dfa8cb6ef8597b328a7286d90a321460"
 }

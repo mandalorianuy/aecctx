@@ -40,7 +40,7 @@ result = ProviderRunner(
 ).run(
     TESSERACT_OCR_PROVIDER_ID,
     "extract",
-    (root / "fixtures/v0.2/inference/ocr-aecctx-15.png").read_bytes(),
+    (root / "fixtures/v0.2/inference/ocr-aecctx-15.pgm").read_bytes(),
     configuration={"dpi": 300, "language": "eng", "minimum_confidence": 0, "page_segmentation_mode": 6},
 )
 assert result.ok

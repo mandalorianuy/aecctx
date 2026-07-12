@@ -92,6 +92,7 @@ def main() -> None:
     build_pdf(image, pdf_path)
     extracted = PdfReader(pdf_path).pages[0].images[0].data
     (ROOT / "ocr-aecctx-15.png").write_bytes(extracted)
+    (ROOT / "ocr-aecctx-15.pgm").write_bytes(f"P5\n{image.width} {image.height}\n255\n".encode("ascii") + image.tobytes())
 
 
 if __name__ == "__main__":

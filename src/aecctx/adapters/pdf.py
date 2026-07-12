@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from ..ingest import CAPABILITIES, IngestResult, _timestamp
-from ..inference import InferenceMappingError, map_ocr_result
+from ..inference import InferenceMappingError, canonical_ocr_pgm, map_ocr_result
 from ..package import PackageArtifact, PackageWriter, canonical_json, hash_file
 from ..providers.protocol import ProviderResult
 
@@ -252,6 +252,7 @@ def ingest_pdf(
             data = image_file.data
             digest = hashlib.sha256(data).hexdigest()
             width, height = image_file.image.size
+            ocr_input = canonical_ocr_pgm(width, height, image_file.image.convert("L").tobytes())
             derived_artifacts.append(PackageArtifact(artifact_path, data, image_file.image.get_format_mimetype() or "application/octet-stream", "pdf-raster-image", False))
             record_id = _stable_id("prim_pdf_raster", source_digest, f"{page_index}:{page_image_index}")
             primitives.append(
@@ -271,7 +272,7 @@ def ingest_pdf(
                     "viewport": {"media_box": media_box},
                 }
             )
-            raster_candidates.append((data, width, height, record_id, f"page:{page_index}/image:{image_file.name}", page_index))
+            raster_candidates.append((ocr_input, width, height, record_id, f"page:{page_index}/image:{image_file.name}", page_index))
 
     inference_diagnostics: list[dict[str, Any]] = []
     mapping = None

@@ -26,7 +26,7 @@ def descriptor() -> dict[str, Any]:
         "distribution": "operator-built-oci-image",
         "enforced_axes": {axis: True for axis in REQUIRED_AXES},
         "enforcement_profile": "oci-docker-v1",
-        "formats": ["image/png", "image/jpeg", "image/tiff"],
+        "formats": ["image/x-portable-graymap"],
         "license_spdx": "Apache-2.0 AND HPND",
         "network_mode": "disabled",
         "platforms": ["linux-container"],

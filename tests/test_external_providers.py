@@ -425,16 +425,19 @@ def test_oci_profile_rejects_missing_runtime(tmp_path: Path) -> None:
     assert captured.value.code == "AECCTX_PROVIDER_PROFILE_UNAVAILABLE"
 
 
-def test_oci_profile_verifies_allowlisted_local_image_id(tmp_path: Path) -> None:
+def _mock_docker_preflight(monkeypatch: pytest.MonkeyPatch, image_id: str) -> None:
+    def run(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        stdout = "linux\n" if command[1] == "version" else f"{image_id}\n"
+        return subprocess.CompletedProcess(command, 0, stdout=stdout, stderr="")
+
+    monkeypatch.setattr("aecctx.providers.oci.subprocess.run", run)
+
+
+def test_oci_profile_verifies_allowlisted_local_image_id(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     docker = tmp_path / "docker"
-    docker.write_text(
-        "#!/bin/sh\n"
-        "if [ \"$1\" = version ]; then echo linux; exit 0; fi\n"
-        "if [ \"$1\" = image ]; then echo sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; exit 0; fi\n"
-        "exit 1\n",
-        encoding="utf-8",
-    )
+    docker.write_text("reviewed runtime placeholder", encoding="utf-8")
     docker.chmod(0o755)
+    _mock_docker_preflight(monkeypatch, "sha256:" + "a" * 64)
     base = providers.reference_provider_registry().resolve("org.aecctx.reference-provider")
     registration = providers.ProviderRegistration(
         descriptor=base.descriptor,
@@ -448,16 +451,11 @@ def test_oci_profile_verifies_allowlisted_local_image_id(tmp_path: Path) -> None
     providers.OCIDockerProfile(docker_executable=docker, image="aecctx-local-provider:0.2.0").preflight(registration)
 
 
-def test_oci_profile_rejects_local_image_id_mismatch(tmp_path: Path) -> None:
+def test_oci_profile_rejects_local_image_id_mismatch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     docker = tmp_path / "docker"
-    docker.write_text(
-        "#!/bin/sh\n"
-        "if [ \"$1\" = version ]; then echo linux; exit 0; fi\n"
-        "if [ \"$1\" = image ]; then echo sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb; exit 0; fi\n"
-        "exit 1\n",
-        encoding="utf-8",
-    )
+    docker.write_text("reviewed runtime placeholder", encoding="utf-8")
     docker.chmod(0o755)
+    _mock_docker_preflight(monkeypatch, "sha256:" + "b" * 64)
     base = providers.reference_provider_registry().resolve("org.aecctx.reference-provider")
     registration = providers.ProviderRegistration(
         descriptor=base.descriptor,

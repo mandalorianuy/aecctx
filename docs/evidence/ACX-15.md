@@ -1,7 +1,7 @@
 # ACX-15 acceptance evidence
 
 Date: 2026-07-12
-Status: completed
+Status: in progress pending portable CI correction
 Task: OCR, vision and reconstruction hypotheses
 Decision: ACXD-020
 Completion commit: `feat: complete ACX-15 bounded OCR inference profile`
@@ -24,7 +24,7 @@ No OCR result establishes source identity, measurements, georeferencing, geometr
 - Reviewed provider `org.aecctx.ocr.tesseract-tsv@0.2.0`: Ubuntu Noble Tesseract `5.3.4`, official C API through `ctypes`, English data, LSTM/PSM 6 and Pillow decode validation.
 - The sandbox remains at `pids=1`; OpenMP is fixed to one thread. Runtime network, telemetry, downloads and workspace retention are absent.
 - Provider requests allow only exact bounded configuration. Outputs are schema/hash/attestation validated before mapping.
-- Each accepted word is an `inferred` v0.2 primitive with exact input/region, request, response, provider/runtime and confidence provenance.
+- PDF/image pixels are converted to deterministic grayscale PGM before OCR, so replay identity is independent of encoder/backend byte variance. Each accepted word is an `inferred` v0.2 primitive with exact input/region, request, response, provider/runtime and confidence provenance.
 - Native PDF text remains observed and independent. Equality is cited; disagreement emits `conflicted` evidence and neither value wins.
 - `ingest_image()` and `ingest_pdf()` support explicit v0.2 SDK opt-in. CLI uses `--inference-replay` plus `--inference-entry`; it never invokes or uploads to a provider.
 - Rejected/failed provider results degrade with structured diagnostics while baseline PDF/image evidence remains available.
@@ -36,11 +36,12 @@ All raster/PDF content and glyph rendering code were authored in this repository
 
 | Artifact | SHA-256 |
 |---|---|
-| `generate_fixtures.py` | `5fb7e0169f2e41e0da28f7af8127d263ccbd261442be9b9e0eb99c3dc324fb6a` |
+| `generate_fixtures.py` | `eceda2404d551df9ccfe428687881916057729f97ebb3463d526f700a382f8b8` |
 | `native-conflict-raster.pdf` | `5cf2da012f7ac193e199a38237619654f8d64485e024c5d20e8e58341b417c7f` |
 | `ocr-aecctx-15.png` | `901aea5d7dadedeaf3b0f3ae5559d511b490c14463d2b7af3d443599838f9f1b` |
-| provider request | `c2374b2f3432b61879346940eb3982129ea81e634124f5786272385460ab5f41` |
-| provider response | `104445dc98a7b02158ac00bd9aae385b5358e1d52a43226429b16d2a9cd441b1` |
+| canonical OCR PGM | `02458e002754496b7682855acb99c758db9a5f1185ae609fc2624ed8b1502f60` |
+| provider request | `e5ac4db8253df590de88124bcfde76b6c8473efca03869409e62d9a1fd8049f5` |
+| provider response | `5a8a6247082d11c51d856824385cfc2aef6438170cc8732a5a1a14c4dd267414` |
 
 `conformance/v0.2/inference-corpus.json` binds the input, descriptor, request, response and output root. Reproduction uses `fixtures/v0.2/inference/generate_replay.py`. Portable validation uses the same provider protocol validator as live execution.
 
@@ -49,7 +50,7 @@ All raster/PDF content and glyph rendering code were authored in this repository
 - Focused inference/PDF/image/CLI/provider tests: passed.
 - Portable replay corpus: valid, one entry, zero artifacts, exact attestation and hashes.
 - Live provider: `./scripts/verify_tesseract_provider.sh` passed against image ID `sha256:6d52ebcafef0ccdf59f58beccc7483c16a6e160fc94e3c3ea59f3f10c991f492`; OCR words were `AECLCTs*` and `15` under the unchanged `pids=1` sandbox.
-- Full suite: `189 passed`.
+- Full suite after the portable canonical-raster correction: `190 passed`.
 - `python scripts/check_spec_contract.py`: passed; claim registry valid with no errors; inference replay corpus valid.
 - `python3 scripts/check_meta_agent_baseline_integration.py --fail-on-issues`: healthy, zero issues.
 - `./scripts/verify_portable.sh`: passed; wheel and sdist built successfully.
@@ -65,4 +66,4 @@ The provider image is operator-built and excluded from core packages. Tesseract 
 
 Additional languages, rotated/complex layouts, tables/symbols/dimensions, image/PDF vision, reconstruction hypotheses, portable live provider matrices and hidden geometry extraction remain unclaimed or `unsupported`. A future capability requires a new governed profile before implementation.
 
-No WoodFraming path, `WFDomain`, `WFImport`, network service or LLM dependency was accessed or modified. ACX-15 is completed and ACX-16 is promoted to `pending-next`; ACX-16 was not executed.
+No WoodFraming path, `WFDomain`, `WFImport`, network service or LLM dependency was accessed or modified. ACX-15 remains in progress until the canonical-raster CI correction is green; ACX-16 remains pending and was not executed.

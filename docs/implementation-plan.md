@@ -160,8 +160,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-12 | completed | Reviewed external sandbox/provider foundation |
 | ACX-13 | completed | IFC source-native 2D and georeferencing |
 | ACX-14 | completed | DXF source-native semantics and bounded 3D |
-| ACX-15 | completed | Experimental bounded OCR evidence; vision remains target and hidden geometry remains public unsupported |
-| ACX-16 | pending-next | Mesh units, calibration and CRS registration |
+| ACX-15 | in_progress | Experimental bounded OCR evidence; portable canonical-raster correction required by CI |
+| ACX-16 | pending | Mesh units, calibration and CRS registration |
 | ACX-17 | pending | STEP/IGES adapter profiles |
 | ACX-18 | pending | Optional DWG external-provider adapter |
 | ACX-19 | pending | Optional RVT external-provider adapter |

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from ..ingest import CAPABILITIES, IngestResult, _timestamp
-from ..inference import InferenceMappingError, map_ocr_result
+from ..inference import InferenceMappingError, canonical_ocr_pgm, map_ocr_result
 from ..package import PackageArtifact, PackageWriter, canonical_json, hash_file
 from ..providers.protocol import ProviderResult
 
@@ -157,6 +157,7 @@ def ingest_image(
         image_format = image.format or "unknown"
         mode = image.mode
         metadata = {str(key): str(value) for key, value in sorted(image.info.items()) if key not in {"exif", "icc_profile"}}
+        ocr_input = canonical_ocr_pgm(width, height, image.convert("L").tobytes())
     primitive_id = _stable_id("prim_image", source_digest, "image")
     primitive = {
         "calibration": _unknown("AECCTX_IMAGE_CALIBRATION_NOT_DECLARED"),
@@ -194,7 +195,7 @@ def ingest_image(
         try:
             mapping = map_ocr_result(
                 ocr_result,
-                input_bytes=source.read_bytes(),
+                input_bytes=ocr_input,
                 source_id=source_id,
                 parent_record_id=primitive_id,
                 source_locator="pixel-canvas",

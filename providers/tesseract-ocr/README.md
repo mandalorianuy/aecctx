@@ -9,7 +9,7 @@ docker build --platform linux/arm64 -t aecctx-tesseract-ocr:0.2.0 providers/tess
 docker image inspect --format '{{.Id}}' aecctx-tesseract-ocr:0.2.0
 ```
 
-The accepted image ID is `sha256:6d52ebcafef0ccdf59f58beccc7483c16a6e160fc94e3c3ea59f3f10c991f492`. A different ID is rejected and is not covered by the claim. Verify the installed runtime and sandbox with:
+The accepted image ID is `sha256:6d52ebcafef0ccdf59f58beccc7483c16a6e160fc94e3c3ea59f3f10c991f492`. A different ID is rejected and is not covered by the claim. Runtime input is canonical grayscale PGM produced from decoded pixels, not source encoder bytes. Verify the installed runtime and sandbox with:
 
 ```bash
 ./scripts/verify_tesseract_provider.sh

@@ -30,7 +30,7 @@ The core never installs or links Tesseract. The provider image is built or insta
 
 ## 3. Inputs, output vocabulary and budgets
 
-OCR input in this profile is exactly one complete content-addressed raster image or decoded PDF raster artifact. Its input artifact hash is also its region hash. Cropped/rotated subregions require a future governed locator/transform profile and are not an ACX-15 claim.
+OCR input in this profile is exactly one complete raster converted to canonical grayscale PGM (`P5`, decimal width/height, max value 255, LF separators, then exactly `width * height` bytes). The input artifact and region hash bind those canonical bytes, while the observed source/decoded-raster record remains a separately cited parent. This avoids encoder/backend variance across platforms without changing pixels. Cropped/rotated subregions require a future governed locator/transform profile and are not an ACX-15 claim.
 
 Allowed configuration is limited to `language="eng"`, `page_segmentation_mode=6`, an integer `dpi` from 70 through 1200, `minimum_confidence` from 0 through 100, and explicit limits inherited from ACX-12. Unknown keys, paths, commands, callbacks, environment values, model downloads and network options are rejected.
 

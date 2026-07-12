@@ -24,9 +24,7 @@
   },
   "enforcement_profile": "oci-docker-v1",
   "formats": [
-    "image/png",
-    "image/jpeg",
-    "image/tiff"
+    "image/x-portable-graymap"
   ],
   "license_spdx": "Apache-2.0 AND HPND",
   "network_mode": "disabled",

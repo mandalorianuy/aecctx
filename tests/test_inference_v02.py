@@ -14,6 +14,14 @@ REQUEST_SHA = "1" * 64
 RESPONSE_SHA = "2" * 64
 
 
+def test_canonical_ocr_pgm_is_encoder_independent_and_bounded() -> None:
+    from aecctx.inference import canonical_ocr_pgm
+
+    assert canonical_ocr_pgm(2, 2, bytes([0, 127, 128, 255])) == b"P5\n2 2\n255\n\x00\x7f\x80\xff"
+    with pytest.raises(ValueError):
+        canonical_ocr_pgm(2, 2, b"short")
+
+
 def _result(words: list[dict[str, object]]) -> ProviderResult:
     return ProviderResult(
         ok=True,

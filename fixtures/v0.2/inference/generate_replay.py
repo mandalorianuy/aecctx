@@ -13,7 +13,7 @@ from aecctx.providers import ProviderLimits, build_provider_request, tesseract_o
 ROOT = Path(__file__).resolve().parents[3]
 FIXTURE_ROOT = Path(__file__).resolve().parent
 OUTPUT_ROOT = FIXTURE_ROOT / "ocr-output"
-INPUT = FIXTURE_ROOT / "ocr-aecctx-15.png"
+INPUT = FIXTURE_ROOT / "ocr-aecctx-15.pgm"
 WORKER = ROOT / "providers" / "tesseract-ocr" / "worker.py"
 IMAGE = "aecctx-tesseract-ocr:0.2.0"
 CONFIGURATION = {"dpi": 300, "language": "eng", "minimum_confidence": 0, "page_segmentation_mode": 6}
