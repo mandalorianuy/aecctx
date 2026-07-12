@@ -8,7 +8,7 @@
 - Task 1 decision/schema/checker commit: `8610eec`.
 - Task 2 governance and anti-claim commits: `d437ca7`, `db6606d`.
 - Task 3 governance and distribution-gate commits: `e0384f1`, `a294f57`.
-- Closure commit: the verified commit containing this evidence; its exact published hash is recorded by the planned evidence-only follow-up.
+- Closure commit: `ccc7ab324027bb35368fb5ae6844dbe8b2894b9d`.
 
 ## 2. Normative coverage
 
@@ -58,7 +58,7 @@ The first row is an unsupported boundary, not a positive RVT claim. The opaque r
 - Task 3 CI `29207464228`: Ubuntu `86689259849`, macOS `86689259848`, Windows `86689259845`, all passed.
 - Fresh closure baseline check: healthy, zero issues, bundle `baseline-shared-v1`.
 - Fresh closure `./scripts/verify.sh`: 282 passed, nine expected skips, wheel/sdist and post-build RVT boundary passed, v0.1 corpus deterministic, release verification passed, final `aecctx verify: ok`.
-- Final published closure CI is recorded by the planned evidence-only follow-up before this evidence is considered immutable.
+- Closure CI `29207685331` for `ccc7ab3`: Ubuntu `86689844003`, macOS `86689844005`, Windows `86689844007`, all passed.
 
 ## 7. Determinism and reproducibility
 
