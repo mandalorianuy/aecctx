@@ -39,6 +39,7 @@ def test_portable_verify_checks_v02_schemas_and_claim_registry() -> None:
     assert "schemas/v0.2/manifest.schema.json" in script
     assert "schemas/v0.2/record.schema.json" in script
     assert "conformance/v0.2/claims.json" in script
+    assert "conformance/v0.2/ifc-corpus.json" in script
     assert "validate_claim_registry_file" in script
 
 

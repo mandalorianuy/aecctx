@@ -50,8 +50,8 @@ This table is a roadmap, not a support claim. Current claims in the release regi
 
 | Capability gap | Current public state | Bounded target | Owning task |
 |---|---|---|---|
-| IFC source-native 2D | `partial` | Supported representation families preserve native 2D evidence and deterministic previews without relabeling 3D projection | ACX-13 |
-| IFC georeferencing | `partial` | Source CRS/coordinate-operation evidence and complete transform-chain state for declared schema profiles | ACX-13 |
+| IFC source-native 2D | `partial`: public for IFC2X3 TC1/IFC4 Add2 TC1 explicit 2D contexts and the polyline/indexed-line/geometric-curve-set/mapped-2D profile | Additional curves, annotations, hatches/styles and later schemas remain structured loss | ACX-13 completed |
+| IFC georeferencing | `partial`: public for explicit IFC4 Add2 TC1 `IfcMapConversion` + `IfcProjectedCRS` with compatible declared units and reversible transforms | IFC2X3 property sets, omitted/multiple/conflicted operations and later schemas remain unknown/unsupported/conflicted | ACX-13 completed |
 | DXF source semantics | `partial` | Source-native dictionaries/XDATA/ownership/material/structure evidence; no consumer classification | ACX-14 |
 | DXF 3D | `partial` | Bounded 3D entity families with OCS/transforms/topology and explicit kernel/proxy loss | ACX-14 |
 | Raster OCR | `unsupported` without provider | Optional OCR spans/regions with provider provenance and native-text conflict handling | ACX-15 |

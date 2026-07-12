@@ -158,8 +158,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-10 | deferred | Consumer integration template; WoodFraming-specific plan remains consumer-owned |
 | ACX-11 | completed | Shared post-v0.1 schemas, compatibility contract and conformance claim registry |
 | ACX-12 | completed | Reviewed external sandbox/provider foundation |
-| ACX-13 | pending-next | IFC source-native 2D and georeferencing |
-| ACX-14 | pending | DXF source-native semantics and bounded 3D |
+| ACX-13 | completed | IFC source-native 2D and georeferencing |
+| ACX-14 | pending-next | DXF source-native semantics and bounded 3D |
 | ACX-15 | pending | Optional OCR/vision evidence with explicit hidden-geometry boundary |
 | ACX-16 | pending | Mesh units, calibration and CRS registration |
 | ACX-17 | pending | STEP/IGES adapter profiles |
@@ -391,6 +391,8 @@ Until accepted, only the digest-pinned Linux-container environment under `oci-do
 
 Objective: replace broad IFC 2D/georeferencing partial claims with bounded, schema-specific conformance claims.
 
+Normative profile: [`docs/specs/ifc-v02-profile.md`](specs/ifc-v02-profile.md), accepted by ACXD-025 before implementation.
+
 Deliverables:
 
 - enumerated IFC schema/representation support table;
@@ -424,7 +426,7 @@ Non-scope: no universal IFC representation claim, no engineering validation and 
 
 Acceptance: every `full`/`partial` claim is schema/profile bounded; all excluded cases have structured loss; v0.1 IFC fixtures remain compatible; `./scripts/verify.sh` passes.
 
-Evidence: `docs/evidence/ACX-13.md` when completed.
+Evidence: [`docs/evidence/ACX-13.md`](evidence/ACX-13.md).
 
 ## ACX-14: DXF semantics and 3D
 

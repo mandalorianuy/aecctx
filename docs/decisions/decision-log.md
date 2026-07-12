@@ -115,6 +115,16 @@ Status: Active
 - Consequence: ACX-12 claims the digest-pinned Linux-container provider environment wherever the reviewed Docker runtime passes preflight. Native host profiles and Windows-container execution remain blocked by ACXB-001.
 - Evidence owner: ACX-12 protocol schemas, Linux-container reference provider corpus, threat model, tests and acceptance evidence.
 
+### ACXD-025: Bounded IFC v0.2 profile and opt-in emission
+
+- Decision: ACX-13 implements only the source-native 2D and coordinate profiles enumerated in `docs/specs/ifc-v02-profile.md`, using optional `ifcopenshell==0.8.5`. Public fixtures/claims are limited to IFC2X3 TC1 and IFC4 Add2 TC1. A different IfcOpenShell version or later IFC family remains unclaimed until separately proven.
+- 2D boundary: Only explicitly 2D contexts/views/identifiers and the listed polyline/indexed-line/geometric-curve-set/mapped-item profiles are normalized. Unsupported curves, text, hatch, styling and other items remain source evidence and structured loss; 3D projection can never be relabeled source-native.
+- IfcOpenShell 0.8.5 mapped-2D limitation: `resolve_items()` does not yield a usable matrix for `IfcCartesianTransformationOperator2D`; ACX-13 therefore performs bounded structural extraction of the explicit mapping source/origin/target attributes for that operator only. Other mapped operators remain unsupported rather than falling back to 3D projection.
+- Coordinate boundary: A complete global link requires one explicit IFC4 `IfcMapConversion` to one `IfcProjectedCRS`, finite/invertible WCS and operation matrices, explicit non-zero axes/positive scale, compatible declared project/map units and a non-empty source CRS name. IFC defaults, EPSG IDs or missing parameters are not synthesized for a public complete claim.
+- Compatibility: `ingest_ifc()` remains v0.1 by default. ACX-13 behavior is explicitly selected with `aecctx_version="0.2.0"`; v0.1 fixture/package identity stays unchanged.
+- Consequence: both IFC 2D and georeferencing remain public `partial` claims with exact schema/item/operation scope and explicit absent/empty/unsupported/failure/conflict states.
+- Evidence owner: ACX-13 fixtures, claim mappings, deterministic SVG/replay tests and acceptance evidence.
+
 ## Open decisions
 
 ### ACXD-018: Signing and trust profile

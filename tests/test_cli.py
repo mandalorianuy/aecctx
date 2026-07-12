@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from aecctx.package import PackageReader
+
 
 ROOT = Path(__file__).parents[1]
 FIXTURE = ROOT / "fixtures" / "minimal-aecctx"
@@ -138,6 +140,44 @@ def test_ingest_auto_selects_ifc_adapter(tmp_path: Path) -> None:
 
     assert completed.returncode == 0, completed.stderr
     assert json.loads(completed.stdout)["data"]["adapter"] == "ifc"
+
+
+def test_ingest_ifc_v02_is_explicitly_available_from_cli(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "ifc" / "ifc4-native-2d-georef.ifc"
+    output = tmp_path / "ifc-v02.aecctx"
+
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(output),
+        "--aecctx-version",
+        "0.2.0",
+        "--created-at",
+        "2026-07-12T00:00:00Z",
+        "--json",
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert PackageReader(output).manifest["aecctx_version"] == "0.2.0"
+    assert json.loads(completed.stdout)["data"]["aecctx_version"] == "0.2.0"
+
+
+def test_ingest_v02_rejects_adapter_without_governed_v02_profile(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "dxf" / "minimal-plan.dxf"
+
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(tmp_path / "dxf-v02.aecctx"),
+        "--aecctx-version",
+        "0.2.0",
+        "--json",
+    )
+
+    assert completed.returncode == 2
+    assert json.loads(completed.stdout)["diagnostics"][0]["code"] == "AECCTX_INGEST_VERSION_UNSUPPORTED"
 
 
 def test_ingest_auto_selects_dxf_adapter(tmp_path: Path) -> None:

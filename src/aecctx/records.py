@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
@@ -111,12 +112,47 @@ class CoordinateQualification:
         if not isinstance(global_raw, Mapping) or not isinstance(links, list):
             raise RecordModelError("AECCTX_COORDINATE_STRUCTURE_INVALID", "Coordinate qualification requires global_location and transform_chain")
         global_location = ValueState.from_dict(global_raw)
+        tolerance = 1e-6
+        tolerance_raw = raw.get("tolerance")
+        if isinstance(tolerance_raw, Mapping) and tolerance_raw.get("state") == "known":
+            tolerance_value = tolerance_raw.get("value")
+            if isinstance(tolerance_value, (int, float)) and math.isfinite(float(tolerance_value)) and float(tolerance_value) > 0:
+                tolerance = float(tolerance_value)
         if global_location.state == "known" and any(not isinstance(link, Mapping) or link.get("state") != "known" for link in links):
             raise RecordModelError(
                 "AECCTX_COORDINATE_GLOBAL_STATE_INVALID",
                 "Known global location requires a complete known transform chain",
             )
+        for link in links:
+            if not isinstance(link, Mapping) or link.get("state") != "known":
+                continue
+            matrix = link.get("matrix")
+            inverse = link.get("inverse_matrix")
+            if not _inverse_matrices_match(matrix, inverse, tolerance=tolerance):
+                raise RecordModelError(
+                    "AECCTX_COORDINATE_INVERSE_INVALID",
+                    "Known transform matrix and inverse_matrix must round trip within tolerance",
+                )
         return cls(global_location=global_location, transform_chain=tuple(links), raw=raw)
+
+
+def _inverse_matrices_match(matrix: Any, inverse: Any, *, tolerance: float = 1e-6) -> bool:
+    if (
+        not isinstance(matrix, list)
+        or not isinstance(inverse, list)
+        or len(matrix) != 16
+        or len(inverse) != 16
+        or any(not isinstance(value, (int, float)) or not math.isfinite(float(value)) for value in [*matrix, *inverse])
+    ):
+        return False
+    for left, right in ((matrix, inverse), (inverse, matrix)):
+        for row in range(4):
+            for column in range(4):
+                value = sum(float(left[row * 4 + index]) * float(right[index * 4 + column]) for index in range(4))
+                expected = 1.0 if row == column else 0.0
+                if not math.isclose(value, expected, rel_tol=0.0, abs_tol=tolerance):
+                    return False
+    return True
 
 
 @dataclass(frozen=True, slots=True)

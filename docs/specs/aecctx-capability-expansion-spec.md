@@ -119,6 +119,8 @@ The response attestation binds provider descriptor and runtime digests. Parent v
 
 ## 6. IFC 2D and georeferencing
 
+ACXD-025 and `docs/specs/ifc-v02-profile.md` define the implemented ACX-13 public `partial` profiles. The broader language below remains a target only for schema/item/operation combinations outside that exact corpus.
+
 ### 6.1 IFC 2D target
 
 The IFC adapter MUST preserve source representation identifiers and context for supported curve, annotation, footprint, axis, plan, and mapped 2D representations. Output MAY include deterministic SVG previews, but source primitives and representation relationships remain authoritative.

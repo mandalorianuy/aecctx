@@ -15,7 +15,7 @@ Decision authority: ACXD-017
 | unknown required extension | not applicable | invalid with `AECCTX_REQUIRED_EXTENSION_UNSUPPORTED` |
 | unknown optional namespaced extension | governed by v0.1 contract | accepted as package data; retained when explicitly passed through a lossless rewrite |
 
-The reference implementation remains version `0.1.0` until the governed expansion release. Supporting v0.2 schemas in ACX-11 is a bounded compatibility capability, not a claim that later v0.2 format adapters exist.
+The reference implementation remains version `0.1.0` until the governed expansion release. Supporting v0.2 schemas in ACX-11 is a bounded compatibility capability. ACX-13 adds the first opt-in v0.2 format producer for the exact IFC profiles in `docs/specs/ifc-v02-profile.md`; it does not imply other v0.2 format adapters.
 
 ## Schema boundary
 
@@ -26,6 +26,8 @@ v0.1 schemas under `schemas/v0.1/` are immutable. v0.2 packages use:
 - `required_extensions`, including an empty array when none are required;
 - optional namespaced manifest `extensions`;
 - typed record fields for `evidence_class`, `inference`, `coordinate_qualification`, `representation_fidelity`, and `provider_attestation`.
+
+Known transform links include both `matrix` and `inverse_matrix`, each as 16 row-major finite numbers. Semantic validation checks their round trip using the record's known positive tolerance when present, otherwise a conservative default. A forward matrix without a matching inverse is invalid.
 
 Normative shared semantics are base v0.2 fields rather than loosely interpreted v0.1 extensions. Later tasks may add optional namespaced extensions, but they cannot redefine these fields or weaken their invariants.
 
@@ -52,6 +54,8 @@ Changing only version strings is not a conforming migration when v0.2 semantic f
 ## Writer behavior
 
 `PackageWriter` defaults to v0.1 for compatibility. A caller must explicitly request `aecctx_version="0.2.0"` and provide v0.2 record artifacts. The writer adds sorted `required_extensions` and optional `extensions`; it does not invent evidence-class, coordinate, provider or fidelity values.
+
+`ingest_ifc()` and `aecctx ingest --aecctx-version 0.2.0` provide the ACX-13 IFC opt-in. The CLI rejects v0.2 requests for adapters whose owning task has not yet published a governed profile. Omitting the option remains v0.1 and is byte-compatible with explicit `--aecctx-version 0.1.0`.
 
 ## Conformance material
 

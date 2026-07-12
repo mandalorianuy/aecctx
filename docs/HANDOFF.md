@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-11
-Handoff status: `0.2.0-ACX-12-COMPLETE`
+Handoff status: `0.2.0-ACX-13-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 completed the bounded v0.2 shared schema/compatibility substrate and ACX-12 completed the external-provider foundation with a claim limited to the reviewed Linux-container profile. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 completed the v0.2 shared substrate, ACX-12 the bounded external-provider foundation, and ACX-13 the opt-in partial IFC 2D/georeferencing profiles. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09, ACX-11 and ACX-12 are complete; ACX-10 remains deferred. Execute only ACX-13, currently `pending-next`, when continuation is explicitly requested.
+4. ACX-01 through ACX-09 and ACX-11 through ACX-13 are complete; ACX-10 remains deferred. Execute only ACX-14, currently `pending-next`, when continuation is explicitly requested.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -32,6 +32,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 completed the bounded v0
 - Hidden/unobserved geometry remains unsupported as source evidence; reconstruction can only be an inference hypothesis.
 - Manual mesh calibration augments and never rewrites source coordinates.
 - ACX-12 is complete only for `oci-docker-v1` on `linux-container` with the digest-pinned reference runtime; native Linux/macOS and Windows profiles remain unsupported under ACXB-001.
+- ACX-13 IFC claims are partial and limited to `docs/specs/ifc-v02-profile.md`; IFC4.1/4.2/4X3 and unlisted 2D/coordinate profiles remain unclaimed.
 - DWG/RVT remain optional provider capabilities outside the Apache-2.0 core distribution.
 - Authenticity remains unsupported until ACXD-018 and ACX-20 are complete.
 - The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
@@ -51,7 +52,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 completed the bounded v0
 
 ## Next implementation task
 
-ACX-13: implement bounded IFC source-native 2D and georeferencing evidence using the ACX-11 shared contracts. It must enumerate supported IFC schema/representation and CRS/coordinate-operation profiles before coding, distinguish absent/empty/unsupported/failure states, preserve explicit transform-chain state and label SVG only as derived preview. It MUST NOT begin DXF, OCR/vision, mesh, STEP/IGES, DWG/RVT or signing work.
+ACX-14: implement bounded DXF source-native semantics and 3D evidence using official ezdxf APIs. It must inventory and govern exact version/entity profiles before coding, preserve dictionaries/XDATA/ownership/material/block evidence, keep unsupported ACIS/proxy/custom content explicit, and never infer consumer construction families. It MUST NOT begin OCR/vision, mesh, STEP/IGES, DWG/RVT or signing work.
 
 Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request.
 

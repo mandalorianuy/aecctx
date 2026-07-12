@@ -13,6 +13,10 @@ from .query import QuerySyntaxError, query_package
 from .validation import ValidationResult, validate_package
 
 
+class IngestVersionError(ValueError):
+    code = "AECCTX_INGEST_VERSION_UNSUPPORTED"
+
+
 def _envelope(ok: bool, data: Any, diagnostics: list[dict[str, Any]]) -> dict[str, Any]:
     return {"data": data, "diagnostics": diagnostics, "ok": ok}
 
@@ -52,6 +56,7 @@ def build_parser() -> argparse.ArgumentParser:
     ingest.add_argument("--form", choices=("directory", "zip"), default="directory")
     ingest.add_argument("--embedding-policy", choices=("external", "embedded", "redacted"), default="external")
     ingest.add_argument("--adapter", choices=("auto", "opaque", "ifc", "dxf", "pdf", "image", "geometry"), default="auto")
+    ingest.add_argument("--aecctx-version", choices=("0.1.0", "0.2.0"), default="0.1.0")
     ingest.add_argument("--created-at")
     ingest.add_argument("--json", action="store_true", dest="as_json")
     query = subparsers.add_parser("query")
@@ -103,6 +108,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     adapter = "image"
                 else:
                     adapter = "opaque"
+            if arguments.aecctx_version == "0.2.0" and adapter != "ifc":
+                raise IngestVersionError(f"Adapter {adapter} has no governed AECCTX v0.2 profile")
             if adapter == "ifc":
                 from .adapters.ifc import ingest_ifc
 
@@ -112,6 +119,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     created_at=arguments.created_at,
                     embedding_policy=arguments.embedding_policy,
                     package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
                 )
             elif adapter == "dxf":
                 from .adapters.dxf import ingest_dxf
@@ -162,7 +170,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     package_form=arguments.form,
                 )
         except (OSError, ValueError) as error:
-            diagnostic = {"code": "AECCTX_INGEST_FAILED", "message": str(error), "severity": "error"}
+            diagnostic = {"code": getattr(error, "code", "AECCTX_INGEST_FAILED"), "message": str(error), "severity": "error"}
             if arguments.as_json:
                 print(json.dumps(_envelope(False, None, [diagnostic]), sort_keys=True, separators=(",", ":")))
             else:
@@ -175,6 +183,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "source_id": result.source_id,
             "support": "partial" if adapter in {"ifc", "dxf", "pdf", "image", "geometry"} else "opaque",
             "adapter": adapter,
+            "aecctx_version": arguments.aecctx_version,
         }
         if arguments.as_json:
             print(json.dumps(_envelope(True, data, []), sort_keys=True, separators=(",", ":")))

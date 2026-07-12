@@ -12,7 +12,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from .errors import Diagnostic
 from .package import PackageReadError, PackageReader, SafetyLimits
-from .records import ProviderAttestation, RecordModelError, RepresentationFidelity
+from .records import CoordinateQualification, ProviderAttestation, RecordModelError, RepresentationFidelity
 
 
 REQUIRED_ARTIFACTS = (
@@ -146,21 +146,10 @@ def _validate_records(root: Path, diagnostics: list[Diagnostic], *, version: str
             if version == "0.2.0":
                 coordinate = record.get("coordinate_qualification")
                 if isinstance(coordinate, dict):
-                    global_location = coordinate.get("global_location")
-                    links = coordinate.get("transform_chain")
-                    if (
-                        isinstance(global_location, dict)
-                        and global_location.get("state") == "known"
-                        and isinstance(links, list)
-                        and any(not isinstance(link, dict) or link.get("state") != "known" for link in links)
-                    ):
-                        diagnostics.append(
-                            _diagnostic(
-                                "AECCTX_COORDINATE_GLOBAL_STATE_INVALID",
-                                "Known global location requires a complete known transform chain",
-                                path=line_path,
-                            )
-                        )
+                    try:
+                        CoordinateQualification.from_dict(coordinate)
+                    except RecordModelError as error:
+                        diagnostics.append(_diagnostic(error.code, str(error), path=line_path))
                 fidelity = record.get("representation_fidelity")
                 if isinstance(fidelity, dict):
                     try:

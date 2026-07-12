@@ -1,7 +1,12 @@
 from __future__ import annotations
 
-import aecctx.records as records
+import json
+from importlib.resources import files
+
 import pytest
+from jsonschema import Draft202012Validator
+
+import aecctx.records as records
 
 
 def test_v02_typed_models_are_public() -> None:
@@ -74,6 +79,49 @@ def test_coordinate_model_rejects_known_global_location_with_unknown_link() -> N
         )
 
     assert captured.value.code == "AECCTX_COORDINATE_GLOBAL_STATE_INVALID"
+
+
+def test_known_transform_link_schema_accepts_forward_and_inverse_matrices() -> None:
+    schema = json.loads(files("aecctx.schemas.v0_2").joinpath("record.schema.json").read_text(encoding="utf-8"))
+    transform_schema = schema["$defs"]["transform_link"]
+    matrix = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+
+    errors = list(
+        Draft202012Validator(transform_schema).iter_errors(
+            {
+                "from_frame": "source-local",
+                "inverse_matrix": matrix,
+                "matrix": matrix,
+                "state": "known",
+                "to_frame": "project",
+            }
+        )
+    )
+
+    assert errors == []
+
+
+def test_coordinate_model_rejects_forged_inverse_matrix() -> None:
+    identity = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+    forged = [2.0, *identity[1:]]
+
+    with pytest.raises(records.RecordModelError) as captured:
+        records.CoordinateQualification.from_dict(
+            {
+                "global_location": {"state": "known", "value": "EPSG:32721"},
+                "transform_chain": [
+                    {
+                        "from_frame": "project",
+                        "inverse_matrix": forged,
+                        "matrix": identity,
+                        "state": "known",
+                        "to_frame": "map",
+                    }
+                ],
+            }
+        )
+
+    assert captured.value.code == "AECCTX_COORDINATE_INVERSE_INVALID"
 
 
 def test_preview_fidelity_must_remain_derived() -> None:

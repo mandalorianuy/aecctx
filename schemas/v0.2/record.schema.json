@@ -63,18 +63,20 @@
       "type": "object"
     },
     "transform_link": {
-      "additionalProperties": false,
       "oneOf": [
         {
+          "additionalProperties": false,
           "properties": {
             "from_frame": {"minLength": 1, "type": "string"},
+            "inverse_matrix": {"items": {"type": "number"}, "maxItems": 16, "minItems": 16, "type": "array"},
             "matrix": {"items": {"type": "number"}, "maxItems": 16, "minItems": 16, "type": "array"},
             "state": {"const": "known"},
             "to_frame": {"minLength": 1, "type": "string"}
           },
-          "required": ["from_frame", "to_frame", "state", "matrix"]
+          "required": ["from_frame", "to_frame", "state", "matrix", "inverse_matrix"]
         },
         {
+          "additionalProperties": false,
           "properties": {
             "from_frame": {"minLength": 1, "type": "string"},
             "reason_code": {"minLength": 1, "type": "string"},

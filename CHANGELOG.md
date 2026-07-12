@@ -8,6 +8,7 @@ All notable changes are documented here. AECCTX follows Semantic Versioning for 
 - Added dual v0.1/v0.2 validation and writing, required-extension negotiation, cross-version diff metadata, publishable shared fixtures and a governed claim-to-test registry.
 - Added the ACX-12 external-provider protocol, allowlisted registry, content-addressed replay corpus and digest-pinned `oci-docker-v1` enforcement profile with adversarial conformance.
 - Added explicit rejection for unenforceable native/macOS provider profiles plus security, licensing and privacy review gates.
+- Added ACX-13 opt-in IFC v0.2 source-native 2D and explicit projected-georeferencing profiles, reversible transform validation, deterministic cited SVG previews and degraded-state conformance fixtures.
 - Format-specific v0.2 targets remain unchanged until their owning tasks complete conformance.
 
 ## 0.1.0 - 2026-07-11

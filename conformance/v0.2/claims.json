@@ -3,7 +3,8 @@
   "fixtures": [
     {"id": "v01-minimal", "path": "fixtures/minimal-aecctx"},
     {"id": "v02-shared", "path": "fixtures/v0.2/shared/minimal-v02"},
-    {"id": "v02-provider-reference", "path": "fixtures/v0.2/providers"}
+    {"id": "v02-provider-reference", "path": "fixtures/v0.2/providers"},
+    {"id": "v02-ifc-acx13", "path": "fixtures/v0.2/ifc"}
   ],
   "claims": [
     {
@@ -101,7 +102,38 @@
       ],
       "evidence": "docs/evidence/ACX-12.md"
     },
-    {"id": "ifc.native-2d-georeferencing", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {
+      "id": "ifc.native-2d",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "ifc2x3-tc1-ifc4-add2tc1-native-2d-v1",
+      "platform_scope": ["ifcopenshell-python-supported"],
+      "provider_scope": "ifcopenshell==0.8.5",
+      "fixture_ids": ["v02-ifc-acx13"],
+      "test_ids": [
+        "tests/test_ifc_v02.py::test_ifc4_v02_preserves_native_2d_representations_and_derived_svg",
+        "tests/test_ifc_v02.py::test_ifc_v02_degraded_profiles_remain_explicit_and_package_valid",
+        "tests/test_ifc_v02.py::test_ifc2x3_v02_preserves_native_2d_but_does_not_guess_crs",
+        "tests/test_ifc_v02.py::test_ifc_v02_zip_is_deterministic_and_v01_default_is_unchanged"
+      ],
+      "evidence": "docs/evidence/ACX-13.md"
+    },
+    {
+      "id": "ifc.georeferencing",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "ifc4-add2tc1-explicit-mapconversion-projectedcrs-v1",
+      "platform_scope": ["ifcopenshell-python-supported"],
+      "provider_scope": "ifcopenshell==0.8.5",
+      "fixture_ids": ["v02-ifc-acx13"],
+      "test_ids": [
+        "tests/test_ifc_v02.py::test_ifc4_v02_emits_complete_source_coordinate_chain",
+        "tests/test_ifc_v02.py::test_ifc4_v02_preserves_crs_operation_and_context_as_source_evidence",
+        "tests/test_ifc_v02.py::test_ifc_v02_conflicting_units_do_not_produce_global_location",
+        "tests/test_ifc_v02.py::test_ifc_v02_transform_inverses_round_trip_large_coordinates"
+      ],
+      "evidence": "docs/evidence/ACX-13.md"
+    },
     {"id": "dxf.semantics-3d", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "pdf-image.ocr-vision", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "mesh.units-crs", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
