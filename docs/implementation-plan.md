@@ -565,6 +565,8 @@ Objective: implement bounded STEP/IGES evidence extraction using an existing rev
 
 Normative profile: [`docs/specs/step-iges-v02-profile.md`](specs/step-iges-v02-profile.md), governed by ACXD-014, the ACX-17 instance of ACXD-019 and ACXD-028. The native OCP/OCCT runtime is restricted to the reviewed ACX-12 OCI boundary.
 
+Execution cut: [`docs/plans/acx-17-implementation.md`](plans/acx-17-implementation.md). It is subordinate to this plan and the normative profile; it adds no scope.
+
 Decision gate: resolve an ACXD-019 instance before linking or executing the selected kernel. The record MUST cover API/version, license, redistribution, wheels/platforms, CI, fixture rights, telemetry/network, security history and maintenance posture.
 
 Deliverables:
@@ -572,7 +574,7 @@ Deliverables:
 - adapter design selecting permissive in-process execution or ACX-12 provider execution;
 - exact STEP application protocols and IGES versions/flavors in the support table;
 - source entity, product/assembly, name, layer/color, unit, placement and B-Rep/curve/surface evidence;
-- derived deterministic tessellation and opt-in healing reports;
+- derived deterministic tessellation and explicit fixed translator-processing/healing reports;
 - legally publishable STEP/IGES corpus and kernel license evidence.
 
 Work breakdown:
@@ -583,7 +585,7 @@ Work breakdown:
 4. Preserve schema/flavor, entity IDs, product hierarchy, names, colors/layers, units and placements.
 5. Preserve exact B-Rep/curve/surface references where the kernel exposes them; never substitute tessellation as exact geometry.
 6. Add deterministic tessellation with tolerance/version provenance.
-7. Make healing explicit and opt-in; retain original evidence and emit changed-topology/tolerance loss.
+7. Keep translator processing fixed by the reviewed runtime, reject caller healing options, retain original evidence and emit changed-topology/tolerance loss.
 8. Register only exact profile/kernel/platform claims proven by conformance.
 
 Test matrix:
@@ -593,7 +595,7 @@ Test matrix:
 - curves/surfaces/solids and unsupported entities;
 - invalid topology, truncated/malformed records and extreme entity counts;
 - tessellation repeatability and kernel-version provenance;
-- healing off/on, changed topology and tolerance diagnostics;
+- fixed translator-processing report, rejected caller healing configuration, changed topology and tolerance diagnostics;
 - missing optional dependency/provider failure;
 - clean core install without the kernel.
 
