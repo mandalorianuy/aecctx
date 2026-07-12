@@ -332,6 +332,8 @@ def test_key_lifecycle_and_trust_are_independent() -> None:
 
 ### Task 5: Multi-signature verification and separated result records
 
+**Checkpoint:** Completed 2026-07-12. Verifier RED produced 14 expected missing-interface failures and the raw Ed25519 boundary RED produced 1 expected missing-interface failure. GREEN passes 15 focused verification/threshold/foreign/unsigned tests and 105 complete signing contract/crypto/policy tests. Full `./scripts/verify.sh` passes 388 tests with 9 optional skips, builds wheel and sdist, and passes portable, release and baseline-integration gates. Completion commit is the Task 5 milestone commit on `codex/acx-20-signing`.
+
 **Files:**
 - Modify: `src/aecctx/signing.py`
 - Modify: `src/aecctx/_signing_crypto.py`
@@ -343,7 +345,7 @@ def test_key_lifecycle_and_trust_are_independent() -> None:
 - `PackageSignatureResult.to_dict()` validates against `signature-verification-result.schema.json` and emits ordered `package_validation`, `statement`, `signatures`, and `policy_evaluation` sections.
 - Missing bundle returns `signature_presence="unsigned"`, an empty signatures tuple and `policy_satisfied=False` when policy exists or `None` without policy.
 
-- [ ] **Step 1: Write failing cryptographic/result-state tests.** Cover authorized valid, matching statement hash plus invalid signature, foreign statement hash, unknown key, unsupported algorithm, valid-untrusted, trusted-unauthorized, not-yet-valid, expired, revoked, unknown status, no policy, unsigned, 1-of-N, 2-of-2, duplicated signer rejection and rotation under one subject.
+- [x] **Step 1: Write failing cryptographic/result-state tests.** Cover authorized valid, matching statement hash plus invalid signature, foreign statement hash, unknown key, unsupported algorithm, valid-untrusted, trusted-unauthorized, not-yet-valid, expired, revoked, unknown status, no policy, unsigned, 1-of-N, 2-of-2, duplicated signer rejection and rotation under one subject.
 
 ```python
 def test_foreign_bundle_is_distinct_from_corrupt_signature() -> None:
@@ -353,9 +355,9 @@ def test_foreign_bundle_is_distinct_from_corrupt_signature() -> None:
     assert corrupt.signatures[0].diagnostic_codes == ("AECCTX_SIGNING_SIGNATURE_INVALID",)
 ```
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_crypto.py tests/test_signing_policy.py -k 'verify or threshold or foreign or unsigned' -q`; expect missing verifier failures.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_crypto.py tests/test_signing_policy.py -k 'verify or threshold or foreign or unsigned' -q`; expect missing verifier failures.
 
-- [ ] **Step 3: Implement per-signature verification in fixed order.** Check header/profile and protected statement digest; resolve candidate key and identity; evaluate key lifecycle, trust and scopes through `evaluate_key(key, policy)`; then evaluate the allowlisted algorithm and Ed25519 signature; finally aggregate unique authorized `kid`. Unknown keys and verification without policy retain `key_status = "not_evaluated"`. An unsigned verification returns without importing `cryptography`. Never skip package integrity validation and never convert an operational parse error into `invalid`.
+- [x] **Step 3: Implement per-signature verification in fixed order.** Check header/profile and protected statement digest; resolve candidate key and identity; evaluate key lifecycle, trust and scopes through `evaluate_key(key, policy)`; then evaluate the allowlisted algorithm and Ed25519 signature; finally aggregate unique authorized `kid`. Unknown keys and verification without policy retain `key_status = "not_evaluated"`. An unsigned verification returns without importing `cryptography`. Never skip package integrity validation and never convert an operational parse error into `invalid`.
 
 ```python
 authorized = {
@@ -368,13 +370,13 @@ authorized = {
 policy_satisfied = len(authorized) >= policy.minimum_authorized_signatures
 ```
 
-- [ ] **Step 4: Add stable diagnostics.** Define and test exact codes for package invalid, malformed bundle, statement mismatch, unsupported algorithm, unknown key, invalid signature, not-yet-valid/expired/revoked/unknown status, untrusted, unauthorized, threshold failure and crypto absence. Diagnostic messages must not contain package host paths, key bytes or input JSON.
+- [x] **Step 4: Add stable diagnostics.** Define and test exact codes for package invalid, malformed bundle, statement mismatch, unsupported algorithm, unknown key, invalid signature, not-yet-valid/expired/revoked/unknown status, untrusted, unauthorized, threshold failure and crypto absence. Diagnostic messages must not contain package host paths, key bytes or input JSON.
 
-- [ ] **Step 5: Validate every result document.** `to_dict()` must pass the packaged result schema, preserve signature order and include statement/package/policy SHA-256 values. `policy_evaluation` contains the requested threshold, authorized unique IDs and `policy_satisfied`; it never emits approval language.
+- [x] **Step 5: Validate every result document.** `to_dict()` must pass the packaged result schema, preserve signature order and include statement/package/policy SHA-256 values. `policy_evaluation` contains the requested threshold, authorized unique IDs and `policy_satisfied`; it never emits approval language.
 
-- [ ] **Step 6: Run the complete mutation matrix.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py tests/test_signing_crypto.py tests/test_signing_policy.py -q`; expect all states machine-distinct and deterministic across two executions.
+- [x] **Step 6: Run the complete mutation matrix.** Run `.venv/bin/python -m pytest tests/test_signing_contract.py tests/test_signing_crypto.py tests/test_signing_policy.py -q`; expect all states machine-distinct and deterministic across two executions.
 
-- [ ] **Step 7: Commit.** Commit as `feat: verify ACX-20 signatures and trust states`.
+- [x] **Step 7: Commit.** Commit as `feat: verify ACX-20 signatures and trust states`.
 
 ### Task 6: CLI sign/verify commands and exit contract
 

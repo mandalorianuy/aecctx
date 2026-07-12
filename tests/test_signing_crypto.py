@@ -84,6 +84,15 @@ def test_crypto_boundary_loads_ed25519_and_verifies_signature() -> None:
     assert _signing_crypto().verify_bytes(public_key, signature, b"changed") is False
 
 
+def test_crypto_boundary_verifies_raw_ed25519_material() -> None:
+    private_key = Ed25519PrivateKey.from_private_bytes(b"A" * 32)
+    public_key = private_key.public_key().public_bytes_raw()
+    signature = private_key.sign(b"message")
+
+    assert _signing_crypto().verify_ed25519(public_key, signature, b"message") is True
+    assert _signing_crypto().verify_ed25519(public_key, signature, b"changed") is False
+
+
 def test_crypto_boundary_maps_wrong_password_and_key_type_without_secret_echo() -> None:
     secret = b"do-not-echo-this-password"
     encrypted = _private_pem(password=secret)

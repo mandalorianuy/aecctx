@@ -48,3 +48,7 @@ def verify_bytes(public_key: Any, signature: bytes, message: bytes) -> bool:
     except InvalidSignature:
         return False
     return True
+
+
+def verify_ed25519(raw_public_key: bytes, signature: bytes, message: bytes) -> bool:
+    return verify_bytes(load_public_key(raw_public_key), signature, message)

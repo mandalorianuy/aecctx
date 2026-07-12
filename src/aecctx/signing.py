@@ -187,14 +187,69 @@ class PackageSignatureResult:
     verification_completed: bool
     policy_satisfied: bool | None
     statement_sha256: str | None
+    semantic_manifest_sha256: str | None
     package_id: str | None
     logical_digest: str | None
     signatures: tuple[SignatureVerification, ...]
     diagnostics: tuple[Diagnostic, ...]
+    package_diagnostic_codes: tuple[str, ...] = ()
+    policy_sha256: str | None = None
+    minimum_authorized_signatures: int | None = None
+    authorized_kids: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         _require_state("package_integrity", self.package_integrity, frozenset({"valid", "invalid"}))
         _require_state("signature_presence", self.signature_presence, frozenset({"unsigned", "signed"}))
+
+    def to_dict(self) -> dict[str, Any]:
+        if self.statement_sha256 is None or self.semantic_manifest_sha256 is None:
+            raise ValueError("a completed verification result requires statement digests")
+        if self.policy_satisfied is None:
+            policy_evaluation = None
+        else:
+            if self.policy_sha256 is None or self.minimum_authorized_signatures is None:
+                raise ValueError("a policy result requires policy metadata")
+            policy_evaluation = {
+                "policy_sha256": self.policy_sha256,
+                "minimum_authorized_signatures": self.minimum_authorized_signatures,
+                "authorized_kids": list(self.authorized_kids),
+                "policy_satisfied": self.policy_satisfied,
+            }
+        value = {
+            "result_version": "1",
+            "package_validation": {
+                "valid": self.package_integrity == "valid",
+                "package_id": self.package_id,
+                "logical_digest": self.logical_digest,
+                "diagnostic_codes": list(self.package_diagnostic_codes),
+            },
+            "statement": {
+                "profile": "https://aecctx.dev/signing/v1",
+                "statement_version": "1",
+                "sha256": self.statement_sha256,
+                "semantic_manifest_sha256": self.semantic_manifest_sha256,
+            },
+            "signature_presence": self.signature_presence,
+            "verification_completed": self.verification_completed,
+            "signatures": [
+                {
+                    "kid": item.kid,
+                    "algorithm": item.algorithm,
+                    "subject": item.subject,
+                    "cryptographic_status": item.cryptographic_status,
+                    "identity_status": item.identity_status,
+                    "key_status": item.key_status,
+                    "trust_status": item.trust_status,
+                    "authorization_status": item.authorization_status,
+                    "diagnostic_codes": list(item.diagnostic_codes),
+                }
+                for item in self.signatures
+            ],
+            "policy_evaluation": policy_evaluation,
+            "diagnostics": [diagnostic.to_dict() for diagnostic in self.diagnostics],
+        }
+        validate_signing_document(value, "signature-verification-result.schema.json")
+        return value
 
 
 def validate_signing_document(value: Any, schema_name: str) -> None:
@@ -499,3 +554,207 @@ def append_signature(
         limits=active_limits,
     )
     return SignatureBundle(bundle.signatures + new_bundle.signatures)
+
+
+_VERIFICATION_DIAGNOSTIC_MESSAGES = {
+    "AECCTX_SIGNING_STATEMENT_BINDING_MISMATCH": "signature is bound to a different package statement",
+    "AECCTX_SIGNING_SIGNATURE_INVALID": "Ed25519 signature verification failed",
+    "AECCTX_SIGNING_UNKNOWN_KEY": "signature key id is absent from the supplied registry",
+    "AECCTX_SIGNING_ALGORITHM_UNSUPPORTED": "signature algorithm is not supported by profile v1",
+    "AECCTX_SIGNING_KEY_NOT_YET_VALID": "signing key is not yet valid at policy time",
+    "AECCTX_SIGNING_KEY_EXPIRED": "signing key is expired at policy time",
+    "AECCTX_SIGNING_KEY_REVOKED": "signing key is revoked at policy time",
+    "AECCTX_SIGNING_KEY_STATUS_UNKNOWN": "signing key revocation status is unknown",
+    "AECCTX_SIGNING_KEY_UNTRUSTED": "signing key is not trusted by the supplied policy",
+    "AECCTX_SIGNING_SIGNER_UNAUTHORIZED": "signing key does not satisfy policy authorization",
+    "AECCTX_SIGNING_THRESHOLD_NOT_MET": "authorized signature threshold was not met",
+}
+
+
+def _policy_sha256(policy: TrustPolicy) -> str:
+    from ._signing_io import canonical_json_nfc
+
+    value = {
+        "allowed_algorithms": list(policy.allowed_algorithms),
+        "minimum_authorized_signatures": policy.minimum_authorized_signatures,
+        "policy_version": "1",
+        "required_scopes": list(policy.required_scopes),
+        "trusted_kids": list(policy.trusted_kids),
+        "trusted_subjects": list(policy.trusted_subjects),
+        "verification_time": policy.verification_time,
+    }
+    return hashlib.sha256(canonical_json_nfc(value, terminal_lf=True)).hexdigest()
+
+
+def _verification_diagnostics(codes: list[str]) -> tuple[Diagnostic, ...]:
+    seen: set[str] = set()
+    diagnostics: list[Diagnostic] = []
+    for code in codes:
+        if code in seen:
+            continue
+        seen.add(code)
+        diagnostics.append(Diagnostic(code, _VERIFICATION_DIAGNOSTIC_MESSAGES[code]))
+    return tuple(diagnostics)
+
+
+def verify_package_signatures(
+    package_path: str | Path,
+    *,
+    bundle: SignatureBundle | None,
+    registry: KeyRegistry,
+    policy: TrustPolicy | None = None,
+    limits: SigningLimits | None = None,
+) -> PackageSignatureResult:
+    from ._signing_crypto import verify_ed25519
+    from ._signing_io import base64url_decode, base64url_encode
+
+    active_limits = limits or SigningLimits()
+    statement = build_signing_statement(package_path, limits=active_limits)
+    package_id = str(statement.data["package_id"])
+    logical_digest = str(statement.data["logical_digest"])
+    semantic_manifest_sha256 = str(statement.data["semantic_manifest_sha256"])
+    policy_digest = _policy_sha256(policy) if policy is not None else None
+
+    if bundle is None:
+        codes = ["AECCTX_SIGNING_THRESHOLD_NOT_MET"] if policy is not None else []
+        result = PackageSignatureResult(
+            package_integrity="valid",
+            signature_presence="unsigned",
+            verification_completed=True,
+            policy_satisfied=False if policy is not None else None,
+            statement_sha256=statement.sha256,
+            semantic_manifest_sha256=semantic_manifest_sha256,
+            package_id=package_id,
+            logical_digest=logical_digest,
+            signatures=(),
+            diagnostics=_verification_diagnostics(codes),
+            policy_sha256=policy_digest,
+            minimum_authorized_signatures=(policy.minimum_authorized_signatures if policy is not None else None),
+        )
+        result.to_dict()
+        return result
+
+    if len(bundle.signatures) > active_limits.max_signatures:
+        raise SigningError("AECCTX_SIGNING_INPUT_LIMIT_EXCEEDED", "signature bundle exceeds its signature limit")
+    kids = [entry.kid for entry in bundle.signatures]
+    if len(kids) != len(set(kids)):
+        raise SigningError("AECCTX_SIGNING_DUPLICATE_KID", "signature bundle contains a duplicate kid")
+    key_by_kid: dict[str, SigningKey] = {}
+    for key in registry.keys:
+        if key.kid in key_by_kid:
+            raise SigningError("AECCTX_SIGNING_DUPLICATE_KID", "key registry contains a duplicate kid")
+        key_by_kid[key.kid] = key
+
+    results: list[SignatureVerification] = []
+    all_codes: list[str] = []
+    encoded_statement = base64url_encode(statement.canonical_bytes)
+    for entry in bundle.signatures:
+        if entry.statement_sha256 != statement.sha256:
+            codes = ("AECCTX_SIGNING_STATEMENT_BINDING_MISMATCH",)
+            result = SignatureVerification(
+                entry.kid,
+                entry.algorithm,
+                None,
+                "invalid",
+                "unresolved",
+                "not_evaluated",
+                "not_evaluated",
+                "not_evaluated",
+                codes,
+            )
+            results.append(result)
+            all_codes.extend(codes)
+            continue
+
+        key = key_by_kid.get(entry.kid)
+        if key is None:
+            codes = ("AECCTX_SIGNING_UNKNOWN_KEY",)
+            result = SignatureVerification(
+                entry.kid,
+                entry.algorithm,
+                None,
+                "unknown_key",
+                "unresolved",
+                "not_evaluated",
+                "not_evaluated",
+                "not_evaluated",
+                codes,
+            )
+            results.append(result)
+            all_codes.extend(codes)
+            continue
+
+        evaluation = evaluate_key(key, policy)
+        if entry.algorithm not in SIGNING_ALGORITHMS or (
+            policy is not None and entry.algorithm not in policy.allowed_algorithms
+        ):
+            codes = ("AECCTX_SIGNING_ALGORITHM_UNSUPPORTED",)
+            result = SignatureVerification(
+                entry.kid,
+                entry.algorithm,
+                key.subject,
+                "unsupported_algorithm",
+                "resolved",
+                evaluation.key_status,
+                evaluation.trust_status,
+                evaluation.authorization_status,
+                codes,
+            )
+            results.append(result)
+            all_codes.extend(codes)
+            continue
+
+        signature = base64url_decode(entry.signature, expected_bytes=64)
+        public_key = base64url_decode(key.public_key_x, expected_bytes=32)
+        signing_input = f"{entry.protected}.{encoded_statement}".encode("ascii")
+        valid = verify_ed25519(public_key, signature, signing_input)
+        crypto_codes = () if valid else ("AECCTX_SIGNING_SIGNATURE_INVALID",)
+        codes = evaluation.diagnostic_codes + crypto_codes
+        result = SignatureVerification(
+            entry.kid,
+            entry.algorithm,
+            key.subject,
+            "valid" if valid else "invalid",
+            "resolved",
+            evaluation.key_status,
+            evaluation.trust_status,
+            evaluation.authorization_status,
+            codes,
+        )
+        results.append(result)
+        all_codes.extend(codes)
+
+    authorized = tuple(
+        sorted(
+            {
+                item.kid
+                for item in results
+                if item.cryptographic_status == "valid"
+                and item.key_status == "valid"
+                and item.trust_status == "trusted"
+                and item.authorization_status == "authorized"
+            }
+        )
+    )
+    policy_satisfied = None
+    if policy is not None:
+        policy_satisfied = len(authorized) >= policy.minimum_authorized_signatures
+        if not policy_satisfied:
+            all_codes.append("AECCTX_SIGNING_THRESHOLD_NOT_MET")
+    result = PackageSignatureResult(
+        package_integrity="valid",
+        signature_presence="signed",
+        verification_completed=True,
+        policy_satisfied=policy_satisfied,
+        statement_sha256=statement.sha256,
+        semantic_manifest_sha256=semantic_manifest_sha256,
+        package_id=package_id,
+        logical_digest=logical_digest,
+        signatures=tuple(results),
+        diagnostics=_verification_diagnostics(all_codes),
+        policy_sha256=policy_digest,
+        minimum_authorized_signatures=(policy.minimum_authorized_signatures if policy is not None else None),
+        authorized_kids=authorized,
+    )
+    result.to_dict()
+    return result
