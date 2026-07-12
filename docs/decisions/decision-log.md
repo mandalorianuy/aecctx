@@ -162,6 +162,17 @@ Status: Active
 - Consequence: ACXD-019 is resolved only for this ACX-17 provider/profile. DWG and RVT retain separate open ACXD-019 instances. ACXB-001 continues to block unreviewed native host and other container enforcement profiles.
 - Evidence owner: `docs/specs/step-iges-v02-profile.md`, ACX-17 provider recipe/descriptor, project-authored corpus, license/security review, tests and acceptance evidence.
 
+### ACXD-029: Bounded DWG R2000 external LibreDWG provider
+
+- Provider decision: ACX-18 selects `org.aecctx.dwg.libredwg@0.2.0` using GNU LibreDWG 0.13.4 API/ABI 1, built from the official release archive with SHA-256 `7e153ea4dac4cbf3dc9c50b9ef7a5604e09cdd4c5520bcf8017877bbe1422cd5`. LibreDWG is GPL-3.0-or-later and therefore runs only through ACX-12 `oci-docker-v1`; it never enters core dependencies, wheels, sdists or in-process extras.
+- Format boundary: the initial target is self-contained R2000/`AC1015` only. Other DWG revisions, encrypted/protected content, proxy/custom semantics, ACIS bodies, external-reference traversal and proprietary vertical objects remain unsupported or opaque.
+- Evidence boundary: `dwgread` JSON is direct decoder evidence. `dwg2dxf --as r2000` output and all geometry parsed from it are converted/derived evidence with converter/runtime/configuration and input/output hashes. They are never presented as native DWG geometry or source-exact B-Rep.
+- Runtime/distribution: the provider is operator-built, digest-pinned, network-disabled and not distributed by core. There is no entitlement, credential, telemetry, retention or service dependency. Any image distribution must satisfy GPL source, notice and replacement obligations. Image ID, exact base image and build results are implementation evidence, not inferred trust.
+- Rejected alternatives: ODA Drawings SDK and Autodesk RealDWG lack repository-owned commercial entitlement, redistribution terms and public CI credentials. Network conversion lacks upload consent, retention/jurisdiction and reproducibility governance. They require separate future decisions.
+- Fixture decision: conformance DWGs are generated from project-authored DXF/JSON commands by the exact provider. Negative cases mutate only project-authored bytes. Proprietary samples may supplement local diagnosis but cannot support a claim.
+- Consequence: the ACX-18 instance of ACXD-019 is resolved for this exact provider/profile. RVT retains its separate open ACXD-019 instance.
+- Evidence owner: `docs/specs/dwg-v02-profile.md`, ACX-18 provider recipe/descriptor, generated corpus, license/security review, tests and acceptance evidence.
+
 ## Open decisions
 
 ### ACXD-018: Signing and trust profile
@@ -172,7 +183,7 @@ Status: Active
 
 ### ACXD-019: Restricted decoder distribution and entitlement
 
-- Owner: adapter-specific ACX-17, ACX-18, or ACX-19 task before implementation.
+- Owner: the remaining ACX-19 RVT provider instance before implementation. ACX-17 and ACX-18 are resolved by ACXD-028 and ACXD-029.
 - Decision required: for each selected STEP/IGES, DWG, or RVT provider, record license compatibility, entitlement, redistribution, CI access, fixture rights, telemetry/network behavior, supported platforms, and support lifecycle.
 - Blocking effect: only the affected provider/format. An adapter may remain unsupported while other tasks continue.
 

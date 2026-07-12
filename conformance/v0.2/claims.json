@@ -259,7 +259,7 @@
       "test_ids": ["tests/test_step_iges_provider.py::test_step_iges_live_provider_emits_source_and_derived_brep_evidence", "tests/test_step_iges_adapter.py::test_step_iges_v02_maps_observed_structure_and_derived_geometry"],
       "evidence": "docs/evidence/ACX-17.md"
     },
-    {"id": "dwg.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "dwg.external-provider", "status": "target", "support_level": null, "profile": "dwg-r2000-libredwg-json-dxf-v1", "platform_scope": [], "provider_scope": "planned org.aecctx.dwg.libredwg@0.2.0; exact image pending reviewed operator build", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "rvt.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "package.authenticity-signing", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "quality-gate.policy-ids", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},

@@ -163,7 +163,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-15 | completed | Experimental bounded OCR evidence; vision remains target and hidden geometry remains public unsupported |
 | ACX-16 | completed | Mesh units, calibration and CRS registration |
 | ACX-17 | completed | Experimental bounded STEP/IGES source graph and translator-derived BREP profiles |
-| ACX-18 | pending-next | Optional DWG external-provider adapter |
+| ACX-18 | in_progress | Optional DWG external-provider adapter |
 | ACX-19 | pending | Optional RVT external-provider adapter |
 | ACX-20 | pending | Package authenticity and signing profile |
 | ACX-21 | pending | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
@@ -610,6 +610,8 @@ Completion resolution: ACXD-028 selects the exact operator-built OCP/OCCT OCI pr
 ## ACX-18: DWG
 
 Objective: provide optional, version-scoped DWG extraction through a legally reviewed ACX-12 provider.
+
+Normative profile: [`docs/specs/dwg-v02-profile.md`](specs/dwg-v02-profile.md), governed by ACXD-007, ACXD-014, ACXD-019, ACXD-024 and ACXD-029. The selected GPL runtime is restricted to the reviewed ACX-12 OCI boundary.
 
 Decision gate: resolve the DWG ACXD-019 instance, including SDK/service entitlement, user deployment model, CI credentials, redistribution, telemetry/retention, version support and publishable fixture rights. If no compliant provider is available, record `blocked` evidence and retain opaque fallback.
 
