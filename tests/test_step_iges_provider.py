@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+import json
+import os
 from pathlib import Path
 
 import pytest
@@ -14,6 +16,7 @@ from aecctx.providers.step_iges import (
     step_iges_descriptor,
     step_iges_registry,
 )
+from aecctx.providers import OCIDockerProfile, ProviderLimits, ProviderRunner
 
 
 ROOT = Path(__file__).parents[1]
@@ -203,3 +206,54 @@ def test_generated_step_iges_fixtures_are_bound_to_exact_source_profiles() -> No
     assert hashlib.sha256(iges).hexdigest() == "b64f87ee6b4fea34d9d268154550a17593e587f8227670c1a78fc84b51c09321"
     assert scanned_iges["version"] == "5.3"
     assert len(scanned_iges["directory"]) == 52
+
+
+@pytest.mark.skipif(os.environ.get("AECCTX_RUN_STEP_IGES_PROVIDER") != "1", reason="exact reviewed OCI runtime is opt-in")
+@pytest.mark.parametrize("fixture", ["ap203-part.step", "ap214-assembly.step", "ap242-part.step", "iges53-part.igs"])
+def test_step_iges_live_provider_emits_source_and_derived_brep_evidence(fixture: str) -> None:
+    source = (ROOT / "fixtures" / "v0.2" / "step-iges" / fixture).read_bytes()
+    runner = ProviderRunner(
+        registry=step_iges_registry(repository_root=ROOT),
+        profile=OCIDockerProfile(image=STEP_IGES_IMAGE),
+        limits=ProviderLimits(max_input_bytes=2_000_000, max_output_bytes=20_000_000, max_records=2_000, wall_time_seconds=30),
+    )
+
+    result = runner.run(STEP_IGES_PROVIDER_ID, "extract", source, configuration=STEP_IGES_CONFIGURATION)
+
+    assert result.ok is True
+    assert result.attestation["runtime_digest"] == STEP_IGES_IMAGE_ID
+    assert result.events[0]["payload"]["schema"] == "aecctx.step-iges.source.v1"
+    assert result.events[0]["payload"]["format"] in {"step", "iges"}
+    shape_events = [item for item in result.events if item["payload"].get("schema") == "aecctx.step-iges.shape.v1"]
+    assert shape_events
+    assert shape_events[0]["payload"]["representation_fidelity"] == "brep-translator-derived"
+    assert shape_events[0]["payload"]["topology"]["solids"] >= 1
+    brep_paths = [item["path"] for item in result.artifacts if item["media_type"] == "model/vnd.opencascade.brep"]
+    assert brep_paths == ["artifacts/root-1.brep"]
+    assert result.artifact_bytes[brep_paths[0]].startswith(b"DBRep_DrawableShape")
+    mesh_paths = [item["path"] for item in result.artifacts if item["media_type"] == "application/vnd.aecctx.triangle-mesh+json"]
+    assert mesh_paths == ["artifacts/scene-mesh.json"]
+    mesh = json.loads(result.artifact_bytes[mesh_paths[0]])
+    assert mesh["schema"] == "aecctx.triangle-mesh.v1"
+    assert len(mesh["vertices"]) >= 8
+    assert len(mesh["triangles"]) >= 12
+    assert result.capability_report["3d_geometry"]["support_level"] == "partial"
+    assert "AECCTX_STEP_IGES_TRANSLATOR_PROCESSING_APPLIED" in result.capability_report["3d_geometry"]["reason_codes"]
+
+
+@pytest.mark.skipif(os.environ.get("AECCTX_RUN_STEP_IGES_PROVIDER") != "1", reason="exact reviewed OCI runtime is opt-in")
+def test_step_iges_live_provider_is_deterministic_for_fixed_runtime_and_input() -> None:
+    source = (ROOT / "fixtures" / "v0.2" / "step-iges" / "ap214-assembly.step").read_bytes()
+    runner = ProviderRunner(
+        registry=step_iges_registry(repository_root=ROOT),
+        profile=OCIDockerProfile(image=STEP_IGES_IMAGE),
+        limits=ProviderLimits(max_input_bytes=2_000_000, max_output_bytes=20_000_000, max_records=2_000, wall_time_seconds=30),
+    )
+
+    first = runner.run(STEP_IGES_PROVIDER_ID, "extract", source, configuration=STEP_IGES_CONFIGURATION)
+    second = runner.run(STEP_IGES_PROVIDER_ID, "extract", source, configuration=STEP_IGES_CONFIGURATION)
+
+    assert first.events == second.events
+    assert first.artifacts == second.artifacts
+    assert first.artifact_bytes == second.artifact_bytes
+    assert first.attestation == second.attestation

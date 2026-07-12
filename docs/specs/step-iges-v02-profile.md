@@ -73,7 +73,7 @@ Deflections are expressed in kernel target units after the translator's declared
 The response uses the ACX-12 envelope and emits only:
 
 - ordered `source_entity`, `product`, `assembly_relation`, `instance`, `shape`, `style`, `diagnostic` and `artifact` events;
-- content-addressed BREP and GLB artifacts;
+- content-addressed BREP and canonical triangle-mesh JSON artifacts;
 - capability/loss report and provider attestation;
 - bounded resource usage and exact runtime versions.
 
@@ -145,7 +145,7 @@ Source entity records describe original STEP/IGES classes and references. Kernel
 - transfer status, warnings, failed roots and translator/healing report;
 - `representation_fidelity.class = "brep"`, `derived = true` and source representation IDs.
 
-Deterministic GLB uses fixed deflection, angular tolerance, vertex/normal/index ordering and canonical export. It is `tessellated` and derived from cited BREP records. SVG previews, if emitted, are projections and do not count as source-native 2D.
+The provider uses fixed deflection and angular tolerance and emits canonical finite vertices/triangle indices plus their BREP parent reference. The core validates that mesh evidence and uses the existing `trimesh==4.12.2` deterministic geometry convention to create GLB. GLB is `tessellated` and derived from cited BREP records; it is not a provider/source artifact. SVG previews, if emitted, are projections and do not count as source-native 2D.
 
 The provider MUST NOT silently sew, heal, simplify, merge, split, reorient, rescale or discard shapes. Translator-default processing that cannot be disabled without invalidating the reviewed reader is explicitly attested and reported per root. A source-exact B-Rep claim is prohibited.
 

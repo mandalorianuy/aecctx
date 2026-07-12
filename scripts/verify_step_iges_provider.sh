@@ -14,4 +14,7 @@ fi
 docker run --rm --network=none --read-only --user=65532:65532 "$image" \
   python3 -c 'import importlib.metadata, OCP; assert importlib.metadata.version("cadquery-ocp") == "7.9.3.1.1"'
 
+AECCTX_RUN_STEP_IGES_PROVIDER=1 "$repo_root/.venv/bin/python" -m pytest \
+  "$repo_root/tests/test_step_iges_provider.py" -k live -q
+
 echo "aecctx STEP/IGES provider runtime: ok $actual_id"
