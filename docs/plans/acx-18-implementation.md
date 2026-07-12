@@ -43,7 +43,7 @@
 
 - [ ] **Step 1: Write failing descriptor and distribution-boundary tests.** Assert provider ID `org.aecctx.dwg.libredwg`, version `0.2.0`, runtime `python-3.12+libredwg-0.13.4-api1`, license `GPL-3.0-or-later`, `linux-container`, every enforcement axis, exact configuration, allowlisted worker path/command, and absence of `libredwg`/GPL dependencies from `pyproject.toml`.
 - [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_dwg_provider.py -k 'registration or core_distribution' -q`; expect import failure for `aecctx.providers.dwg`.
-- [ ] **Step 3: Add the deterministic image recipe.** Use the reviewed Ubuntu Noble arm64 base digest already accepted by ACX-17. Download the official 0.13.4 tar.xz, verify SHA-256 `7e153ea4dac4cbf3dc9c50b9ef7a5604e09cdd4c5520bcf8017877bbe1422cd5`, build with `./configure --enable-release`, run the upstream test target during build, install, remove compiler/source/cache packages in the final stage, and run as UID/GID 65532 with fixed locale/hash settings.
+- [ ] **Step 3: Add the deterministic image recipe.** Use the reviewed Ubuntu Noble arm64 base digest already accepted by ACX-17. Download the official 0.13.4 tar.xz, verify SHA-256 `7e153ea4dac4cbf3dc9c50b9ef7a5604e09cdd4c5520bcf8017877bbe1422cd5`, build with `./configure --enable-release`, run exact upstream `programs/dxf.test` (the governed aggregate `alive.test` failure remains recorded), install, remove compiler/source/cache packages in the final stage, and run as UID/GID 65532 with fixed locale/hash settings.
 - [ ] **Step 4: Build explicitly and capture immutable evidence.** Run `./scripts/build_dwg_provider.sh`; record `docker image inspect --format '{{.Id}}' aecctx-dwg-libredwg:0.2.0` in `DWG_IMAGE_ID`, worker constants and license/security records. An ID change requires review and cannot auto-update.
 - [ ] **Step 5: Implement descriptor/registry and public exports.** Follow the ACX-17 registration pattern, using image tag plus immutable local ID and allowlisted worker module `aecctx.external.libredwg_worker`.
 - [ ] **Step 6: Verify GREEN.** Run the focused tests and `docker run --rm --network=none --read-only --user=65532:65532 aecctx-dwg-libredwg:0.2.0 dwgread --version`; assert exact 0.13.4 runtime and no network/write need.
@@ -163,4 +163,3 @@
 - The public target is only R2000/AC1015; all other DWG versions and proprietary content remain explicit residuals.
 - No task adds consumer semantics, network, LLM, WoodFraming, RVT, signing or quality-gate scope.
 - The immutable image ID is a reviewed build output that must be committed before live tests or claims; it is not guessed in this plan.
-

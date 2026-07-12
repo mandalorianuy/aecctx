@@ -31,6 +31,8 @@ There is no entitlement, account, credential, telemetry, retention or service de
 
 The security review must explicitly record the February 2026 upstream heap-buffer-overflow report involving material texture parsing, verify whether the selected 0.13.4 release contains the relevant fix, and retain the full OCI resource boundary regardless. Absence of a published CVE or a successful fixture run is not proof that the native decoder is memory-safe.
 
+The official 0.13.4 arm64 release build has a known verification limitation: its aggregate `make check` fails `programs/alive.test` on JSON-to-DWG writer round trips, while `programs/dxf.test` passes the read/DWG-to-DXF and DXF-to-DWG paths used by this profile. The reviewed image build MUST run the exact upstream `dxf.test`, then the AECCTX provider read/conversion/adversarial corpus. It MUST record the aggregate upstream failure and MUST NOT present the selected test cut as full upstream conformance. A future LibreDWG release requires a new decision and complete re-evaluation.
+
 ## 3. Rejected providers
 
 ODA Drawings SDK and Autodesk RealDWG are not selected. Both require commercial licensing/entitlement and an approved redistribution and CI model that this repository does not possess. Autodesk Platform Services conversion is also not selected because it would require network credentials, upload consent, retention/jurisdiction governance and external-input provenance.

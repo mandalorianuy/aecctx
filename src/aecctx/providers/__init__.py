@@ -25,6 +25,14 @@ from .step_iges import (
     step_iges_registry,
 )
 from .runner import ProviderRunner
+from .dwg import (
+    DWG_CONFIGURATION,
+    DWG_IMAGE,
+    DWG_IMAGE_ID,
+    DWG_PROVIDER_ID,
+    dwg_descriptor,
+    dwg_registry,
+)
 
 __all__ = [
     "MacOSSeatbeltProfile",
@@ -54,4 +62,10 @@ __all__ = [
     "STEP_IGES_PROVIDER_ID",
     "step_iges_descriptor",
     "step_iges_registry",
+    "DWG_CONFIGURATION",
+    "DWG_IMAGE",
+    "DWG_IMAGE_ID",
+    "DWG_PROVIDER_ID",
+    "dwg_descriptor",
+    "dwg_registry",
 ]
