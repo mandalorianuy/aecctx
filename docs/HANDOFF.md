@@ -1,7 +1,7 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-12
-Handoff status: `0.2.0-ACX-15-IN-PROGRESS`
+Handoff status: `0.2.0-ACX-15-COMPLETE`
 
 ## Outcome
 
@@ -12,7 +12,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-14 completed
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09 and ACX-11 through ACX-14 are complete; ACX-10 remains deferred. ACX-15 remains `in_progress` until portable CI passes; ACX-16 is pending and must not start.
+4. ACX-01 through ACX-09 and ACX-11 through ACX-15 are complete; ACX-10 remains deferred. Execute only ACX-16, currently `pending-next`, when continuation is explicitly requested.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 

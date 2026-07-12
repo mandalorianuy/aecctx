@@ -1,7 +1,7 @@
 # ACX-15 acceptance evidence
 
 Date: 2026-07-12
-Status: in progress pending portable CI correction
+Status: completed
 Task: OCR, vision and reconstruction hypotheses
 Decision: ACXD-020
 Completion commit: `feat: complete ACX-15 bounded OCR inference profile`
@@ -54,7 +54,8 @@ All raster/PDF content and glyph rendering code were authored in this repository
 - `python scripts/check_spec_contract.py`: passed; claim registry valid with no errors; inference replay corpus valid.
 - `python3 scripts/check_meta_agent_baseline_integration.py --fail-on-issues`: healthy, zero issues.
 - `./scripts/verify_portable.sh`: passed; wheel and sdist built successfully.
-- `./scripts/verify.sh`: passed after evidence and ACX-16 promotion; deterministic v0.1 corpus and release verification remained green.
+- `./scripts/verify.sh`: passed on the corrected implementation and evidence; deterministic v0.1 corpus and release verification remained green. The spec/claim gates passed again after final ACX-16 promotion.
+- GitHub Actions run `29196310224`: Ubuntu, macOS and Windows `verify_portable.sh` jobs all passed after the canonical-raster and portable OCI-test correction.
 
 ## Security, privacy, license and platform boundary
 
@@ -66,4 +67,4 @@ The provider image is operator-built and excluded from core packages. Tesseract 
 
 Additional languages, rotated/complex layouts, tables/symbols/dimensions, image/PDF vision, reconstruction hypotheses, portable live provider matrices and hidden geometry extraction remain unclaimed or `unsupported`. A future capability requires a new governed profile before implementation.
 
-No WoodFraming path, `WFDomain`, `WFImport`, network service or LLM dependency was accessed or modified. ACX-15 remains in progress until the canonical-raster CI correction is green; ACX-16 remains pending and was not executed.
+No WoodFraming path, `WFDomain`, `WFImport`, network service or LLM dependency was accessed or modified. ACX-15 is completed and ACX-16 is promoted to `pending-next`; ACX-16 was not executed.
