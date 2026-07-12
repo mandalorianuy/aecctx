@@ -49,7 +49,7 @@ The public claim registry maps both claims to the corpus, focused tests and this
 - `./scripts/verify_portable.sh`: passed; wheel and sdist built successfully in isolated environments.
 - `python3 scripts/check_meta_agent_baseline_integration.py --fail-on-issues`: healthy, zero issues, bundle `baseline-shared-v1`.
 - `./scripts/verify.sh`: passed; the v0.1 deterministic corpus remained valid with matching claims and digests for all seven adapters.
-- Remote GitHub Actions: recorded after the published branch run completes.
+- GitHub Actions run `29197567916`: Ubuntu, macOS and Windows `verify_portable.sh` jobs passed for implementation commit `22451c2`.
 
 ## Security and authority boundary
 
