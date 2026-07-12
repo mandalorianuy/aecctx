@@ -114,7 +114,7 @@
     "representation_fidelity": {
       "additionalProperties": false,
       "properties": {
-        "class": {"enum": ["source_exact", "parametric", "brep", "tessellated", "rasterized", "projection_2d", "preview", "inferred"]},
+        "class": {"enum": ["source_exact", "parametric", "brep", "converted", "tessellated", "rasterized", "projection_2d", "preview", "inferred"]},
         "derived": {"type": "boolean"},
         "source_representation_ids": {"items": {"minLength": 1, "type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true}
       },

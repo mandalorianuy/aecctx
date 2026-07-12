@@ -19,7 +19,7 @@ RECORD_PATHS = (
 )
 VALUE_STATES = {"known", "unknown", "not_applicable", "conflicted", "explicit_null", "unsupported"}
 REPRODUCIBILITY_CLASSES = {"deterministic", "seeded", "non_deterministic"}
-DERIVED_FIDELITY_CLASSES = {"tessellated", "rasterized", "projection_2d", "preview", "inferred"}
+DERIVED_FIDELITY_CLASSES = {"converted", "tessellated", "rasterized", "projection_2d", "preview", "inferred"}
 
 
 class RecordModelError(ValueError):
