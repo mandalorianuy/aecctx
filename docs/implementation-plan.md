@@ -8,6 +8,139 @@ Specification readiness: `0.2.0-EXPANSION-SPEC-READY`
 
 Execute only the first task with status `pending-next` or `in_progress`. Update this plan and attach acceptance evidence before advancing. A later task may not borrow scope from an earlier task.
 
+## Status and promotion protocol
+
+Allowed ledger states are:
+
+- `pending`: sequenced but not executable;
+- `pending-next`: the only task authorized to start;
+- `in_progress`: the only task currently executing;
+- `completed`: every acceptance item has evidence and all required gates pass;
+- `blocked`: execution was attempted but a repository-external legal, credential, platform, provider, or human decision prevents completion; the evidence document records impact, alternatives attempted, retained support level, and the exact decision required;
+- `deferred`: deliberately outside this implementation line.
+
+There MUST be exactly one `pending-next` or `in_progress` task while executable work remains. A `blocked` task is not a successful capability claim and MUST remain `partial`, `opaque`, or `unsupported` in the capability matrix. It permits promotion of the next independent task only after the blocker is documented in its evidence file and decision log. ACX-23 MUST enumerate every blocked predecessor and omit its target from release claims.
+
+Task promotion is performed in the same change that closes the current task:
+
+1. attach `docs/evidence/ACX-NN.md`;
+2. update capability claims only for tested, bounded support;
+3. resolve or update owned decision-log entries;
+4. set the task to `completed` or documented `blocked`;
+5. promote exactly the following task to `pending-next`;
+6. run `./scripts/verify.sh`;
+7. commit one coherent ACX milestone without rewriting published history.
+
+## Definition of ready
+
+Before a task moves to `in_progress`:
+
+- every earlier non-deferred task is `completed` or documented `blocked`;
+- its normative spec sections and decision owners are identified;
+- required libraries/providers have official API, version, license, distribution and security notes, or the task begins with that review;
+- positive, negative, degraded and adversarial fixtures are listed with publication rights;
+- expected claim boundaries and non-claims are written before implementation;
+- the narrow test commands and final repository gate are named.
+
+## Definition of done
+
+Every ACX completion requires:
+
+- tests written from the acceptance contract, including at least one failing/degraded path before the implementation claim;
+- implementation, schema, CLI/SDK, fixture and documentation changes required by that task only;
+- structured capability/loss and stable diagnostic coverage for every non-full result;
+- deterministic replay evidence or an explicit reproducibility class and external-input hashes;
+- security, privacy, license and platform evidence proportional to the capability;
+- `python3 scripts/check_spec_contract.py`, the task-specific tests, `./scripts/verify_portable.sh`, and `./scripts/verify.sh` passing;
+- no uncommitted generated timestamps or unrelated workspace changes;
+- no new WoodFraming, `WFDomain`, `WFImport`, network, or LLM dependency in the core.
+
+## Acceptance evidence template
+
+Each new `docs/evidence/ACX-NN.md` MUST contain:
+
+1. task status, completion commit and date;
+2. spec sections and decision-log entries covered;
+3. implemented deliverables and explicit non-scope;
+4. claim table with capability, source/profile/version, support level and conformance test IDs;
+5. fixtures with origin/license and hashes;
+6. commands run with results;
+7. determinism or reproducibility evidence;
+8. capability/loss and diagnostic evidence;
+9. dependency, license, security, privacy and platform review;
+10. known residual risks and unsupported cases;
+11. proof that WoodFraming was not modified;
+12. next-task promotion or exact blocker/decision required.
+
+## Cross-task directory contract
+
+Expected implementation surfaces are listed to prevent rediscovery; a task MAY refine a path only with equivalent ownership and an updated evidence document.
+
+| Surface | Intended ownership |
+|---|---|
+| `schemas/v0.2/` and `src/aecctx/schemas/v0_2/` | public and packaged v0.2 schemas |
+| `src/aecctx/records.py`, `validation.py`, `query.py`, `diff.py`, `context.py` | shared record semantics and projections |
+| `src/aecctx/providers/` | external provider descriptors, protocol and reviewed runners |
+| `src/aecctx/adapters/` | format-specific evidence extraction only |
+| `src/aecctx/signing.py` | optional signature statement and verification policy |
+| `src/aecctx/gate/` | quality-gate policy, evaluation and result projection |
+| `plugins/aecctx-inspector/` | optional Codex plugin distribution |
+| `fixtures/v0.2/` | legally publishable source and package fixtures |
+| `conformance/v0.2/` | claim registry, corpus manifests and expected results |
+| `tests/` | unit, integration, adversarial and parity tests |
+| `docs/evidence/` | immutable milestone acceptance evidence |
+
+## Dependency spine
+
+All tasks execute sequentially even when a later task has no direct code dependency. The logical dependencies are:
+
+```text
+ACX-11 schemas/claims
+  -> ACX-12 provider sandbox
+  -> ACX-13..16 open-format capabilities
+  -> ACX-17..19 restricted/kernel-backed formats
+  -> ACX-20 signing
+  -> ACX-21 quality gate
+  -> ACX-22 Codex plugin
+  -> ACX-23 conformance release
+```
+
+ACX-13 through ACX-16 consume ACX-11. ACX-15, ACX-17 when restricted, ACX-18 and ACX-19 consume ACX-12. ACX-21 consumes the stable capability/loss, diff, validation and optional signing results. ACX-22 consumes only stable library/CLI/MCP/gate behavior. ACX-23 consumes all completed or documented-blocked outcomes.
+
+## Specification traceability
+
+| Expansion spec section | Owning task | Required durable output |
+|---|---|---|
+| 1-3 purpose, boundaries and claim lifecycle | ACX-11, ACX-23 | versioned claims registry and release claim audit |
+| 4 shared evidence extensions | ACX-11 | v0.2 schemas, models and compatibility fixtures |
+| 5 external sandbox provider contract | ACX-12 | provider protocol, reference profile and adversarial suite |
+| 6 IFC 2D/georeferencing | ACX-13 | bounded IFC profiles and conformance corpus |
+| 7 DXF semantics/3D | ACX-14 | bounded DXF profiles and conformance corpus |
+| 8 OCR/vision/hidden geometry | ACX-15 | optional provider profile, replay corpus and hypothesis boundary tests |
+| 9 mesh units/CRS | ACX-16 | calibration schema, transforms and coordinate corpus |
+| 10 STEP/IGES | ACX-17 | reviewed kernel adapter and profile-specific corpus |
+| 11 DWG/RVT | ACX-18, ACX-19 | separate reviewed provider decisions/adapters/corpora |
+| 12 authenticity/signing | ACX-20 | threat model, signature profile and verification corpus |
+| 13 delivery quality gate | ACX-21 | policy/IDS evaluator and outcome corpus |
+| 14 Codex plugin | ACX-22 | optional plugin package and parity/adversarial corpus |
+| 15 compatibility/migration | ACX-11, ACX-23 | reader matrix, migration guide and release compatibility tests |
+| 16 security/privacy/licensing | every owning task | task evidence review and abuse fixtures |
+| 17 release claim gate | ACX-23 | published corpus, artifacts, CI and release evidence |
+
+## Verification cadence
+
+Every task uses this order:
+
+1. targeted unit/schema tests for the changed contract;
+2. targeted integration tests for adapter/provider/CLI behavior;
+3. deterministic or replay comparison for records/artifacts;
+4. adversarial/resource tests appropriate to the input boundary;
+5. `python3 scripts/check_spec_contract.py`;
+6. `./scripts/verify_portable.sh`;
+7. `./scripts/verify.sh` before completion and promotion.
+
+ACX-23 additionally runs clean-install artifact verification, the complete v0.1/v0.2 conformance corpus, all claimed platform/provider matrices, plugin validation, and remote CI/release verification.
+
 ## Task ledger
 
 | Task | Status | Outcome |
@@ -133,13 +266,44 @@ After the neutral core is proven, define a generic consumer adapter template. Wo
 
 ## ACX-11: Shared expansion contracts
 
-Scope:
+Objective: establish the v0.2 record and conformance substrate without implementing a new format capability.
 
-- resolve ACXD-017 and version the observation/inference, coordinate-qualification, representation-fidelity, and provider-attestation schemas;
-- define compatibility, migration, required-extension, query, diff, and validation behavior across v0.1 and the expansion version;
-- create a machine-readable claim-to-test registry that distinguishes roadmap target, experimental implementation, and public package claim;
-- add minimal positive/negative fixtures for the shared envelopes without implementing a format capability;
-- preserve all v0.1 packages and APIs according to the accepted compatibility policy.
+Entry gates:
+
+- ACX-01 through ACX-09 remain green;
+- ACXD-017 is the only design decision this task may resolve;
+- v0.1 fixtures remain immutable compatibility inputs.
+
+Deliverables:
+
+- `schemas/v0.2/manifest.schema.json`, `record.schema.json`, extension schemas and packaged mirrors;
+- typed record models for observation/inference, coordinate qualification, representation fidelity and provider attestation;
+- compatibility and migration document covering v0.1 read, v0.2 read/write, required extensions, query, diff and context;
+- `conformance/v0.2/claims.json` mapping every target/experimental/public claim to tests and fixtures;
+- positive and negative shared-envelope fixtures under `fixtures/v0.2/shared/`;
+- schema and claim-registry validation wired into portable verification.
+
+Work breakdown:
+
+1. Inventory every new field in expansion-spec sections 3, 4 and 15 and classify it as base, optional extension or required extension.
+2. Record the compatibility choice in ACXD-017 before creating implementation schemas.
+3. Write failing schema/semantic tests for observed-versus-inferred provenance, manual calibration precedence, fidelity classes, transform-chain incompleteness and unsupported required extensions.
+4. Add the public schemas and packaged copies with an automated byte-equality/package-data check.
+5. Extend record loading, validation, query, diff and context so v0.1 behavior remains stable and v0.2 fields remain queryable without Markdown authority.
+6. Implement the claim registry checker: unique claim IDs, bounded profile/version, support level, fixture IDs, test IDs, platform/provider scope and evidence link.
+7. Add compatibility fixtures for v0.1-only consumer, v0.2-aware consumer, ignored optional extension and rejected unknown required extension.
+8. Document migration and close ACXD-017 with evidence.
+
+Test matrix:
+
+- valid observed extraction and valid provider inference;
+- inference mislabeled as source-observed must fail;
+- original, manual and derived coordinate assertions remain independently addressable;
+- incomplete/conflicted transform chain cannot validate as globally located;
+- B-Rep, tessellation, projection and preview fidelity remain distinct;
+- v0.1 packages retain identical logical digest/query/diff behavior;
+- missing, duplicate or unmapped claim-registry entries fail verification;
+- public/package schemas remain synchronized.
 
 Non-scope:
 
@@ -153,108 +317,516 @@ Acceptance:
 - old/new reader and required-extension fixtures pass;
 - inference cannot validate as observed extraction and manual calibration cannot overwrite source declarations;
 - the claim registry fails when a capability has no mapped conformance test;
+- public v0.1 behavior and release corpus remain unchanged;
 - `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-11.md` when completed.
 
 ## ACX-12: External sandbox/provider foundation
 
-Implement the versioned provider protocol and at least one reviewed local enforcement profile. Use allowlisted descriptors, content-addressed I/O, bounded event/artifact transport, provider attestations, schema validation, network denial by default, complete process-tree termination, cleanup, and enforceable resource limits.
+Objective: provide the only admissible execution boundary for native, GPL, commercial and network-backed decoders.
 
-Acceptance includes hostile provider output, path/size/record/resource exhaustion, timeout/process-tree, network denial, environment/path redaction, deterministic replay, unenforceable-limit rejection, and a documented license/privacy review template. The reference fixture provider MUST be legally publishable and MUST NOT require a commercial decoder.
+Deliverables:
 
-Non-scope: no DWG/RVT claim and no generic caller-supplied command runner.
+- versioned provider request, response, descriptor and attestation schemas;
+- `src/aecctx/providers/` registry, content-addressed staging, protocol client and result validator;
+- one reviewed local reference sandbox profile using a harmless publishable fixture provider;
+- resource-limit model for bytes, records, files, recursion, decompression, CPU, memory, wall time, child processes and output;
+- security and license/privacy review templates;
+- stable diagnostics for registration, policy, launch, timeout, resource, protocol, attestation and cleanup failures.
+
+Work breakdown:
+
+1. Threat-model parent/core, sandbox launcher, decoder, filesystem, network, artifacts and returned events.
+2. Specify allowlisted provider resolution; reject caller paths, shell strings, environment-selected imports and source-controlled callbacks.
+3. Write protocol-contract tests and a deterministic fake provider before the runner.
+4. Implement content-addressed input/output staging with private temporary directories, normalized environment and no host-path leakage.
+5. Enforce OS-supported limits and reject a provider profile when any required axis cannot be enforced.
+6. Deny network by default; make any reviewed egress policy explicit, bounded and attested.
+7. Validate every event/artifact before package construction and retain capability/loss after partial/fatal provider failure.
+8. Kill the complete process tree on timeout/cancellation and prove cleanup.
+9. Publish provider-author review checklists and portability evidence.
+
+Test matrix:
+
+- valid deterministic round trip with identical response/artifact hashes;
+- unregistered provider, supplied command and descriptor mismatch;
+- invalid JSON/schema, duplicate sequence, forged hash, absolute/traversal/symlink path and oversized output;
+- CPU, memory, wall-time, process, file, record and recursion exhaustion;
+- child/grandchild process termination and temporary-data cleanup;
+- socket/network attempt denied and reported;
+- host path, HOME, locale, clock and environment leakage normalized/redacted;
+- provider unavailable, crash and partial-output behavior;
+- unsupported enforcement platform rejected, not degraded silently.
+
+Non-scope:
+
+- no DWG, RVT, STEP/IGES or inference capability claim;
+- no generic caller-supplied command runner;
+- no assumption that sandbox output is trusted.
+
+Acceptance: all enforcement axes have conformance evidence on each claimed platform; the reference provider is legally publishable; core install remains provider-independent; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-12.md` when completed.
 
 ## ACX-13: IFC 2D and georeferencing
 
-Extend the IfcOpenShell adapter for explicitly enumerated source-native 2D representation families and IFC coordinate-operation/CRS profiles. Preserve representation contexts, placements, units, axes, operation parameters, original classes, and complete transform-chain state. Derived SVG remains a preview.
+Objective: replace broad IFC 2D/georeferencing partial claims with bounded, schema-specific conformance claims.
 
-Acceptance includes legally publishable IFC 2x3/4.x fixtures for supported 2D families, local-only coordinates, valid georeferencing, incomplete chains, conflicting metadata, unsupported representations, and deterministic output. Claims are scoped by schema and representation family.
+Deliverables:
+
+- enumerated IFC schema/representation support table;
+- source-native 2D primitive and representation-relationship extraction in `adapters/ifc.py` or focused IFC modules;
+- coordinate-operation/CRS evidence and transform-chain records using ACX-11 schemas;
+- deterministic optional SVG projections clearly labeled derived;
+- `fixtures/v0.2/ifc/` corpus and claim entries.
+
+Work breakdown:
+
+1. Review the official IfcOpenShell API and supported IFC schema entities; record exact dependency versions.
+2. Enumerate supported curve, annotation, footprint, axis, plan and mapped 2D representation families before coding.
+3. Write fixtures/tests that distinguish source-native 2D, empty representation, absent representation, unsupported type and extraction failure.
+4. Extract representation IDs, contexts, items, placements, units and relationships without converting a 3D projection into source-native evidence.
+5. Enumerate supported coordinate-reference/operation profiles and preserve original class, parameters, axes, units and relationship paths.
+6. Build explicit local-to-project-to-CRS transform chains with known/unknown/conflicted/unsupported states and reversible matrices when complete.
+7. Generate deterministic SVG only as cited preview evidence.
+8. Update claims only for exact schema and representation combinations proven by the corpus.
+
+Test matrix:
+
+- IFC2X3 and IFC4-family supported fixtures;
+- native plan/axis/annotation/curve/mapped representation;
+- local-only model, complete projected CRS, incomplete operation, conflicting units/axes and malformed parameters;
+- large coordinates and precision/tolerance behavior;
+- unsupported representation retained with stable loss;
+- repeated ingest produces identical semantic records/artifact hashes;
+- no guessed EPSG, origin, scale, rotation or elevation.
+
+Non-scope: no universal IFC representation claim, no engineering validation and no consumer classification.
+
+Acceptance: every `full`/`partial` claim is schema/profile bounded; all excluded cases have structured loss; v0.1 IFC fixtures remain compatible; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-13.md` when completed.
 
 ## ACX-14: DXF semantics and 3D
 
-Extend the ezdxf adapter for bounded source-native semantic structures and 3D entity families. Preserve handles, ownership, dictionaries, XDATA/application identifiers, blocks/inserts, materials, coordinate systems, extrusion/transforms, topology, and raw-tag fallbacks. Derived tessellation declares fidelity and loss.
+Objective: preserve bounded source-native DXF structure and 3D geometry without inventing domain semantics or exact-kernel support.
 
-Acceptance includes ASCII and binary fixtures, nested/block transforms, supported solids/surfaces/meshes, proxy/custom objects, external references, cyclic/malformed structures, and proof that no construction-domain family is inferred.
+Deliverables:
+
+- DXF version/entity/semantic support table tied to ezdxf versions;
+- evidence records for ownership, dictionaries, extension dictionaries, XDATA, application IDs, groups, attributes, materials and block structure;
+- bounded 3D extraction for declared entity families with OCS/WCS and insert transforms;
+- derived GLB/tessellation path with fidelity/loss metadata;
+- ASCII/binary positive and adversarial fixtures plus claim entries.
+
+Work breakdown:
+
+1. Inventory current raw-tag fallback and choose exact semantic/entity profiles from official ezdxf APIs.
+2. Write tests for semantic evidence identity and preservation before normalized records.
+3. Implement handle ownership and dictionary/XDATA/application/group/material extraction with unknown tags retained.
+4. Implement 3D coordinates, extrusion, OCS/WCS, nested inserts and topology for enumerated entities.
+5. Keep ACIS/proxy/custom/encrypted/external-reference content bounded as raw/opaque/unsupported unless a reviewed kernel exists.
+6. Produce derived tessellation with source IDs, transforms, tolerance and fidelity class.
+7. Add malformed/cyclic/resource fixtures and verify stable diagnostics.
+8. Prove neutral kinds never classify CAD shapes as consumer construction families.
+
+Test matrix:
+
+- supported ASCII and binary versions;
+- dictionaries/XDATA/groups/attributes/materials and unknown tags;
+- nested inserts, non-default extrusion and OCS/WCS transforms;
+- 3DFACE, meshes/polymeshes and only the explicitly supported solid/surface profiles;
+- proxy/custom objects, xrefs, invalid handles, cycles and malformed tag streams;
+- tessellation failure and partial topology;
+- deterministic output and exact raw-tag fallback;
+- vocabulary scan rejecting wall/beam/panel inference from geometry alone.
+
+Non-scope: no automatic construction semantics, no proprietary kernel bundling and no claim beyond listed entity/version profiles.
+
+Acceptance: source semantics and 3D claims map to fixtures/tests; unsupported kernel content stays explicit; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-14.md` when completed.
 
 ## ACX-15: OCR, vision and reconstruction hypotheses
 
-Resolve ACXD-020 and implement optional provider profiles over existing PDF/image evidence. Native text, OCR text, inferred regions/symbols, and reconstruction hypotheses remain separately queryable. Core ingest continues to work without providers, network, or an LLM.
+Objective: add optional OCR/vision evidence while keeping core ingest offline and hidden geometry unsupported as source evidence.
 
-Acceptance covers provider absence/failure, native-text conflicts, rotated/multilingual text, region coordinates, confidence separation, response hashing, privacy/network consent, nondeterminism reporting, budget/time limits, and proof that unobserved geometry remains `unsupported` as source geometry.
+Decision gate: resolve ACXD-020 separately for each provider profile, including license, install extra, execution boundary, model/runtime versioning, network/privacy/retention and reproducibility.
+
+Deliverables:
+
+- provider-neutral OCR/vision request and result mapping over ACX-11 inference records;
+- at least one reviewed optional profile, preferably deterministic/local when technically adequate;
+- explicit CLI/SDK opt-in with budgets, languages/profile and network-consent controls;
+- native-text/OCR conflict records and reconstruction-hypothesis type;
+- publishable raster/PDF and provider-response fixtures, including offline replay.
+
+Work breakdown:
+
+1. Define profile vocabulary for text spans, regions, symbols, dimensions, tables, relationships and reconstruction hypotheses.
+2. Resolve ACXD-020 using official provider/runtime documentation; do not add it to core dependencies.
+3. Write golden provider-response fixtures so most conformance tests require neither network nor model download.
+4. Implement region rasterization/input hashing and bounded provider invocation through the appropriate reviewed boundary.
+5. Map output with provider/model/config/request/response hashes, coordinates, confidence separation and reproducibility class.
+6. Preserve native PDF text and OCR text independently; emit explicit conflicts rather than choosing silently.
+7. Enforce budgets, timeouts, size/page/region limits, consent and failure fallback.
+8. Add prompt-like/source content tests proving provider/source output remains data.
+
+Test matrix:
+
+- provider absent, disabled, timeout, malformed response and partial page failure;
+- native text equal to/conflicting with OCR;
+- rotated, multilingual, low-confidence and empty regions;
+- pixel/page coordinate transforms and uncalibrated measurement state;
+- seeded/non-deterministic provenance and response-hash replay;
+- privacy/network disabled by default;
+- reconstruction marked inferred and excluded from identity, measurement, georeferencing and geometry completeness;
+- no-provider core ingest/query/diff/context regression.
+
+Non-scope: no mandatory LLM/network, no implicit upload, no hidden-geometry extraction claim and no consumer acceptance.
+
+Acceptance: ACXD-020 profile decisions are recorded; optional installs and offline replay pass; hidden geometry remains `unsupported`; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-15.md` when completed.
 
 ## ACX-16: Mesh units and CRS
 
-Preserve declared coordinate metadata for supported mesh formats and implement explicit manual calibration/registration profiles without mutating source evidence. Record scale, axes, control points, transform/inverse, CRS state, residual/tolerance, author, and derivation provenance.
+Objective: qualify mesh coordinates honestly and support explicit, provenance-bearing calibration/registration.
 
-Acceptance covers missing and declared units, manual scale, control-point registration, axis changes, large coordinates, conflicting CRS evidence, degenerate calibration, tolerance failure, and reversible-transform checks.
+Deliverables:
+
+- format-specific declared metadata extraction for OBJ/STL/glTF-family inputs where available;
+- calibration/registration profile schema and CLI/SDK input;
+- transform solver/validator with inverse, residual and tolerance reporting;
+- derived geometry/artifact path that leaves original mesh coordinates unchanged;
+- mesh coordinate conformance fixtures and claim entries.
+
+Work breakdown:
+
+1. Inventory which metadata is source-declared versus library/viewer convention for each supported format.
+2. Add failing tests that keep absent units/CRS `unknown`.
+3. Preserve declared units, axes, transforms and coordinate metadata with source locators.
+4. Define manual scale, explicit matrix and control-point registration modes with author and configuration hash.
+5. Validate dimensionality, non-degenerate control points, invertibility, residuals, tolerances and transform direction.
+6. Emit manual assertions and derived artifacts without rewriting source evidence.
+7. Detect and retain conflicts between source declarations and manual calibration.
+8. Verify large-coordinate stability and round-trip transform accuracy.
+
+Test matrix:
+
+- missing, valid and conflicting declared units;
+- absent, declared and manually supplied CRS;
+- manual scale, matrix and control-point registration;
+- insufficient/collinear points, singular matrix, tolerance failure and axis mismatch;
+- large/small coordinate magnitudes and numeric canonicalization;
+- forward/inverse round trip within declared tolerance;
+- source mesh hash/coordinates unchanged after calibration.
+
+Non-scope: no guessed units/CRS, no survey authority and no silent precedence between conflicting sources.
+
+Acceptance: all calibration modes preserve original evidence and explicit states; deterministic transforms pass; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-16.md` when completed.
 
 ## ACX-17: STEP/IGES
 
-Select a reviewed existing parser/kernel and resolve its ACXD-019 instance before implementation. Use the permissive in-process boundary only when licensing and safety permit; otherwise use ACX-12. Publish exact STEP/IGES profiles and kernel versions. Preserve source entities, product/assembly structure, names, layers/colors, units, placements, B-Rep/curve/surface evidence, and kernel diagnostics. Tessellation/healing remain derived and healing is opt-in.
+Objective: implement bounded STEP/IGES evidence extraction using an existing reviewed parser/geometry kernel.
 
-Acceptance includes valid, malformed, unsupported-entity, invalid-topology, unit/placement, assembly, deterministic tessellation, and healing-loss fixtures with legally publishable provenance.
+Decision gate: resolve an ACXD-019 instance before linking or executing the selected kernel. The record MUST cover API/version, license, redistribution, wheels/platforms, CI, fixture rights, telemetry/network, security history and maintenance posture.
+
+Deliverables:
+
+- adapter design selecting permissive in-process execution or ACX-12 provider execution;
+- exact STEP application protocols and IGES versions/flavors in the support table;
+- source entity, product/assembly, name, layer/color, unit, placement and B-Rep/curve/surface evidence;
+- derived deterministic tessellation and opt-in healing reports;
+- legally publishable STEP/IGES corpus and kernel license evidence.
+
+Work breakdown:
+
+1. Evaluate existing official APIs and record a decision matrix; do not implement a parser or geometry kernel from scratch.
+2. Resolve ACXD-019 and pin the tested kernel/runtime range.
+3. Write probe, malformed-file and minimal product/assembly tests before adapter implementation.
+4. Preserve schema/flavor, entity IDs, product hierarchy, names, colors/layers, units and placements.
+5. Preserve exact B-Rep/curve/surface references where the kernel exposes them; never substitute tessellation as exact geometry.
+6. Add deterministic tessellation with tolerance/version provenance.
+7. Make healing explicit and opt-in; retain original evidence and emit changed-topology/tolerance loss.
+8. Register only exact profile/kernel/platform claims proven by conformance.
+
+Test matrix:
+
+- each claimed STEP protocol and IGES flavor;
+- single part, nested assembly, colors/layers, units and placements;
+- curves/surfaces/solids and unsupported entities;
+- invalid topology, truncated/malformed records and extreme entity counts;
+- tessellation repeatability and kernel-version provenance;
+- healing off/on, changed topology and tolerance diagnostics;
+- missing optional dependency/provider failure;
+- clean core install without the kernel.
+
+Non-scope: no authoring write-back, no self-built B-Rep kernel, no generic STEP/IGES claim and no implicit healing.
+
+Acceptance: ACXD-019 is accepted for the chosen path; exact profiles and losses are published; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-17.md` when completed.
 
 ## ACX-18: DWG
 
-Resolve the DWG instance of ACXD-019, then implement an optional allowlisted ACX-12 provider. Preserve version/producer, handles, layouts/layers/blocks/xrefs, properties, geometry, units/coordinates, conversion provenance, and exact structured loss. Encrypted/protected/unsupported versions are diagnosed without bypass attempts.
+Objective: provide optional, version-scoped DWG extraction through a legally reviewed ACX-12 provider.
 
-Acceptance requires a legally publishable corpus, entitlement/CI/release evidence, resource and hostile-file tests, provider-unavailable behavior, version-scoped claims, and proof the core distribution/install remains decoder-independent.
+Decision gate: resolve the DWG ACXD-019 instance, including SDK/service entitlement, user deployment model, CI credentials, redistribution, telemetry/retention, version support and publishable fixture rights. If no compliant provider is available, record `blocked` evidence and retain opaque fallback.
+
+Deliverables:
+
+- allowlisted DWG provider descriptor/profile separate from the core distribution;
+- version/producer, handle, layout/layer/block/xref, property, geometry and coordinate evidence mapping;
+- direct-versus-converted extraction provenance, including intermediate hashes and conversion loss;
+- encrypted/protected/unsupported-version diagnostics without bypass;
+- publishable versioned corpus or documented blocker.
+
+Work breakdown:
+
+1. Compare official provider APIs and licensing terms; close the provider decision before code.
+2. Add descriptor, entitlement and provider-unavailable tests using ACX-12 fake/replay responses.
+3. Implement bounded probe and extraction mapping for enumerated DWG versions.
+4. Preserve source IDs/handles, containers, layouts, layers, blocks/inserts, xrefs, properties, units, coordinates and geometry fidelity.
+5. If conversion is used, record converter/runtime/settings and input/intermediate/output hashes; never label it direct extraction.
+6. Exercise ACX-12 resource, network, cleanup and hostile-output controls with DWG-specific cases.
+7. Verify core wheel/sdist and normal install contain no commercial binaries or required entitlement.
+
+Test matrix:
+
+- each claimed DWG version and feature profile;
+- nested blocks/xrefs, model/paper layouts, layers/properties, 2D/3D supported geometry;
+- unsupported custom/proxy objects and partial conversion;
+- encrypted/protected, future/old unsupported, corrupt and oversized files;
+- entitlement missing/expired, provider unavailable/timeout/crash;
+- intermediate conversion provenance and loss;
+- deterministic replay where provider permits and declared nondeterminism otherwise;
+- core install/import/CLI without provider.
+
+Non-scope: no license bypass, no commercial binary redistribution in core, no universal DWG claim and no domain classification.
+
+Acceptance: provider/legal review and corpus support every claim, or the exact external blocker is documented; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-18.md` when completed.
 
 ## ACX-19: RVT
 
-Resolve the RVT instance of ACXD-019, then implement an optional allowlisted ACX-12 provider. Preserve neutral BIM source evidence for supported versions: source identifiers, categories/classes as original evidence, containers/views, properties, relations, geometry references, units/coordinates, converter/runtime provenance, and loss. Do not introduce consumer ontology or WoodFraming semantics.
+Objective: provide optional, version-scoped RVT neutral evidence extraction through a legally reviewed ACX-12 provider.
 
-Acceptance requires a legally publishable corpus or legally publishable generated fixture strategy, entitlement/CI/release evidence, unsupported-version/provider-failure tests, resource limits, intermediate-conversion loss when applicable, and decoder-independent core installation.
+Decision gate: resolve the RVT ACXD-019 instance for API/service/runtime, entitlement, supported host versions/platform, automation constraints, CI, telemetry/retention, redistribution and fixture rights. If unavailable, document `blocked` and retain opaque fallback.
+
+Deliverables:
+
+- allowlisted RVT provider descriptor/profile outside core dependencies;
+- mapping for original element IDs, classes/categories, documents/links, levels/views, properties, types/materials, relations, geometry references, units and coordinates;
+- converter/intermediate provenance when extraction is indirect;
+- publishable generated corpus strategy or exact legal blocker;
+- explicit scan proving no WoodFraming, `WFDomain`, `WFImport` or consumer classification enters output/code.
+
+Work breakdown:
+
+1. Review official supported APIs/providers and close the legal/operational decision.
+2. Define version-specific source locator and identity rules before normalization.
+3. Add replay fixtures and provider-unavailable tests independent of proprietary runtime access.
+4. Implement bounded neutral extraction for enumerated versions/features.
+5. Preserve original class/category as evidence; normalized neutral kinds remain non-consumer interpretations.
+6. Record document links, views/levels, properties, relations, geometry, units and coordinate transforms with loss.
+7. Record every conversion step and intermediate hash when native evidence cannot be returned directly.
+8. Exercise sandbox limits, unsupported versions and protected/corrupt inputs.
+
+Test matrix:
+
+- each claimed RVT version/profile;
+- element/type/material/property and hierarchy/relationship evidence;
+- linked documents, levels/views, units, local/project/geographic coordinates;
+- supported geometry and representation loss;
+- unsupported/future version, protected/corrupt file and unsupported custom content;
+- provider entitlement/unavailable/timeout/resource failure;
+- replay parity and indirect-conversion provenance;
+- core install without provider and repository scan for consumer dependencies.
+
+Non-scope: no authoring mutation, no engineering approval, no consumer ontology and no WoodFraming integration.
+
+Acceptance: claims are version/provider bounded or the blocker is explicit; consumer-boundary scans pass; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-19.md` when completed.
 
 ## ACX-20: Authenticity and signing
 
-Resolve ACXD-018 through a documented threat/trust model before implementing a signature profile. Bind a canonical statement to the logical package identity while keeping signatures optional and integrity separate from authenticity. Verification must distinguish unsigned, malformed, cryptographically invalid, valid-untrusted, valid-trusted, expired/revoked/unknown-status, and policy-authorized states.
+Objective: define and implement optional package signature verification without conflating integrity, identity, trust or authorization.
 
-Acceptance covers directory/archive equivalence, reproducible verification, repackaging, artifact mutation, manifest mutation, multiple signatures, key rotation/revocation fixtures, offline behavior, algorithm rejection, unsigned compatibility, and explicit trust-policy configuration. No key is implicitly generated or trusted.
+Decision gate: threat-model package author, distributor, storage, signer, verifier, trust administrator and attacker; resolve ACXD-018 using reviewed standards/libraries and official documentation before public implementation.
+
+Deliverables:
+
+- accepted signing profile: canonical statement, package/digest binding, envelope, serialization, algorithms, identity reference and trust-policy model;
+- `src/aecctx/signing.py` with explicit sign/verify APIs and stable diagnostic/result states;
+- CLI commands/options that never generate/select/trust keys implicitly;
+- offline test PKI/key fixtures, revocation/expiry policy fixtures and multi-signature corpus;
+- security/license review for cryptographic dependencies.
+
+Work breakdown:
+
+1. Produce threat/trust model and compare standards/library options.
+2. Decide how signatures bind logical digest, manifest fields, required extensions and directory/archive equivalence.
+3. Specify unsigned, malformed, invalid, valid-untrusted, valid-trusted, expired, revoked, unknown-status and policy-authorized result records.
+4. Write canonicalization/mutation/algorithm-policy tests before implementation.
+5. Implement detached or selected envelope signing with explicit caller key material and deterministic statement bytes.
+6. Implement offline verification with caller-owned trust roots/policy; keep online status optional and explicit.
+7. Support multiple signatures and rotation without making container metadata authoritative.
+8. Integrate integrity and signature results as separate validation sections and queryable records.
+
+Test matrix:
+
+- unsigned valid package;
+- directory/archive/repacked equivalent package;
+- artifact, manifest, digest, statement and signature mutation;
+- malformed/unknown/disallowed algorithms and serialization;
+- valid-untrusted versus valid-trusted versus authorized signer;
+- expiry, revocation fixture, rotation, multiple signatures and countersignature policy if selected;
+- offline unknown-status behavior;
+- no implicit key generation, discovery, network or trust-root selection.
+
+Non-scope: no universal authorization policy, no mandatory signing, no secret/key management service and no claim that cryptographic validity equals engineering approval.
+
+Acceptance: ACXD-018 is accepted, all states are machine-distinct, unsigned v0.1/v0.2 compatibility passes and `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-20.md` when completed.
 
 ## ACX-21: AEC Delivery Quality Gate
 
-Implement a deterministic policy evaluator over validated AECCTX packages with optional baseline diff and IFC IDS requirements. Define a versioned, content-addressed policy format; stable check IDs, severities and exit behavior; explicit `pass`, `fail`, `requires_review`, and `error` outcomes; structured evidence citations; and derived Markdown/CI projections.
+Objective: implement a deterministic policy-conformance evaluator over validated package evidence, optional baseline diff and bounded IFC IDS requirements.
 
-Resolve ACXD-023 before selecting the IDS implementation profile. Keep IDS results distinct from AECCTX geometry, provenance, integrity, capability, loss, and cross-format checks. A gate pass is policy conformance only and never engineering approval, regulatory acceptance, construction readiness, or consumer canonical acceptance.
+Decision gate: resolve ACXD-023 for policy schema, stable check IDs/severities, waiver model, aggregation, exit codes, IDS versions/facets, reviewed IDS implementation and official conformance scope.
 
-Acceptance covers positive, failing, review-required and evaluation-error policies; malformed and malicious policies/IDS files; baseline regressions; capability/loss thresholds; unresolved value states; deterministic output and exit codes; exact record/diagnostic citations; IDS official conformance fixtures for the supported profile; clean offline CLI/library use; and proof that Markdown is not the evaluation authority.
+Deliverables:
+
+- versioned JSON policy schema and content digest;
+- `src/aecctx/gate/` evaluator, result records and derived Markdown/CI annotations;
+- CLI/SDK `gate` entry point with stable JSON and exit behavior;
+- checks for validation/integrity, capabilities, loss budgets, value states, diagnostics, baseline regressions and selected IDS profile;
+- positive/fail/review/error/malicious/baseline/IDS corpus.
+
+Work breakdown:
+
+1. Define trust boundary and reject executable expressions, callbacks, links, macros or source commands in policy/IDS.
+2. Resolve ACXD-023 and publish policy/check/outcome/waiver schemas.
+3. Write outcome aggregation and exit-code tests before checks.
+4. Implement structural/integrity/capability/loss/value-state/diagnostic checks over authoritative records.
+5. Add baseline semantic-diff regression checks using stable diff APIs.
+6. Integrate only the selected IDS versions/facets and label IDS results separately from other AECCTX checks.
+7. Emit `pass`, `fail`, `requires_review` or `error` with policy/package digests, evaluator versions and exact evidence IDs.
+8. Generate Markdown/CI annotations from the JSON result and prove projection parity.
+
+Test matrix:
+
+- positive, deterministic failure, explicit review and evaluator error;
+- unknown/unsupported/conflicted/explicit-null/not-applicable policy handling;
+- capability/loss thresholds and diagnostic severity budgets;
+- baseline added/removed/changed records and producer/capability regressions;
+- allowed/expired/invalid waiver with provenance;
+- malformed, recursive, oversized and prompt/command-like policy/IDS inputs;
+- official IDS conformance cases for enumerated facets and explicit unsupported facets;
+- identical inputs yield semantically identical JSON/exit code;
+- Markdown cannot change the result and pass language never implies engineering approval.
+
+Non-scope: no workflow approval, regulatory certification, construction readiness, consumer canonical acceptance or policy inference.
+
+Acceptance: ACXD-023 is accepted; authoritative JSON/result parity and offline execution pass; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-21.md` when completed.
 
 ## ACX-22: Codex plugin
 
-Package the optional `aecctx-inspector` Codex plugin with a valid `.codex-plugin/plugin.json`, allowlisted `.mcp.json`, focused skills for inspection, revision comparison, loss triage and quality-gate explanation, and validated assets/marketplace metadata only when governed for publication. Reuse the stable library/CLI/MCP contracts; no plugin tool may introduce unique AECCTX semantics.
+Objective: package `aecctx-inspector` as an optional Codex orchestration layer with no unique AECCTX semantics.
 
-The v0.2 MCP inspection surface remains read-only. A skill may orchestrate explicit local raw-source ingest through the CLI, but it may not upload files, enable network/providers, choose embedding policy, mutate a source, follow source links, waive a gate, or treat source content as agent instructions without explicit caller action.
+Deliverables:
 
-Acceptance covers clean installation and uninstall, manifest validation, compatible-version checks, MCP parity for validate/info/query/diff/context and quality-gate results, invalid-package refusal, missing optional dependency behavior, deterministic token budgets, authoritative record citations, prompt-injection fixtures embedded in filenames/text/metadata/context, and proof that `requires_review` cannot be promoted to `pass` by presentation logic.
+- `plugins/aecctx-inspector/.codex-plugin/plugin.json` and allowlisted `.mcp.json`;
+- focused skills for validate/inspect, revision diff, capability/loss triage, budgeted context and quality-gate explanation;
+- read-only MCP parity for stable inspection/gate operations;
+- plugin validation/install/uninstall scripts and compatibility metadata;
+- adversarial source/prompt-injection fixtures and parity tests.
+
+Work breakdown:
+
+1. Inventory stable CLI/library/MCP/gate operations; exclude anything not already authoritative outside the plugin.
+2. Define minimal plugin manifest, MCP allowlist and compatible AECCTX versions.
+3. Write skills that always validate first and distinguish observed, normalized, inferred, derived and policy-result layers.
+4. Keep MCP inspection read-only; any raw ingest workflow must require explicit local paths/options and normal core policies.
+5. Add structured citations to package digest, record IDs and diagnostic/check IDs.
+6. Add prompt-injection defenses treating filenames, source text, metadata, annotations and context as data.
+7. Prove missing Codex/plugin dependencies do not affect core package operation.
+8. Validate install/uninstall and package only referenced assets.
+
+Test matrix:
+
+- manifest/schema and MCP allowlist validation;
+- clean plugin install, compatible/incompatible core version and uninstall;
+- validate/info/query/diff/context/gate parity with direct library/CLI results;
+- invalid package refusal and missing optional dependency;
+- deterministic token-budget selection and correct record citations;
+- prompt-like filenames, PDF text, IFC/DXF metadata, OCR response and generated context;
+- no implicit upload/network/provider/embedding-policy change/source mutation/link following;
+- `requires_review`/`fail` cannot become `pass` in skill prose;
+- no tool introduces unique semantics or consumer/engineering claims.
+
+Non-scope: no LLM requirement for core, no write tool, no trust-root/waiver selection, no marketplace publication without separate governed authorization.
+
+Acceptance: plugin is optional, installable and parity-tested; adversarial behavior passes; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-22.md` when completed.
 
 ## ACX-23: Expansion release
 
-Publish the versioned conformance corpus, compatibility/migration notes, optional-extra and Codex-plugin packaging, SBOM/checksums, capability/loss and quality-gate documentation, security/license/provider reviews, and release automation for the expansion line. Verify clean offline core installation, plugin installation, and separately gated optional providers on every claimed platform.
+Objective: release the expansion line only with claim-complete evidence, reproducible artifacts and truthful unsupported/blocked reporting.
 
-Acceptance requires every public claim to map to a passing conformance test, incomplete targets to remain visibly partial/unsupported, deterministic fixtures to reproduce, ACX-21 quality-gate conformance and ACX-22 plugin parity/adversarial tests to pass, remote CI green on the release commit, and release/tag creation only after all gates pass. Authenticity appears in release claims only with the completed ACX-20 verification profile and documented trust policy.
+Deliverables:
+
+- `conformance/v0.2/corpus.json` and expected claim/gate/plugin results;
+- compatibility/migration guide and versioned release notes;
+- core, optional-extra and plugin packaging with pinned compatibility ranges;
+- checksums, SBOM, dependency/license/provider/security/privacy reports;
+- release workflow for build, clean install, corpus, signing verification when supported, artifact upload and tag/release checks;
+- final capability matrix and evidence index.
+
+Work breakdown:
+
+1. Audit ACX-11 through ACX-22 evidence and list completed versus documented-blocked tasks.
+2. Fail release verification for any claim without a unique conformance test/fixture/evidence mapping.
+3. Build the v0.2 corpus from legally publishable fixtures and offline provider replays.
+4. Publish migration and compatibility behavior for v0.1 readers/packages and optional extensions/providers.
+5. Build wheel/sdist/plugin artifacts in clean environments; inspect contents and dependency boundaries.
+6. Generate checksums and SBOM; verify licenses and that restricted binaries/credentials/fixtures are absent.
+7. Run Linux/macOS/Windows public CI plus separately authorized provider matrices for each claimed platform.
+8. Verify deterministic artifacts/results where declared and explicit reproducibility metadata otherwise.
+9. Update capability matrix, README, changelog, docs and handoff with exact support profiles and residual risks.
+10. Create tag/release only from the reviewed green commit and verify published assets/checksums/CI.
+
+Release matrix:
+
+- clean core install without optional adapters, providers, Codex, network or LLM;
+- each public optional extra install/import/CLI smoke;
+- directory/ZIP validation, ingest, query, diff, context and v0.1 compatibility;
+- claimed IFC, DXF, OCR/vision, mesh, STEP/IGES, DWG and RVT profiles;
+- sandbox adversarial suite and provider-unavailable fallback;
+- signing states when ACX-20 is completed;
+- quality-gate policy/IDS corpus;
+- Codex plugin install/parity/adversarial corpus;
+- sdist/wheel/plugin content, checksum and SBOM verification;
+- remote CI green for the exact release SHA.
+
+Non-scope: no claim for a blocked/unproven profile, no hidden geometry authority, no proprietary binary redistribution, no WoodFraming integration and no `1.0` stability promise.
+
+Acceptance:
+
+- every claim maps to passing evidence and every blocked/unsupported target remains explicit;
+- all local and remote gates pass on the release commit;
+- clean install and published artifact verification pass;
+- version/tag/release are created only after those gates;
+- final handoff identifies the exact neutral integration boundary for consumer-owned planning.
 
 Evidence: `docs/evidence/ACX-23.md` when completed.

@@ -13,7 +13,8 @@ AECCTX `0.1.0` remains implemented and released. The post-v0.1 capability expans
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
 4. ACX-01 through ACX-09 are complete and ACX-10 remains deferred. Execute only ACX-11, currently `pending-next`.
-5. Run `./scripts/verify.sh` before handoff.
+5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
+6. Run `./scripts/verify.sh` before handoff.
 
 ## Fixed decisions
 
@@ -51,6 +52,8 @@ AECCTX `0.1.0` remains implemented and released. The post-v0.1 capability expans
 ## Next implementation task
 
 ACX-11: version the shared observation/inference, coordinate, fidelity, and provider-attestation contracts; resolve ACXD-017; add compatibility fixtures and the claim-to-conformance registry. It MUST NOT implement a format adapter or promote a capability claim.
+
+Its detailed file-level deliverables, eight-step work breakdown, test matrix, non-scope and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Completion requires `docs/evidence/ACX-11.md` and explicit promotion of ACX-12.
 
 ## Consumer integration planning entry point
 

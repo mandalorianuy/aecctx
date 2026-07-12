@@ -24,6 +24,7 @@ Research notes and README examples are informative and cannot override normative
 - An application integration cannot add consumer semantics to the neutral package contract.
 - Open decisions block only the affected capability; they must not be resolved implicitly in code.
 - A target in the expansion spec is not a capability claim until its conformance task is complete and the capability matrix is updated with evidence.
+- A `blocked` implementation-plan task requires an evidence file and decision-log entry; it permits later independent work but never permits a release claim for the blocked capability.
 
 ## Release gates
 

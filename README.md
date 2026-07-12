@@ -43,6 +43,7 @@ python -m pip install '.[all]'
 - Handoff for the implementation task: [`docs/HANDOFF.md`](docs/HANDOFF.md)
 
 Only the first `pending-next` or `in_progress` task in the implementation plan is executable.
+The same plan contains the v0.2 definition of ready/done, specification traceability, file-level deliverables, test matrices and milestone evidence protocol.
 
 ## CLI
 

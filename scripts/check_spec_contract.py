@@ -90,6 +90,17 @@ def check_authorities() -> None:
             fail(f"expansion spec missing authority phrase: {phrase}")
 
     plan = PLAN.read_text(encoding="utf-8")
+    for phrase in [
+        "Status and promotion protocol",
+        "Definition of ready",
+        "Definition of done",
+        "Acceptance evidence template",
+        "Specification traceability",
+        "Verification cadence",
+        "ACX-23: Expansion release",
+    ]:
+        if phrase not in plan:
+            fail(f"implementation plan missing execution detail: {phrase}")
     ledger = {
         task: status
         for task, status in re.findall(r"^\| (ACX-\d{2}) \| ([a-z_-]+) \|", plan, re.MULTILINE)
@@ -105,15 +116,15 @@ def check_authorities() -> None:
     pending_next = [task for task in executable if ledger.get(task) == "pending-next"]
     in_progress = [task for task in executable if ledger.get(task) == "in_progress"]
     if not pending_next and not in_progress:
-        if any(ledger.get(task) != "completed" for task in executable):
-            fail("implementation plan without an active task requires every executable task completed")
+        if any(ledger.get(task) not in {"completed", "blocked"} for task in executable):
+            fail("implementation plan without an active task requires every executable task completed or blocked")
         return
     if len(pending_next) + len(in_progress) != 1:
         fail("implementation plan must contain exactly one pending-next or in_progress task")
     active = (pending_next + in_progress)[0]
     active_index = executable.index(active)
-    if any(ledger.get(task) != "completed" for task in executable[:active_index]):
-        fail("tasks before the active task must be completed")
+    if any(ledger.get(task) not in {"completed", "blocked"} for task in executable[:active_index]):
+        fail("tasks before the active task must be completed or documented blocked")
     if any(ledger.get(task) != "pending" for task in executable[active_index + 1 :]):
         fail("tasks after the active task must remain pending")
 
