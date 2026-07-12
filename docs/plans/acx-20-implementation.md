@@ -153,7 +153,7 @@ git commit -m "feat: define ACX-20 signing contracts"
 
 ### Task 2: Strict JSON, canonical statement and package binding
 
-**Checkpoint:** Completed 2026-07-12. Primitive RED produced 14 missing-module failures, statement RED produced 7 missing-interface failures, and the immutability review produced 2 focused failures. GREEN passes 52 signing-contract/validation/v0.2 compatibility tests. Completion commit is the Task 2 milestone commit on `codex/acx-20-signing`.
+**Checkpoint:** Completed 2026-07-12. Primitive RED produced 14 missing-module failures, statement RED produced 7 missing-interface failures, and the immutability review produced 2 focused failures. GREEN passes 52 signing-contract/validation/v0.2 compatibility tests. Completion commit: `8c2aa5a`.
 
 **Files:**
 - Create: `src/aecctx/_signing_io.py`
@@ -229,6 +229,8 @@ statement_data = {
 
 ### Task 3: Optional Ed25519 signing and deterministic bundle append
 
+**Checkpoint:** Completed 2026-07-12. Dependency RED produced 1 expected missing-extra failure while the lazy-import assertion already passed; behavior RED produced 12 expected missing-interface failures. GREEN passes 14 signing-crypto tests and 51 combined signing-crypto/contract tests with `cryptography==49.0.0`. Full `./scripts/verify.sh` passes 334 tests with 9 optional skips, builds wheel and sdist, and passes portable, release and baseline-integration gates. Completion commit is the Task 3 milestone commit on `codex/acx-20-signing`.
+
 **Files:**
 - Create: `src/aecctx/_signing_crypto.py`
 - Modify: `src/aecctx/signing.py`
@@ -243,7 +245,7 @@ statement_data = {
 - Produces `append_signature(package_path, bundle: SignatureBundle, *, private_key_pem: bytes, kid: str, password: bytes | None = None, limits=SigningLimits()) -> SignatureBundle`.
 - `SignatureBundle.to_bytes() -> bytes` emits deterministic canonical JWS General JSON with detached payload absent.
 
-- [ ] **Step 1: Add the optional dependency boundary and write RED import tests.** Add `signing = ["cryptography>=45,<50"]`; include the same bounded dependency in `all` and `test`, but not base `dependencies`. Assert `src/aecctx/signing.py` imports without eagerly importing `cryptography`.
+- [x] **Step 1: Add the optional dependency boundary and write RED import tests.** Add `signing = ["cryptography>=45,<50"]`; include the same bounded dependency in `all` and `test`, but not base `dependencies`. Assert `src/aecctx/signing.py` imports without eagerly importing `cryptography`.
 
 ```python
 def test_signing_module_does_not_eagerly_import_crypto() -> None:
@@ -252,9 +254,9 @@ def test_signing_module_does_not_eagerly_import_crypto() -> None:
     assert completed.stdout.strip() == "False"
 ```
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_crypto.py -q`; expect missing crypto/signing functions.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_signing_crypto.py -q`; expect missing crypto/signing functions.
 
-- [ ] **Step 3: Implement the lazy PyCA boundary.** Catch only `ImportError` as `AECCTX_SIGNING_CRYPTO_UNAVAILABLE`; require an `Ed25519PrivateKey`; map malformed PEM or wrong password to `AECCTX_SIGNING_PRIVATE_KEY_INVALID` without echoing library text that may expose paths/content.
+- [x] **Step 3: Implement the lazy PyCA boundary.** Catch only `ImportError` as `AECCTX_SIGNING_CRYPTO_UNAVAILABLE`; require an `Ed25519PrivateKey`; map malformed PEM or wrong password to `AECCTX_SIGNING_PRIVATE_KEY_INVALID` without echoing library text that may expose paths/content.
 
 ```python
 def _serialization_modules():
@@ -267,9 +269,9 @@ def _serialization_modules():
     return InvalidSignature, serialization, Ed25519PrivateKey, Ed25519PublicKey
 ```
 
-- [ ] **Step 4: Write failing signing/bundle tests.** Use a fixed 32-byte test seed in test memory. Assert exact four protected headers, statement hash, 64-byte signature, payload absence, deterministic repeated bytes, package bytes unchanged, encrypted PKCS#8 password success/failure, invalid key type, duplicate `kid`, deterministic append ordering and preservation of previous signature objects.
+- [x] **Step 4: Write failing signing/bundle tests.** Use a fixed 32-byte test seed in test memory. Assert exact four protected headers, statement hash, 64-byte signature, payload absence, deterministic repeated bytes, package bytes unchanged, encrypted PKCS#8 password success/failure, invalid key type, duplicate `kid`, deterministic append ordering and preservation of previous signature objects.
 
-- [ ] **Step 5: Implement sign and append.** Validate `kid` length/UTF-8/NFC, construct the protected header with `alg`, `kid`, `typ` and statement SHA-256, sign the RFC 7515 input, sort entries by `(kid, protected, signature)` and reject duplicate decoded `kid` before output.
+- [x] **Step 5: Implement sign and append.** Validate `kid` length/UTF-8/NFC, construct the protected header with `alg`, `kid`, `typ` and statement SHA-256, sign the RFC 7515 input, sort entries by `(kid, protected, signature)` and reject duplicate decoded `kid` before output.
 
 ```python
 protected = {
@@ -281,9 +283,9 @@ protected = {
 signing_input = f"{base64url_encode(canonical_json_nfc(protected, terminal_lf=False))}.".encode("ascii") + base64url_encode(statement.canonical_bytes).encode("ascii")
 ```
 
-- [ ] **Step 6: Verify GREEN.** Run `.venv/bin/python -m pytest tests/test_signing_crypto.py tests/test_signing_contract.py -q`; compare two generated bundle byte strings exactly and revalidate the original package after every sign/append case.
+- [x] **Step 6: Verify GREEN.** Run `.venv/bin/python -m pytest tests/test_signing_crypto.py tests/test_signing_contract.py -q`; compare two generated bundle byte strings exactly and revalidate the original package after every sign/append case.
 
-- [ ] **Step 7: Commit.** Commit as `feat: sign packages with detached Ed25519 JWS`.
+- [x] **Step 7: Commit.** Commit as `feat: sign packages with detached Ed25519 JWS`.
 
 ### Task 4: Strict bundle, registry and trust-policy parsing
 

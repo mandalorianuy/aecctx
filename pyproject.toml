@@ -32,6 +32,7 @@ aecctx-mcp = "aecctx.mcp_server:main"
 
 [project.optional-dependencies]
 all = [
+  "cryptography>=45,<50",
   "ezdxf==1.4.4",
   "ifcopenshell==0.8.5",
   "mcp>=1.20,<2",
@@ -45,8 +46,10 @@ image = ["Pillow>=12.1,<13"]
 ifc = ["ifcopenshell==0.8.5"]
 mcp = ["mcp>=1.20,<2"]
 pdf = ["pypdf>=6.6,<7", "Pillow>=12.1,<13"]
+signing = ["cryptography>=45,<50"]
 test = [
   "build>=1.2,<2",
+  "cryptography>=45,<50",
   "ezdxf==1.4.4",
   "ifcopenshell==0.8.5",
   "mcp>=1.20,<2",

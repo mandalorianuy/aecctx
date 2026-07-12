@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import unicodedata
 from collections.abc import Mapping as MappingABC
 from dataclasses import dataclass
 from importlib.resources import files
@@ -90,6 +91,21 @@ class SignatureEntry:
 @dataclass(frozen=True, slots=True)
 class SignatureBundle:
     signatures: tuple[SignatureEntry, ...]
+
+    def __post_init__(self) -> None:
+        ordered = tuple(sorted(self.signatures, key=lambda item: (item.kid, item.protected, item.signature)))
+        object.__setattr__(self, "signatures", ordered)
+
+    def to_bytes(self) -> bytes:
+        from ._signing_io import canonical_json_nfc
+
+        value = {
+            "signatures": [
+                {"protected": entry.protected, "signature": entry.signature}
+                for entry in self.signatures
+            ]
+        }
+        return canonical_json_nfc(value, terminal_lf=True)
 
 
 @dataclass(frozen=True, slots=True)
@@ -204,3 +220,70 @@ def build_signing_statement(package_path: str | Path, *, limits: SigningLimits |
     }
     canonical_bytes = canonical_json_nfc(statement_data, terminal_lf=True)
     return SigningStatement(statement_data, canonical_bytes, hashlib.sha256(canonical_bytes).hexdigest())
+
+
+def _validate_kid(kid: str) -> None:
+    if (
+        not kid
+        or len(kid) > 256
+        or unicodedata.normalize("NFC", kid) != kid
+        or any(ord(character) < 0x20 or ord(character) == 0x7F for character in kid)
+    ):
+        raise SigningError("AECCTX_SIGNING_KID_INVALID", "kid must be bounded NFC text without control characters")
+
+
+def sign_package(
+    package_path: str | Path,
+    *,
+    private_key_pem: bytes,
+    kid: str,
+    password: bytes | None = None,
+    limits: SigningLimits | None = None,
+) -> SignatureBundle:
+    from ._signing_crypto import load_private_key, sign_bytes
+    from ._signing_io import base64url_encode, canonical_json_nfc
+
+    active_limits = limits or SigningLimits()
+    _validate_kid(kid)
+    if len(private_key_pem) > active_limits.max_private_key_bytes:
+        raise SigningError("AECCTX_SIGNING_INPUT_LIMIT_EXCEEDED", "private key exceeds its byte limit")
+    if password is not None and len(password) > active_limits.max_password_bytes:
+        raise SigningError("AECCTX_SIGNING_INPUT_LIMIT_EXCEEDED", "password exceeds its byte limit")
+
+    statement = build_signing_statement(package_path, limits=active_limits)
+    protected_value = {
+        "alg": "Ed25519",
+        "https://aecctx.dev/jws/statement-sha256": statement.sha256,
+        "kid": kid,
+        "typ": "aecctx-signing-statement+jws",
+    }
+    protected = base64url_encode(canonical_json_nfc(protected_value, terminal_lf=False))
+    signing_input = f"{protected}.{base64url_encode(statement.canonical_bytes)}".encode("ascii")
+    private_key = load_private_key(private_key_pem, password)
+    signature = base64url_encode(sign_bytes(private_key, signing_input))
+    return SignatureBundle((SignatureEntry(protected, signature, kid, "Ed25519", statement.sha256),))
+
+
+def append_signature(
+    package_path: str | Path,
+    bundle: SignatureBundle,
+    *,
+    private_key_pem: bytes,
+    kid: str,
+    password: bytes | None = None,
+    limits: SigningLimits | None = None,
+) -> SignatureBundle:
+    active_limits = limits or SigningLimits()
+    existing_kids = [entry.kid for entry in bundle.signatures]
+    if len(existing_kids) != len(set(existing_kids)) or kid in existing_kids:
+        raise SigningError("AECCTX_SIGNING_DUPLICATE_KID", "signature bundle contains a duplicate kid")
+    if len(bundle.signatures) >= active_limits.max_signatures:
+        raise SigningError("AECCTX_SIGNING_INPUT_LIMIT_EXCEEDED", "signature bundle exceeds its signature limit")
+    new_bundle = sign_package(
+        package_path,
+        private_key_pem=private_key_pem,
+        kid=kid,
+        password=password,
+        limits=active_limits,
+    )
+    return SignatureBundle(bundle.signatures + new_bundle.signatures)
