@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-11
-Handoff status: `0.2.0-ACX-11-COMPLETE`
+Handoff status: `0.2.0-ACX-12-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 completed the bounded v0.2 shared schema and compatibility substrate without promoting later format targets. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 completed the bounded v0.2 shared schema/compatibility substrate and ACX-12 completed the external-provider foundation with a claim limited to the reviewed Linux-container profile. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09 and ACX-11 are complete; ACX-10 remains deferred. Execute only ACX-12, currently `pending-next`, when continuation is explicitly requested.
+4. ACX-01 through ACX-09, ACX-11 and ACX-12 are complete; ACX-10 remains deferred. Execute only ACX-13, currently `pending-next`, when continuation is explicitly requested.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -31,7 +31,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 completed the bounded v0
 - Targets do not change the v0.1 claim registry until conformance evidence exists.
 - Hidden/unobserved geometry remains unsupported as source evidence; reconstruction can only be an inference hypothesis.
 - Manual mesh calibration augments and never rewrites source coordinates.
-- ACX-12 is the next governed task and is required before native, GPL, commercial, or network-backed decoder work.
+- ACX-12 is complete only for `oci-docker-v1` on `linux-container` with the digest-pinned reference runtime; native Linux/macOS and Windows profiles remain unsupported under ACXB-001.
 - DWG/RVT remain optional provider capabilities outside the Apache-2.0 core distribution.
 - Authenticity remains unsupported until ACXD-018 and ACX-20 are complete.
 - The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
@@ -51,7 +51,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 completed the bounded v0
 
 ## Next implementation task
 
-ACX-12: implement the reviewed external sandbox/provider foundation, including bounded protocol schemas, allowlisted descriptors, content-addressed transport, resource enforcement, network denial, process-tree termination, cleanup and adversarial conformance. It MUST NOT implement DWG, RVT, STEP/IGES or inference capability claims.
+ACX-13: implement bounded IFC source-native 2D and georeferencing evidence using the ACX-11 shared contracts. It must enumerate supported IFC schema/representation and CRS/coordinate-operation profiles before coding, distinguish absent/empty/unsupported/failure states, preserve explicit transform-chain state and label SVG only as derived preview. It MUST NOT begin DXF, OCR/vision, mesh, STEP/IGES, DWG/RVT or signing work.
 
 Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request.
 

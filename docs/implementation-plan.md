@@ -157,8 +157,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-09 | completed | Cross-platform conformance corpus, packaging and `0.1.0` release |
 | ACX-10 | deferred | Consumer integration template; WoodFraming-specific plan remains consumer-owned |
 | ACX-11 | completed | Shared post-v0.1 schemas, compatibility contract and conformance claim registry |
-| ACX-12 | pending-next | Reviewed external sandbox/provider foundation |
-| ACX-13 | pending | IFC source-native 2D and georeferencing |
+| ACX-12 | completed | Reviewed external sandbox/provider foundation |
+| ACX-13 | pending-next | IFC source-native 2D and georeferencing |
 | ACX-14 | pending | DXF source-native semantics and bounded 3D |
 | ACX-15 | pending | Optional OCR/vision evidence with explicit hidden-geometry boundary |
 | ACX-16 | pending | Mesh units, calibration and CRS registration |
@@ -367,7 +367,25 @@ Non-scope:
 
 Acceptance: all enforcement axes have conformance evidence on each claimed platform; the reference provider is legally publishable; core install remains provider-independent; `./scripts/verify.sh` passes.
 
-Evidence: `docs/evidence/ACX-12.md` when completed.
+Evidence: [`docs/evidence/ACX-12.md`](evidence/ACX-12.md).
+
+## Governed residual backlog
+
+### ACXB-001: Additional external enforcement profiles
+
+Functional outcome: restricted decoders can run on Linux and Windows only through reviewed profiles that enforce the complete ACX-12 axis set rather than trusting descriptor declarations.
+
+Owner: the first of ACX-17, ACX-18 or ACX-19 that proposes a public claim on the affected platform. It MUST update the plan before implementation.
+
+Acceptance:
+
+- Linux OCI/namespace/cgroup or equivalent profile has runtime conformance for filesystem/user/process/network/resource isolation, process-tree termination and cleanup;
+- Windows AppContainer/job-object or equivalent profile has the same bounded evidence;
+- unavailable runtimes reject execution deterministically;
+- provider/core packaging remains separated;
+- the capability matrix and claim registry name exact platform/provider scope.
+
+Until accepted, only the digest-pinned Linux-container environment under `oci-docker-v1` is executable. Native Linux/macOS and Windows restricted-decoder claims remain `unsupported`.
 
 ## ACX-13: IFC 2D and georeferencing
 

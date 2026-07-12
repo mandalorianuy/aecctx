@@ -62,6 +62,6 @@ This table is a roadmap, not a support claim. Current claims in the release regi
 | DWG | `unsupported`/opaque fallback | Optional reviewed external provider with adapter-specific claims | ACX-18 |
 | RVT | `unsupported`/opaque fallback | Optional reviewed external provider with neutral BIM evidence only | ACX-19 |
 | Package authenticity/signing | integrity only; authenticity `unsupported` | Optional governed signature verification with distinct integrity, validity, trust, and authorization states | ACX-20 |
-| Restricted decoder isolation | built-in runner rejects this class | Reviewed external sandbox/provider profiles with enforceable limits and attestations | ACX-12 |
+| Restricted decoder isolation | `partial`: `oci-docker-v1` is public only for the digest-pinned Linux-container/reference-provider profile; native Linux/macOS and Windows remain `unsupported` | Additional reviewed profiles with the complete enforcement-axis corpus | ACX-12 completed; ACXB-001 residual |
 | AEC delivery quality gate | `unsupported` | Deterministic policy, baseline-diff and bounded IFC IDS evaluation with explicit outcomes and evidence citations | ACX-21 |
 | Codex plugin | standalone read-only MCP only | Optional `aecctx-inspector` package with inspection, revision, loss-triage and quality-gate skills; no unique semantics | ACX-22 |

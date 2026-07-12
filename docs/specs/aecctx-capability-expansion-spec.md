@@ -1,6 +1,6 @@
 # AECCTX Post-v0.1 Capability Expansion Specification
 
-Version: `0.2.0-draft.3`
+Version: `0.2.0-draft.4`
 Date: 2026-07-11
 Status: Planning authority; no new capability claim is implied
 
@@ -108,6 +108,14 @@ An unenforceable required limit results in rejection, not best-effort execution.
 ### 5.3 Provider classes
 
 The contract MAY support local OS sandbox, container, remote service, and customer-managed provider profiles. Each profile has separate conformance evidence. Network-backed providers MUST be optional and MUST NOT be required by core validation, query, diff, or context rendering.
+
+### 5.4 Initial executable profile
+
+ACXD-024 selects `oci-docker-v1` as the first executable profile. The registered image MUST be digest-pinned and already present; the runner MUST NOT pull or build it implicitly. The Linux container MUST have no network, a read-only root, a non-root identity, no capabilities, `no-new-privileges`, one process, bounded memory/CPU/open files/output and private temporary storage. Input, request and reviewed provider code are read-only; only the bounded output root is writable.
+
+The response attestation binds provider descriptor and runtime digests. Parent validation rejects invalid schema, mismatched attestation, host paths, unsafe/duplicate artifact paths, symlinks, size/hash mismatch, non-sequential events and resource overflow before package construction.
+
+`macos-seatbelt-v1` is explicitly unavailable because it cannot prove both restricted host reads for the Python runtime and the required memory axis. It MUST reject rather than fall back to a partially isolated subprocess. Native Linux/macOS and Windows enforcement profiles remain governed by ACXB-001; no restricted decoder may claim those platforms until that backlog acceptance passes.
 
 ## 6. IFC 2D and georeferencing
 

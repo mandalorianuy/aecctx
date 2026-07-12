@@ -2,7 +2,8 @@
   "version": "0.2.0",
   "fixtures": [
     {"id": "v01-minimal", "path": "fixtures/minimal-aecctx"},
-    {"id": "v02-shared", "path": "fixtures/v0.2/shared/minimal-v02"}
+    {"id": "v02-shared", "path": "fixtures/v0.2/shared/minimal-v02"},
+    {"id": "v02-provider-reference", "path": "fixtures/v0.2/providers"}
   ],
   "claims": [
     {
@@ -82,7 +83,24 @@
       "test_ids": ["tests/test_v02_fixture.py::test_v02_inference_fields_are_queryable_authoritative_records", "tests/test_v02_fixture.py::test_v02_context_projects_but_does_not_replace_inference_record", "tests/test_v02_compatibility.py::test_cross_version_diff_reports_version_change"],
       "evidence": "docs/evidence/ACX-11.md"
     },
-    {"id": "sandbox.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {
+      "id": "sandbox.external-provider",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "oci-docker-v1",
+      "platform_scope": ["linux-container"],
+      "provider_scope": "org.aecctx.reference-provider@0.2.0 with pinned runtime digest",
+      "fixture_ids": ["v02-provider-reference"],
+      "test_ids": [
+        "tests/test_external_providers.py::test_reference_provider_replay_corpus_is_portable_and_valid",
+        "tests/test_external_providers.py::test_reference_provider_round_trip_is_content_addressed_and_cleans_workspace",
+        "tests/test_external_providers.py::test_oci_profile_denies_network_and_outside_filesystem_write",
+        "tests/test_external_providers.py::test_oci_profile_timeout_terminates_container_and_cleans_workspace",
+        "tests/test_external_providers.py::test_runner_rejects_hostile_provider_output",
+        "tests/test_external_providers.py::test_oci_profile_enforces_memory_limit"
+      ],
+      "evidence": "docs/evidence/ACX-12.md"
+    },
     {"id": "ifc.native-2d-georeferencing", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "dxf.semantics-3d", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "pdf-image.ocr-vision", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},

@@ -17,6 +17,15 @@ artifacts=(dist/aecctx-0.1.0-py3-none-any.whl dist/aecctx-0.1.0.tar.gz)
 for artifact in "${artifacts[@]}"; do
   [[ -f "$artifact" ]] || { echo "aecctx release verify: missing $artifact" >&2; exit 1; }
 done
+for required in \
+  "aecctx-0.1.0/conformance/v0.2/provider-corpus.json" \
+  "aecctx-0.1.0/docs/providers/provider-review-template.md" \
+  "aecctx-0.1.0/docs/security/external-provider-threat-model.md"; do
+  tar -tf "${artifacts[1]}" | grep -Fxq "$required" || {
+    echo "aecctx release verify: sdist missing $required" >&2
+    exit 1
+  }
+done
 "$python_runtime" -m aecctx.release "${artifacts[@]}" --output-directory dist >/dev/null
 
 clean_root="$(mktemp -d "${TMPDIR:-/tmp}/aecctx-clean-install.XXXXXX")"

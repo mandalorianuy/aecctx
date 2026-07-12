@@ -106,6 +106,15 @@ Status: Active
 - Decision: `aecctx-inspector` packages focused skills and allowlisted MCP access over stable AECCTX library/CLI behavior. It introduces no unique package semantics and keeps v0.2 MCP inspection read-only.
 - Consequence: AECCTX remains usable without Codex or an LLM, source content remains untrusted data, and plugin responses cannot elevate Markdown, inference, or presentation above structured evidence and policy results.
 
+### ACXD-024: External provider protocol and first enforcement profile
+
+- Decision: ACX-12 uses a versioned JSON file protocol over a private content-addressed workspace. Callers select only an allowlisted `provider_id`; registrations own immutable launch targets, runtime roots, license/network posture, supported actions and enforcement claims. Provider output is schema-validated and hash-checked before it reaches package construction.
+- Reference profile: The first executable enforcement profile is `oci-docker-v1`. It requires an allowlisted, digest-pinned image already present in a reviewed Docker-compatible runtime and launches with no network, read-only root filesystem, non-root user, dropped capabilities, `no-new-privileges`, bounded memory/CPU/PIDs/files, private tmpfs, read-only content-addressed input and a single bounded output mount. The runner never pulls an image implicitly.
+- Rejected alternative: `macos-seatbelt-v1` remains unavailable for restricted decoders. Conformance showed that the Python runtime requires host-wide reads under Seatbelt and macOS does not provide a usable per-process address-space rlimit for this profile. Allowing broad host reads or silently omitting the memory axis would violate the contract.
+- Portability: Protocol/schema/registry validation is portable. A host without a reviewed complete enforcement profile rejects execution with `AECCTX_PROVIDER_PROFILE_UNAVAILABLE`; it does not fall back to the in-process worker or an unconfined subprocess.
+- Consequence: ACX-12 claims the digest-pinned Linux-container provider environment wherever the reviewed Docker runtime passes preflight. Native host profiles and Windows-container execution remain blocked by ACXB-001.
+- Evidence owner: ACX-12 protocol schemas, Linux-container reference provider corpus, threat model, tests and acceptance evidence.
+
 ## Open decisions
 
 ### ACXD-018: Signing and trust profile

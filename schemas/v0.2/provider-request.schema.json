@@ -1,0 +1,43 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.2/provider-request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "action": {"enum": ["describe", "probe", "extract", "finalize", "render"]},
+    "configuration": {"type": "object"},
+    "configuration_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "input": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {"minimum": 0, "type": "integer"},
+        "path": {"pattern": "^input/[0-9a-f]{64}$", "type": "string"},
+        "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+      },
+      "required": ["path", "sha256", "bytes"],
+      "type": "object"
+    },
+    "limits": {
+      "additionalProperties": false,
+      "properties": {
+        "cpu_seconds": {"minimum": 1, "type": "integer"},
+        "max_decompression_ratio": {"exclusiveMinimum": 0, "type": "number"},
+        "max_files": {"minimum": 1, "type": "integer"},
+        "max_input_bytes": {"minimum": 1, "type": "integer"},
+        "max_memory_bytes": {"minimum": 1, "type": "integer"},
+        "max_open_files": {"minimum": 1, "type": "integer"},
+        "max_output_bytes": {"minimum": 1, "type": "integer"},
+        "max_records": {"minimum": 1, "type": "integer"},
+        "max_recursion_depth": {"minimum": 1, "type": "integer"},
+        "wall_time_seconds": {"exclusiveMinimum": 0, "type": "number"}
+      },
+      "required": ["cpu_seconds", "max_decompression_ratio", "max_files", "max_input_bytes", "max_memory_bytes", "max_open_files", "max_output_bytes", "max_records", "max_recursion_depth", "wall_time_seconds"],
+      "type": "object"
+    },
+    "protocol_version": {"const": "0.2"},
+    "provider_id": {"minLength": 1, "type": "string"},
+    "request_id": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["protocol_version", "request_id", "provider_id", "action", "input", "configuration", "configuration_digest", "limits"],
+  "title": "AECCTX v0.2 external provider request",
+  "type": "object"
+}

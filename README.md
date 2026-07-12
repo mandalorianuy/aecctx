@@ -4,7 +4,7 @@ AECCTX is an open, application-agnostic specification and local-first Python too
 
 Version **0.1.0** is implemented, packaged and covered by a public conformance corpus.
 
-The post-v0.1 implementation line is active. ACX-11 implements the bounded v0.2 shared schema/compatibility substrate; format targets remain unchanged until their owning tasks pass conformance.
+The post-v0.1 implementation line is active. ACX-11 implements the bounded v0.2 shared schema/compatibility substrate and ACX-12 adds the reviewed external-provider foundation. Its public sandbox claim is limited to the digest-pinned `oci-docker-v1` Linux-container/reference-provider profile; format targets remain unchanged until their owning tasks pass conformance.
 
 ## Why this exists
 
