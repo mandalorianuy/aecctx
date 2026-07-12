@@ -217,7 +217,7 @@ A signing profile MUST define before any authenticity claim:
 
 The base package MUST remain valid when unsigned. Validation reports integrity and signature verification separately. `signed`, `valid signature`, `trusted signer`, and `authorized producer` are separate states and MUST NOT be collapsed. Signing keys MUST NOT be generated, stored, or selected implicitly by core ingest.
 
-ACX-20 is blocked from implementation until ACXD-018 selects a reviewed signing profile and threat/trust model. Experimental namespaced signatures may be used only in fixtures and MUST NOT create a public authenticity claim.
+ACXD-018 selects the detached JWS General JSON, Ed25519 and verifier-owned offline trust model in `docs/specs/signing-v1-profile.md`; `docs/security/signing-threat-model.md` defines its threat boundary. That accepted design authorizes only the ACX-20 implementation and conformance work enumerated in the active plan. Authenticity remains publicly `unsupported` until ACX-20 closes with passing evidence. Experimental signatures used during implementation MUST NOT create a public authenticity claim.
 
 ## 13. AEC Delivery Quality Gate
 

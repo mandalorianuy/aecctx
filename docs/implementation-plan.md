@@ -165,7 +165,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-17 | completed | Experimental bounded STEP/IGES source graph and translator-derived BREP profiles |
 | ACX-18 | completed | Experimental bounded R2000/AC1015 DWG source-object and converted-DXF evidence profile |
 | ACX-19 | blocked | No admissible RVT provider; public unsupported boundary with deterministic opaque anti-claim evidence |
-| ACX-20 | pending-next | Package authenticity and signing profile |
+| ACX-20 | in_progress | Accepted detached JWS/Ed25519 profile; implementation plan and TDD execution pending written-spec review |
 | ACX-21 | pending | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
 | ACX-22 | pending | Optional `aecctx-inspector` plugin for Codex |
 | ACX-23 | pending | Expansion conformance corpus, packaging, documentation and release |
@@ -691,7 +691,9 @@ Completion resolution: ACXD-030 selected no provider because Revit desktop, APS 
 
 Objective: define and implement optional package signature verification without conflating integrity, identity, trust or authorization.
 
-Decision gate: threat-model package author, distributor, storage, signer, verifier, trust administrator and attacker; resolve ACXD-018 using reviewed standards/libraries and official documentation before public implementation.
+Normative profile: [`docs/specs/signing-v1-profile.md`](specs/signing-v1-profile.md), accepted under ACXD-018. Its threat boundary is [`docs/security/signing-threat-model.md`](security/signing-threat-model.md). Acceptance authorizes implementation planning but does not create an authenticity claim.
+
+Decision gate: resolved. ACXD-018 selects detached JWS General JSON, the fully specified `Ed25519` JOSE identifier, canonical semantic-manifest binding and caller-owned offline registry/policy evaluation. The written profile requires user review before the subordinate TDD execution cut is authored.
 
 Deliverables:
 
@@ -711,6 +713,8 @@ Work breakdown:
 6. Implement offline verification with caller-owned trust roots/policy; keep online status optional and explicit.
 7. Support multiple signatures and rotation without making container metadata authoritative.
 8. Integrate integrity and signature results as separate validation sections and queryable records.
+
+Governed execution rule: no implementation file, schema, fixture or dependency change begins until the accepted written profile has been reviewed and a subordinate ACX-20 implementation plan is committed. That plan MUST preserve the work breakdown and test matrix above, order tests before implementation, name narrow commands per slice and contain no ACX-21 scope.
 
 Test matrix:
 

@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-12
-Handoff status: `0.2.0-ACX-19-BLOCKED`
+Handoff status: `0.2.0-ACX-20-DESIGN-REVIEW`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`: no RVT provider met the entitlement, runtime, sandbox, CI, privacy and fixture-rights gates, so RVT remains public `unsupported` with deterministic opaque anti-claim evidence. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is `in_progress`: ACXD-018 now accepts the detached JWS/Ed25519 offline signing design, but implementation and the public authenticity claim remain pending written-spec review, a subordinate TDD plan and conformance. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09 and ACX-11 through ACX-18 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. Execute only ACX-20, currently `pending-next`.
+4. ACX-01 through ACX-09 and ACX-11 through ACX-18 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. Execute only ACX-20, currently `in_progress`.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -39,7 +39,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - ACX-17 STEP/IGES claims are experimental partial only for the exact AP203/AP214/AP242 edition-1 and IGES 5.3 corpus through `org.aecctx.step-iges.ocp@0.2.0`; XDE correlation, normalized styles/units/placements, source-exact BREP and other live platforms remain unsupported.
 - ACX-18 DWG is experimental partial only for self-contained `AC1015` through `org.aecctx.dwg.libredwg@0.2.0`, exact Linux-arm64 OCI or portable replay. JSON objects are observed decoder evidence; DXF/geometry are converted. Other releases/platforms, xrefs, ACIS/proxy/custom semantics, units/CRS and complete 3D remain unsupported/unknown.
 - RVT is public `unsupported`; no provider is selected under ACXD-030 and deterministic v0.1 opaque fallback is anti-claim evidence only.
-- Authenticity remains unsupported until ACXD-018 and ACX-20 are complete.
+- ACXD-018 accepts `docs/specs/signing-v1-profile.md`; authenticity remains unsupported until ACX-20 implementation and conformance complete.
 - The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
 - The ACX-22 Codex plugin remains optional, local-first and semantically subordinate to library/CLI results.
 
@@ -57,9 +57,9 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 
 ## Next implementation task
 
-ACX-20: define and implement optional package signature verification only after resolving ACXD-018 through the threat/trust model and standards/library decision required by [`docs/implementation-plan.md`](implementation-plan.md). It MUST distinguish integrity, signature validity, signer identity, trust and authorization, and MUST NOT begin quality-gate, plugin or consumer work.
+ACX-20: review the written [`docs/specs/signing-v1-profile.md`](specs/signing-v1-profile.md) and [`docs/security/signing-threat-model.md`](security/signing-threat-model.md). After explicit approval, author the subordinate TDD execution plan before changing schemas, dependencies, fixtures or implementation. The implementation MUST distinguish integrity, signature validity, signer identity, trust and authorization, and MUST NOT begin quality-gate, plugin or consumer work.
 
-Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request. ACX-19 blocked evidence is in [`docs/evidence/ACX-19.md`](evidence/ACX-19.md).
+Its work breakdown, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). The next authorized action is written-spec review, not implementation. ACX-19 blocked evidence is in [`docs/evidence/ACX-19.md`](evidence/ACX-19.md).
 
 ## Consumer integration planning entry point
 

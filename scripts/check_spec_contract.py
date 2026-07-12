@@ -83,6 +83,8 @@ def check_required_files() -> None:
         ROOT / "docs/specs/step-iges-v02-profile.md",
         ROOT / "docs/specs/dwg-v02-profile.md",
         ROOT / "docs/specs/rvt-v02-blocked-profile.md",
+        ROOT / "docs/specs/signing-v1-profile.md",
+        ROOT / "docs/security/signing-threat-model.md",
         ROOT / "fixtures/v0.2/dxf/r2018-semantics-3d-ascii.dxf",
         ROOT / "fixtures/v0.2/dxf/r2018-semantics-3d-binary.dxf",
         ROOT / "fixtures/v0.2/dxf/r2000-cyclic-inserts.dxf",
@@ -128,6 +130,16 @@ def check_authorities() -> None:
     ]:
         if phrase not in expansion:
             fail(f"expansion spec missing authority phrase: {phrase}")
+
+    signing = (ROOT / "docs/specs/signing-v1-profile.md").read_text(encoding="utf-8")
+    for phrase in [
+        "Integrity, cryptographic validity, signer identity, verifier trust and policy authorization",
+        "Detached JWS envelope",
+        "Algorithm profile and agility",
+        "Claim boundary",
+    ]:
+        if phrase not in signing:
+            fail(f"signing profile missing authority phrase: {phrase}")
 
     plan = PLAN.read_text(encoding="utf-8")
     for phrase in [
