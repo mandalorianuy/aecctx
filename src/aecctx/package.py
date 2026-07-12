@@ -98,7 +98,14 @@ class PackageWriter:
         embedding_policy: str,
         producer: dict[str, str],
         artifacts: list[PackageArtifact],
+        aecctx_version: str = "0.1.0",
+        required_extensions: list[str] | None = None,
+        extensions: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
+        if aecctx_version not in {"0.1.0", "0.2.0"}:
+            raise ValueError(f"unsupported AECCTX version: {aecctx_version}")
+        if aecctx_version == "0.1.0" and (required_extensions or extensions):
+            raise ValueError("v0.1 writer does not accept v0.2 extension fields")
         if self.output.exists():
             raise FileExistsError(self.output)
         files: dict[str, bytes | Path] = {}
@@ -127,7 +134,7 @@ class PackageWriter:
             files[logical_path] = artifact.content
         logical_digest = hashlib.sha256(b"".join(digest_lines)).hexdigest()
         manifest: dict[str, Any] = {
-            "aecctx_version": "0.1.0",
+            "aecctx_version": aecctx_version,
             "artifacts": inventory,
             "capabilities": capabilities,
             "created_at": created_at,
@@ -139,6 +146,10 @@ class PackageWriter:
             "source_embedding_policy": embedding_policy,
             "source_ids": source_ids,
         }
+        if aecctx_version == "0.2.0":
+            manifest["required_extensions"] = sorted(required_extensions or [])
+            if extensions is not None:
+                manifest["extensions"] = extensions
         files["manifest.json"] = canonical_json(manifest)
         self.output.parent.mkdir(parents=True, exist_ok=True)
         if self.package_form == "directory":

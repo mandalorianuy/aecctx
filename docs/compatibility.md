@@ -16,3 +16,7 @@
 ## Adapter claims
 
 Capability support is per input and emitted package, not a blanket promise for every file version or construct. Any degradation must remain structured as `partial`, `opaque` or `unsupported` with evidence and fallback guidance.
+
+## v0.2 development line
+
+The governed development compatibility and migration contract is [`compatibility-v0.2.md`](compatibility-v0.2.md). Its shared schemas do not promote later adapter targets to release claims.

@@ -1,0 +1,48 @@
+{
+  "artifacts": [
+    {
+      "bytes": 50,
+      "media_type": "application/octet-stream",
+      "path": "artifacts/echo.bin",
+      "sha256": "bf68a47b8a3e6d4a8eeda7134a5bda2b01a23d745fcac76490f4f4fd010aebdc"
+    }
+  ],
+  "attestation": {
+    "descriptor_digest": "a0ae8ca0e3a3a86d6197f62c62b322640639000e05eb574784a5ef88b1e556f1",
+    "deterministic": true,
+    "enforcement_profile": "oci-docker-v1",
+    "network_mode": "disabled",
+    "provider_id": "org.aecctx.reference-provider",
+    "provider_version": "0.2.0",
+    "request_digest": "d2d90957578b61c43725d06719ac6bbf195bbf763f142f0a863fc1beaa62932e",
+    "response_payload_digest": "a2496e7a8b47d689cc5f58b71b410b9cfb1a47e1e915c2b1bcbca50e1b0268ff",
+    "runtime_digest": "sha256:6d43704baacd1bfbe7c295d7f13079d5d8104ed33568873133f8fc69980419df",
+    "runtime_version": "python-3.12"
+  },
+  "capability_report": {
+    "2d_geometry": {"affected": ["reference-fixture"], "fallback": "retain opaque evidence", "reason_codes": ["AECCTX_REFERENCE_PROVIDER_CAPABILITY_UNSUPPORTED"], "support_level": "unsupported"},
+    "3d_geometry": {"affected": ["reference-fixture"], "fallback": "retain opaque evidence", "reason_codes": ["AECCTX_REFERENCE_PROVIDER_CAPABILITY_UNSUPPORTED"], "support_level": "unsupported"},
+    "georeferencing": {"affected": ["reference-fixture"], "fallback": "retain opaque evidence", "reason_codes": ["AECCTX_REFERENCE_PROVIDER_CAPABILITY_UNSUPPORTED"], "support_level": "unsupported"},
+    "hierarchy": {"affected": ["reference-fixture"], "fallback": "retain opaque evidence", "reason_codes": ["AECCTX_REFERENCE_PROVIDER_CAPABILITY_UNSUPPORTED"], "support_level": "unsupported"},
+    "identity": {"affected": [], "fallback": "none", "reason_codes": [], "support_level": "full"},
+    "materials_styles": {"affected": ["reference-fixture"], "fallback": "retain opaque evidence", "reason_codes": ["AECCTX_REFERENCE_PROVIDER_CAPABILITY_UNSUPPORTED"], "support_level": "unsupported"},
+    "properties": {"affected": ["reference-fixture"], "fallback": "retain opaque evidence", "reason_codes": ["AECCTX_REFERENCE_PROVIDER_CAPABILITY_UNSUPPORTED"], "support_level": "unsupported"},
+    "relationships": {"affected": ["reference-fixture"], "fallback": "retain opaque evidence", "reason_codes": ["AECCTX_REFERENCE_PROVIDER_CAPABILITY_UNSUPPORTED"], "support_level": "unsupported"},
+    "text": {"affected": ["reference-fixture"], "fallback": "retain opaque evidence", "reason_codes": ["AECCTX_REFERENCE_PROVIDER_CAPABILITY_UNSUPPORTED"], "support_level": "unsupported"},
+    "validation": {"affected": [], "fallback": "none", "reason_codes": [], "support_level": "full"}
+  },
+  "diagnostics": [],
+  "events": [
+    {
+      "event_type": "diagnostic",
+      "payload": {"message": "reference-provider"},
+      "sequence": 0,
+      "source_locator": "sha256:bf68a47b8a3e6d4a8eeda7134a5bda2b01a23d745fcac76490f4f4fd010aebdc"
+    }
+  ],
+  "ok": true,
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.reference-provider",
+  "request_id": "12c7aa0c25c4920dad36bc47423b3a84266f15dfb0f3421470895935d534533b",
+  "resource_usage": {"artifacts": 1, "events": 1}
+}

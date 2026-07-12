@@ -1,0 +1,27 @@
+{
+  "entries": [
+    {
+      "action": "extract",
+      "configuration": {},
+      "descriptor": "fixtures/v0.2/providers/reference-descriptor.json",
+      "id": "reference-provider-echo",
+      "input": "fixtures/v0.2/providers/reference-input.bin",
+      "limits": {
+        "cpu_seconds": 5,
+        "max_decompression_ratio": 10.0,
+        "max_files": 4,
+        "max_input_bytes": 1024,
+        "max_memory_bytes": 134217728,
+        "max_open_files": 32,
+        "max_output_bytes": 4096,
+        "max_records": 10,
+        "max_recursion_depth": 8,
+        "wall_time_seconds": 5.0
+      },
+      "output_root": "fixtures/v0.2/providers/reference-output",
+      "request": "fixtures/v0.2/providers/reference-request.json",
+      "response": "fixtures/v0.2/providers/reference-output/response.json"
+    }
+  ],
+  "version": "0.2.0"
+}

@@ -1,0 +1,38 @@
+{
+  "entries": [
+    {
+      "container": "ascii",
+      "dxf_version": "AC1032",
+      "expected": ["source-semantics:partial", "bounded-3d:partial", "acis:unsupported", "xref:not-traversed"],
+      "id": "dxf-r2018-semantics-3d-ascii",
+      "path": "fixtures/v0.2/dxf/r2018-semantics-3d-ascii.dxf",
+      "sha256": "e1ef17ad68911a744a9e87a5d59d11d99cadab6793829903d63b698d2d25cc49"
+    },
+    {
+      "container": "binary",
+      "dxf_version": "AC1032",
+      "expected": ["source-semantics:partial", "bounded-3d:partial", "acis:unsupported", "xref:not-traversed"],
+      "id": "dxf-r2018-semantics-3d-binary",
+      "path": "fixtures/v0.2/dxf/r2018-semantics-3d-binary.dxf",
+      "sha256": "1a9b6003f159a001fe661d726dcaabe2b9f527a1d0e5a3bb051e9ea2cdb7e1c0"
+    },
+    {
+      "container": "ascii",
+      "dxf_version": "AC1015",
+      "expected": ["insert-cycle:diagnosed", "bounded-3d:partial"],
+      "id": "dxf-r2000-cyclic-inserts",
+      "path": "fixtures/v0.2/dxf/r2000-cyclic-inserts.dxf",
+      "sha256": "31c1e3bbfffec7f5b4f9403d4274d4a5aef395c9e6c3e8fc7340111f25ef6a4e"
+    },
+    {
+      "container": "malformed",
+      "dxf_version": "unknown",
+      "expected": ["parse:rejected"],
+      "id": "dxf-malformed-tags",
+      "path": "fixtures/v0.2/dxf/malformed-tags.dxf",
+      "sha256": "d0d6126f97e924ead43292ce66165d121519a289d14f2a23c155c4a5824ee66b"
+    }
+  ],
+  "origin": "project-authored Apache-2.0 fixture corpus",
+  "version": "0.2.0"
+}

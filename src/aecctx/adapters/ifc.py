@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -56,6 +57,8 @@ def _json_value(value: Any) -> tuple[Any, bool]:
     if value is None or isinstance(value, (str, int, bool)):
         return value, True
     if isinstance(value, float):
+        if not math.isfinite(value):
+            return repr(value), False
         return round(value, 12), True
     if isinstance(value, (tuple, list)):
         converted = []
@@ -77,7 +80,7 @@ def _value_state(value: Any) -> dict[str, Any]:
     if value is None:
         return _null()
     normalized, supported = _json_value(value)
-    return _known(normalized) if supported else _unsupported("IFC_ATTRIBUTE_TYPE_UNSUPPORTED")
+    return _known(normalized) if supported else {"state": "unsupported", "reason_code": "IFC_ATTRIBUTE_TYPE_UNSUPPORTED", "source_value": normalized}
 
 
 def _provenance(instant: str, parents: Iterable[str], runtime_version: str, method: str = "ifcopenshell-extraction") -> dict[str, Any]:
@@ -92,6 +95,494 @@ def _provenance(instant: str, parents: Iterable[str], runtime_version: str, meth
 
 def _source_refs(source_id: str, step_id: int) -> list[dict[str, str]]:
     return [{"locator": f"ifc-step:#{step_id}", "source_id": source_id}]
+
+
+def _matrix_values(matrix: Any) -> list[float]:
+    return [round(float(value), 12) for row in matrix for value in row]
+
+
+def _known_transform(from_frame: str, to_frame: str, matrix: Any) -> dict[str, Any]:
+    import numpy
+
+    forward = numpy.array(_matrix_values(matrix)).reshape((4, 4))
+    return {
+        "from_frame": from_frame,
+        "inverse_matrix": _matrix_values(numpy.linalg.inv(forward)),
+        "matrix": _matrix_values(forward),
+        "state": "known",
+        "to_frame": to_frame,
+    }
+
+
+def _qualified(value: Any, authority: str = "source_declared") -> dict[str, Any]:
+    return {"authority": authority, "state": "known", "value": value}
+
+
+def _coordinate_qualification(model: Any) -> dict[str, Any]:
+    import numpy
+    import ifcopenshell.util.geolocation as ifc_geolocation
+    import ifcopenshell.util.unit as ifc_unit
+
+    project_unit = ifc_unit.get_project_unit(model, "LENGTHUNIT")
+    project_unit_name = ifc_unit.get_full_unit_name(project_unit) if project_unit is not None else None
+    contexts = sorted(model.by_type("IfcGeometricRepresentationContext", include_subtypes=False), key=lambda item: item.id())
+    precision_values = [float(item.Precision) for item in contexts if getattr(item, "Precision", None) is not None]
+    tolerance = min(precision_values) if precision_values else None
+    chain: list[dict[str, Any]] = []
+    wcs = ifc_geolocation.get_wcs(model)
+    if wcs is None:
+        chain.append(
+            {
+                "from_frame": "ifc-source-local",
+                "reason_code": "AECCTX_IFC_WCS_NOT_RESOLVED",
+                "state": "unknown",
+                "to_frame": "ifc-project",
+            }
+        )
+    else:
+        chain.append(_known_transform("ifc-source-local", "ifc-project", wcs))
+
+    operations = sorted(model.by_type("IfcMapConversion"), key=lambda item: item.id()) if model.schema != "IFC2X3" else []
+    crs_entities = sorted(model.by_type("IfcProjectedCRS"), key=lambda item: item.id()) if model.schema != "IFC2X3" else []
+    base: dict[str, Any] = {
+        "axis_order": _qualified(["easting", "northing", "height"], "detected"),
+        "declared_units": _qualified(project_unit_name) if project_unit_name else {"authority": "source_declared", "reason_code": "AECCTX_IFC_PROJECT_UNIT_NOT_DECLARED", "state": "unknown"},
+        "global_location": {"reason_code": "AECCTX_IFC_GEOREFERENCING_NOT_DECLARED", "state": "unknown"},
+        "handedness": _qualified("right-handed", "detected"),
+        "tolerance": _qualified(tolerance) if tolerance is not None else {"authority": "source_declared", "reason_code": "AECCTX_IFC_PRECISION_NOT_DECLARED", "state": "unknown"},
+        "transform_chain": chain,
+    }
+    if not operations and not crs_entities:
+        chain.append(
+            {
+                "from_frame": "ifc-project",
+                "reason_code": "AECCTX_IFC_GEOREFERENCING_NOT_DECLARED",
+                "state": "unknown",
+                "to_frame": "ifc-map-crs",
+            }
+        )
+        return base
+    if len(operations) != 1 or len(crs_entities) != 1:
+        base["global_location"] = {"reason_code": "AECCTX_IFC_GEOREFERENCING_CONFLICTED", "state": "conflicted"}
+        chain.append(
+            {
+                "from_frame": "ifc-project",
+                "reason_code": "AECCTX_IFC_GEOREFERENCING_CONFLICTED",
+                "state": "conflicted",
+                "to_frame": "ifc-map-crs",
+            }
+        )
+        return base
+
+    operation = operations[0]
+    crs = crs_entities[0]
+    values = (
+        operation.Eastings,
+        operation.Northings,
+        operation.OrthogonalHeight,
+        operation.XAxisAbscissa,
+        operation.XAxisOrdinate,
+        operation.Scale,
+    )
+    crs_name = getattr(crs, "Name", None)
+    map_unit = getattr(crs, "MapUnit", None)
+    if (
+        not isinstance(crs_name, str)
+        or not crs_name
+        or map_unit is None
+        or any(value is None or not math.isfinite(float(value)) for value in values)
+        or math.hypot(float(operation.XAxisAbscissa), float(operation.XAxisOrdinate)) == 0
+        or float(operation.Scale) <= 0
+    ):
+        base["global_location"] = {"reason_code": "AECCTX_IFC_GEOREFERENCING_INCOMPLETE", "state": "unsupported"}
+        chain.append(
+            {
+                "from_frame": "ifc-project",
+                "reason_code": "AECCTX_IFC_GEOREFERENCING_INCOMPLETE",
+                "state": "unsupported",
+                "to_frame": f"ifc-crs:{crs_name or 'unknown'}",
+            }
+        )
+        return base
+
+    expected_scale = float(ifc_unit.convert_unit(1.0, project_unit, map_unit)) if project_unit is not None else None
+    scale = float(operation.Scale)
+    comparison_tolerance = max(abs(float(tolerance or 0.0) * float(expected_scale or 1.0)), 1e-12)
+    if expected_scale is None or not math.isclose(scale, expected_scale, rel_tol=0.0, abs_tol=comparison_tolerance):
+        base["global_location"] = {"reason_code": "AECCTX_IFC_COORDINATE_UNITS_CONFLICT", "state": "conflicted"}
+        chain.append(
+            {
+                "from_frame": "ifc-project",
+                "reason_code": "AECCTX_IFC_COORDINATE_UNITS_CONFLICT",
+                "state": "conflicted",
+                "to_frame": f"ifc-crs:{crs_name}",
+            }
+        )
+        return base
+
+    x = float(operation.XAxisAbscissa)
+    y = float(operation.XAxisOrdinate)
+    magnitude = math.hypot(x, y)
+    x /= magnitude
+    y /= magnitude
+    matrix = numpy.array(
+        [
+            [scale * x, -scale * y, 0.0, float(operation.Eastings)],
+            [scale * y, scale * x, 0.0, float(operation.Northings)],
+            [0.0, 0.0, scale, float(operation.OrthogonalHeight)],
+            [0.0, 0.0, 0.0, 1.0],
+        ]
+    )
+    map_unit_name = ifc_unit.get_full_unit_name(map_unit)
+    base.update(
+        {
+            "declared_crs": _qualified(crs_name),
+            "global_location": _known(crs_name),
+            "horizontal_crs": _qualified(crs_name),
+            "origin": _qualified([float(operation.Eastings), float(operation.Northings), float(operation.OrthogonalHeight)]),
+            "scale": _qualified(scale),
+            "transform_direction": _qualified(f"ifc-source-local->ifc-project->ifc-crs:{crs_name}"),
+            "vertical_crs": _qualified(crs.VerticalDatum) if getattr(crs, "VerticalDatum", None) else {"authority": "source_declared", "reason_code": "AECCTX_IFC_VERTICAL_CRS_NOT_DECLARED", "state": "explicit_null"},
+        }
+    )
+    base["detected_units"] = _qualified(map_unit_name, "detected")
+    chain.append(_known_transform("ifc-project", f"ifc-crs:{crs_name}", matrix))
+    return base
+
+
+def _ifc_2d_context(context: Any, identifier: str | None) -> dict[str, Any] | None:
+    dimension = getattr(context, "CoordinateSpaceDimension", None)
+    target_view = getattr(context, "TargetView", None)
+    context_identifier = getattr(context, "ContextIdentifier", None)
+    declared_2d = (
+        dimension == 2
+        or target_view in {"PLAN_VIEW", "REFLECTED_PLAN_VIEW", "SECTION_VIEW", "ELEVATION_VIEW", "GRAPH_VIEW", "SKETCH_VIEW"}
+        or identifier in {"Axis", "FootPrint", "Annotation", "Plan"}
+        or context_identifier in {"Axis", "FootPrint", "Annotation", "Plan"}
+    )
+    if not declared_2d:
+        return None
+    parent = getattr(context, "ParentContext", None)
+    return {
+        "context_class": context.is_a(),
+        "context_identifier": context_identifier,
+        "context_step_id": context.id(),
+        "context_type": getattr(context, "ContextType", None),
+        "coordinate_space_dimension": dimension,
+        "parent_context_step_id": parent.id() if parent is not None else None,
+        "precision": getattr(context, "Precision", None),
+        "target_scale": getattr(context, "TargetScale", None),
+        "target_view": target_view,
+    }
+
+
+def _coordinates(value: Any) -> list[float] | None:
+    try:
+        result = [float(item) for item in value]
+    except (TypeError, ValueError):
+        return None
+    if len(result) not in {2, 3} or any(not math.isfinite(item) for item in result):
+        return None
+    return result
+
+
+def _mapping_2d(item: Any) -> tuple[list[float], list[Any]] | None:
+    import numpy
+
+    source = getattr(item, "MappingSource", None)
+    target = getattr(item, "MappingTarget", None)
+    if source is None or target is None or not target.is_a("IfcCartesianTransformationOperator2D"):
+        return None
+    axis1 = _coordinates(getattr(getattr(target, "Axis1", None), "DirectionRatios", None))
+    axis2 = _coordinates(getattr(getattr(target, "Axis2", None), "DirectionRatios", None))
+    origin = _coordinates(getattr(getattr(target, "LocalOrigin", None), "Coordinates", None))
+    scale = getattr(target, "Scale", None)
+    if axis1 is None or axis2 is None or origin is None or scale is None or not math.isfinite(float(scale)) or float(scale) <= 0:
+        return None
+    if len(axis1) != 2 or len(axis2) != 2 or len(origin) != 2:
+        return None
+    target_matrix = numpy.array(
+        [
+            [float(scale) * axis1[0], float(scale) * axis2[0], 0.0, origin[0]],
+            [float(scale) * axis1[1], float(scale) * axis2[1], 0.0, origin[1]],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]
+    )
+    if not math.isfinite(float(numpy.linalg.det(target_matrix))) or abs(float(numpy.linalg.det(target_matrix))) < 1e-15:
+        return None
+    representation = getattr(source, "MappedRepresentation", None)
+    resolved = sorted(list(getattr(representation, "Items", ()) or ()), key=lambda value: value.id())
+    return _matrix_values(target_matrix), resolved
+
+
+def _geometry_2d(item: Any) -> tuple[dict[str, Any] | None, list[list[list[float]]]]:
+    if item.is_a("IfcPolyline"):
+        points = [_coordinates(point.Coordinates) for point in item.Points]
+        if any(point is None for point in points):
+            return None, []
+        coordinates = [point for point in points if point is not None]
+        return {"coordinates": coordinates, "kind": "polyline"}, [coordinates]
+    if item.is_a("IfcIndexedPolyCurve"):
+        coordinates = [_coordinates(point) for point in item.Points.CoordList]
+        if any(point is None or len(point) != 2 for point in coordinates):
+            return None, []
+        segments: list[list[int]] = []
+        for segment in item.Segments or ():
+            if not segment.is_a("IfcLineIndex"):
+                return None, []
+            segments.append([int(index) for index in list(segment)[0]])
+        clean = [point for point in coordinates if point is not None]
+        return {"coordinates": clean, "kind": "indexed_polycurve", "line_indices": segments}, [clean]
+    if item.is_a("IfcGeometricCurveSet"):
+        member_ids: list[int] = []
+        paths: list[list[list[float]]] = []
+        for member in sorted(item.Elements, key=lambda value: value.id()):
+            geometry, member_paths = _geometry_2d(member)
+            if geometry is None:
+                return None, []
+            member_ids.append(member.id())
+            paths.extend(member_paths)
+        return {"kind": "geometric_curve_set", "member_step_ids": member_ids}, paths
+    if item.is_a("IfcMappedItem"):
+        mapped = _mapping_2d(item)
+        if mapped is None:
+            return None, []
+        matrix, resolved = mapped
+        transformed_paths: list[list[list[float]]] = []
+        for resolved_item in resolved:
+            geometry, paths = _geometry_2d(resolved_item)
+            if geometry is None:
+                return None, []
+            for path in paths:
+                transformed_paths.append(
+                    [
+                        [
+                            round(matrix[0] * point[0] + matrix[1] * point[1] + matrix[3], 12),
+                            round(matrix[4] * point[0] + matrix[5] * point[1] + matrix[7], 12),
+                        ]
+                        for point in path
+                    ]
+                )
+        return {"kind": "mapped_item", "mapping_matrix": matrix, "resolved_item_ids": [value.id() for value in resolved]}, transformed_paths
+    return None, []
+
+
+def _ifc_2d_svg(representation_ids: list[str], paths: list[list[list[float]]]) -> bytes:
+    points = [point for path in paths for point in path]
+    if points:
+        min_x = min(point[0] for point in points)
+        min_y = min(point[1] for point in points)
+        max_x = max(point[0] for point in points)
+        max_y = max(point[1] for point in points)
+    else:
+        min_x = min_y = 0.0
+        max_x = max_y = 1.0
+    width = max(max_x - min_x, 1.0)
+    height = max(max_y - min_y, 1.0)
+    lines = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{min_x:g} {min_y:g} {width:g} {height:g}">',
+        '<g fill="none" stroke="black" stroke-width="1">',
+    ]
+    for representation_id in representation_ids:
+        lines.append(f'<g data-source-record-id="{representation_id}"/>')
+    for path in paths:
+        rendered = " ".join(f"{point[0]:g},{point[1]:g}" for point in path)
+        lines.append(f'<polyline points="{rendered}"/>')
+    lines.extend(("</g>", "</svg>"))
+    return ("\n".join(lines) + "\n").encode("utf-8")
+
+
+def _augment_ifc_v02_2d(
+    model: Any,
+    primitives: list[dict[str, Any]],
+    primitive_ids: dict[int, str],
+    source_digest: str,
+    source_id: str,
+    instant: str,
+    runtime_version: str,
+) -> tuple[list[PackageArtifact], list[tuple[str, int]]]:
+    by_record_id = {record["record_id"]: record for record in primitives}
+    by_step_id = {step_id: by_record_id[record_id] for step_id, record_id in primitive_ids.items()}
+    representations: dict[int, Any] = {}
+    for product in sorted(model.by_type("IfcProduct"), key=lambda value: value.id()):
+        shape = getattr(product, "Representation", None)
+        for representation in getattr(shape, "Representations", ()) or ():
+            representations[representation.id()] = representation
+    representation_ids: list[str] = []
+    preview_paths: list[list[list[float]]] = []
+    issues: list[tuple[str, int]] = []
+    products_without_representation = [
+        product.id()
+        for product in sorted(model.by_type("IfcProduct"), key=lambda value: value.id())
+        if getattr(product, "Representation", None) is None
+    ]
+    if products_without_representation:
+        issues.append(("AECCTX_IFC_2D_REPRESENTATION_NOT_DECLARED", products_without_representation[0]))
+    for representation in sorted(representations.values(), key=lambda value: value.id()):
+        identifier = getattr(representation, "RepresentationIdentifier", None)
+        context = _ifc_2d_context(representation.ContextOfItems, identifier)
+        if context is None:
+            continue
+        record = by_step_id[representation.id()]
+        record_id = primitive_ids[representation.id()]
+        representation_ids.append(record_id)
+        item_ids = [primitive_ids[item.id()] for item in sorted(representation.Items, key=lambda value: value.id())]
+        item_states: list[str] = []
+        for item in sorted(representation.Items, key=lambda value: value.id()):
+            geometry, paths = _geometry_2d(item)
+            if geometry is None:
+                state = (
+                    "extraction_failed"
+                    if item.is_a("IfcPolyline") or item.is_a("IfcIndexedPolyCurve")
+                    else "unsupported"
+                )
+                item_states.append(state)
+                continue
+            item_states.append("supported")
+            item_record = by_step_id[item.id()]
+            item_record.setdefault("ifc_2d_parent_representation_ids", []).append(record_id)
+            if item.is_a("IfcMappedItem"):
+                mapping_source = item.MappingSource
+                mapped_representation = mapping_source.MappedRepresentation
+                geometry.update(
+                    {
+                        "mapping_source_representation_step_id": mapped_representation.id(),
+                        "relationship_path": [
+                            f"{representation.is_a()}#{representation.id()}",
+                            f"{item.is_a()}#{item.id()}",
+                            f"{mapping_source.is_a()}#{mapping_source.id()}",
+                            f"{mapped_representation.is_a()}#{mapped_representation.id()}",
+                        ],
+                    }
+                )
+            item_record["geometry_2d"] = geometry
+            preview_paths.extend(paths)
+            if item.is_a("IfcGeometricCurveSet"):
+                for member in item.Elements:
+                    member_geometry, _ = _geometry_2d(member)
+                    if member_geometry is not None:
+                        by_step_id[member.id()]["geometry_2d"] = member_geometry
+            if item.is_a("IfcMappedItem"):
+                for resolved_id in geometry["resolved_item_ids"]:
+                    resolved = model.by_id(resolved_id)
+                    resolved_geometry, _ = _geometry_2d(resolved)
+                    if resolved_geometry is not None:
+                        by_step_id[resolved_id]["geometry_2d"] = resolved_geometry
+        profile_state = (
+            "empty"
+            if not item_ids
+            else "extraction_failed"
+            if "extraction_failed" in item_states
+            else "unsupported"
+            if "unsupported" in item_states
+            else "supported"
+        )
+        record["ifc_2d_representation"] = {
+            "context": context,
+            "identifier": identifier,
+            "item_record_ids": item_ids,
+            "profile_state": profile_state,
+            "representation_type": getattr(representation, "RepresentationType", None),
+        }
+        if profile_state == "empty":
+            issues.append(("AECCTX_IFC_2D_REPRESENTATION_EMPTY", representation.id()))
+        elif profile_state == "unsupported":
+            issues.append(("AECCTX_IFC_2D_ITEM_UNSUPPORTED", representation.id()))
+        elif profile_state == "extraction_failed":
+            issues.append(("AECCTX_IFC_2D_EXTRACTION_FAILED", representation.id()))
+        record["representation_fidelity"] = {
+            "class": "source_exact",
+            "derived": False,
+            "source_representation_ids": [record_id],
+        }
+    if not representation_ids:
+        return [], issues
+    svg_bytes = _ifc_2d_svg(representation_ids, preview_paths)
+    svg_path = "previews/ifc/source-native-2d.svg"
+    svg_digest = hashlib.sha256(svg_bytes).hexdigest()
+    preview_id = _stable_id("prim_ifc_preview", source_digest, "source-native-2d")
+    primitives.append(
+        {
+            "artifact_refs": [{"artifact_path": svg_path, "media_type": "image/svg+xml", "sha256": svg_digest}],
+            "container": _known("ifc-derived-preview"),
+            "evidence_class": "derived",
+            "extraction_confidence": {"band": "full", "method": "aecctx-deterministic-ifc-svg"},
+            "original_class": "AECCTXDerivedIFC2DPreview",
+            "provenance": _provenance(instant, representation_ids, runtime_version, "aecctx-deterministic-ifc-svg"),
+            "raw_attributes": {},
+            "record_id": preview_id,
+            "record_type": "primitive",
+            "record_version": "0.2",
+            "representation_fidelity": {"class": "preview", "derived": True, "source_representation_ids": representation_ids},
+            "source_refs": [{"locator": "ifc-derived-preview:source-native-2d", "source_id": source_id}],
+        }
+    )
+    return [PackageArtifact(svg_path, svg_bytes, "image/svg+xml", "ifc-source-native-2d-preview", False)], issues
+
+
+def _augment_ifc_v02_coordinate_evidence(
+    model: Any,
+    primitives: list[dict[str, Any]],
+    primitive_ids: dict[int, str],
+) -> None:
+    import ifcopenshell.util.placement as ifc_placement
+    import ifcopenshell.util.unit as ifc_unit
+
+    by_record_id = {record["record_id"]: record for record in primitives}
+    by_step_id = {step_id: by_record_id[record_id] for step_id, record_id in primitive_ids.items()}
+    for context in sorted(model.by_type("IfcGeometricRepresentationContext", include_subtypes=False), key=lambda value: value.id()):
+        try:
+            matrix = _matrix_values(ifc_placement.get_axis2placement(context.WorldCoordinateSystem))
+            wcs = _known(matrix)
+        except Exception:
+            wcs = _unsupported("AECCTX_IFC_WCS_NOT_RESOLVED")
+        true_north = getattr(context, "TrueNorth", None)
+        by_step_id[context.id()]["coordinate_frame"] = {
+            "coordinate_space_dimension": int(context.CoordinateSpaceDimension),
+            "precision": _value_state(getattr(context, "Precision", None)),
+            "true_north": _value_state(getattr(true_north, "DirectionRatios", None)),
+            "world_coordinate_system": wcs,
+        }
+
+    if model.schema == "IFC2X3":
+        return
+    for crs in sorted(model.by_type("IfcProjectedCRS"), key=lambda value: value.id()):
+        map_unit = getattr(crs, "MapUnit", None)
+        by_step_id[crs.id()]["coordinate_reference_system"] = {
+            "crs_class": crs.is_a(),
+            "geodetic_datum": _value_state(getattr(crs, "GeodeticDatum", None)),
+            "map_projection": _value_state(getattr(crs, "MapProjection", None)),
+            "map_unit": ifc_unit.get_full_unit_name(map_unit) if map_unit is not None else None,
+            "map_zone": _value_state(getattr(crs, "MapZone", None)),
+            "name": getattr(crs, "Name", None),
+            "vertical_datum": _value_state(getattr(crs, "VerticalDatum", None)),
+        }
+        if by_step_id[crs.id()]["coordinate_reference_system"]["vertical_datum"]["state"] == "explicit_null":
+            by_step_id[crs.id()]["coordinate_reference_system"]["vertical_datum"]["reason_code"] = "AECCTX_IFC_VERTICAL_CRS_NOT_DECLARED"
+    for operation in sorted(model.by_type("IfcMapConversion"), key=lambda value: value.id()):
+        source_crs = getattr(operation, "SourceCRS", None)
+        target_crs = getattr(operation, "TargetCRS", None)
+        source_id = source_crs.id() if source_crs is not None else None
+        target_id = target_crs.id() if target_crs is not None else None
+        by_step_id[operation.id()]["coordinate_operation"] = {
+            "operation_class": operation.is_a(),
+            "parameters": {
+                "eastings": operation.Eastings,
+                "northings": operation.Northings,
+                "orthogonal_height": operation.OrthogonalHeight,
+                "scale": operation.Scale,
+                "x_axis_abscissa": operation.XAxisAbscissa,
+                "x_axis_ordinate": operation.XAxisOrdinate,
+            },
+            "relationship_path": [
+                f"{source_crs.is_a()}#{source_id}" if source_crs is not None else "unknown-source-crs",
+                f"{operation.is_a()}#{operation.id()}",
+                f"{target_crs.is_a()}#{target_id}" if target_crs is not None else "unknown-target-crs",
+            ],
+            "source_crs_step_id": source_id,
+            "target_crs_step_id": target_id,
+        }
 
 
 def _neutral_kind(instance: Any) -> str:
@@ -134,6 +625,10 @@ class IFCPlugin:
             "resource_limits": {"bytes": True, "records": True, "wall_time": False, "memory": False},
             "supported_extensions": [".ifc", ".ifczip"],
             "supported_media_types": ["application/x-step", "application/vnd.ifc"],
+            "v02_public_profiles": {
+                "georeferencing": "ifc4-add2tc1-explicit-mapconversion-projectedcrs-v1:partial",
+                "native_2d": "ifc2x3-tc1-ifc4-add2tc1-native-2d-v1:partial",
+            },
         }
 
     def probe(self, prefix: bytes) -> dict[str, Any]:
@@ -234,6 +729,7 @@ def ingest_ifc(
     created_at: str | None = None,
     embedding_policy: str = "external",
     package_form: str = "directory",
+    aecctx_version: str = "0.1.0",
 ) -> IngestResult:
     ifcopenshell, ifc_geom, ifc_element, ifc_placement, ifc_validate = _ifcopenshell()
     source = Path(source_path)
@@ -242,6 +738,8 @@ def ingest_ifc(
         raise ValueError("source_path must be a regular IFC file")
     if embedding_policy not in {"external", "embedded", "redacted"}:
         raise ValueError("embedding_policy must be external, embedded, or redacted")
+    if aecctx_version not in {"0.1.0", "0.2.0"}:
+        raise ValueError("aecctx_version must be 0.1.0 or 0.2.0")
     source_digest, source_bytes = hash_file(source)
     instant = _timestamp(created_at)
     identity = source_digest[:24]
@@ -280,6 +778,14 @@ def ingest_ifc(
             }
         )
 
+    if aecctx_version == "0.2.0":
+        _augment_ifc_v02_coordinate_evidence(model, primitives, primitive_ids)
+        v02_2d_artifacts, v02_2d_issues = _augment_ifc_v02_2d(
+            model, primitives, primitive_ids, source_digest, source_id, instant, runtime_version
+        )
+    else:
+        v02_2d_artifacts, v02_2d_issues = [], []
+
     entity_instances = [
         instance
         for instance in all_instances
@@ -288,7 +794,7 @@ def ingest_ifc(
         or instance.is_a("IfcPropertySetDefinition")
     ]
     entity_ids = {instance.id(): _stable_id("entity_ifc", source_digest, str(instance.id())) for instance in entity_instances}
-    geometry_artifacts: list[PackageArtifact] = []
+    geometry_artifacts: list[PackageArtifact] = list(v02_2d_artifacts)
     entities: list[dict[str, Any]] = []
     geometry_failures: list[tuple[int, str]] = []
     settings = ifc_geom.settings()
@@ -445,15 +951,15 @@ def ingest_ifc(
         )
     capabilities = {name: "full" for name in CAPABILITIES}
     capabilities["2d_geometry"] = "partial"
-    has_georeferencing = bool(model.by_type("IfcProjectedCRS") or model.by_type("IfcMapConversion"))
-    capabilities["georeferencing"] = "full" if has_georeferencing else "partial"
+    has_georeferencing = bool(model.by_type("IfcProjectedCRS") or model.by_type("IfcMapConversion")) if model.schema != "IFC2X3" else False
+    capabilities["georeferencing"] = "partial" if aecctx_version == "0.2.0" else "full" if has_georeferencing else "partial"
     if geometry_failures:
         capabilities["3d_geometry"] = "partial"
     if unsupported_fields:
         capabilities["properties"] = "partial"
     partial_reasons = {
         "2d_geometry": "AECCTX_IFC_2D_REPRESENTATION_PARTIAL",
-        "georeferencing": "AECCTX_IFC_GEOREFERENCING_NOT_DECLARED",
+        "georeferencing": "AECCTX_IFC_GEOREFERENCING_PROFILE_PARTIAL" if aecctx_version == "0.2.0" else "AECCTX_IFC_GEOREFERENCING_NOT_DECLARED",
         "3d_geometry": "AECCTX_IFC_TESSELLATION_PARTIAL",
         "properties": "AECCTX_IFC_ATTRIBUTE_UNSUPPORTED",
     }
@@ -508,6 +1014,52 @@ def ingest_ifc(
     elif embedding_policy == "redacted":
         source_record["redaction_reason"] = "AECCTX_SOURCE_CONTENT_REDACTED_BY_POLICY"
 
+    if aecctx_version == "0.2.0":
+        qualification = _coordinate_qualification(model)
+        source_record["coordinate_qualification"] = qualification
+        source_record["spatial_reference"] = qualification["global_location"]
+        for code, step_id in v02_2d_issues:
+            evidence_id = primitive_ids.get(step_id)
+            diagnostics.append(
+                {
+                    "affected_count": 1,
+                    "capability": "2d_geometry",
+                    "code": code,
+                    "fallback": "Inspect preserved IFC representation and item primitives.",
+                    "message": f"IFC source-native 2D profile excluded or degraded at STEP #{step_id}.",
+                    "provenance": _provenance(instant, [evidence_id] if evidence_id else [source_id], runtime_version),
+                    "record_id": _stable_id("diag_ifc_v02_2d", source_digest, f"{code}:{step_id}"),
+                    "record_type": "diagnostic",
+                    "record_version": "0.2",
+                    "severity": "info",
+                    "source_refs": _source_refs(source_id, step_id),
+                    "support_level": "partial",
+                }
+            )
+        global_location = qualification["global_location"]
+        georeferencing_code = global_location.get("reason_code")
+        if georeferencing_code:
+            diagnostics.append(
+                {
+                    "affected_count": 1,
+                    "capability": "georeferencing",
+                    "code": georeferencing_code,
+                    "fallback": "Use local/project coordinates and inspect preserved CRS/operation primitives.",
+                    "message": "IFC global coordinate qualification is not known for the bounded profile.",
+                    "provenance": _provenance(instant, [source_id], runtime_version),
+                    "record_id": _stable_id("diag_ifc_v02_georef", source_digest, str(georeferencing_code)),
+                    "record_type": "diagnostic",
+                    "record_version": "0.2",
+                    "severity": "info",
+                    "source_refs": [{"locator": "ifc-file", "source_id": source_id}],
+                    "support_level": "partial",
+                }
+            )
+        for record in [source_record, *primitives, *assertions, *entities, *relations, *diagnostics]:
+            record.setdefault("evidence_class", "observed")
+            record["record_version"] = "0.2"
+        diagnostics.sort(key=lambda item: item["record_id"])
+
     records = {
         "sources/sources.jsonl": [source_record],
         "evidence/primitives.jsonl": primitives,
@@ -538,5 +1090,6 @@ def ingest_ifc(
         embedding_policy=embedding_policy,
         producer={"name": PLUGIN_ID, "version": f"{PLUGIN_VERSION}+ifcopenshell.{runtime_version}"},
         artifacts=artifacts,
+        aecctx_version=aecctx_version,
     )
     return IngestResult(package_id, source_id, manifest["logical_digest"], output)

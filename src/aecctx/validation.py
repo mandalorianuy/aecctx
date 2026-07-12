@@ -12,6 +12,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from .errors import Diagnostic
 from .package import PackageReadError, PackageReader, SafetyLimits
+from .records import CoordinateQualification, ProviderAttestation, RecordModelError, RepresentationFidelity
 
 
 REQUIRED_ARTIFACTS = (
@@ -23,6 +24,8 @@ REQUIRED_ARTIFACTS = (
     "diagnostics/diagnostics.jsonl",
     "context/index.md",
 )
+SCHEMA_PACKAGES = {"0.1.0": "aecctx.schemas.v0_1", "0.2.0": "aecctx.schemas.v0_2"}
+SUPPORTED_REQUIRED_EXTENSIONS: frozenset[str] = frozenset()
 
 
 @dataclass(frozen=True, slots=True)
@@ -40,8 +43,8 @@ class ValidationResult:
         }
 
 
-def _load_schema(name: str) -> dict[str, Any]:
-    resource = files("aecctx.schemas.v0_1").joinpath(name)
+def _load_schema(version: str, name: str) -> dict[str, Any]:
+    resource = files(SCHEMA_PACKAGES[version]).joinpath(name)
     return json.loads(resource.read_text(encoding="utf-8"))
 
 
@@ -67,8 +70,8 @@ def _read_json(path: Path, logical_path: str, diagnostics: list[Diagnostic]) -> 
     return None
 
 
-def _schema_diagnostics(instance: Any, schema_name: str, path: str) -> list[Diagnostic]:
-    validator = Draft202012Validator(_load_schema(schema_name), format_checker=FormatChecker())
+def _schema_diagnostics(instance: Any, schema_name: str, path: str, *, version: str) -> list[Diagnostic]:
+    validator = Draft202012Validator(_load_schema(version, schema_name), format_checker=FormatChecker())
     diagnostics: list[Diagnostic] = []
     for error in sorted(validator.iter_errors(instance), key=lambda item: list(item.absolute_path)):
         location = "/".join(str(part) for part in error.absolute_path)
@@ -114,7 +117,7 @@ def _validate_artifacts(root: Path, manifest: dict[str, Any], diagnostics: list[
         )
 
 
-def _validate_records(root: Path, diagnostics: list[Diagnostic]) -> None:
+def _validate_records(root: Path, diagnostics: list[Diagnostic], *, version: str) -> None:
     seen: set[str] = set()
     for logical_path in REQUIRED_ARTIFACTS:
         if not logical_path.endswith(".jsonl"):
@@ -137,9 +140,28 @@ def _validate_records(root: Path, diagnostics: list[Diagnostic]) -> None:
             except json.JSONDecodeError as error:
                 diagnostics.append(_diagnostic("AECCTX_JSONL_INVALID", str(error), path=line_path))
                 continue
-            diagnostics.extend(_schema_diagnostics(record, "record.schema.json", line_path))
+            diagnostics.extend(_schema_diagnostics(record, "record.schema.json", line_path, version=version))
             if not isinstance(record, dict):
                 continue
+            if version == "0.2.0":
+                coordinate = record.get("coordinate_qualification")
+                if isinstance(coordinate, dict):
+                    try:
+                        CoordinateQualification.from_dict(coordinate)
+                    except RecordModelError as error:
+                        diagnostics.append(_diagnostic(error.code, str(error), path=line_path))
+                fidelity = record.get("representation_fidelity")
+                if isinstance(fidelity, dict):
+                    try:
+                        RepresentationFidelity.from_dict(fidelity)
+                    except RecordModelError as error:
+                        diagnostics.append(_diagnostic(error.code, str(error), path=line_path))
+                attestation = record.get("provider_attestation")
+                if isinstance(attestation, dict):
+                    try:
+                        ProviderAttestation.from_dict(attestation)
+                    except RecordModelError as error:
+                        diagnostics.append(_diagnostic(error.code, str(error), path=line_path))
             record_id = record.get("record_id")
             if not isinstance(record_id, str) or not record_id:
                 continue
@@ -166,9 +188,24 @@ def _validate_directory(root: Path) -> ValidationResult:
     if not isinstance(manifest, dict):
         return ValidationResult(False, tuple(diagnostics))
 
-    diagnostics.extend(_schema_diagnostics(manifest, "manifest.schema.json", "manifest.json"))
+    version = manifest.get("aecctx_version")
+    if version not in SCHEMA_PACKAGES:
+        diagnostics.append(_diagnostic("AECCTX_VERSION_UNSUPPORTED", f"Unsupported AECCTX version: {version!r}", path="manifest.json#/aecctx_version"))
+        return ValidationResult(False, tuple(diagnostics), manifest.get("package_id"), manifest)
+    diagnostics.extend(_schema_diagnostics(manifest, "manifest.schema.json", "manifest.json", version=version))
+    required_extensions = manifest.get("required_extensions", [])
+    if isinstance(required_extensions, list):
+        for extension in sorted(item for item in required_extensions if isinstance(item, str)):
+            if extension not in SUPPORTED_REQUIRED_EXTENSIONS:
+                diagnostics.append(
+                    _diagnostic(
+                        "AECCTX_REQUIRED_EXTENSION_UNSUPPORTED",
+                        f"Required extension is not supported: {extension}",
+                        path="manifest.json#/required_extensions",
+                    )
+                )
     _validate_artifacts(root, manifest, diagnostics)
-    _validate_records(root, diagnostics)
+    _validate_records(root, diagnostics, version=version)
     ordered = tuple(sorted(diagnostics, key=lambda item: (item.path or "", item.code, item.message)))
     return ValidationResult(not ordered, ordered, manifest.get("package_id"), manifest)
 

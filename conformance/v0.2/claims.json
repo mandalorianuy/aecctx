@@ -1,0 +1,300 @@
+{
+  "version": "0.2.0",
+  "fixtures": [
+    {"id": "v01-minimal", "path": "fixtures/minimal-aecctx"},
+    {"id": "v02-shared", "path": "fixtures/v0.2/shared/minimal-v02"},
+    {"id": "v02-provider-reference", "path": "fixtures/v0.2/providers"},
+    {"id": "v02-ifc-acx13", "path": "fixtures/v0.2/ifc"},
+    {"id": "v02-dxf-acx14", "path": "fixtures/v0.2/dxf"},
+    {"id": "v02-inference-acx15", "path": "fixtures/v0.2/inference"},
+    {"id": "v02-mesh-acx16", "path": "fixtures/v0.2/mesh"},
+    {"id": "v02-step-iges-acx17", "path": "fixtures/v0.2/step-iges"},
+    {"id": "v02-dwg-acx18", "path": "fixtures/v0.2/dwg"},
+    {"id": "v02-rvt-acx19-anti-claim", "path": "fixtures/v0.2/rvt/not-a-real-rvt.rvt"}
+  ],
+  "claims": [
+    {
+      "id": "core.v02.dual-version-validation",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.1-v0.2-core-reader",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v01-minimal", "v02-shared"],
+      "test_ids": ["tests/test_v02_compatibility.py::test_v02_package_and_optional_extension_validate", "tests/test_validation.py::test_minimal_directory_fixture_is_valid"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.required-extension-negotiation",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.2-core-reader",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v02-shared"],
+      "test_ids": ["tests/test_v02_compatibility.py::test_unknown_required_extension_is_rejected"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.inference-separation",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.2-shared-evidence",
+      "platform_scope": ["any"],
+      "provider_scope": "schema-only",
+      "fixture_ids": ["v02-shared"],
+      "test_ids": ["tests/test_v02_compatibility.py::test_inferred_record_requires_provider_inference_metadata", "tests/test_v02_records.py::test_inference_metadata_preserves_separate_confidence_and_reproducibility"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.coordinate-qualification",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.2-shared-evidence",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v02-shared"],
+      "test_ids": ["tests/test_v02_compatibility.py::test_manual_calibration_cannot_occupy_declared_units_slot", "tests/test_v02_compatibility.py::test_incomplete_transform_chain_cannot_claim_known_global_location"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.representation-fidelity",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.2-shared-evidence",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v02-shared"],
+      "test_ids": ["tests/test_v02_records.py::test_preview_fidelity_must_remain_derived", "tests/test_v02_compatibility.py::test_preview_record_cannot_claim_source_fidelity"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.provider-attestation",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.2-shared-evidence",
+      "platform_scope": ["any"],
+      "provider_scope": "schema-only",
+      "fixture_ids": ["v02-shared"],
+      "test_ids": ["tests/test_v02_records.py::test_provider_attestation_preserves_execution_boundary", "tests/test_v02_records.py::test_network_provider_attestation_requires_allowlisted_network_mode", "tests/test_v02_compatibility.py::test_network_attestation_requires_explicit_allowlisted_mode"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "core.v02.query-diff-context",
+      "status": "public",
+      "support_level": "full",
+      "profile": "v0.1-v0.2-core-reader",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v01-minimal", "v02-shared"],
+      "test_ids": ["tests/test_v02_fixture.py::test_v02_inference_fields_are_queryable_authoritative_records", "tests/test_v02_fixture.py::test_v02_context_projects_but_does_not_replace_inference_record", "tests/test_v02_compatibility.py::test_cross_version_diff_reports_version_change"],
+      "evidence": "docs/evidence/ACX-11.md"
+    },
+    {
+      "id": "sandbox.external-provider",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "oci-docker-v1",
+      "platform_scope": ["linux-container"],
+      "provider_scope": "org.aecctx.reference-provider@0.2.0 with pinned runtime digest",
+      "fixture_ids": ["v02-provider-reference"],
+      "test_ids": [
+        "tests/test_external_providers.py::test_reference_provider_replay_corpus_is_portable_and_valid",
+        "tests/test_external_providers.py::test_reference_provider_round_trip_is_content_addressed_and_cleans_workspace",
+        "tests/test_external_providers.py::test_oci_profile_denies_network_and_outside_filesystem_write",
+        "tests/test_external_providers.py::test_oci_profile_timeout_terminates_container_and_cleans_workspace",
+        "tests/test_external_providers.py::test_runner_rejects_hostile_provider_output",
+        "tests/test_external_providers.py::test_oci_profile_enforces_memory_limit"
+      ],
+      "evidence": "docs/evidence/ACX-12.md"
+    },
+    {
+      "id": "ifc.native-2d",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "ifc2x3-tc1-ifc4-add2tc1-native-2d-v1",
+      "platform_scope": ["ifcopenshell-python-supported"],
+      "provider_scope": "ifcopenshell==0.8.5",
+      "fixture_ids": ["v02-ifc-acx13"],
+      "test_ids": [
+        "tests/test_ifc_v02.py::test_ifc4_v02_preserves_native_2d_representations_and_derived_svg",
+        "tests/test_ifc_v02.py::test_ifc_v02_degraded_profiles_remain_explicit_and_package_valid",
+        "tests/test_ifc_v02.py::test_ifc2x3_v02_preserves_native_2d_but_does_not_guess_crs",
+        "tests/test_ifc_v02.py::test_ifc_v02_zip_is_deterministic_and_v01_default_is_unchanged"
+      ],
+      "evidence": "docs/evidence/ACX-13.md"
+    },
+    {
+      "id": "ifc.georeferencing",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "ifc4-add2tc1-explicit-mapconversion-projectedcrs-v1",
+      "platform_scope": ["ifcopenshell-python-supported"],
+      "provider_scope": "ifcopenshell==0.8.5",
+      "fixture_ids": ["v02-ifc-acx13"],
+      "test_ids": [
+        "tests/test_ifc_v02.py::test_ifc4_v02_emits_complete_source_coordinate_chain",
+        "tests/test_ifc_v02.py::test_ifc4_v02_preserves_crs_operation_and_context_as_source_evidence",
+        "tests/test_ifc_v02.py::test_ifc_v02_conflicting_units_do_not_produce_global_location",
+        "tests/test_ifc_v02.py::test_ifc_v02_transform_inverses_round_trip_large_coordinates"
+      ],
+      "evidence": "docs/evidence/ACX-13.md"
+    },
+    {
+      "id": "dxf.source-semantics",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "dxf-r2000-r2018-source-semantics-v1",
+      "platform_scope": ["ezdxf-python-supported"],
+      "provider_scope": "ezdxf==1.4.4",
+      "fixture_ids": ["v02-dxf-acx14"],
+      "test_ids": [
+        "tests/test_dxf_v02.py::test_dxf_v02_preserves_source_native_semantic_evidence",
+        "tests/test_dxf_v02.py::test_dxf_v02_binary_and_ascii_ingest_are_profile_equivalent_and_deterministic",
+        "tests/test_dxf_v02.py::test_dxf_v02_keeps_acis_xref_and_cyclic_insert_loss_explicit",
+        "tests/test_dxf_v02.py::test_dxf_v02_malformed_and_record_limit_fail_with_stable_codes"
+      ],
+      "evidence": "docs/evidence/ACX-14.md"
+    },
+    {
+      "id": "dxf.bounded-3d",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "dxf-r2000-r2018-bounded-3d-v1",
+      "platform_scope": ["ezdxf-and-trimesh-python-supported"],
+      "provider_scope": "ezdxf==1.4.4; trimesh>=4.12,<5",
+      "fixture_ids": ["v02-dxf-acx14"],
+      "test_ids": [
+        "tests/test_dxf_v02.py::test_dxf_v02_preserves_bounded_3d_ocs_insert_transforms_and_topology",
+        "tests/test_dxf_v02.py::test_dxf_v02_binary_and_ascii_ingest_are_profile_equivalent_and_deterministic",
+        "tests/test_dxf_v02.py::test_dxf_v02_keeps_acis_xref_and_cyclic_insert_loss_explicit",
+        "tests/test_dxf_v02.py::test_dxf_v02_malformed_and_record_limit_fail_with_stable_codes"
+      ],
+      "evidence": "docs/evidence/ACX-14.md"
+    },
+    {
+      "id": "pdf-image.ocr",
+      "status": "experimental",
+      "support_level": "partial",
+      "profile": "tesseract-5.3.4-capi-eng-psm6-v1",
+      "platform_scope": ["linux-arm64-container-live", "any-offline-replay"],
+      "provider_scope": "org.aecctx.ocr.tesseract-tsv@0.2.0; local image ID sha256:6d52ebcafef0ccdf59f58beccc7483c16a6e160fc94e3c3ea59f3f10c991f492",
+      "fixture_ids": ["v02-inference-acx15"],
+      "test_ids": [
+        "tests/test_tesseract_provider.py::test_tesseract_ocr_replay_corpus_is_portable_and_valid",
+        "tests/test_pdf_image_v02.py::test_image_v02_maps_validated_replay_as_inferred_word_evidence",
+        "tests/test_pdf_image_v02.py::test_pdf_v02_keeps_native_ocr_conflict_explicit",
+        "tests/test_pdf_image_v02.py::test_image_v02_ocr_packages_are_deterministic",
+        "tests/test_inference_v02.py::test_ocr_result_rejects_out_of_bounds_or_duplicate_reading_order",
+        "tests/test_inference_v02.py::test_prompt_like_ocr_text_is_preserved_only_as_unverified_data"
+      ],
+      "evidence": "docs/evidence/ACX-15.md"
+    },
+    {
+      "id": "pdf-image.hidden-geometry",
+      "status": "public",
+      "support_level": "unsupported",
+      "profile": "hidden-unobserved-source-geometry-boundary-v1",
+      "platform_scope": ["any"],
+      "provider_scope": "none accepted",
+      "fixture_ids": ["v02-inference-acx15"],
+      "test_ids": [
+        "tests/test_pdf_image_v02.py::test_image_v02_without_provider_preserves_unsupported_boundaries",
+        "tests/test_pdf_image_adapters.py::test_raster_pdf_extracts_image_evidence_without_ocr_or_hidden_geometry"
+      ],
+      "evidence": "docs/evidence/ACX-15.md"
+    },
+    {"id": "pdf-image.vision", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none accepted", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {
+      "id": "mesh.declared-coordinate-metadata",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "obj-stl-gltf2-glb2-coordinate-metadata-v1",
+      "platform_scope": ["trimesh-python-supported"],
+      "provider_scope": "trimesh==4.12.2",
+      "fixture_ids": ["v02-mesh-acx16"],
+      "test_ids": [
+        "tests/test_geometry_v02.py::test_obj_and_stl_v02_keep_units_frame_and_crs_unknown",
+        "tests/test_geometry_v02.py::test_gltf_v02_preserves_normative_meters_frame_and_scene_transform",
+        "tests/test_geometry_v02.py::test_external_gltf_resource_is_rejected_before_resolution",
+        "tests/test_geometry_v02.py::test_geometry_v01_default_remains_byte_identical_to_explicit_v01"
+      ],
+      "evidence": "docs/evidence/ACX-16.md"
+    },
+    {
+      "id": "mesh.manual-registration",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "mesh-manual-scale-matrix-similarity-v1",
+      "platform_scope": ["trimesh-python-supported"],
+      "provider_scope": "trimesh==4.12.2; numpy>=2.2,<3",
+      "fixture_ids": ["v02-mesh-acx16"],
+      "test_ids": [
+        "tests/test_mesh_coordinates_v02.py::test_scale_mode_emits_reversible_uniform_matrix",
+        "tests/test_mesh_coordinates_v02.py::test_matrix_mode_accepts_explicit_affine_and_rejects_singular_or_non_affine",
+        "tests/test_mesh_coordinates_v02.py::test_control_points_solve_orientation_preserving_similarity_with_residuals",
+        "tests/test_geometry_v02.py::test_scale_registration_emits_manual_and_derived_evidence_without_changing_source_mesh",
+        "tests/test_geometry_v02.py::test_matrix_crs_and_control_point_profiles_emit_reversible_deterministic_results",
+        "tests/test_geometry_v02.py::test_source_manual_conflict_remains_explicit_and_emits_no_calibrated_artifact"
+      ],
+      "evidence": "docs/evidence/ACX-16.md"
+    },
+    {
+      "id": "step-iges.source-structure",
+      "status": "experimental",
+      "support_level": "partial",
+      "profile": "step-ap203-ap214-ap242-iges53-source-v1",
+      "platform_scope": ["linux-arm64-container-live", "any-offline-replay"],
+      "provider_scope": "org.aecctx.step-iges.ocp@0.2.0; local image ID sha256:875cbbbc5198ae44e8957e3a90c9a8afd0dc541f01029fb5186a296e3d2a0d47",
+      "fixture_ids": ["v02-step-iges-acx17"],
+      "test_ids": ["tests/test_step_iges_provider.py::test_step_iges_replay_corpus_is_portable_and_valid", "tests/test_step_iges_adapter.py::test_step_iges_v02_maps_observed_structure_and_derived_geometry"],
+      "evidence": "docs/evidence/ACX-17.md"
+    },
+    {
+      "id": "step-iges.brep-geometry",
+      "status": "experimental",
+      "support_level": "partial",
+      "profile": "occt-7.9.3-translator-derived-brep-v1",
+      "platform_scope": ["linux-arm64-container-live", "any-offline-replay"],
+      "provider_scope": "org.aecctx.step-iges.ocp@0.2.0; local image ID sha256:875cbbbc5198ae44e8957e3a90c9a8afd0dc541f01029fb5186a296e3d2a0d47",
+      "fixture_ids": ["v02-step-iges-acx17"],
+      "test_ids": ["tests/test_step_iges_provider.py::test_step_iges_live_provider_emits_source_and_derived_brep_evidence", "tests/test_step_iges_adapter.py::test_step_iges_v02_maps_observed_structure_and_derived_geometry"],
+      "evidence": "docs/evidence/ACX-17.md"
+    },
+    {
+      "id": "dwg.external-provider",
+      "status": "experimental",
+      "support_level": "partial",
+      "profile": "dwg-r2000-libredwg-json-dxf-v1",
+      "platform_scope": ["linux-arm64-container-live", "any-offline-replay"],
+      "provider_scope": "org.aecctx.dwg.libredwg@0.2.0; local image ID sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1",
+      "fixture_ids": ["v02-dwg-acx18"],
+      "test_ids": [
+        "tests/test_dwg_provider.py::test_dwg_replay_corpus_is_portable_and_valid",
+        "tests/test_dwg_provider.py::test_dwg_live_provider_emits_direct_json_and_converted_dxf_evidence",
+        "tests/test_dwg_provider.py::test_dwg_live_provider_is_deterministic_for_fixed_input_and_runtime",
+        "tests/test_dwg_adapter.py::test_dwg_committed_replay_creates_deterministic_valid_package",
+        "tests/test_dwg_adapter.py::test_dwg_v01_is_byte_identical_to_opaque_ingest",
+        "tests/test_cli.py::test_ingest_dwg_v02_accepts_explicit_validated_provider_replay"
+      ],
+      "evidence": "docs/evidence/ACX-18.md"
+    },
+    {
+      "id": "rvt.external-provider",
+      "status": "public",
+      "support_level": "unsupported",
+      "profile": "rvt-no-provider-blocked-v1",
+      "platform_scope": ["any"],
+      "provider_scope": "none",
+      "fixture_ids": ["v02-rvt-acx19-anti-claim"],
+      "test_ids": [
+        "tests/test_rvt_blocked_profile.py::test_rvt_suffix_uses_deterministic_opaque_fallback",
+        "tests/test_rvt_blocked_profile.py::test_cli_auto_does_not_promote_rvt_suffix"
+      ],
+      "evidence": "docs/evidence/ACX-19.md"
+    },
+    {"id": "package.authenticity-signing", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "quality-gate.policy-ids", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {"id": "codex.aecctx-inspector", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null}
+  ]
+}

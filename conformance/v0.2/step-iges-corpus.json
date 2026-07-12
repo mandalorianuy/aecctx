@@ -1,0 +1,121 @@
+{
+  "entries": [
+    {
+      "action": "extract",
+      "configuration": {
+        "angular_deflection": 0.5,
+        "brep_format": "occt-ascii-brep-7.9.3",
+        "linear_deflection": 0.1,
+        "read_shape_healing": "translator-default-observed",
+        "schema_profile": "acx17-v1",
+        "tessellation_units": "source"
+      },
+      "descriptor": "fixtures/v0.2/step-iges/descriptor.json",
+      "id": "ap203-part",
+      "input": "fixtures/v0.2/step-iges/ap203-part.step",
+      "limits": {
+        "cpu_seconds": 60,
+        "max_decompression_ratio": 20.0,
+        "max_files": 10,
+        "max_input_bytes": 10000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 10000000,
+        "max_records": 100000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 60.0
+      },
+      "output_root": "fixtures/v0.2/step-iges/outputs/ap203-part",
+      "request": "fixtures/v0.2/step-iges/requests/ap203-part.json",
+      "response": "fixtures/v0.2/step-iges/outputs/ap203-part/response.json"
+    },
+    {
+      "action": "extract",
+      "configuration": {
+        "angular_deflection": 0.5,
+        "brep_format": "occt-ascii-brep-7.9.3",
+        "linear_deflection": 0.1,
+        "read_shape_healing": "translator-default-observed",
+        "schema_profile": "acx17-v1",
+        "tessellation_units": "source"
+      },
+      "descriptor": "fixtures/v0.2/step-iges/descriptor.json",
+      "id": "ap214-assembly",
+      "input": "fixtures/v0.2/step-iges/ap214-assembly.step",
+      "limits": {
+        "cpu_seconds": 60,
+        "max_decompression_ratio": 20.0,
+        "max_files": 10,
+        "max_input_bytes": 10000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 10000000,
+        "max_records": 100000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 60.0
+      },
+      "output_root": "fixtures/v0.2/step-iges/outputs/ap214-assembly",
+      "request": "fixtures/v0.2/step-iges/requests/ap214-assembly.json",
+      "response": "fixtures/v0.2/step-iges/outputs/ap214-assembly/response.json"
+    },
+    {
+      "action": "extract",
+      "configuration": {
+        "angular_deflection": 0.5,
+        "brep_format": "occt-ascii-brep-7.9.3",
+        "linear_deflection": 0.1,
+        "read_shape_healing": "translator-default-observed",
+        "schema_profile": "acx17-v1",
+        "tessellation_units": "source"
+      },
+      "descriptor": "fixtures/v0.2/step-iges/descriptor.json",
+      "id": "ap242-part",
+      "input": "fixtures/v0.2/step-iges/ap242-part.step",
+      "limits": {
+        "cpu_seconds": 60,
+        "max_decompression_ratio": 20.0,
+        "max_files": 10,
+        "max_input_bytes": 10000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 10000000,
+        "max_records": 100000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 60.0
+      },
+      "output_root": "fixtures/v0.2/step-iges/outputs/ap242-part",
+      "request": "fixtures/v0.2/step-iges/requests/ap242-part.json",
+      "response": "fixtures/v0.2/step-iges/outputs/ap242-part/response.json"
+    },
+    {
+      "action": "extract",
+      "configuration": {
+        "angular_deflection": 0.5,
+        "brep_format": "occt-ascii-brep-7.9.3",
+        "linear_deflection": 0.1,
+        "read_shape_healing": "translator-default-observed",
+        "schema_profile": "acx17-v1",
+        "tessellation_units": "source"
+      },
+      "descriptor": "fixtures/v0.2/step-iges/descriptor.json",
+      "id": "iges53-part",
+      "input": "fixtures/v0.2/step-iges/iges53-part.igs",
+      "limits": {
+        "cpu_seconds": 60,
+        "max_decompression_ratio": 20.0,
+        "max_files": 10,
+        "max_input_bytes": 10000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 10000000,
+        "max_records": 100000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 60.0
+      },
+      "output_root": "fixtures/v0.2/step-iges/outputs/iges53-part",
+      "request": "fixtures/v0.2/step-iges/requests/iges53-part.json",
+      "response": "fixtures/v0.2/step-iges/outputs/iges53-part/response.json"
+    }
+  ],
+  "version": "0.2.0"
+}

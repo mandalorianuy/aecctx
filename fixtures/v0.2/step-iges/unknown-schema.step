@@ -1,0 +1,10 @@
+ISO-10303-21;
+HEADER;
+FILE_DESCRIPTION(('AECCTX negative fixture'),'2;1');
+FILE_NAME('unknown-schema.step','2026-07-12T00:00:00',('AECCTX'),('AECCTX'),'AECCTX','','');
+FILE_SCHEMA(('UNCLAIMED_AEC_SCHEMA'));
+ENDSEC;
+DATA;
+#1=PRODUCT('fixture','Unknown schema','',());
+ENDSEC;
+END-ISO-10303-21;

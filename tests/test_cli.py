@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from aecctx.package import PackageReader
+
 
 ROOT = Path(__file__).parents[1]
 FIXTURE = ROOT / "fixtures" / "minimal-aecctx"
@@ -138,6 +140,204 @@ def test_ingest_auto_selects_ifc_adapter(tmp_path: Path) -> None:
 
     assert completed.returncode == 0, completed.stderr
     assert json.loads(completed.stdout)["data"]["adapter"] == "ifc"
+
+
+def test_ingest_ifc_v02_is_explicitly_available_from_cli(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "ifc" / "ifc4-native-2d-georef.ifc"
+    output = tmp_path / "ifc-v02.aecctx"
+
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(output),
+        "--aecctx-version",
+        "0.2.0",
+        "--created-at",
+        "2026-07-12T00:00:00Z",
+        "--json",
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert PackageReader(output).manifest["aecctx_version"] == "0.2.0"
+    assert json.loads(completed.stdout)["data"]["aecctx_version"] == "0.2.0"
+
+
+def test_ingest_dxf_v02_is_explicitly_available_from_cli(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "dxf" / "r2018-semantics-3d-ascii.dxf"
+    output = tmp_path / "dxf-v02"
+
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(output),
+        "--adapter",
+        "dxf",
+        "--aecctx-version",
+        "0.2.0",
+        "--created-at",
+        "2026-07-12T00:00:00Z",
+        "--json",
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    payload = json.loads(completed.stdout)
+    assert payload["data"]["adapter"] == "dxf"
+    assert payload["data"]["aecctx_version"] == "0.2.0"
+    assert PackageReader(output).manifest["aecctx_version"] == "0.2.0"
+
+
+def test_ingest_v02_rejects_adapter_without_governed_v02_profile(tmp_path: Path) -> None:
+    fixture = tmp_path / "opaque.bin"
+    fixture.write_bytes(b"opaque")
+
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(tmp_path / "opaque-v02.aecctx"),
+        "--adapter",
+        "opaque",
+        "--aecctx-version",
+        "0.2.0",
+        "--json",
+    )
+
+    assert completed.returncode == 2
+    assert json.loads(completed.stdout)["diagnostics"][0]["code"] == "AECCTX_INGEST_VERSION_UNSUPPORTED"
+
+
+def test_ingest_geometry_v02_accepts_coordinate_profile_from_cli(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "mesh" / "triangle-unknown.obj"
+    coordinate_profile = ROOT / "fixtures" / "v0.2" / "mesh" / "profiles" / "scale-mm-to-m.json"
+    output = tmp_path / "mesh-v02"
+
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(output),
+        "--adapter",
+        "geometry",
+        "--aecctx-version",
+        "0.2.0",
+        "--mesh-coordinate-profile",
+        str(coordinate_profile),
+        "--created-at",
+        "2026-07-12T00:00:00Z",
+        "--json",
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert PackageReader(output).manifest["aecctx_version"] == "0.2.0"
+    assert "geometry/calibrated-scene.glb" in {item["path"] for item in PackageReader(output).manifest["artifacts"]}
+
+
+def test_mesh_coordinate_profile_is_rejected_outside_geometry_v02(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "mesh" / "triangle-unknown.obj"
+    coordinate_profile = ROOT / "fixtures" / "v0.2" / "mesh" / "profiles" / "scale-mm-to-m.json"
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(tmp_path / "mesh-v01"),
+        "--adapter",
+        "geometry",
+        "--mesh-coordinate-profile",
+        str(coordinate_profile),
+        "--json",
+    )
+
+    assert completed.returncode == 2
+    assert json.loads(completed.stdout)["diagnostics"][0]["code"] == "AECCTX_INGEST_FAILED"
+
+
+def test_ingest_image_v02_accepts_explicit_validated_inference_replay(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "inference" / "ocr-aecctx-15.png"
+    corpus = ROOT / "conformance" / "v0.2" / "inference-corpus.json"
+    output = tmp_path / "image-ocr-v02"
+
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(output),
+        "--adapter",
+        "image",
+        "--aecctx-version",
+        "0.2.0",
+        "--inference-replay",
+        str(corpus),
+        "--inference-entry",
+        "tesseract-ocr-aecctx-15",
+        "--created-at",
+        "2026-07-12T00:00:00Z",
+        "--json",
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert json.loads(completed.stdout)["data"]["aecctx_version"] == "0.2.0"
+    assert PackageReader(output).manifest["capabilities"]["text"] == "partial"
+
+
+def test_ingest_step_iges_v02_accepts_explicit_validated_provider_replay(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "step-iges" / "ap214-assembly.step"
+    corpus = ROOT / "conformance" / "v0.2" / "step-iges-corpus.json"
+    output = tmp_path / "step-v02.aecctx"
+
+    completed = run_cli(
+        "ingest", str(fixture), "--output", str(output), "--aecctx-version", "0.2.0",
+        "--provider-replay", str(corpus), "--provider-entry", "ap214-assembly",
+        "--created-at", "2026-07-12T00:00:00Z", "--form", "zip", "--json",
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert json.loads(completed.stdout)["data"]["adapter"] == "step-iges"
+    assert PackageReader(output).manifest["capabilities"]["3d_geometry"] == "partial"
+
+
+def test_ingest_step_iges_replay_options_are_paired_and_v02_only(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "step-iges" / "ap214-assembly.step"
+    corpus = ROOT / "conformance" / "v0.2" / "step-iges-corpus.json"
+    missing = run_cli("ingest", str(fixture), "--output", str(tmp_path / "missing"), "--provider-replay", str(corpus), "--json")
+    v01 = run_cli(
+        "ingest", str(fixture), "--output", str(tmp_path / "v01"), "--provider-replay", str(corpus),
+        "--provider-entry", "ap214-assembly", "--json",
+    )
+    assert missing.returncode == 2
+    assert v01.returncode == 2
+
+
+def test_ingest_dwg_v02_accepts_explicit_validated_provider_replay(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "dwg" / "r2000-profile.dwg"
+    corpus = ROOT / "conformance" / "v0.2" / "dwg-corpus.json"
+    output = tmp_path / "dwg-v02.aecctx"
+
+    completed = run_cli(
+        "ingest", str(fixture), "--output", str(output), "--aecctx-version", "0.2.0",
+        "--provider-replay", str(corpus), "--provider-entry", "r2000-profile",
+        "--created-at", "2026-07-12T00:00:00Z", "--form", "zip", "--json",
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert json.loads(completed.stdout)["data"]["adapter"] == "dwg"
+    assert PackageReader(output).manifest["capabilities"]["2d_geometry"] == "partial"
+
+
+def test_ingest_dwg_replay_is_v02_only_and_provider_scoped(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "dwg" / "r2000-profile.dwg"
+    corpus = ROOT / "conformance" / "v0.2" / "dwg-corpus.json"
+    v01 = run_cli(
+        "ingest", str(fixture), "--output", str(tmp_path / "v01"), "--provider-replay", str(corpus),
+        "--provider-entry", "r2000-profile", "--json",
+    )
+    wrong = run_cli(
+        "ingest", str(fixture), "--output", str(tmp_path / "wrong"), "--adapter", "step-iges",
+        "--aecctx-version", "0.2.0", "--provider-replay", str(corpus), "--provider-entry", "r2000-profile", "--json",
+    )
+    assert v01.returncode == 2
+    assert wrong.returncode == 2
 
 
 def test_ingest_auto_selects_dxf_adapter(tmp_path: Path) -> None:

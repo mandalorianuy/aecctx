@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aecctx.org/schemas/v0.2/dwg-provider-event.schema.json",
+  "title": "AECCTX DWG provider event payload",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["artifact_path", "artifact_sha256", "dwg_version", "handle_conflicts", "input_sha256", "object_count", "schema"],
+      "properties": {
+        "schema": {"const": "aecctx.dwg.source.v1"},
+        "artifact_path": {"const": "artifacts/source.json"},
+        "artifact_sha256": {"$ref": "#/$defs/digest"},
+        "dwg_version": {"const": "AC1015"},
+        "handle_conflicts": {"type": "array", "items": {"type": "string", "pattern": "^[0-9A-F]+$"}, "uniqueItems": true},
+        "input_sha256": {"$ref": "#/$defs/digest"},
+        "object_count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": ["artifact_path", "artifact_sha256", "converter", "dxf_version", "input_sha256", "representation_fidelity", "schema"],
+      "properties": {
+        "schema": {"const": "aecctx.dwg.conversion.v1"},
+        "artifact_path": {"const": "artifacts/converted-r2000.dxf"},
+        "artifact_sha256": {"$ref": "#/$defs/digest"},
+        "converter": {"const": "LibreDWG dwgread 0.13.4"},
+        "dxf_version": {"const": "AC1015"},
+        "input_sha256": {"$ref": "#/$defs/digest"},
+        "representation_fidelity": {"const": "converted"}
+      },
+      "additionalProperties": false
+    }
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
+

@@ -1,0 +1,89 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.2/mesh-coordinate-profile.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "author": {
+      "additionalProperties": false,
+      "properties": {
+        "display_name": {"maxLength": 256, "minLength": 1, "type": "string"},
+        "id": {"maxLength": 256, "minLength": 1, "type": "string"}
+      },
+      "required": ["id"],
+      "type": "object"
+    },
+    "crs": {
+      "additionalProperties": false,
+      "properties": {
+        "horizontal": {"maxLength": 256, "minLength": 1, "pattern": "^[ -~]+$", "type": "string"},
+        "vertical": {"maxLength": 256, "minLength": 1, "pattern": "^[ -~]+$", "type": "string"}
+      },
+      "required": ["horizontal"],
+      "type": "object"
+    },
+    "frame": {
+      "additionalProperties": false,
+      "properties": {
+        "axes": {
+          "items": {"enum": ["+X", "-X", "+Y", "-Y", "+Z", "-Z"]},
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        },
+        "handedness": {"enum": ["right", "left"]}
+      },
+      "required": ["axes", "handedness"],
+      "type": "object"
+    },
+    "point": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {"maxLength": 256, "minLength": 1, "type": "string"},
+        "source": {"items": {"type": "number"}, "maxItems": 3, "minItems": 3, "type": "array"},
+        "target": {"items": {"type": "number"}, "maxItems": 3, "minItems": 3, "type": "array"}
+      },
+      "required": ["id", "source", "target"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"mode": {"const": "scale"}}},
+      "then": {
+        "not": {"anyOf": [{"required": ["matrix"]}, {"required": ["control_points"]}, {"required": ["target_crs"]}]},
+        "required": ["scale"]
+      }
+    },
+    {
+      "if": {"properties": {"mode": {"const": "matrix"}}},
+      "then": {
+        "not": {"anyOf": [{"required": ["scale"]}, {"required": ["control_points"]}]},
+        "required": ["matrix"]
+      }
+    },
+    {
+      "if": {"properties": {"mode": {"const": "control_points"}}},
+      "then": {
+        "not": {"anyOf": [{"required": ["scale"]}, {"required": ["matrix"]}]},
+        "required": ["control_points"]
+      }
+    }
+  ],
+  "properties": {
+    "author": {"$ref": "#/$defs/author"},
+    "control_points": {"items": {"$ref": "#/$defs/point"}, "minItems": 1, "type": "array"},
+    "matrix": {"items": {"type": "number"}, "maxItems": 16, "minItems": 16, "type": "array"},
+    "mode": {"enum": ["scale", "matrix", "control_points"]},
+    "profile_version": {"const": "0.2.0"},
+    "scale": {"exclusiveMinimum": 0, "type": "number"},
+    "source_frame": {"$ref": "#/$defs/frame"},
+    "source_units": {"enum": ["m", "mm", "cm", "in", "ft"]},
+    "target_crs": {"$ref": "#/$defs/crs"},
+    "target_frame": {"$ref": "#/$defs/frame"},
+    "target_units": {"enum": ["m", "mm", "cm", "in", "ft"]},
+    "tolerance": {"exclusiveMinimum": 0, "type": "number"}
+  },
+  "required": ["profile_version", "mode", "author", "target_units", "target_frame", "tolerance"],
+  "title": "AECCTX v0.2 mesh coordinate profile",
+  "type": "object"
+}

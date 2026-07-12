@@ -4,6 +4,8 @@ AECCTX is an open, application-agnostic specification and local-first Python too
 
 Version **0.1.0** is implemented, packaged and covered by a public conformance corpus.
 
+The post-v0.1 implementation line is active. ACX-11 implements the bounded v0.2 shared schema/compatibility substrate, ACX-12 the reviewed external-provider foundation, ACX-13 bounded IFC 2D/georeferencing, ACX-14 DXF source-semantics/bounded-3D, ACX-15 experimental English OCR, ACX-16 mesh coordinate qualification/manual registration, ACX-17 experimental STEP/IGES source-graph plus translator-derived BREP extraction, and ACX-18 experimental R2000 DWG source-object plus converted-DXF evidence. Claims remain exact and bounded by their corpora.
+
 ## Why this exists
 
 AEC formats split information across proprietary files, open schemas, vector drawings, raster documents, geometry, properties, and relationships. Feeding those files directly to an agent is expensive and unreliable; flattening them into a single Markdown file destroys precision and provenance.
@@ -38,6 +40,7 @@ python -m pip install '.[all]'
 - Format specification: [`docs/specs/aec-context-package-spec.md`](docs/specs/aec-context-package-spec.md)
 - Plugin contract: [`docs/specs/aec-context-plugin-contract.md`](docs/specs/aec-context-plugin-contract.md)
 - Post-v0.1 expansion specification: [`docs/specs/aecctx-capability-expansion-spec.md`](docs/specs/aecctx-capability-expansion-spec.md)
+- v0.2 compatibility and migration: [`docs/compatibility-v0.2.md`](docs/compatibility-v0.2.md)
 - Capability matrix: [`docs/capability-matrix.md`](docs/capability-matrix.md)
 - Active implementation sequence: [`docs/implementation-plan.md`](docs/implementation-plan.md)
 - Handoff for the implementation task: [`docs/HANDOFF.md`](docs/HANDOFF.md)
@@ -57,6 +60,32 @@ aecctx diff revision-a.aecctx revision-b.aecctx
 ```
 
 Unknown inputs use the honest opaque fallback. IFC, DXF, PDF, image and OBJ/STL/glTF content are selected by bounded content probes; `--adapter` can make the choice explicit.
+
+The ACX-13 through ACX-18 v0.2 profiles are explicit:
+
+```bash
+aecctx ingest model.ifc --output model-v02.aecctx --form zip --aecctx-version 0.2.0 --json
+aecctx validate model-v02.aecctx --json
+aecctx ingest model.dxf --output model-dxf-v02.aecctx --form zip --aecctx-version 0.2.0 --json
+aecctx validate model-dxf-v02.aecctx --json
+aecctx ingest scan.png --output scan-v02.aecctx --aecctx-version 0.2.0 \
+  --inference-replay conformance/v0.2/inference-corpus.json \
+  --inference-entry tesseract-ocr-aecctx-15 --json
+aecctx ingest model.glb --output model-mesh-v02.aecctx --adapter geometry \
+  --aecctx-version 0.2.0 --mesh-coordinate-profile registration.json --json
+
+# Portable STEP/IGES replay; the CLI never launches the native provider.
+aecctx ingest model.step --output model-step-v02.aecctx --adapter step-iges \
+  --aecctx-version 0.2.0 --provider-replay conformance/v0.2/step-iges-corpus.json \
+  --provider-entry ap214-assembly --json
+
+# Portable R2000 DWG replay; the CLI never launches LibreDWG.
+aecctx ingest drawing.dwg --output drawing-dwg-v02.aecctx --adapter dwg \
+  --aecctx-version 0.2.0 --provider-replay conformance/v0.2/dwg-corpus.json \
+  --provider-entry r2000-profile --json
+```
+
+Other adapters currently reject `--aecctx-version 0.2.0` until their governed expansion task publishes a profile. OCR, STEP/IGES and DWG remain experimental and partial under their normative profiles. STEP/IGES and DWG require a validated replay in CLI or validated `ProviderResult` in SDK. DWG is limited to self-contained `AC1015`; JSON objects are observed decoder evidence while DXF/geometry are converted evidence. Other DWG releases, xref traversal, ACIS/proxy/custom semantics, qualified units/CRS and complete 3D remain unsupported. Mesh registration never guesses units/CRS or rewrites source coordinates. Vision and hidden geometry are not inferred.
 
 ## Python API
 

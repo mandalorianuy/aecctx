@@ -1,0 +1,33 @@
+{
+  "entries": [
+    {
+      "action": "extract",
+      "configuration": {
+        "dwg_version": "AC1015",
+        "dxf_version": "r2000",
+        "json_format": "JSON",
+        "profile": "acx18-r2000-v1",
+        "resolve_external_references": false
+      },
+      "descriptor": "fixtures/v0.2/dwg/descriptor.json",
+      "id": "r2000-profile",
+      "input": "fixtures/v0.2/dwg/r2000-profile.dwg",
+      "limits": {
+        "cpu_seconds": 30,
+        "max_decompression_ratio": 20.0,
+        "max_files": 10,
+        "max_input_bytes": 2000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 30000000,
+        "max_records": 2000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 30.0
+      },
+      "output_root": "fixtures/v0.2/dwg/outputs/r2000-profile",
+      "request": "fixtures/v0.2/dwg/requests/r2000-profile.json",
+      "response": "fixtures/v0.2/dwg/outputs/r2000-profile/response.json"
+    }
+  ],
+  "version": "0.2.0"
+}

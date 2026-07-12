@@ -1,0 +1,39 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.2/provider-descriptor.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "enforced_axes": {
+      "additionalProperties": false,
+      "properties": {
+        "cpu": {"const": true}, "decompression": {"const": true}, "environment": {"const": true},
+        "filesystem": {"const": true}, "input_bytes": {"const": true}, "memory": {"const": true},
+        "network": {"const": true}, "open_files": {"const": true}, "output_bytes": {"const": true},
+        "process": {"const": true}, "process_tree": {"const": true}, "records": {"const": true},
+        "recursion": {"const": true}, "temporary_storage": {"const": true},
+        "user_permissions": {"const": true}, "wall_time": {"const": true}
+      },
+      "required": ["cpu", "decompression", "environment", "filesystem", "input_bytes", "memory", "network", "open_files", "output_bytes", "process", "process_tree", "records", "recursion", "temporary_storage", "user_permissions", "wall_time"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "actions": {"items": {"enum": ["describe", "probe", "extract", "finalize", "render"]}, "minItems": 1, "type": "array", "uniqueItems": true},
+    "deterministic": {"type": "boolean"},
+    "distribution": {"minLength": 1, "type": "string"},
+    "enforced_axes": {"$ref": "#/$defs/enforced_axes"},
+    "enforcement_profile": {"minLength": 1, "type": "string"},
+    "formats": {"items": {"minLength": 1, "type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true},
+    "license_spdx": {"minLength": 1, "type": "string"},
+    "network_mode": {"enum": ["disabled", "allowlisted"]},
+    "platforms": {"items": {"minLength": 1, "type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true},
+    "protocol_version": {"const": "0.2"},
+    "provider_id": {"minLength": 1, "type": "string"},
+    "provider_version": {"minLength": 1, "type": "string"},
+    "runtime_version": {"minLength": 1, "type": "string"}
+    ,"runtime_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["protocol_version", "provider_id", "provider_version", "runtime_version", "runtime_digest", "license_spdx", "distribution", "actions", "formats", "platforms", "network_mode", "deterministic", "enforcement_profile", "enforced_axes"],
+  "title": "AECCTX v0.2 external provider descriptor",
+  "type": "object"
+}

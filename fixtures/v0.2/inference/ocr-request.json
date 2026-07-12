@@ -1,0 +1,30 @@
+{
+  "action": "extract",
+  "configuration": {
+    "dpi": 300,
+    "language": "eng",
+    "minimum_confidence": 0,
+    "page_segmentation_mode": 6
+  },
+  "configuration_digest": "b7ebb0a929fdf10a59fb29e902860d8f442a5fdb4a51b385f5b73dd4dc10bfbd",
+  "input": {
+    "bytes": 45774,
+    "path": "input/02458e002754496b7682855acb99c758db9a5f1185ae609fc2624ed8b1502f60",
+    "sha256": "02458e002754496b7682855acb99c758db9a5f1185ae609fc2624ed8b1502f60"
+  },
+  "limits": {
+    "cpu_seconds": 30,
+    "max_decompression_ratio": 20.0,
+    "max_files": 10,
+    "max_input_bytes": 1000000,
+    "max_memory_bytes": 536870912,
+    "max_open_files": 32,
+    "max_output_bytes": 1000000,
+    "max_records": 100,
+    "max_recursion_depth": 8,
+    "wall_time_seconds": 30.0
+  },
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.ocr.tesseract-tsv",
+  "request_id": "6a6c5bbbd4203773d4f81f1ddd8a6e04dfa8cb6ef8597b328a7286d90a321460"
+}

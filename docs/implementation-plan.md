@@ -1,6 +1,6 @@
 # AECCTX Implementation Plan
 
-Date: 2026-07-11
+Date: 2026-07-12
 Status: Active implementation authority
 Specification readiness: `0.2.0-EXPANSION-SPEC-READY`
 
@@ -156,16 +156,16 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-08 | completed | Plugin isolation, security limits, optional MCP and signing decision |
 | ACX-09 | completed | Cross-platform conformance corpus, packaging and `0.1.0` release |
 | ACX-10 | deferred | Consumer integration template; WoodFraming-specific plan remains consumer-owned |
-| ACX-11 | pending-next | Shared post-v0.1 schemas, compatibility contract and conformance claim registry |
-| ACX-12 | pending | Reviewed external sandbox/provider foundation |
-| ACX-13 | pending | IFC source-native 2D and georeferencing |
-| ACX-14 | pending | DXF source-native semantics and bounded 3D |
-| ACX-15 | pending | Optional OCR/vision evidence with explicit hidden-geometry boundary |
-| ACX-16 | pending | Mesh units, calibration and CRS registration |
-| ACX-17 | pending | STEP/IGES adapter profiles |
-| ACX-18 | pending | Optional DWG external-provider adapter |
-| ACX-19 | pending | Optional RVT external-provider adapter |
-| ACX-20 | pending | Package authenticity and signing profile |
+| ACX-11 | completed | Shared post-v0.1 schemas, compatibility contract and conformance claim registry |
+| ACX-12 | completed | Reviewed external sandbox/provider foundation |
+| ACX-13 | completed | IFC source-native 2D and georeferencing |
+| ACX-14 | completed | DXF source-native semantics and bounded 3D |
+| ACX-15 | completed | Experimental bounded OCR evidence; vision remains target and hidden geometry remains public unsupported |
+| ACX-16 | completed | Mesh units, calibration and CRS registration |
+| ACX-17 | completed | Experimental bounded STEP/IGES source graph and translator-derived BREP profiles |
+| ACX-18 | completed | Experimental bounded R2000/AC1015 DWG source-object and converted-DXF evidence profile |
+| ACX-19 | blocked | No admissible RVT provider; public unsupported boundary with deterministic opaque anti-claim evidence |
+| ACX-20 | pending-next | Package authenticity and signing profile |
 | ACX-21 | pending | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
 | ACX-22 | pending | Optional `aecctx-inspector` plugin for Codex |
 | ACX-23 | pending | Expansion conformance corpus, packaging, documentation and release |
@@ -320,7 +320,7 @@ Acceptance:
 - public v0.1 behavior and release corpus remain unchanged;
 - `./scripts/verify.sh` passes.
 
-Evidence: `docs/evidence/ACX-11.md` when completed.
+Evidence: [`docs/evidence/ACX-11.md`](evidence/ACX-11.md).
 
 ## ACX-12: External sandbox/provider foundation
 
@@ -367,11 +367,31 @@ Non-scope:
 
 Acceptance: all enforcement axes have conformance evidence on each claimed platform; the reference provider is legally publishable; core install remains provider-independent; `./scripts/verify.sh` passes.
 
-Evidence: `docs/evidence/ACX-12.md` when completed.
+Evidence: [`docs/evidence/ACX-12.md`](evidence/ACX-12.md).
+
+## Governed residual backlog
+
+### ACXB-001: Additional external enforcement profiles
+
+Functional outcome: restricted decoders can run on Linux and Windows only through reviewed profiles that enforce the complete ACX-12 axis set rather than trusting descriptor declarations.
+
+Owner: the first of ACX-17, ACX-18 or ACX-19 that proposes a public claim on the affected platform. It MUST update the plan before implementation.
+
+Acceptance:
+
+- Linux OCI/namespace/cgroup or equivalent profile has runtime conformance for filesystem/user/process/network/resource isolation, process-tree termination and cleanup;
+- Windows AppContainer/job-object or equivalent profile has the same bounded evidence;
+- unavailable runtimes reject execution deterministically;
+- provider/core packaging remains separated;
+- the capability matrix and claim registry name exact platform/provider scope.
+
+Until accepted, only the digest-pinned Linux-container environment under `oci-docker-v1` is executable. Native Linux/macOS and Windows restricted-decoder claims remain `unsupported`.
 
 ## ACX-13: IFC 2D and georeferencing
 
 Objective: replace broad IFC 2D/georeferencing partial claims with bounded, schema-specific conformance claims.
+
+Normative profile: [`docs/specs/ifc-v02-profile.md`](specs/ifc-v02-profile.md), accepted by ACXD-025 before implementation.
 
 Deliverables:
 
@@ -406,11 +426,13 @@ Non-scope: no universal IFC representation claim, no engineering validation and 
 
 Acceptance: every `full`/`partial` claim is schema/profile bounded; all excluded cases have structured loss; v0.1 IFC fixtures remain compatible; `./scripts/verify.sh` passes.
 
-Evidence: `docs/evidence/ACX-13.md` when completed.
+Evidence: [`docs/evidence/ACX-13.md`](evidence/ACX-13.md).
 
 ## ACX-14: DXF semantics and 3D
 
 Objective: preserve bounded source-native DXF structure and 3D geometry without inventing domain semantics or exact-kernel support.
+
+Normative profile: [`docs/specs/dxf-v02-profile.md`](specs/dxf-v02-profile.md), accepted by ACXD-026 before implementation.
 
 Deliverables:
 
@@ -446,11 +468,13 @@ Non-scope: no automatic construction semantics, no proprietary kernel bundling a
 
 Acceptance: source semantics and 3D claims map to fixtures/tests; unsupported kernel content stays explicit; `./scripts/verify.sh` passes.
 
-Evidence: `docs/evidence/ACX-14.md` when completed.
+Evidence: [`docs/evidence/ACX-14.md`](evidence/ACX-14.md).
 
 ## ACX-15: OCR, vision and reconstruction hypotheses
 
 Objective: add optional OCR/vision evidence while keeping core ingest offline and hidden geometry unsupported as source evidence.
+
+Normative profile: [`docs/specs/inference-v02-profile.md`](specs/inference-v02-profile.md), accepted by ACXD-020 before implementation. ACX-15 first strengthens the shared OCI preflight to verify a registered local image tag against its allowlisted immutable image ID; this is a functional prerequisite for the selected provider and does not broaden ACX-12 platform claims.
 
 Decision gate: resolve ACXD-020 separately for each provider profile, including license, install extra, execution boundary, model/runtime versioning, network/privacy/retention and reproducibility.
 
@@ -488,11 +512,17 @@ Non-scope: no mandatory LLM/network, no implicit upload, no hidden-geometry extr
 
 Acceptance: ACXD-020 profile decisions are recorded; optional installs and offline replay pass; hidden geometry remains `unsupported`; `./scripts/verify.sh` passes.
 
-Evidence: `docs/evidence/ACX-15.md` when completed.
+Evidence: [`docs/evidence/ACX-15.md`](evidence/ACX-15.md).
+
+Completion resolution: ACXD-020 selected only the exact local English OCR profile in `docs/specs/inference-v02-profile.md`. The provider-neutral v0.2 inference envelope, OCI execution, replay, PDF/image SDK/CLI opt-in, native/OCR comparisons, confidence/provenance mapping and failure degradation are implemented and tested. No vision/reconstruction vocabulary or provider was accepted, so those work-breakdown branches close as governed `unsupported` boundaries rather than implementation claims. Cropped/rotated regions, other languages and portable live-runtime matrices remain registered residuals requiring a future plan update before work begins.
 
 ## ACX-16: Mesh units and CRS
 
 Objective: qualify mesh coordinates honestly and support explicit, provenance-bearing calibration/registration.
+
+Normative profile: [`docs/specs/mesh-coordinate-v02-profile.md`](specs/mesh-coordinate-v02-profile.md), governed by ACXD-016 and ACXD-027. Control-point registration uses an orientation-preserving uniform-scale similarity; automatic affine/shear/reflection fitting is outside the claim.
+
+Execution cut: [`docs/plans/acx-16-implementation.md`](plans/acx-16-implementation.md). It is subordinate to this plan and the normative profile; it adds no scope.
 
 Deliverables:
 
@@ -533,6 +563,10 @@ Evidence: `docs/evidence/ACX-16.md` when completed.
 
 Objective: implement bounded STEP/IGES evidence extraction using an existing reviewed parser/geometry kernel.
 
+Normative profile: [`docs/specs/step-iges-v02-profile.md`](specs/step-iges-v02-profile.md), governed by ACXD-014, the ACX-17 instance of ACXD-019 and ACXD-028. The native OCP/OCCT runtime is restricted to the reviewed ACX-12 OCI boundary.
+
+Execution cut: [`docs/plans/acx-17-implementation.md`](plans/acx-17-implementation.md). It is subordinate to this plan and the normative profile; it adds no scope.
+
 Decision gate: resolve an ACXD-019 instance before linking or executing the selected kernel. The record MUST cover API/version, license, redistribution, wheels/platforms, CI, fixture rights, telemetry/network, security history and maintenance posture.
 
 Deliverables:
@@ -540,7 +574,7 @@ Deliverables:
 - adapter design selecting permissive in-process execution or ACX-12 provider execution;
 - exact STEP application protocols and IGES versions/flavors in the support table;
 - source entity, product/assembly, name, layer/color, unit, placement and B-Rep/curve/surface evidence;
-- derived deterministic tessellation and opt-in healing reports;
+- derived deterministic tessellation and explicit fixed translator-processing/healing reports;
 - legally publishable STEP/IGES corpus and kernel license evidence.
 
 Work breakdown:
@@ -551,7 +585,7 @@ Work breakdown:
 4. Preserve schema/flavor, entity IDs, product hierarchy, names, colors/layers, units and placements.
 5. Preserve exact B-Rep/curve/surface references where the kernel exposes them; never substitute tessellation as exact geometry.
 6. Add deterministic tessellation with tolerance/version provenance.
-7. Make healing explicit and opt-in; retain original evidence and emit changed-topology/tolerance loss.
+7. Keep translator processing fixed by the reviewed runtime, reject caller healing options, retain original evidence and emit changed-topology/tolerance loss.
 8. Register only exact profile/kernel/platform claims proven by conformance.
 
 Test matrix:
@@ -561,7 +595,7 @@ Test matrix:
 - curves/surfaces/solids and unsupported entities;
 - invalid topology, truncated/malformed records and extreme entity counts;
 - tessellation repeatability and kernel-version provenance;
-- healing off/on, changed topology and tolerance diagnostics;
+- fixed translator-processing report, rejected caller healing configuration, changed topology and tolerance diagnostics;
 - missing optional dependency/provider failure;
 - clean core install without the kernel.
 
@@ -571,9 +605,15 @@ Acceptance: ACXD-019 is accepted for the chosen path; exact profiles and losses 
 
 Evidence: `docs/evidence/ACX-17.md` when completed.
 
+Completion resolution: ACXD-028 selects the exact operator-built OCP/OCCT OCI provider. The portable corpus proves AP203, AP214, AP242 edition 1 and IGES 5.3 protocol/mapping determinism; the exact Linux-arm64 image proves live transfer, BREP and tessellation. Claims remain `experimental partial`. XDE/source correlation, normalized styles/units/placements, per-root tolerance summaries, partial-root recovery, source-exact BREP and other schemas/platforms remain explicit unsupported residuals rather than scaffold claims.
+
 ## ACX-18: DWG
 
 Objective: provide optional, version-scoped DWG extraction through a legally reviewed ACX-12 provider.
+
+Normative profile: [`docs/specs/dwg-v02-profile.md`](specs/dwg-v02-profile.md), governed by ACXD-007, ACXD-014, ACXD-019, ACXD-024 and ACXD-029. The selected GPL runtime is restricted to the reviewed ACX-12 OCI boundary.
+
+Execution cut: [`docs/plans/acx-18-implementation.md`](plans/acx-18-implementation.md). It is subordinate to this plan and the normative profile; it adds no scope.
 
 Decision gate: resolve the DWG ACXD-019 instance, including SDK/service entitlement, user deployment model, CI credentials, redistribution, telemetry/retention, version support and publishable fixture rights. If no compliant provider is available, record `blocked` evidence and retain opaque fallback.
 
@@ -612,47 +652,40 @@ Acceptance: provider/legal review and corpus support every claim, or the exact e
 
 Evidence: `docs/evidence/ACX-18.md` when completed.
 
+Completion resolution: ACXD-029 selected only GNU LibreDWG 0.13.4 behind the exact reviewed Linux-arm64 `oci-docker-v1` image. ACX-18 implements self-contained R2000/`AC1015` content probing, direct bounded LibreDWG JSON object evidence, explicitly converted DXF/simple-geometry evidence, deterministic replay/CLI, duplicate-handle conflict preservation, GPL/security review and opaque v0.1 compatibility. Other DWG releases/platforms, encrypted/protected content, xref traversal, ACIS/proxy/custom semantics, qualified units/CRS and complete 3D remain registered unsupported/unknown residuals. ACX-19 is promoted to `pending-next`; no RVT implementation is included.
+
 ## ACX-19: RVT
 
 Objective: provide optional, version-scoped RVT neutral evidence extraction through a legally reviewed ACX-12 provider.
+
+Normative blocked profile: [`docs/specs/rvt-v02-blocked-profile.md`](specs/rvt-v02-blocked-profile.md), approved under ACXD-019 and ACXD-030. Its detailed TDD execution plan is [`docs/superpowers/plans/2026-07-12-acx-19-rvt-blocked-boundary.md`](superpowers/plans/2026-07-12-acx-19-rvt-blocked-boundary.md); no provider implementation is authorized.
 
 Decision gate: resolve the RVT ACXD-019 instance for API/service/runtime, entitlement, supported host versions/platform, automation constraints, CI, telemetry/retention, redistribution and fixture rights. If unavailable, document `blocked` and retain opaque fallback.
 
 Deliverables:
 
-- allowlisted RVT provider descriptor/profile outside core dependencies;
-- mapping for original element IDs, classes/categories, documents/links, levels/views, properties, types/materials, relations, geometry references, units and coordinates;
-- converter/intermediate provenance when extraction is indirect;
-- publishable generated corpus strategy or exact legal blocker;
+- when a provider is selected through a future reopening decision: allowlisted RVT provider descriptor/profile outside core dependencies, neutral mappings, converter provenance and a publishable generated corpus;
+- for the current ACXD-030 no-provider decision: the machine-readable decision record, executable anti-claim/opaque-fallback boundary, restricted-dependency scans and exact reopening requirements defined by the blocked profile;
 - explicit scan proving no WoodFraming, `WFDomain`, `WFImport` or consumer classification enters output/code.
 
 Work breakdown:
 
 1. Review official supported APIs/providers and close the legal/operational decision.
-2. Define version-specific source locator and identity rules before normalization.
-3. Add replay fixtures and provider-unavailable tests independent of proprietary runtime access.
-4. Implement bounded neutral extraction for enumerated versions/features.
-5. Preserve original class/category as evidence; normalized neutral kinds remain non-consumer interpretations.
-6. Record document links, views/levels, properties, relations, geometry, units and coordinate transforms with loss.
-7. Record every conversion step and intermediate hash when native evidence cannot be returned directly.
-8. Exercise sandbox limits, unsupported versions and protected/corrupt inputs.
+2. If the decision selects a provider, stop and govern its version-specific source locator, identity, extraction, provenance, sandbox and corpus contract before implementation.
+3. If the decision selects no provider, stop adapter work and execute only the separately approved blocked-profile implementation plan.
 
 Test matrix:
 
-- each claimed RVT version/profile;
-- element/type/material/property and hierarchy/relationship evidence;
-- linked documents, levels/views, units, local/project/geographic coordinates;
-- supported geometry and representation loss;
-- unsupported/future version, protected/corrupt file and unsupported custom content;
-- provider entitlement/unavailable/timeout/resource failure;
-- replay parity and indirect-conversion provenance;
-- core install without provider and repository scan for consumer dependencies.
+- selected-provider branch: each claimed RVT version/profile, neutral evidence, loss, failures, replay parity, provenance and core isolation;
+- current blocked branch: decision-record schema, anti-claim registry, extension-independent opaque ingest determinism, core distribution/dependency isolation and consumer-boundary scans.
 
 Non-scope: no authoring mutation, no engineering approval, no consumer ontology and no WoodFraming integration.
 
 Acceptance: claims are version/provider bounded or the blocker is explicit; consumer-boundary scans pass; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-19.md` when completed.
+
+Completion resolution: ACXD-030 selected no provider because Revit desktop, APS Automation, ODA BimRv and the Revit IFC exporter do not satisfy the repository's combined entitlement, runtime, sandbox, CI, privacy and fixture-rights gates. ACX-19 therefore closes as documented `blocked` with a machine-validated decision, exact public `unsupported` claim, deterministic opaque anti-claim sentinel and source/wheel/sdist enforcement. No provider, adapter, descriptor, replay, RVT version or semantic claim was added. ACX-20 alone is promoted to `pending-next`.
 
 ## ACX-20: Authenticity and signing
 

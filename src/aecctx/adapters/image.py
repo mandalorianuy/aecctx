@@ -6,7 +6,9 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from ..ingest import CAPABILITIES, IngestResult, _timestamp
+from ..inference import InferenceMappingError, canonical_ocr_pgm, map_ocr_result
 from ..package import PackageArtifact, PackageWriter, canonical_json, hash_file
+from ..providers.protocol import ProviderResult
 
 
 PLUGIN_ID = "aecctx.adapter.image.pillow"
@@ -127,6 +129,8 @@ def ingest_image(
     embedding_policy: str = "external",
     package_form: str = "directory",
     max_pixels: int = 100_000_000,
+    aecctx_version: str = "0.1.0",
+    ocr_result: ProviderResult | None = None,
 ) -> IngestResult:
     Image, runtime = _pillow()
     source = Path(source_path)
@@ -135,6 +139,10 @@ def ingest_image(
         raise ValueError("source_path must be a regular image file")
     if embedding_policy not in {"external", "embedded", "redacted"}:
         raise ValueError("embedding_policy must be external, embedded, or redacted")
+    if aecctx_version not in {"0.1.0", "0.2.0"}:
+        raise ValueError("aecctx_version must be 0.1.0 or 0.2.0")
+    if ocr_result is not None and aecctx_version != "0.2.0":
+        raise ValueError("ocr_result requires aecctx_version of 0.2.0")
     source_digest, source_bytes = hash_file(source)
     identity = source_digest[:24]
     source_id = f"src_{identity}"
@@ -149,6 +157,7 @@ def ingest_image(
         image_format = image.format or "unknown"
         mode = image.mode
         metadata = {str(key): str(value) for key, value in sorted(image.info.items()) if key not in {"exif", "icc_profile"}}
+        ocr_input = canonical_ocr_pgm(width, height, image.convert("L").tobytes())
     primitive_id = _stable_id("prim_image", source_digest, "image")
     primitive = {
         "calibration": _unknown("AECCTX_IMAGE_CALIBRATION_NOT_DECLARED"),
@@ -166,6 +175,8 @@ def ingest_image(
         "record_version": "0.1",
         "source_refs": [{"locator": "pixel-canvas", "source_id": source_id}],
     }
+    primitives = [primitive]
+    assertions: list[dict[str, Any]] = []
     capabilities = {name: "full" for name in CAPABILITIES}
     capabilities.update(
         {
@@ -178,11 +189,32 @@ def ingest_image(
             "georeferencing": "unsupported",
         }
     )
+    mapping = None
+    ocr_error: InferenceMappingError | None = None
+    if ocr_result is not None:
+        try:
+            mapping = map_ocr_result(
+                ocr_result,
+                input_bytes=ocr_input,
+                source_id=source_id,
+                parent_record_id=primitive_id,
+                source_locator="pixel-canvas",
+                width=width,
+                height=height,
+                recorded_at=instant,
+            )
+        except InferenceMappingError as error:
+            ocr_error = error
+        else:
+            primitive["ocr"] = _known("inferred-word-evidence")
+            capabilities["text"] = "partial"
+            primitives.extend(mapping.primitives)
+            assertions.extend(mapping.assertions)
     reasons = {
         "hierarchy": "AECCTX_IMAGE_HIERARCHY_OPAQUE",
         "properties": "AECCTX_IMAGE_METADATA_PARTIAL",
         "relationships": "AECCTX_IMAGE_RELATIONSHIPS_OPAQUE",
-        "text": "AECCTX_OCR_PROVIDER_NOT_CONFIGURED",
+        "text": "AECCTX_OCR_INFERRED_UNVERIFIED" if mapping is not None else "AECCTX_OCR_PROVIDER_RESULT_REJECTED" if ocr_error is not None else "AECCTX_OCR_PROVIDER_NOT_CONFIGURED",
         "3d_geometry": "AECCTX_IMAGE_HIDDEN_GEOMETRY_UNSUPPORTED",
         "materials_styles": "AECCTX_IMAGE_COLOR_PROFILE_PARTIAL",
         "georeferencing": "AECCTX_IMAGE_GEOREFERENCING_UNSUPPORTED",
@@ -206,6 +238,25 @@ def ingest_image(
                 "severity": "info",
                 "source_refs": [{"locator": "image", "source_id": source_id}],
                 "support_level": level,
+            }
+        )
+    if mapping is not None:
+        diagnostics.extend(mapping.diagnostics)
+    if ocr_error is not None:
+        diagnostics.append(
+            {
+                "affected_count": 1,
+                "capability": "text",
+                "code": ocr_error.code,
+                "fallback": "Retain the observed raster and inspect or rerun the rejected provider result.",
+                "message": "OCR provider result was rejected; baseline image evidence remains available.",
+                "provenance": _provenance(instant, [primitive_id], runtime),
+                "record_id": _stable_id("diag_image_ocr_rejected", source_digest, ocr_error.code),
+                "record_type": "diagnostic",
+                "record_version": "0.1",
+                "severity": "warning",
+                "source_refs": [{"locator": "pixel-canvas", "source_id": source_id}],
+                "support_level": "unsupported",
             }
         )
     diagnostics.sort(key=lambda item: item["record_id"])
@@ -238,10 +289,14 @@ def ingest_image(
         source_record["storage_ref"] = storage_ref
     elif embedding_policy == "redacted":
         source_record["redaction_reason"] = "AECCTX_SOURCE_CONTENT_REDACTED_BY_POLICY"
+    if aecctx_version == "0.2.0":
+        for record in [source_record, *primitives, *assertions, *diagnostics]:
+            record.setdefault("evidence_class", "observed")
+            record["record_version"] = "0.2"
     record_sets = {
         "sources/sources.jsonl": [source_record],
-        "evidence/primitives.jsonl": [primitive],
-        "evidence/assertions.jsonl": [],
+        "evidence/primitives.jsonl": primitives,
+        "evidence/assertions.jsonl": assertions,
         "model/entities.jsonl": [],
         "model/relations.jsonl": [],
         "diagnostics/diagnostics.jsonl": diagnostics,
@@ -252,7 +307,8 @@ def ingest_image(
     ]
     context = (
         f"# Raster image AECCTX package\n\nPackage `{package_id}` preserves a {width}x{height} `{mode}` image in pixel coordinates. "
-        "Pixels are not construction units without explicit calibration; OCR, vision interpretation, hidden geometry, and georeferencing are not inferred.\n"
+        "Pixels are not construction units without explicit calibration; vision interpretation, hidden geometry, and georeferencing are not inferred. "
+        f"OCR word evidence is {'present but inferred and unverified' if mapping is not None else 'rejected with structured loss' if ocr_error is not None else 'not configured'}.\n"
     ).encode()
     artifacts.append(PackageArtifact("context/index.md", context, "text/markdown", "agent-context", False))
     if storage_ref:
@@ -266,5 +322,6 @@ def ingest_image(
         embedding_policy=embedding_policy,
         producer={"name": PLUGIN_ID, "version": f"{PLUGIN_VERSION}+pillow.{runtime}"},
         artifacts=artifacts,
+        aecctx_version=aecctx_version,
     )
     return IngestResult(package_id, source_id, manifest["logical_digest"], output)

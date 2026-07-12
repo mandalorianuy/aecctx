@@ -1,0 +1,83 @@
+{
+  "author": {
+    "id": "fixture:author"
+  },
+  "control_points": [
+    {
+      "id": "a",
+      "source": [
+        0,
+        0,
+        0
+      ],
+      "target": [
+        100,
+        200,
+        300
+      ]
+    },
+    {
+      "id": "b",
+      "source": [
+        4,
+        0,
+        0
+      ],
+      "target": [
+        100,
+        208,
+        300
+      ]
+    },
+    {
+      "id": "c",
+      "source": [
+        0,
+        3,
+        0
+      ],
+      "target": [
+        94,
+        200,
+        300
+      ]
+    },
+    {
+      "id": "d",
+      "source": [
+        0,
+        0,
+        2
+      ],
+      "target": [
+        100,
+        200,
+        304
+      ]
+    }
+  ],
+  "mode": "control_points",
+  "profile_version": "0.2.0",
+  "source_frame": {
+    "axes": [
+      "+X",
+      "+Y",
+      "+Z"
+    ],
+    "handedness": "right"
+  },
+  "source_units": "m",
+  "target_crs": {
+    "horizontal": "LOCAL:CONTROL"
+  },
+  "target_frame": {
+    "axes": [
+      "+X",
+      "+Y",
+      "+Z"
+    ],
+    "handedness": "right"
+  },
+  "target_units": "m",
+  "tolerance": 1e-08
+}

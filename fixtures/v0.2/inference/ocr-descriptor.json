@@ -1,0 +1,39 @@
+{
+  "actions": [
+    "extract"
+  ],
+  "deterministic": true,
+  "distribution": "operator-built-oci-image",
+  "enforced_axes": {
+    "cpu": true,
+    "decompression": true,
+    "environment": true,
+    "filesystem": true,
+    "input_bytes": true,
+    "memory": true,
+    "network": true,
+    "open_files": true,
+    "output_bytes": true,
+    "process": true,
+    "process_tree": true,
+    "records": true,
+    "recursion": true,
+    "temporary_storage": true,
+    "user_permissions": true,
+    "wall_time": true
+  },
+  "enforcement_profile": "oci-docker-v1",
+  "formats": [
+    "image/x-portable-graymap"
+  ],
+  "license_spdx": "Apache-2.0 AND HPND",
+  "network_mode": "disabled",
+  "platforms": [
+    "linux-container"
+  ],
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.ocr.tesseract-tsv",
+  "provider_version": "0.2.0",
+  "runtime_digest": "sha256:6d52ebcafef0ccdf59f58beccc7483c16a6e160fc94e3c3ea59f3f10c991f492",
+  "runtime_version": "tesseract-5.3.4+capi+eng"
+}

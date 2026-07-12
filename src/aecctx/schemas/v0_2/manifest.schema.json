@@ -1,0 +1,23 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.2/manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "aecctx_version": {"const": "0.2.0"},
+    "artifacts": {"items": {"additionalProperties": false, "properties": {"authoritative": {"type": "boolean"}, "bytes": {"minimum": 0, "type": "integer"}, "media_type": {"minLength": 1, "type": "string"}, "path": {"pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+", "type": "string"}, "role": {"minLength": 1, "type": "string"}, "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}, "required": ["path", "sha256", "bytes", "media_type", "role", "authoritative"], "type": "object"}, "type": "array"},
+    "capabilities": {"additionalProperties": {"enum": ["full", "partial", "opaque", "unsupported"]}, "minProperties": 1, "type": "object"},
+    "created_at": {"format": "date-time", "type": "string"},
+    "extensions": {"additionalProperties": true, "type": "object"},
+    "logical_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "loss_summary": {"items": {"minLength": 1, "type": "string"}, "type": "array"},
+    "package_form": {"enum": ["directory", "zip"]},
+    "package_id": {"minLength": 1, "type": "string"},
+    "producer": {"additionalProperties": false, "properties": {"name": {"minLength": 1, "type": "string"}, "version": {"minLength": 1, "type": "string"}}, "required": ["name", "version"], "type": "object"},
+    "required_extensions": {"items": {"minLength": 1, "type": "string"}, "type": "array", "uniqueItems": true},
+    "source_embedding_policy": {"enum": ["external", "embedded", "redacted"]},
+    "source_ids": {"items": {"minLength": 1, "type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true}
+  },
+  "required": ["aecctx_version", "package_id", "created_at", "producer", "package_form", "source_ids", "artifacts", "capabilities", "loss_summary", "source_embedding_policy", "logical_digest", "required_extensions"],
+  "title": "AECCTX v0.2 manifest",
+  "type": "object"
+}

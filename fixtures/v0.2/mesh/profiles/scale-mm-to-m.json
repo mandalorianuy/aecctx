@@ -1,0 +1,27 @@
+{
+  "author": {
+    "id": "fixture:author"
+  },
+  "mode": "scale",
+  "profile_version": "0.2.0",
+  "scale": 0.001,
+  "source_frame": {
+    "axes": [
+      "+X",
+      "+Y",
+      "+Z"
+    ],
+    "handedness": "right"
+  },
+  "source_units": "mm",
+  "target_frame": {
+    "axes": [
+      "+X",
+      "+Y",
+      "+Z"
+    ],
+    "handedness": "right"
+  },
+  "target_units": "m",
+  "tolerance": 1e-09
+}

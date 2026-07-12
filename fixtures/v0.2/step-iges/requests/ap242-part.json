@@ -1,0 +1,32 @@
+{
+  "action": "extract",
+  "configuration": {
+    "angular_deflection": 0.5,
+    "brep_format": "occt-ascii-brep-7.9.3",
+    "linear_deflection": 0.1,
+    "read_shape_healing": "translator-default-observed",
+    "schema_profile": "acx17-v1",
+    "tessellation_units": "source"
+  },
+  "configuration_digest": "754851e7cb1b60cd4e118a98858a9ec5d8747dee8e736f8642f1a57820b86240",
+  "input": {
+    "bytes": 15426,
+    "path": "input/8153a85a2b6b9d2b2958d0dcec56562989cc0e407e65a348f0f3798dd5aa8815",
+    "sha256": "8153a85a2b6b9d2b2958d0dcec56562989cc0e407e65a348f0f3798dd5aa8815"
+  },
+  "limits": {
+    "cpu_seconds": 60,
+    "max_decompression_ratio": 20.0,
+    "max_files": 10,
+    "max_input_bytes": 10000000,
+    "max_memory_bytes": 1073741824,
+    "max_open_files": 32,
+    "max_output_bytes": 10000000,
+    "max_records": 100000,
+    "max_recursion_depth": 64,
+    "wall_time_seconds": 60.0
+  },
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.step-iges.ocp",
+  "request_id": "ace22a84f21bc00df1ce02405f19566d05469fa40ab5365973cef6ab50945582"
+}

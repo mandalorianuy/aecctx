@@ -1,6 +1,6 @@
 # AECCTX Post-v0.1 Capability Expansion Specification
 
-Version: `0.2.0-draft.2`
+Version: `0.2.0-draft.4`
 Date: 2026-07-11
 Status: Planning authority; no new capability claim is implied
 
@@ -109,7 +109,17 @@ An unenforceable required limit results in rejection, not best-effort execution.
 
 The contract MAY support local OS sandbox, container, remote service, and customer-managed provider profiles. Each profile has separate conformance evidence. Network-backed providers MUST be optional and MUST NOT be required by core validation, query, diff, or context rendering.
 
+### 5.4 Initial executable profile
+
+ACXD-024 selects `oci-docker-v1` as the first executable profile. The registered image MUST be digest-pinned and already present; the runner MUST NOT pull or build it implicitly. The Linux container MUST have no network, a read-only root, a non-root identity, no capabilities, `no-new-privileges`, a reviewed per-provider PID ceiling from 1 through 4 (default 1), bounded memory/CPU/open files/output and private temporary storage. Input, request and reviewed provider code are read-only; only the bounded output root is writable. A ceiling above 1 is permitted only when the governed provider architecture requires fixed child executables and the exact value is registered and tested.
+
+The response attestation binds provider descriptor and runtime digests. Parent validation rejects invalid schema, mismatched attestation, host paths, unsafe/duplicate artifact paths, symlinks, size/hash mismatch, non-sequential events and resource overflow before package construction.
+
+`macos-seatbelt-v1` is explicitly unavailable because it cannot prove both restricted host reads for the Python runtime and the required memory axis. It MUST reject rather than fall back to a partially isolated subprocess. Native Linux/macOS and Windows enforcement profiles remain governed by ACXB-001; no restricted decoder may claim those platforms until that backlog acceptance passes.
+
 ## 6. IFC 2D and georeferencing
+
+ACXD-025 and `docs/specs/ifc-v02-profile.md` define the implemented ACX-13 public `partial` profiles. The broader language below remains a target only for schema/item/operation combinations outside that exact corpus.
 
 ### 6.1 IFC 2D target
 
@@ -125,6 +135,8 @@ A georeferencing claim is `full` only for the explicitly bounded schema/represen
 
 ## 7. DXF semantics and 3D
 
+ACXD-026 and `docs/specs/dxf-v02-profile.md` define the implemented ACX-14 public `partial` profiles. The broader language below remains a target for DXF releases, entities and semantic structures outside that exact corpus.
+
 ### 7.1 Semantic evidence target
 
 DXF semantic support means preservation of source-native structure: entity types, handles, ownership, dictionaries, extension dictionaries, XDATA, application registry identifiers, groups, block/insert relationships, attributes, layers, layouts, materials, and other supported metadata. It does not mean construction-domain classification.
@@ -138,6 +150,8 @@ The adapter MUST preserve supported 3D coordinates, extrusion vectors, object co
 Unsupported solid/surface kernels, proxy graphics, encrypted data, external references, and custom objects remain `partial`, `opaque`, or `unsupported` with stable reason codes. A tessellated fallback MUST NOT be presented as exact B-Rep or parametric geometry.
 
 ## 8. PDF and image OCR, vision, and hidden geometry
+
+ACXD-020 and `docs/specs/inference-v02-profile.md` define the ACX-15 experimental OCR profile and the public hidden-geometry boundary. Vision and reconstruction remain targets without an accepted provider.
 
 ### 8.1 OCR target
 
@@ -155,6 +169,8 @@ An optional provider MAY emit a reconstruction hypothesis when the visible evide
 
 ## 9. Mesh units and CRS
 
+ACXD-016, ACXD-027 and `docs/specs/mesh-coordinate-v02-profile.md` define the implemented ACX-16 boundary: exact self-contained OBJ/STL/glTF 2.0/GLB 2.0 source qualification plus explicit manual scale, matrix or similarity registration. Broader formats, extensions and survey/datum authority remain targets or non-claims.
+
 OBJ, STL, and glTF-family adapters MUST preserve declared unit/coordinate metadata where the source format or extension supplies it. When absent, units and CRS remain `unknown`; viewer convention or common practice is not evidence.
 
 AECCTX MAY accept an explicit calibration/registration profile containing scale, units, control points, transform, CRS identifiers, tolerances, and author provenance. Calibration produces derived geometry and assertions while retaining original coordinates unchanged. Conflicting source and manual metadata produces `conflicted`, not precedence by convenience.
@@ -169,6 +185,8 @@ Tessellation and previews are derived. Unsupported entities, invalid topology, h
 
 The owning task MUST publish the exact format profiles and kernel versions for which it makes claims; “STEP” or “IGES” alone is not a bounded conformance claim.
 
+ACXD-014, ACXD-019, ACXD-028 and `docs/specs/step-iges-v02-profile.md` define the ACX-17 implementation boundary: an exact external OCP/OCCT provider, enumerated STEP AP/schema and IGES 5.3 profiles, observed source records, translator-derived B-Rep and subordinate tessellation. Other runtimes, formats and source-exact/healing claims remain unsupported or unclaimed.
+
 ## 11. DWG and RVT
 
 DWG and RVT are optional external-provider capabilities and MUST NOT become dependencies of the Apache-2.0 core distribution.
@@ -178,6 +196,8 @@ Before implementation, each adapter requires an accepted licensing/distribution 
 The provider MUST preserve original source identifiers, version/producer, containers/views/layouts, properties, relationships, geometry references, units/coordinates, and exact unsupported content to the extent legally and technically possible. Exporting through an intermediate format MUST record the converter, versions, settings, intermediate hashes, and conversion loss; it MUST NOT be represented as direct native extraction.
 
 RVT work MUST remain neutral BIM extraction and MUST NOT introduce WoodFraming or another consumer mapping.
+
+ACXD-030 and `docs/specs/rvt-v02-blocked-profile.md` govern the approved ACX-19 no-provider outcome. Until one reopening gate is accepted, RVT semantic extraction remains `unsupported`, ordinary unknown-input ingest remains `opaque`, and no RVT adapter/provider/version claim may be created.
 
 ## 12. Authenticity and signing
 
@@ -268,7 +288,11 @@ Conformance MUST cover plugin manifest validation, clean installation, MCP tool 
 
 ## 15. Compatibility and migration
 
-ACX-11 MUST decide whether new record fields/events can be expressed as optional v0.1 extensions or require `0.2` schemas. Any format-breaking change requires migration documentation, fixtures for old and new readers, required-extension negotiation, and explicit query/diff behavior across versions.
+ACXD-017 establishes a separate v0.2 schema line for the shared observation/inference, coordinate-qualification, representation-fidelity and provider-attestation semantics. A v0.2 package uses `aecctx_version = "0.2.0"` and records use `record_version = "0.2"`; v0.1 schemas and package identity remain immutable.
+
+The v0.2 reference reader MUST validate both v0.1 and v0.2. A v0.1 reader is not required to accept v0.2. Optional namespaced extensions may be ignored by a reader, but every manifest-declared required extension MUST be understood or validation fails. Record versions MUST match the manifest-selected package schema.
+
+Query, diff and context operate on validated structured records across both versions. Shared v0.2 fields remain queryable and diffable; cross-version diff reports the package-version change explicitly. Generated context remains a projection. Migration documentation and old/new reader fixtures are required before ACX-11 completes.
 
 Packages produced by optional providers MUST remain readable and diagnosable without those providers installed. A consumer lacking an optional extension may reject it only when the manifest marks it required.
 

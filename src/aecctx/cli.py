@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from pathlib import Path
 from typing import Any, Sequence
 
 from . import __version__
@@ -11,6 +12,10 @@ from .diff import diff_packages
 from .ingest import ingest_opaque
 from .query import QuerySyntaxError, query_package
 from .validation import ValidationResult, validate_package
+
+
+class IngestVersionError(ValueError):
+    code = "AECCTX_INGEST_VERSION_UNSUPPORTED"
 
 
 def _envelope(ok: bool, data: Any, diagnostics: list[dict[str, Any]]) -> dict[str, Any]:
@@ -51,7 +56,13 @@ def build_parser() -> argparse.ArgumentParser:
     ingest.add_argument("--output", required=True)
     ingest.add_argument("--form", choices=("directory", "zip"), default="directory")
     ingest.add_argument("--embedding-policy", choices=("external", "embedded", "redacted"), default="external")
-    ingest.add_argument("--adapter", choices=("auto", "opaque", "ifc", "dxf", "pdf", "image", "geometry"), default="auto")
+    ingest.add_argument("--adapter", choices=("auto", "opaque", "ifc", "dxf", "dwg", "pdf", "image", "geometry", "step-iges"), default="auto")
+    ingest.add_argument("--aecctx-version", choices=("0.1.0", "0.2.0"), default="0.1.0")
+    ingest.add_argument("--inference-replay", help="validated provider replay corpus (v0.2 PDF/image only)")
+    ingest.add_argument("--inference-entry", help="entry ID inside --inference-replay")
+    ingest.add_argument("--provider-replay", help="validated STEP/IGES or DWG provider replay corpus (v0.2 only)")
+    ingest.add_argument("--provider-entry", help="entry ID inside --provider-replay")
+    ingest.add_argument("--mesh-coordinate-profile", help="manual mesh coordinate profile JSON (v0.2 geometry only)")
     ingest.add_argument("--created-at")
     ingest.add_argument("--json", action="store_true", dest="as_json")
     query = subparsers.add_parser("query")
@@ -88,11 +99,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                 from .adapters.image import ImagePlugin
                 from .adapters.pdf import PDFPlugin
                 from .adapters.geometry import GeometryPlugin
+                from .step_iges import probe_step_iges
+                from .dwg import probe_dwg
 
                 with open(arguments.source, "rb") as source_handle:
                     prefix = source_handle.read(64 * 1024)
                 if IFCPlugin().probe(prefix)["confidence"] == 1.0:
                     adapter = "ifc"
+                elif probe_step_iges(prefix)["confidence"] == 1.0:
+                    adapter = "step-iges"
+                elif probe_dwg(prefix)["confidence"] == 1.0:
+                    adapter = "dwg"
                 elif DXFPlugin().probe(prefix)["confidence"] == 1.0:
                     adapter = "dxf"
                 elif PDFPlugin().probe(prefix)["confidence"] == 1.0:
@@ -103,6 +120,41 @@ def main(argv: Sequence[str] | None = None) -> int:
                     adapter = "image"
                 else:
                     adapter = "opaque"
+            if arguments.aecctx_version == "0.2.0" and adapter not in {"ifc", "dxf", "dwg", "pdf", "image", "geometry", "step-iges"}:
+                raise IngestVersionError(f"Adapter {adapter} has no governed AECCTX v0.2 profile")
+            coordinate_profile = None
+            if arguments.mesh_coordinate_profile:
+                if arguments.aecctx_version != "0.2.0" or adapter != "geometry":
+                    raise ValueError("--mesh-coordinate-profile is limited to the governed v0.2 geometry profile")
+                profile_path = Path(arguments.mesh_coordinate_profile)
+                if not profile_path.is_file() or profile_path.is_symlink():
+                    raise ValueError("mesh coordinate profile must be a regular file")
+                if profile_path.stat().st_size > 1024 * 1024:
+                    raise ValueError("mesh coordinate profile exceeds the 1 MiB safety limit")
+                coordinate_profile = json.loads(profile_path.read_text(encoding="utf-8"))
+                if not isinstance(coordinate_profile, dict):
+                    raise ValueError("mesh coordinate profile must contain a JSON object")
+            if bool(arguments.inference_replay) != bool(arguments.inference_entry):
+                raise ValueError("--inference-replay and --inference-entry must be provided together")
+            inference_result = None
+            if arguments.inference_replay:
+                if arguments.aecctx_version != "0.2.0" or adapter not in {"pdf", "image"}:
+                    raise ValueError("inference replay is limited to governed v0.2 PDF/image profiles")
+                from .providers import load_provider_replay_entry
+
+                inference_result = load_provider_replay_entry(arguments.inference_replay, arguments.inference_entry).result
+            if bool(arguments.provider_replay) != bool(arguments.provider_entry):
+                raise ValueError("--provider-replay and --provider-entry must be provided together")
+            external_provider_result = None
+            if arguments.provider_replay:
+                if arguments.aecctx_version != "0.2.0" or adapter not in {"step-iges", "dwg"}:
+                    raise ValueError("provider replay is limited to governed v0.2 STEP/IGES or DWG profiles")
+                from .providers import load_provider_replay_entry
+                replay = load_provider_replay_entry(arguments.provider_replay, arguments.provider_entry)
+                expected_provider = "org.aecctx.step-iges.ocp" if adapter == "step-iges" else "org.aecctx.dwg.libredwg"
+                if replay.descriptor.provider_id != expected_provider:
+                    raise ValueError(f"provider replay does not contain the governed {adapter} provider")
+                external_provider_result = replay.result
             if adapter == "ifc":
                 from .adapters.ifc import ingest_ifc
 
@@ -112,6 +164,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     created_at=arguments.created_at,
                     embedding_policy=arguments.embedding_policy,
                     package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
                 )
             elif adapter == "dxf":
                 from .adapters.dxf import ingest_dxf
@@ -122,6 +175,19 @@ def main(argv: Sequence[str] | None = None) -> int:
                     created_at=arguments.created_at,
                     embedding_policy=arguments.embedding_policy,
                     package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
+                )
+            elif adapter == "dwg":
+                from .adapters.dwg import ingest_dwg
+
+                result = ingest_dwg(
+                    arguments.source,
+                    arguments.output,
+                    created_at=arguments.created_at,
+                    embedding_policy=arguments.embedding_policy,
+                    package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
+                    provider_result=external_provider_result,
                 )
             elif adapter == "pdf":
                 from .adapters.pdf import ingest_pdf
@@ -132,6 +198,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     created_at=arguments.created_at,
                     embedding_policy=arguments.embedding_policy,
                     package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
+                    ocr_result=inference_result,
                 )
             elif adapter == "image":
                 from .adapters.image import ingest_image
@@ -142,6 +210,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     created_at=arguments.created_at,
                     embedding_policy=arguments.embedding_policy,
                     package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
+                    ocr_result=inference_result,
                 )
             elif adapter == "geometry":
                 from .adapters.geometry import ingest_geometry
@@ -152,6 +222,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                     created_at=arguments.created_at,
                     embedding_policy=arguments.embedding_policy,
                     package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
+                    coordinate_profile=coordinate_profile,
+                )
+            elif adapter == "step-iges":
+                from .adapters.step_iges import ingest_step_iges
+
+                result = ingest_step_iges(
+                    arguments.source,
+                    arguments.output,
+                    created_at=arguments.created_at,
+                    embedding_policy=arguments.embedding_policy,
+                    package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
+                    provider_result=external_provider_result,
                 )
             else:
                 result = ingest_opaque(
@@ -162,7 +246,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     package_form=arguments.form,
                 )
         except (OSError, ValueError) as error:
-            diagnostic = {"code": "AECCTX_INGEST_FAILED", "message": str(error), "severity": "error"}
+            diagnostic = {"code": getattr(error, "code", "AECCTX_INGEST_FAILED"), "message": str(error), "severity": "error"}
             if arguments.as_json:
                 print(json.dumps(_envelope(False, None, [diagnostic]), sort_keys=True, separators=(",", ":")))
             else:
@@ -173,8 +257,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             "output": str(result.output),
             "package_id": result.package_id,
             "source_id": result.source_id,
-            "support": "partial" if adapter in {"ifc", "dxf", "pdf", "image", "geometry"} else "opaque",
+            "support": "partial" if adapter in {"ifc", "dxf", "dwg", "pdf", "image", "geometry", "step-iges"} else "opaque",
             "adapter": adapter,
+            "aecctx_version": arguments.aecctx_version,
         }
         if arguments.as_json:
             print(json.dumps(_envelope(True, data, []), sort_keys=True, separators=(",", ":")))

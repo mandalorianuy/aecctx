@@ -1,0 +1,33 @@
+{
+  "entries": [
+    {
+      "expected": ["native-2d:partial", "georeferencing:unknown"],
+      "id": "ifc2x3-native-2d-local",
+      "path": "fixtures/v0.2/ifc/ifc2x3-native-2d-local.ifc",
+      "schema": "IFC2X3",
+      "sha256": "c3c672e3725a204411d2822aa8d16a5d9a971a79161f8e886c7e8c338712a72d"
+    },
+    {
+      "expected": ["native-2d:partial", "georeferencing:known-bounded-profile"],
+      "id": "ifc4-native-2d-georef",
+      "path": "fixtures/v0.2/ifc/ifc4-native-2d-georef.ifc",
+      "schema": "IFC4",
+      "sha256": "5603c0bb19ed3e195eef2ddcc8fcdbcaeeed443e3508185f266c836788d70ff6"
+    },
+    {
+      "expected": ["native-2d:degraded", "georeferencing:unsupported"],
+      "id": "ifc4-degraded-2d-incomplete-georef",
+      "path": "fixtures/v0.2/ifc/ifc4-degraded-2d-incomplete-georef.ifc",
+      "schema": "IFC4",
+      "sha256": "eba3e37d054cbb95ed4af27230ddf8bf94a863f01de58fd27ab38cb04ddeac54"
+    },
+    {
+      "expected": ["native-2d:not-declared", "georeferencing:conflicted"],
+      "id": "ifc4-conflicting-units",
+      "path": "fixtures/v0.2/ifc/ifc4-conflicting-units.ifc",
+      "schema": "IFC4",
+      "sha256": "adade7518ddb4923e4367a47006f96a70716713c28e95dbfe6305d0c2fec6c9d"
+    }
+  ],
+  "version": "0.2.0"
+}

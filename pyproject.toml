@@ -32,23 +32,23 @@ aecctx-mcp = "aecctx.mcp_server:main"
 
 [project.optional-dependencies]
 all = [
-  "ezdxf>=1.4.4,<2",
-  "ifcopenshell>=0.8.5,<0.9",
+  "ezdxf==1.4.4",
+  "ifcopenshell==0.8.5",
   "mcp>=1.20,<2",
   "Pillow>=12.1,<13",
   "pypdf>=6.6,<7",
   "trimesh>=4.12,<5",
 ]
-dxf = ["ezdxf>=1.4.4,<2"]
+dxf = ["ezdxf==1.4.4"]
 geometry = ["trimesh>=4.12,<5"]
 image = ["Pillow>=12.1,<13"]
-ifc = ["ifcopenshell>=0.8.5,<0.9"]
+ifc = ["ifcopenshell==0.8.5"]
 mcp = ["mcp>=1.20,<2"]
 pdf = ["pypdf>=6.6,<7", "Pillow>=12.1,<13"]
 test = [
   "build>=1.2,<2",
-  "ezdxf>=1.4.4,<2",
-  "ifcopenshell>=0.8.5,<0.9",
+  "ezdxf==1.4.4",
+  "ifcopenshell==0.8.5",
   "mcp>=1.20,<2",
   "Pillow>=12.1,<13",
   "pypdf>=6.6,<7",
@@ -64,7 +64,11 @@ include = [
   "/src",
   "/tests",
   "/fixtures",
+  "/fixtures/v0.2",
+  "/conformance/v0.2",
+  "/docs",
   "/schemas/v0.1",
+  "/schemas/v0.2",
   "/README.md",
   "/LICENSE",
   "/pyproject.toml",

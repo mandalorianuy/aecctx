@@ -1,0 +1,25 @@
+{
+  "action": "extract",
+  "configuration": {},
+  "configuration_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "input": {
+    "bytes": 50,
+    "path": "input/bf68a47b8a3e6d4a8eeda7134a5bda2b01a23d745fcac76490f4f4fd010aebdc",
+    "sha256": "bf68a47b8a3e6d4a8eeda7134a5bda2b01a23d745fcac76490f4f4fd010aebdc"
+  },
+  "limits": {
+    "cpu_seconds": 5,
+    "max_decompression_ratio": 10.0,
+    "max_files": 4,
+    "max_input_bytes": 1024,
+    "max_memory_bytes": 134217728,
+    "max_open_files": 32,
+    "max_output_bytes": 4096,
+    "max_records": 10,
+    "max_recursion_depth": 8,
+    "wall_time_seconds": 5.0
+  },
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.reference-provider",
+  "request_id": "12c7aa0c25c4920dad36bc47423b3a84266f15dfb0f3421470895935d534533b"
+}
