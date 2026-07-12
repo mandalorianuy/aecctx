@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-12
-Handoff status: `0.2.0-ACX-17-COMPLETE`
+Handoff status: `0.2.0-ACX-18-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-17 now include the shared/provider foundation, bounded IFC/DXF/OCR/mesh profiles, and experimental STEP/IGES lexical source-graph plus translator-derived BREP/GLB extraction through the reviewed OCP/OCCT OCI provider. Vision, survey/CRS authority and source-exact translated BREP remain unsupported. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 now include the shared/provider foundation, bounded IFC/DXF/OCR/mesh profiles, experimental STEP/IGES extraction, and experimental self-contained R2000/AC1015 DWG source-object plus converted-DXF evidence through the reviewed LibreDWG OCI provider. Vision, survey/CRS authority, source-exact translated BREP, complete DWG 3D and other DWG releases remain unsupported. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09 and ACX-11 through ACX-17 are complete; ACX-10 remains deferred. Execute only ACX-18, currently `pending-next`.
+4. ACX-01 through ACX-09 and ACX-11 through ACX-18 are complete; ACX-10 remains deferred. Execute only ACX-19, currently `pending-next`.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -37,7 +37,8 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-17 now inclu
 - ACX-15 OCR is experimental and partial only for the exact English Tesseract/replay profile in `docs/specs/inference-v02-profile.md`; vision and hidden geometry remain unsupported.
 - ACX-16 mesh claims are partial only for self-contained OBJ/STL/glTF 2.0/GLB 2.0 through exact `trimesh==4.12.2`; manual registration remains manual/derived evidence and cannot establish survey authority.
 - ACX-17 STEP/IGES claims are experimental partial only for the exact AP203/AP214/AP242 edition-1 and IGES 5.3 corpus through `org.aecctx.step-iges.ocp@0.2.0`; XDE correlation, normalized styles/units/placements, source-exact BREP and other live platforms remain unsupported.
-- DWG/RVT remain optional provider capabilities outside the Apache-2.0 core distribution.
+- ACX-18 DWG is experimental partial only for self-contained `AC1015` through `org.aecctx.dwg.libredwg@0.2.0`, exact Linux-arm64 OCI or portable replay. JSON objects are observed decoder evidence; DXF/geometry are converted. Other releases/platforms, xrefs, ACIS/proxy/custom semantics, units/CRS and complete 3D remain unsupported/unknown.
+- RVT remains an optional provider capability outside the Apache-2.0 core distribution.
 - Authenticity remains unsupported until ACXD-018 and ACX-20 are complete.
 - The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
 - The ACX-22 Codex plugin remains optional, local-first and semantically subordinate to library/CLI results.
@@ -45,7 +46,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-17 now inclu
 ## Explicitly deferred
 
 - WoodFraming mapping and import UX;
-- direct DWG and RVT dependencies in the core; optional external-provider work is governed by ACX-18/ACX-19;
+- direct DWG and RVT dependencies in the core; DWG remains external-only and optional RVT work is governed by ACX-19;
 - editing or round-trip mutation of source authoring formats;
 - a universal AEC ontology;
 - public format stabilization at `1.0`.
@@ -56,9 +57,9 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-17 now inclu
 
 ## Next implementation task
 
-ACX-18: evaluate and, only after its ACXD-019 decision gate, implement or formally block the optional DWG external-provider profile. It must resolve entitlement, redistribution, CI credentials, telemetry/retention, supported versions/platforms and publishable fixture rights before any decoder code or capability claim. It MUST NOT begin RVT, signing, quality-gate or consumer work.
+ACX-19: evaluate and, only after its remaining ACXD-019 decision gate, implement or formally block the optional RVT external-provider profile. It must resolve entitlement, redistribution, CI credentials, telemetry/retention, supported versions/platforms and publishable fixture rights before any decoder code or capability claim. It MUST NOT begin signing, quality-gate or consumer work.
 
-Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request. ACX-17 acceptance evidence is in [`docs/evidence/ACX-17.md`](evidence/ACX-17.md).
+Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request. ACX-18 acceptance evidence is in [`docs/evidence/ACX-18.md`](evidence/ACX-18.md).
 
 ## Consumer integration planning entry point
 

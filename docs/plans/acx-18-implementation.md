@@ -4,6 +4,8 @@
 
 **Goal:** Implement the bounded R2000/AC1015 DWG evidence profile through a reviewed LibreDWG 0.13.4 OCI provider, with portable replay and no GPL dependency in the core distribution.
 
+**Status:** Completed on 2026-07-12. Tasks 1 through 5 passed their narrow, live, portable and repository gates; ACX-19 was promoted but not executed. The unchecked step boxes below are the immutable execution checklist retained for audit; completion authority is `docs/implementation-plan.md` plus `docs/evidence/ACX-18.md`.
+
 **Architecture:** ACX-12 `oci-docker-v1` owns all LibreDWG execution. The provider verifies the DWG header, invokes only fixed `dwgread` JSON/DXF conversions, emits validated source-object events plus content-addressed artifacts, and records conversion loss. The core validates those events, maps observed DWG objects separately from converted DXF geometry, and preserves v0.1 opaque behavior. CLI supports replay only; live Docker execution is an explicit SDK operation.
 
 **Tech Stack:** Python 3.12+, existing ACX-12 provider protocol, Docker Linux arm64, GNU LibreDWG 0.13.4 API/ABI 1, JSON Schema 2020-12, existing ezdxf 1.4.4 and package/record APIs, pytest.

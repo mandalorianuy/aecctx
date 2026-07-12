@@ -15,7 +15,7 @@ Decision authority: ACXD-017
 | unknown required extension | not applicable | invalid with `AECCTX_REQUIRED_EXTENSION_UNSUPPORTED` |
 | unknown optional namespaced extension | governed by v0.1 contract | accepted as package data; retained when explicitly passed through a lossless rewrite |
 
-The reference implementation remains version `0.1.0` until the governed expansion release. Supporting v0.2 schemas in ACX-11 is a bounded compatibility capability. ACX-13 through ACX-17 add opt-in v0.2 producers for exact IFC, DXF, PDF/image inference, mesh coordinate and STEP/IGES profiles; they do not imply other v0.2 format adapters, vision support, survey authority or source-exact translated BREP.
+The reference implementation remains version `0.1.0` until the governed expansion release. Supporting v0.2 schemas in ACX-11 is a bounded compatibility capability. ACX-13 through ACX-18 add opt-in v0.2 producers for exact IFC, DXF, PDF/image inference, mesh coordinate, STEP/IGES and R2000 DWG profiles; they do not imply other DWG versions, other v0.2 format adapters, vision support, survey authority or source-exact translated BREP.
 
 ## Schema boundary
 
@@ -55,7 +55,7 @@ Changing only version strings is not a conforming migration when v0.2 semantic f
 
 `PackageWriter` defaults to v0.1 for compatibility. A caller must explicitly request `aecctx_version="0.2.0"` and provide v0.2 record artifacts. The writer adds sorted `required_extensions` and optional `extensions`; it does not invent evidence-class, coordinate, provider or fidelity values.
 
-`ingest_ifc()`, `ingest_dxf()`, `ingest_pdf()`, `ingest_image()`, `ingest_geometry()`, `ingest_step_iges()` and `aecctx ingest --aecctx-version 0.2.0` provide the completed bounded profiles. PDF/image inference additionally requires an explicit validated `ProviderResult` in the SDK or `--inference-replay` plus `--inference-entry` in the CLI. STEP/IGES requires a validated provider result or `--provider-replay` plus `--provider-entry`; CLI replay never launches Docker. Mesh registration requires a validated SDK mapping or `--mesh-coordinate-profile`; without it, the v0.2 geometry adapter preserves only source-declared facts and explicit unknowns. Omitting the version remains v0.1 and is byte-compatible with explicit `--aecctx-version 0.1.0`.
+`ingest_ifc()`, `ingest_dxf()`, `ingest_pdf()`, `ingest_image()`, `ingest_geometry()`, `ingest_step_iges()`, `ingest_dwg()` and `aecctx ingest --aecctx-version 0.2.0` provide the completed bounded profiles. PDF/image inference additionally requires an explicit validated `ProviderResult` in the SDK or `--inference-replay` plus `--inference-entry` in the CLI. STEP/IGES and DWG require a validated provider result or `--provider-replay` plus `--provider-entry`; CLI replay never launches Docker. Mesh registration requires a validated SDK mapping or `--mesh-coordinate-profile`; without it, the v0.2 geometry adapter preserves only source-declared facts and explicit unknowns. Omitting the version remains v0.1 and is byte-compatible with explicit `--aecctx-version 0.1.0`.
 
 ## Conformance material
 
@@ -67,4 +67,5 @@ Changing only version strings is not a conforming migration when v0.2 semantic f
 - bounded OCR replay corpus: `conformance/v0.2/inference-corpus.json`;
 - bounded mesh coordinate corpus: `conformance/v0.2/mesh-corpus.json`;
 - bounded STEP/IGES replay corpus: `conformance/v0.2/step-iges-corpus.json`;
+- bounded R2000 DWG replay corpus: `conformance/v0.2/dwg-corpus.json`;
 - acceptance evidence: `docs/evidence/ACX-11.md`.

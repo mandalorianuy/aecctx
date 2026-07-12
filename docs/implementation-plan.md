@@ -163,8 +163,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-15 | completed | Experimental bounded OCR evidence; vision remains target and hidden geometry remains public unsupported |
 | ACX-16 | completed | Mesh units, calibration and CRS registration |
 | ACX-17 | completed | Experimental bounded STEP/IGES source graph and translator-derived BREP profiles |
-| ACX-18 | in_progress | Optional DWG external-provider adapter |
-| ACX-19 | pending | Optional RVT external-provider adapter |
+| ACX-18 | completed | Experimental bounded R2000/AC1015 DWG source-object and converted-DXF evidence profile |
+| ACX-19 | pending-next | Optional RVT external-provider adapter |
 | ACX-20 | pending | Package authenticity and signing profile |
 | ACX-21 | pending | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
 | ACX-22 | pending | Optional `aecctx-inspector` plugin for Codex |
@@ -651,6 +651,8 @@ Non-scope: no license bypass, no commercial binary redistribution in core, no un
 Acceptance: provider/legal review and corpus support every claim, or the exact external blocker is documented; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-18.md` when completed.
+
+Completion resolution: ACXD-029 selected only GNU LibreDWG 0.13.4 behind the exact reviewed Linux-arm64 `oci-docker-v1` image. ACX-18 implements self-contained R2000/`AC1015` content probing, direct bounded LibreDWG JSON object evidence, explicitly converted DXF/simple-geometry evidence, deterministic replay/CLI, duplicate-handle conflict preservation, GPL/security review and opaque v0.1 compatibility. Other DWG releases/platforms, encrypted/protected content, xref traversal, ACIS/proxy/custom semantics, qualified units/CRS and complete 3D remain registered unsupported/unknown residuals. ACX-19 is promoted to `pending-next`; no RVT implementation is included.
 
 ## ACX-19: RVT
 
