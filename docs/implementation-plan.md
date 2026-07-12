@@ -162,7 +162,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-14 | completed | DXF source-native semantics and bounded 3D |
 | ACX-15 | completed | Experimental bounded OCR evidence; vision remains target and hidden geometry remains public unsupported |
 | ACX-16 | completed | Mesh units, calibration and CRS registration |
-| ACX-17 | pending-next | STEP/IGES adapter profiles |
+| ACX-17 | in_progress | STEP/IGES adapter profiles |
 | ACX-18 | pending | Optional DWG external-provider adapter |
 | ACX-19 | pending | Optional RVT external-provider adapter |
 | ACX-20 | pending | Package authenticity and signing profile |
@@ -562,6 +562,8 @@ Evidence: `docs/evidence/ACX-16.md` when completed.
 ## ACX-17: STEP/IGES
 
 Objective: implement bounded STEP/IGES evidence extraction using an existing reviewed parser/geometry kernel.
+
+Normative profile: [`docs/specs/step-iges-v02-profile.md`](specs/step-iges-v02-profile.md), governed by ACXD-014, the ACX-17 instance of ACXD-019 and ACXD-028. The native OCP/OCCT runtime is restricted to the reviewed ACX-12 OCI boundary.
 
 Decision gate: resolve an ACXD-019 instance before linking or executing the selected kernel. The record MUST cover API/version, license, redistribution, wheels/platforms, CI, fixture rights, telemetry/network, security history and maintenance posture.
 

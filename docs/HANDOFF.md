@@ -12,7 +12,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-15 completed
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09 and ACX-11 through ACX-16 are complete; ACX-10 remains deferred. Execute only ACX-17, currently `pending-next`; ACX-18 remains pending.
+4. ACX-01 through ACX-09 and ACX-11 through ACX-16 are complete; ACX-10 remains deferred. Execute only ACX-17, currently `in_progress`; ACX-18 remains pending.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -55,7 +55,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-15 completed
 
 ## Next implementation task
 
-ACX-17: implement bounded STEP/IGES evidence extraction using an existing reviewed parser/geometry kernel. Before implementation it must select and govern exact AP/schema/entity/kernel/platform/licensing profiles, preserve source B-Rep/assembly evidence separately from derived tessellation, and satisfy any restricted-decoder dependency on ACX-12/ACXB-001. It MUST NOT begin DWG/RVT, signing, quality-gate or consumer work.
+ACX-17: implement the approved exact external OCP/OCCT provider profile in `docs/specs/step-iges-v02-profile.md` under ACXD-014, ACXD-019 and ACXD-028. Preserve observed source records separately from translator-derived B-Rep and tessellation, keep execution within ACX-12 OCI and retain unclaimed schemas/platforms as explicit loss. It MUST NOT begin DWG/RVT, signing, quality-gate or consumer work.
 
 Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request. ACX-16 acceptance evidence is in [`docs/evidence/ACX-16.md`](evidence/ACX-16.md).
 

@@ -152,6 +152,16 @@ Status: Active
 - Compatibility: `ingest_geometry()` remains byte-identical v0.1 by default. The bounded profile requires explicit v0.2 SDK/CLI selection and an optional schema-validated profile.
 - Evidence owner: ACX-16 schema, solver, geometry adapter, project-authored corpus, claim mapping and acceptance evidence.
 
+### ACXD-028: Bounded STEP/IGES external OCP provider
+
+- Kernel/provider: ACX-17 selects `org.aecctx.step-iges.ocp@0.2.0` using Python 3.12 and `cadquery-ocp==7.9.3.1.1` with bundled OCCT 7.9.3. OCP/OCCT is a native decoder and therefore runs only through the ACX-12 `oci-docker-v1` boundary; it never enters the core wheel or in-process extras.
+- Format boundary: claims are limited to project-corpus STEP ISO 10303-21 `CONFIG_CONTROL_DESIGN`, `AUTOMOTIVE_DESIGN`, `AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF` and the exact IGES 5.3 entity/form list in the normative profile. Other schemas, versions, external references, protected/compressed sets and proprietary extensions remain unclaimed/unsupported.
+- Evidence boundary: source entities and locators remain observed. XDE/kernel B-Rep is translator-derived and records transfer/healing loss; deterministic GLB is subordinate tessellation. Names, colors, layers, units, placements and assembly/subfigure relationships retain original classes and source references. No source-exact B-Rep or consumer classification is claimed.
+- Runtime/license: the initial live claim is exact Linux arm64 OCI plus portable offline replay. OCP bindings are Apache-2.0 and OCCT is LGPL-2.1 with exception. The image is operator-built, digest-pinned, network-disabled and not distributed by core; any image distribution requires the reviewed LGPL notices/source/relinking record. No entitlement, telemetry or service dependency exists.
+- Lifecycle: a base image, architecture, provider, Python, OCP, OCCT, translator parameter or image digest change requires a new reviewed profile and corpus. Replay proves protocol/mapping, not native runtime availability.
+- Consequence: ACXD-019 is resolved only for this ACX-17 provider/profile. DWG and RVT retain separate open ACXD-019 instances. ACXB-001 continues to block unreviewed native host and other container enforcement profiles.
+- Evidence owner: `docs/specs/step-iges-v02-profile.md`, ACX-17 provider recipe/descriptor, project-authored corpus, license/security review, tests and acceptance evidence.
+
 ## Open decisions
 
 ### ACXD-018: Signing and trust profile

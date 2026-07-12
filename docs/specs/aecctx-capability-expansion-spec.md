@@ -185,6 +185,8 @@ Tessellation and previews are derived. Unsupported entities, invalid topology, h
 
 The owning task MUST publish the exact format profiles and kernel versions for which it makes claims; “STEP” or “IGES” alone is not a bounded conformance claim.
 
+ACXD-014, ACXD-019, ACXD-028 and `docs/specs/step-iges-v02-profile.md` define the ACX-17 implementation boundary: an exact external OCP/OCCT provider, enumerated STEP AP/schema and IGES 5.3 profiles, observed source records, translator-derived B-Rep and subordinate tessellation. Other runtimes, formats and source-exact/healing claims remain unsupported or unclaimed.
+
 ## 11. DWG and RVT
 
 DWG and RVT are optional external-provider capabilities and MUST NOT become dependencies of the Apache-2.0 core distribution.
