@@ -1,49 +1,102 @@
 # ACX-19 Acceptance Evidence
 
-Status: `in_progress` — anti-claim boundary evidence only; ACX-19 is not yet accepted or closed
-Date: 2026-07-12
+## 1. Task status, commits and date
 
-## Governed authority
+- Status: `blocked` — provider-external constraints prevent RVT extraction; this is not a capability completion.
+- Date: 2026-07-12.
+- Design/plan commits: `500e384`, `7fc923a`.
+- Task 1 decision/schema/checker commit: `8610eec`.
+- Task 2 governance and anti-claim commits: `d437ca7`, `db6606d`.
+- Task 3 governance and distribution-gate commits: `e0384f1`, `a294f57`.
+- Closure commit: the verified commit containing this evidence; its exact published hash is recorded by the planned evidence-only follow-up.
 
-- Decision: ACXD-019 and ACXD-030 in `docs/decisions/decision-log.md`.
-- Normative profile: `docs/specs/rvt-v02-blocked-profile.md`.
-- Execution plan: `docs/superpowers/plans/2026-07-12-acx-19-rvt-blocked-boundary.md`.
-- Task 1 commit: `8610eec879f80e1a6d519dcc1009fd2615164e1b`.
+## 2. Normative coverage
 
-## Evidence implemented so far
+- Expansion spec section 11, RVT, plus sections 16 security/privacy/licensing and 17 release claim gate.
+- `docs/specs/rvt-v02-blocked-profile.md`, sections 1–9.
+- ACXD-007, ACXD-014, ACXD-019, ACXD-024 and ACXD-030.
+- Detailed execution authority: `docs/superpowers/plans/2026-07-12-acx-19-rvt-blocked-boundary.md`.
 
-- `conformance/v0.2/rvt-provider-decision.json` records the rejected provider routes, exact blocker axes and reopening requirements.
-- `scripts/check_rvt_blocked_conformance.py` rejects provider selection, incomplete axes, unknown blockers, mutable/sensitive values and any RVT claim outside the exact public unsupported boundary.
-- `fixtures/v0.2/rvt/not-a-real-rvt.rvt` is a project-authored text sentinel explicitly stating that it is not an Autodesk Revit RVT file. SHA-256: `a0e93c6e20f3ee4356fc8f6ecca029d95da723154f7b2f25e49ed7268d2e1a49`.
-- `tests/test_rvt_blocked_profile.py` proves deterministic v0.1 opaque ingest, extension-independent CLI auto detection, explicit unknown detected format and absence of consumer mappings.
-- Public claim `rvt.external-provider` is bounded to `unsupported`, `provider_scope = none` and profile `rvt-no-provider-blocked-v1`.
+## 3. Implemented deliverables and explicit non-scope
 
-## Task 2 validation
+Implemented:
 
-- `.venv/bin/python -m pytest tests/test_rvt_blocked_profile.py tests/test_rvt_blocked_conformance.py tests/test_claim_registry.py -q`: 26 passed.
-- `.venv/bin/python scripts/check_rvt_blocked_conformance.py --decision conformance/v0.2/rvt-provider-decision.json --claims conformance/v0.2/claims.json --root .`: `aecctx RVT blocked conformance: ok`.
-- `shasum -a 256 fixtures/v0.2/rvt/not-a-real-rvt.rvt`: exact governed hash confirmed.
-- `python3 scripts/check_spec_contract.py`: `aecctx spec contract: ok`.
-- `.venv/bin/python -m pytest -q`: complete local suite passed with nine expected provider/runtime skips.
+- schema-backed, machine-readable no-provider decision with all evaluated candidates, blocker axes and reopening requirements;
+- exact public `unsupported` anti-claim with deterministic v0.1 opaque fallback;
+- project-authored invalid `.rvt` sentinel proving that a suffix has no semantic detection authority;
+- source, dependency, archive-member, wheel and sdist enforcement preventing RVT scaffolding or restricted/consumer dependencies;
+- portable pre-test and post-build gates.
 
-## Retained support and impact
+Not implemented or claimed:
 
-RVT semantic extraction remains `unsupported`. Ordinary v0.1 opaque ingest preserves exact bytes, identity, provenance, capability/loss diagnostics and deterministic package identity, but emits no RVT elements, properties, relationships, geometry, units or coordinates.
+- no RVT parser, adapter, provider, descriptor, event schema, replay, version or semantic extraction;
+- no Revit/APS/ODA credential, runtime, binary, network execution or fixture;
+- no element, class, property, relation, geometry, unit or coordinate evidence;
+- no authoring mutation, signing, quality-gate, consumer ontology or WoodFraming integration.
 
-## Task 3 validation
+## 4. Claim table
 
-- `.venv/bin/python -m pytest tests/test_rvt_blocked_conformance.py tests/test_rvt_blocked_profile.py tests/test_package_data.py tests/test_claim_registry.py -q`: 45 passed.
-- `./scripts/verify_portable.sh`: 282 passed, nine expected provider/runtime skips, wheel and sdist built successfully, post-build checker passed, final `aecctx portable verify: ok`.
-- Executable-source scans reject RVT adapter/provider modules, `ingest_rvt` and WoodFraming/`WFDomain`/`WFImport` symbols without scanning governance prose.
-- Wheel/sdist scans reject prohibited dependencies, native/proprietary runtime suffixes, unsafe archive members, RVT adapter/provider/event-schema paths and every `.rvt` member except the exact anti-claim sentinel.
-- Real `dist/aecctx-0.1.0-py3-none-any.whl` and `dist/aecctx-0.1.0.tar.gz` passed the post-build distribution boundary.
+| Capability | Source/profile/version | Support | Conformance tests |
+|---|---|---|---|
+| `rvt.external-provider` | no provider; `rvt-no-provider-blocked-v1`; no RVT version | public `unsupported` | `tests/test_rvt_blocked_profile.py::test_rvt_suffix_uses_deterministic_opaque_fallback`; `tests/test_rvt_blocked_profile.py::test_cli_auto_does_not_promote_rvt_suffix` |
+| Opaque source preservation | project-authored invalid sentinel; v0.1 core opaque ingest | `full` identity/validation, other semantic capabilities `opaque` | `tests/test_rvt_blocked_profile.py::test_rvt_suffix_uses_deterministic_opaque_fallback`; `tests/test_rvt_blocked_profile.py::test_opaque_sentinel_output_contains_no_consumer_mapping` |
 
-## Not yet accepted
+The first row is an unsupported boundary, not a positive RVT claim. The opaque row describes existing core behavior over arbitrary bytes, not RVT interpretation.
 
-The following governed work remains pending and prevents ACX-19 closure:
+## 5. Fixtures, origin, license and hashes
 
-- Task 4 full `./scripts/verify.sh`, final acceptance evidence, remote CI evidence and task promotion;
-- capability-matrix and task-ledger closure as documented `blocked`;
-- promotion of ACX-20 to `pending-next`.
+- `fixtures/v0.2/rvt/not-a-real-rvt.rvt`: project-authored Apache-2.0 text sentinel, explicitly not an Autodesk Revit file; SHA-256 `a0e93c6e20f3ee4356fc8f6ecca029d95da723154f7b2f25e49ed7268d2e1a49`.
+- No proprietary, trial, customer, Autodesk, ODA or converted RVT sample is present or used.
 
-This incremental evidence file exists to make the public unsupported claim traceable. It is not evidence of an RVT adapter, provider, version, schema, replay or extraction capability.
+## 6. Commands and results
+
+- Focused Task 2 cut: 26 passed.
+- Focused Task 3 cut: 45 passed.
+- `./scripts/verify_portable.sh`: 282 passed, nine expected opt-in provider/runtime skips; wheel and sdist built; post-build RVT boundary passed; final `aecctx portable verify: ok`.
+- Task 1 CI `29206181392`: Ubuntu `86685908487`, macOS `86685908500`, Windows `86685908481`, all passed.
+- Task 2 CI `29206921706`: Ubuntu `86687819562`, macOS `86687819565`, Windows `86687819561`, all passed.
+- Task 3 CI `29207464228`: Ubuntu `86689259849`, macOS `86689259848`, Windows `86689259845`, all passed.
+- Fresh closure baseline check: healthy, zero issues, bundle `baseline-shared-v1`.
+- Fresh closure `./scripts/verify.sh`: 282 passed, nine expected skips, wheel/sdist and post-build RVT boundary passed, v0.1 corpus deterministic, release verification passed, final `aecctx verify: ok`.
+- Final published closure CI is recorded by the planned evidence-only follow-up before this evidence is considered immutable.
+
+## 7. Determinism and reproducibility
+
+Two v0.1 ZIP packages produced from the sentinel with the same timestamp are byte-identical and share the logical digest. Source bytes, size and SHA-256 are exact. CLI `auto` and explicit opaque ingest preserve unknown detected format and never infer RVT semantics. Decision, claim and distribution checks require no network or proprietary runtime.
+
+## 8. Capability, loss and diagnostics
+
+RVT semantic support remains `unsupported`. Opaque ingest reports identity and validation `full`; hierarchy, properties, relationships, text, 2D/3D geometry, materials/styles and georeferencing remain `opaque` with existing `AECCTX_OPAQUE_*` losses. Detected format remains explicit `unknown` with `AECCTX_NO_FORMAT_ADAPTER`. No value is promoted from unknown/unsupported to a plausible default.
+
+## 9. Dependency, license, security, privacy and platform review
+
+Evaluated official routes on 2026-07-12:
+
+- [Autodesk Revit desktop API](https://help.autodesk.com/cloudhelp/2018/ENU/Revit-API/Revit_API_Developers_Guide/Introduction/Getting_Started/Welcome_to_the_Revit_Platform_API/Installation.html): licensed Windows Revit runtime unavailable.
+- [Autodesk APS Automation](https://aps.autodesk.com/en/docs/design-automation/v3/developers_guide/overview/) and [business model](https://aps.autodesk.com/blog/aps-business-model-evolution): credentials, billing, egress, source transfer, retention and jurisdiction unapproved.
+- [ODA BimRv FAQ](https://www.opendesign.com/faq/bimrv) and [product](https://www.opendesign.com/products/bimrv): separate commercial module entitlement/runtime/redistribution unavailable.
+- [Autodesk Revit IFC exporter](https://github.com/Autodesk/revit-ifc): not a standalone parser and still requires Revit/proprietary assemblies.
+
+Core dependency metadata contains none of those runtimes. Wheel/sdist checks reject prohibited dependencies, native binaries, unsafe/symlink/hardlink members, RVT adapter/provider/event-schema paths and every `.rvt` except the exact sentinel. The checker is portable across the three CI operating systems.
+
+## 10. Residual risks and unsupported cases
+
+- Every real RVT version, producer, document/link, category/class, property/type/material, hierarchy/relation, view/level, geometry, unit and coordinate capability remains unsupported.
+- A local commercial route still requires written automation/redistribution entitlement, exact runtime/RVT versions, a complete ACX-12 enforcement profile, private provider CI, publishable project-authored fixture rights, security history and lifecycle support.
+- APS still requires human approval of credentials, billing, upload consent, storage, retention/jurisdiction, regions, telemetry, timeouts/retries/rate limits and an ACX-12 network-provider profile.
+- Offline opaque behavior does not demonstrate decoder availability or semantic correctness.
+
+## 11. WoodFraming boundary proof
+
+All ACX-19 changed paths are within `/Users/facundo/desarrollo/aecctx`. The executable-source and generated-output tests reject `woodframing`, `WFDomain` and `WFImport`. No file under `/Users/facundo/desarrollo/woodframing` was modified, and no consumer dependency or mapping entered AECCTX.
+
+## 12. Promotion and exact reopening decision
+
+ACX-19 closes as documented `blocked`; RVT stays public `unsupported` with opaque fallback. ACX-20 alone is promoted to `pending-next`; ACX-21 through ACX-23 remain `pending` and ACX-10 remains `deferred`.
+
+Reopening requires a human to choose and authorize exactly one route before any implementation-plan or decoder change:
+
+1. licensed local runtime with all entitlement, sandbox, CI, fixture and lifecycle evidence listed in section 10; or
+2. APS network provider with all credential, billing, upload, retention/jurisdiction and network-profile approvals listed in section 10.
+
+Absent that decision and evidence, an adapter, descriptor, replay, mock success, proprietary sample or renamed `.rvt` file does not count as progress.

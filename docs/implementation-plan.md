@@ -164,8 +164,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-16 | completed | Mesh units, calibration and CRS registration |
 | ACX-17 | completed | Experimental bounded STEP/IGES source graph and translator-derived BREP profiles |
 | ACX-18 | completed | Experimental bounded R2000/AC1015 DWG source-object and converted-DXF evidence profile |
-| ACX-19 | in_progress | Governed RVT provider-blocker resolution; no adapter is authorized |
-| ACX-20 | pending | Package authenticity and signing profile |
+| ACX-19 | blocked | No admissible RVT provider; public unsupported boundary with deterministic opaque anti-claim evidence |
+| ACX-20 | pending-next | Package authenticity and signing profile |
 | ACX-21 | pending | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
 | ACX-22 | pending | Optional `aecctx-inspector` plugin for Codex |
 | ACX-23 | pending | Expansion conformance corpus, packaging, documentation and release |
@@ -684,6 +684,8 @@ Non-scope: no authoring mutation, no engineering approval, no consumer ontology 
 Acceptance: claims are version/provider bounded or the blocker is explicit; consumer-boundary scans pass; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-19.md` when completed.
+
+Completion resolution: ACXD-030 selected no provider because Revit desktop, APS Automation, ODA BimRv and the Revit IFC exporter do not satisfy the repository's combined entitlement, runtime, sandbox, CI, privacy and fixture-rights gates. ACX-19 therefore closes as documented `blocked` with a machine-validated decision, exact public `unsupported` claim, deterministic opaque anti-claim sentinel and source/wheel/sdist enforcement. No provider, adapter, descriptor, replay, RVT version or semantic claim was added. ACX-20 alone is promoted to `pending-next`.
 
 ## ACX-20: Authenticity and signing
 
