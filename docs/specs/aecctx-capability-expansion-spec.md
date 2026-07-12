@@ -111,7 +111,7 @@ The contract MAY support local OS sandbox, container, remote service, and custom
 
 ### 5.4 Initial executable profile
 
-ACXD-024 selects `oci-docker-v1` as the first executable profile. The registered image MUST be digest-pinned and already present; the runner MUST NOT pull or build it implicitly. The Linux container MUST have no network, a read-only root, a non-root identity, no capabilities, `no-new-privileges`, one process, bounded memory/CPU/open files/output and private temporary storage. Input, request and reviewed provider code are read-only; only the bounded output root is writable.
+ACXD-024 selects `oci-docker-v1` as the first executable profile. The registered image MUST be digest-pinned and already present; the runner MUST NOT pull or build it implicitly. The Linux container MUST have no network, a read-only root, a non-root identity, no capabilities, `no-new-privileges`, a reviewed per-provider PID ceiling from 1 through 4 (default 1), bounded memory/CPU/open files/output and private temporary storage. Input, request and reviewed provider code are read-only; only the bounded output root is writable. A ceiling above 1 is permitted only when the governed provider architecture requires fixed child executables and the exact value is registered and tested.
 
 The response attestation binds provider descriptor and runtime digests. Parent validation rejects invalid schema, mismatched attestation, host paths, unsafe/duplicate artifact paths, symlinks, size/hash mismatch, non-sequential events and resource overflow before package construction.
 

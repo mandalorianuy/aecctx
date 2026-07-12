@@ -27,6 +27,8 @@ The provider image is built explicitly by an operator from the official LibreDWG
 
 The immutable locally inspected image ID is a mandatory implementation output. Core ingest never builds, pulls, installs or discovers the image. The repository does not distribute the image by default. Any later image distribution must ship complete GPL notices, corresponding source/build instructions and relinking/replacement rights appropriate to that distribution.
 
+The reviewed build disables BuildKit's generated provenance manifest because its volatile metadata changes Docker's inspected manifest-list ID for byte-identical cached layers. Reproducibility evidence instead binds the exact base digest, LibreDWG archive SHA-256, Dockerfile, targeted upstream test result and stable single-platform image ID. This does not remove provider runtime attestation or source/license evidence.
+
 There is no entitlement, account, credential, telemetry, retention or service dependency. A decoder/version/base-image/build-option/image-ID change creates a new provider profile and requires new review and conformance.
 
 The security review must explicitly record the February 2026 upstream heap-buffer-overflow report involving material texture parsing, verify whether the selected 0.13.4 release contains the relevant fix, and retain the full OCI resource boundary regardless. Absence of a published CVE or a successful fixture run is not proof that the native decoder is memory-safe.
@@ -44,7 +46,7 @@ These alternatives remain future governed profiles; their availability cannot pr
 DWG bytes, LibreDWG JSON/DXF, stderr, object graphs, strings, handles and geometry are untrusted data. The provider uses the complete ACX-12 Linux-container controls:
 
 - no network, non-root user, read-only root filesystem, dropped capabilities and `no-new-privileges`;
-- one process, bounded CPU, memory, wall time, PIDs, open files, input/output bytes, records, recursion and temporary storage;
+- exactly two permitted PIDs (the mounted Python worker and one sequential fixed `dwgread` child), bounded CPU, memory, wall time, open files, input/output bytes, records, recursion and temporary storage;
 - read-only content-addressed source/request/provider mounts and one bounded writable output mount;
 - fixed locale, timezone and environment;
 - schema, sequence, path, symlink, size, hash, attestation and host-path validation before mapping;
@@ -85,13 +87,14 @@ The JSON route is direct decoder evidence. The DXF artifact is converted evidenc
 
 Stable locators are:
 
-- DWG object/entity: `dwg:handle:<uppercase-hex-handle>`;
+- unambiguous DWG object/entity: `dwg:handle:<uppercase-hex-handle>`;
+- conflicted duplicate-handle object: `dwg:handle:<uppercase-hex-handle>:occurrence:<zero-based-source-index>`;
 - header variable: `dwg-header:<NAME>`;
 - class: `dwg-class:<number>`;
 - converted DXF entity: `dwg-dxf:handle:<uppercase-hex-handle>` when preserved, otherwise a converted locator with explicit unresolved identity;
 - artifact: `dwg-artifact:<role>:sha256:<digest>`.
 
-Duplicate or malformed handles, broken owner references, unsafe nesting and non-finite geometry reject or degrade before package construction.
+Malformed handles, unsafe nesting and non-finite numbers reject before package construction. Duplicate handles are retained as distinct observed objects with occurrence locators, produce `AECCTX_DWG_HANDLE_CONFLICT`, and make every reference to that handle unresolved/conflicted; they are never silently merged or guessed. Broken owner references degrade to explicit unresolved loss unless they make the bounded event structurally unsafe.
 
 For the R2000 corpus, the provider preserves when present:
 

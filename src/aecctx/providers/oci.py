@@ -17,7 +17,18 @@ class OCIDockerProfile:
     image: str = DEFAULT_IMAGE
     profile_id: str = "oci-docker-v1"
 
+    @staticmethod
+    def _pids_limit(registration: ProviderRegistration) -> int:
+        value = registration.container_pids_limit
+        if not isinstance(value, int) or isinstance(value, bool) or not 1 <= value <= 4:
+            raise ProviderExecutionError(
+                "AECCTX_PROVIDER_PROCESS_LIMIT_INVALID",
+                "OCI provider PID ceiling must be an integer from 1 through 4",
+            )
+        return value
+
     def preflight(self, registration: ProviderRegistration) -> None:
+        self._pids_limit(registration)
         descriptor = registration.descriptor
         if not self.docker_executable.is_file() or not os.access(self.docker_executable, os.X_OK):
             raise ProviderExecutionError("AECCTX_PROVIDER_PROFILE_UNAVAILABLE", "Reviewed Docker runtime is unavailable")
@@ -70,6 +81,7 @@ class OCIDockerProfile:
         container_name: str,
     ) -> tuple[str, ...]:
         root = Path(workspace).resolve()
+        pids_limit = self._pids_limit(registration)
         worker_path = registration.worker_path.resolve() if registration.worker_path is not None else Path("/missing")
         cpu_quota = min(1.0, limits.cpu_seconds / limits.wall_time_seconds)
         return (
@@ -82,7 +94,7 @@ class OCIDockerProfile:
             "--cap-drop=ALL",
             "--security-opt=no-new-privileges",
             "--user=65532:65532",
-            "--pids-limit=1",
+            f"--pids-limit={pids_limit}",
             f"--memory={limits.max_memory_bytes}",
             f"--cpus={cpu_quota:g}",
             f"--ulimit=nofile={limits.max_open_files}:{limits.max_open_files}",

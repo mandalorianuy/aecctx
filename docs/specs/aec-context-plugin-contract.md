@@ -82,6 +82,8 @@ Plugins MUST treat inputs as data and MUST NOT execute embedded macros, scripts,
 
 Paths emitted by plugins are logical POSIX package paths. Absolute paths, `..`, device paths and symlink escapes are invalid.
 
+For the v0.2 external-provider OCI profile, provider registration includes a reviewed `container_pids_limit` integer from 1 through 4. Its default is 1. A value above 1 is valid only for a governed fixed child-executable graph, MUST be enforced by the launcher, and does not authorize caller-selected commands, shells or unbounded descendants.
+
 ## 8. Failure behavior
 
 Fatal plugin failure does not erase registered source identity or prior emitted diagnostics. The core records the session as failed and MUST NOT present partial records as complete. Recoverable unsupported content is emitted as `unsupported` evidence and reflected in the loss report.

@@ -3,7 +3,7 @@ set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 image="aecctx-dwg-libredwg:0.2.0"
-expected_id="sha256:9bae0e6084613c08f7f283381a2be45ba3b480992ddef92887f7ed4ddf425679"
+expected_id="sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1"
 actual_id="$(docker image inspect --format '{{.Id}}' "$image")"
 
 if [[ "$actual_id" != "$expected_id" ]]; then

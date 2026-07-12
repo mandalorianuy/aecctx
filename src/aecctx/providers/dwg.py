@@ -8,7 +8,7 @@ from .registry import ProviderRegistry
 
 DWG_PROVIDER_ID = "org.aecctx.dwg.libredwg"
 DWG_IMAGE = "aecctx-dwg-libredwg:0.2.0"
-DWG_IMAGE_ID = "sha256:9bae0e6084613c08f7f283381a2be45ba3b480992ddef92887f7ed4ddf425679"
+DWG_IMAGE_ID = "sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1"
 DWG_WORKER_MODULE = "aecctx.external.libredwg_worker"
 DWG_CONFIGURATION = {
     "dwg_version": "AC1015",
@@ -50,6 +50,7 @@ def dwg_registry(*, repository_root: str | Path | None = None) -> ProviderRegist
             container_image=DWG_IMAGE,
             container_image_id=DWG_IMAGE_ID,
             container_command=("python3", "/provider/worker.py"),
+            container_pids_limit=2,
             worker_path=root / "providers" / "libredwg" / "worker.py",
         )
     )

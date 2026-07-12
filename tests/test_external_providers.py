@@ -9,6 +9,7 @@ from pathlib import Path
 import sys
 import shutil
 import subprocess
+from dataclasses import replace
 
 
 def test_external_provider_package_is_public() -> None:
@@ -499,6 +500,19 @@ def test_oci_profile_command_enforces_network_filesystem_user_and_resources(tmp_
     assert f"src={tmp_path.resolve() / 'output'},dst=/workspace/output" in rendered
     assert "dst=/provider/worker.py,readonly" in rendered
     assert "dst=/provider/reference_provider_worker.py" not in rendered
+
+
+def test_oci_profile_enforces_reviewed_per_provider_pid_ceiling(tmp_path: Path) -> None:
+    base = providers.reference_provider_registry().resolve("org.aecctx.reference-provider")
+    profile = providers.OCIDockerProfile()
+    limits = providers.ProviderLimits()
+    registration = replace(base, container_pids_limit=2)
+
+    assert "--pids-limit=2" in profile.command(registration, tmp_path, limits, container_name="aecctx-test")
+    for invalid in (0, 5, True):
+        with pytest.raises(providers.ProviderExecutionError) as captured:
+            profile.command(replace(base, container_pids_limit=invalid), tmp_path, limits, container_name="aecctx-test")
+        assert captured.value.code == "AECCTX_PROVIDER_PROCESS_LIMIT_INVALID"
 
 
 def _oci_reference_available() -> bool:

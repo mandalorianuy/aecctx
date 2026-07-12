@@ -131,6 +131,7 @@ class ProviderRegistration:
     container_image: str | None = None
     container_image_id: str | None = None
     container_command: tuple[str, ...] = field(default_factory=tuple)
+    container_pids_limit: int = 1
     worker_path: Path | None = None
 
 
