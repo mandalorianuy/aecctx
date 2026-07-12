@@ -1,0 +1,10 @@
+ISO-10303-21;
+HEADER;
+FILE_DESCRIPTION(('AECCTX negative fixture'),'2;1');
+FILE_NAME('external-reference.step','2026-07-12T00:00:00',('AECCTX'),('AECCTX'),'AECCTX','','');
+FILE_SCHEMA(('AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }'));
+ENDSEC;
+DATA;
+#1=EXTERNAL_FILE_ID_AND_LOCATION('missing-part.step','file:///untrusted/missing-part.step');
+ENDSEC;
+END-ISO-10303-21;

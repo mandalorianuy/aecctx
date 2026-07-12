@@ -14,7 +14,7 @@
 - Normative authority is `docs/specs/step-iges-v02-profile.md` and ACXD-028.
 - OCP/OCCT never enters `pyproject.toml`, the core wheel, an in-process extra or a host import path.
 - Only the exact operator-built Linux arm64 image may execute live; portable replay is not live-runtime evidence.
-- STEP profiles are `CONFIG_CONTROL_DESIGN`, `AUTOMOTIVE_DESIGN` and `AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF`; IGES is 5.3 with only the enumerated type/form list.
+- STEP profiles are `CONFIG_CONTROL_DESIGN`, AP214 IS tuple `{ 1 0 10303 214 1 1 1 1 }` and AP242 edition-1 tuple `{ 1 0 10303 442 1 1 4 }`; IGES is 5.3 with only the enumerated type/form list. Profile matching normalizes tuple whitespace but retains the source string.
 - Source entities/XDE-backed facts are observed. OCCT BREP and GLB are translator-derived and tessellated evidence respectively.
 - External references are preserved but never opened. Runtime network, commands, callbacks and caller resource paths are forbidden.
 - Translator-default processing is reported. No source-exact B-Rep, implicit healing, CRS/survey authority or consumer classification is claimed.
@@ -66,13 +66,13 @@
 
 **Interfaces:**
 - Worker pure helpers remain importable without OCP: `_configuration(request)`, `_probe(data)`, `_scan_step(data, limits)`, `_scan_iges(data, limits)`.
-- `_scan_step` returns exact header fields plus sorted entity records `{id, original_class, raw, references}`.
+- `_scan_step` returns exact header fields plus sorted entity records `{id, original_class, component_classes, raw, references}`; `component_classes` is populated only for ISO 10303-21 complex instances.
 - `_scan_iges` returns exact global fields plus sorted directory records `{sequence, entity_type, form, parameter_pointer, transform_pointer, level, label, subscript}`.
 - OCP imports occur only inside native transfer functions.
 
 - [ ] **Step 1: Write failing pure worker tests.** Cover STEP/IGES probes, exact/multiple/unknown STEP schema, duplicate/broken IDs, multiline strings/comments, IGES 80-column sections, type/form extraction, malformed/truncated data, entity/record/recursion limits and external-reference detection.
 - [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_step_iges_provider.py -k 'probe or scanner or configuration' -q`; expect missing worker/helpers.
-- [ ] **Step 3: Implement only the bounded lexical/source layer.** Parse ISO-10303-21 record boundaries with string/comment awareness and positive `#id=CLASS(...)` envelopes; retain raw record bytes decoded as strict ASCII and direct `#id` references. Parse IGES fixed 80-column section markers/directory pairs and Global delimiters. Do not implement EXPRESS, geometry or schema semantics. Reject recovery that would invent a record.
+- [ ] **Step 3: Implement only the bounded lexical/source layer.** Parse ISO-10303-21 record boundaries with string/comment awareness, positive `#id=CLASS(...)` envelopes and complex `#id=(CLASS(...) CLASS(...))` instances; retain raw record bytes decoded as strict ASCII, ordered component classes and direct `#id` references. Parse IGES fixed 80-column section markers/directory pairs and Global delimiters. Do not implement EXPRESS, geometry or schema semantics. Reject recovery that would invent a record.
 - [ ] **Step 4: Implement exact configuration validation.** Accept only the canonical `STEP_IGES_CONFIGURATION`; reject extra keys, changed deflections, resource paths, commands or environment fields with `AECCTX_STEP_IGES_CONFIGURATION_INVALID`.
 - [ ] **Step 5: Verify scanner GREEN.** Run the targeted tests; assert stable error codes and deterministic sort order.
 - [ ] **Step 6: Generate legal fixtures through the reviewed kernel.** In `generate_fixtures.py`, use `BRepPrimAPI_MakeBox`, XDE labels, two placed component instances, names/colors/layers and `STEPCAFControl_Writer`/`IGESCAFControl_Writer`. Set exact STEP schema modes for AP203/AP214/AP242 and emit IGES 5.3. The shell script mounts only the generator/output into the reviewed image. Hand-authored negative fixtures contain no third-party geometry.

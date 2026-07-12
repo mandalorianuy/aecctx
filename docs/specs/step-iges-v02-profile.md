@@ -18,7 +18,7 @@ The live ACX-17 profile is limited to an operator-built Linux arm64 OCI image co
 
 The bounded source profiles are:
 
-- STEP ISO 10303-21 physical files whose sole `FILE_SCHEMA` identifier is `CONFIG_CONTROL_DESIGN` (AP203), `AUTOMOTIVE_DESIGN` (AP214) or `AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF` (AP242 edition 1 long form);
+- STEP ISO 10303-21 physical files whose sole `FILE_SCHEMA` identifier is `CONFIG_CONTROL_DESIGN` (AP203), `AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }` (AP214 IS) or `AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF { 1 0 10303 442 1 1 4 }` (AP242 edition 1 long form). ASCII whitespace inside the edition braces is normalized only for profile matching; the complete source string remains observed evidence;
 - IGES 5.3 clear-text files with a valid Start, Global, Directory Entry, Parameter Data and Terminate section sequence;
 - self-contained files only.
 
@@ -91,7 +91,7 @@ The original source hash, byte count, media type and embedding policy remain cor
 - OCCT/XDE label derived from source translation: `xde:<entry>` with cited source entity locators when the kernel exposes them;
 - kernel shape path: `shape:<root-index>/<deterministic-child-index>...`.
 
-Source entity records preserve original entity number, original class/type/form, raw parameter text or a bounded lossless token representation, direct referenced entity IDs and parser diagnostics. They are `observed`. The adapter never rewrites entity IDs or presents XDE labels as source identifiers.
+Source entity records preserve original entity number, original class/type/form, raw parameter text or a bounded lossless token representation, direct referenced entity IDs and parser diagnostics. ISO 10303-21 complex instances are preserved as `original_class = "COMPLEX_INSTANCE"` plus their ordered component class names and unmodified raw statement; no component is selected as implicit primary meaning. They are `observed`. The adapter never rewrites entity IDs or presents XDE labels as source identifiers.
 
 Repeated source entity IDs, invalid references, malformed sections, truncated records, invalid delimiters, recursion beyond limit and oversized parameter payloads fail or degrade with stable codes. Parser recovery never creates known values.
 
@@ -195,7 +195,7 @@ A stable diagnostic never converts an unknown or failed fact into a plausible de
 
 Project-authored fixtures MUST cover:
 
-- STEP `CONFIG_CONTROL_DESIGN`, `AUTOMOTIVE_DESIGN` and `AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF`, plus unknown/multiple schema identifiers;
+- STEP `CONFIG_CONTROL_DESIGN`, AP214 IS tuple `{ 1 0 10303 214 1 1 1 1 }` and AP242 edition-1 long-form tuple `{ 1 0 10303 442 1 1 4 }`, plus unknown/multiple schema identifiers;
 - IGES 5.3 and unclaimed version;
 - single part, nested assembly/subfigure, repeated instance and non-identity placement;
 - names, colors, layers, declared units and conflicting/missing units;

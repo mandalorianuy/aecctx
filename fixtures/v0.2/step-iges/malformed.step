@@ -1,0 +1,6 @@
+ISO-10303-21;
+HEADER;
+FILE_SCHEMA(('CONFIG_CONTROL_DESIGN'));
+ENDSEC;
+DATA;
+#1=PRODUCT('truncated','fixture','',(
