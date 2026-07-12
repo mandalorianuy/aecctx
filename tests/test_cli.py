@@ -189,15 +189,16 @@ def test_ingest_dxf_v02_is_explicitly_available_from_cli(tmp_path: Path) -> None
 
 
 def test_ingest_v02_rejects_adapter_without_governed_v02_profile(tmp_path: Path) -> None:
-    fixture = ROOT / "fixtures" / "geometry" / "minimal-triangle.obj"
+    fixture = tmp_path / "opaque.bin"
+    fixture.write_bytes(b"opaque")
 
     completed = run_cli(
         "ingest",
         str(fixture),
         "--output",
-        str(tmp_path / "geometry-v02.aecctx"),
+        str(tmp_path / "opaque-v02.aecctx"),
         "--adapter",
-        "geometry",
+        "opaque",
         "--aecctx-version",
         "0.2.0",
         "--json",
@@ -205,6 +206,51 @@ def test_ingest_v02_rejects_adapter_without_governed_v02_profile(tmp_path: Path)
 
     assert completed.returncode == 2
     assert json.loads(completed.stdout)["diagnostics"][0]["code"] == "AECCTX_INGEST_VERSION_UNSUPPORTED"
+
+
+def test_ingest_geometry_v02_accepts_coordinate_profile_from_cli(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "mesh" / "triangle-unknown.obj"
+    coordinate_profile = ROOT / "fixtures" / "v0.2" / "mesh" / "profiles" / "scale-mm-to-m.json"
+    output = tmp_path / "mesh-v02"
+
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(output),
+        "--adapter",
+        "geometry",
+        "--aecctx-version",
+        "0.2.0",
+        "--mesh-coordinate-profile",
+        str(coordinate_profile),
+        "--created-at",
+        "2026-07-12T00:00:00Z",
+        "--json",
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert PackageReader(output).manifest["aecctx_version"] == "0.2.0"
+    assert "geometry/calibrated-scene.glb" in {item["path"] for item in PackageReader(output).manifest["artifacts"]}
+
+
+def test_mesh_coordinate_profile_is_rejected_outside_geometry_v02(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "mesh" / "triangle-unknown.obj"
+    coordinate_profile = ROOT / "fixtures" / "v0.2" / "mesh" / "profiles" / "scale-mm-to-m.json"
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(tmp_path / "mesh-v01"),
+        "--adapter",
+        "geometry",
+        "--mesh-coordinate-profile",
+        str(coordinate_profile),
+        "--json",
+    )
+
+    assert completed.returncode == 2
+    assert json.loads(completed.stdout)["diagnostics"][0]["code"] == "AECCTX_INGEST_FAILED"
 
 
 def test_ingest_image_v02_accepts_explicit_validated_inference_replay(tmp_path: Path) -> None:

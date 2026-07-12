@@ -4,7 +4,7 @@ AECCTX is an open, application-agnostic specification and local-first Python too
 
 Version **0.1.0** is implemented, packaged and covered by a public conformance corpus.
 
-The post-v0.1 implementation line is active. ACX-11 implements the bounded v0.2 shared schema/compatibility substrate, ACX-12 the reviewed external-provider foundation, ACX-13 bounded IFC 2D/georeferencing, ACX-14 DXF source-semantics/bounded-3D, and ACX-15 an experimental opt-in English OCR profile with an explicit unsupported hidden-geometry boundary. Claims remain exact and bounded by their corpora.
+The post-v0.1 implementation line is active. ACX-11 implements the bounded v0.2 shared schema/compatibility substrate, ACX-12 the reviewed external-provider foundation, ACX-13 bounded IFC 2D/georeferencing, ACX-14 DXF source-semantics/bounded-3D, ACX-15 an experimental opt-in English OCR profile, and ACX-16 explicit mesh coordinate qualification/manual registration. Claims remain exact and bounded by their corpora.
 
 ## Why this exists
 
@@ -61,7 +61,7 @@ aecctx diff revision-a.aecctx revision-b.aecctx
 
 Unknown inputs use the honest opaque fallback. IFC, DXF, PDF, image and OBJ/STL/glTF content are selected by bounded content probes; `--adapter` can make the choice explicit.
 
-The ACX-13 IFC, ACX-14 DXF and ACX-15 PDF/image v0.2 profiles are explicit:
+The ACX-13 through ACX-16 v0.2 profiles are explicit:
 
 ```bash
 aecctx ingest model.ifc --output model-v02.aecctx --form zip --aecctx-version 0.2.0 --json
@@ -71,9 +71,11 @@ aecctx validate model-dxf-v02.aecctx --json
 aecctx ingest scan.png --output scan-v02.aecctx --aecctx-version 0.2.0 \
   --inference-replay conformance/v0.2/inference-corpus.json \
   --inference-entry tesseract-ocr-aecctx-15 --json
+aecctx ingest model.glb --output model-mesh-v02.aecctx --adapter geometry \
+  --aecctx-version 0.2.0 --mesh-coordinate-profile registration.json --json
 ```
 
-Other adapters currently reject `--aecctx-version 0.2.0` until their governed expansion task publishes a profile. OCR remains experimental and partial under [`docs/specs/inference-v02-profile.md`](docs/specs/inference-v02-profile.md); without explicit replay/provider output it remains unsupported. Vision and hidden geometry are not inferred.
+Other adapters currently reject `--aecctx-version 0.2.0` until their governed expansion task publishes a profile. OCR remains experimental and partial under [`docs/specs/inference-v02-profile.md`](docs/specs/inference-v02-profile.md). Mesh registration is partial under [`docs/specs/mesh-coordinate-v02-profile.md`](docs/specs/mesh-coordinate-v02-profile.md): it never guesses units/CRS or rewrites source coordinates. Vision and hidden geometry are not inferred.
 
 ## Python API
 

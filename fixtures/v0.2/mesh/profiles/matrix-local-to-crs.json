@@ -1,0 +1,48 @@
+{
+  "author": {
+    "id": "fixture:author"
+  },
+  "matrix": [
+    1,
+    0,
+    0,
+    500000,
+    0,
+    1,
+    0,
+    6100000,
+    0,
+    0,
+    1,
+    25,
+    0,
+    0,
+    0,
+    1
+  ],
+  "mode": "matrix",
+  "profile_version": "0.2.0",
+  "source_frame": {
+    "axes": [
+      "+X",
+      "+Y",
+      "+Z"
+    ],
+    "handedness": "right"
+  },
+  "source_units": "m",
+  "target_crs": {
+    "horizontal": "EPSG:32721",
+    "vertical": "local-height"
+  },
+  "target_frame": {
+    "axes": [
+      "+X",
+      "+Y",
+      "+Z"
+    ],
+    "handedness": "right"
+  },
+  "target_units": "m",
+  "tolerance": 1e-07
+}

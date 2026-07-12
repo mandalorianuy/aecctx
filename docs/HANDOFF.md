@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-12
-Handoff status: `0.2.0-ACX-15-COMPLETE`
+Handoff status: `0.2.0-ACX-16-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-14 completed the shared/provider/IFC/DXF expansion foundations. ACX-15 now adds the experimental opt-in English OCR profile, portable replay and public unsupported hidden-geometry boundary. Vision remains unsupported. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-15 completed the shared/provider/IFC/DXF/OCR expansion foundations. ACX-16 now adds bounded mesh coordinate qualification plus explicit manual scale, affine-matrix and control-point similarity registration. Vision and survey/CRS authority remain unsupported. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09 and ACX-11 through ACX-15 are complete; ACX-10 remains deferred. Execute only ACX-16, currently `in_progress`; ACX-17 remains pending.
+4. ACX-01 through ACX-09 and ACX-11 through ACX-16 are complete; ACX-10 remains deferred. Execute only ACX-17, currently `pending-next`; ACX-18 remains pending.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -35,6 +35,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-14 completed
 - ACX-13 IFC claims are partial and limited to `docs/specs/ifc-v02-profile.md`; IFC4.1/4.2/4X3 and unlisted 2D/coordinate profiles remain unclaimed.
 - ACX-14 DXF claims are partial and limited to `docs/specs/dxf-v02-profile.md`; unlisted releases/entities, ACIS/proxy/custom interpretation and xref traversal remain unclaimed.
 - ACX-15 OCR is experimental and partial only for the exact English Tesseract/replay profile in `docs/specs/inference-v02-profile.md`; vision and hidden geometry remain unsupported.
+- ACX-16 mesh claims are partial only for self-contained OBJ/STL/glTF 2.0/GLB 2.0 through exact `trimesh==4.12.2`; manual registration remains manual/derived evidence and cannot establish survey authority.
 - DWG/RVT remain optional provider capabilities outside the Apache-2.0 core distribution.
 - Authenticity remains unsupported until ACXD-018 and ACX-20 are complete.
 - The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
@@ -54,9 +55,9 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-14 completed
 
 ## Next implementation task
 
-ACX-16: qualify mesh coordinates and add explicit, provenance-bearing manual unit calibration and CRS registration under ACXD-016, ACXD-027 and `docs/specs/mesh-coordinate-v02-profile.md`. It must preserve original mesh coordinates, keep declared/detected/manual values separate, require reversible transforms and reject incomplete/conflicted registrations. It MUST NOT begin STEP/IGES, DWG/RVT, signing, quality-gate or consumer work.
+ACX-17: implement bounded STEP/IGES evidence extraction using an existing reviewed parser/geometry kernel. Before implementation it must select and govern exact AP/schema/entity/kernel/platform/licensing profiles, preserve source B-Rep/assembly evidence separately from derived tessellation, and satisfy any restricted-decoder dependency on ACX-12/ACXB-001. It MUST NOT begin DWG/RVT, signing, quality-gate or consumer work.
 
-Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request.
+Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request. ACX-16 acceptance evidence is in [`docs/evidence/ACX-16.md`](evidence/ACX-16.md).
 
 ## Consumer integration planning entry point
 

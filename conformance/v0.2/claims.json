@@ -6,7 +6,8 @@
     {"id": "v02-provider-reference", "path": "fixtures/v0.2/providers"},
     {"id": "v02-ifc-acx13", "path": "fixtures/v0.2/ifc"},
     {"id": "v02-dxf-acx14", "path": "fixtures/v0.2/dxf"},
-    {"id": "v02-inference-acx15", "path": "fixtures/v0.2/inference"}
+    {"id": "v02-inference-acx15", "path": "fixtures/v0.2/inference"},
+    {"id": "v02-mesh-acx16", "path": "fixtures/v0.2/mesh"}
   ],
   "claims": [
     {
@@ -201,7 +202,40 @@
       "evidence": "docs/evidence/ACX-15.md"
     },
     {"id": "pdf-image.vision", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none accepted", "fixture_ids": [], "test_ids": [], "evidence": null},
-    {"id": "mesh.units-crs", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {
+      "id": "mesh.declared-coordinate-metadata",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "obj-stl-gltf2-glb2-coordinate-metadata-v1",
+      "platform_scope": ["trimesh-python-supported"],
+      "provider_scope": "trimesh==4.12.2",
+      "fixture_ids": ["v02-mesh-acx16"],
+      "test_ids": [
+        "tests/test_geometry_v02.py::test_obj_and_stl_v02_keep_units_frame_and_crs_unknown",
+        "tests/test_geometry_v02.py::test_gltf_v02_preserves_normative_meters_frame_and_scene_transform",
+        "tests/test_geometry_v02.py::test_external_gltf_resource_is_rejected_before_resolution",
+        "tests/test_geometry_v02.py::test_geometry_v01_default_remains_byte_identical_to_explicit_v01"
+      ],
+      "evidence": "docs/evidence/ACX-16.md"
+    },
+    {
+      "id": "mesh.manual-registration",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "mesh-manual-scale-matrix-similarity-v1",
+      "platform_scope": ["trimesh-python-supported"],
+      "provider_scope": "trimesh==4.12.2; numpy>=2.2,<3",
+      "fixture_ids": ["v02-mesh-acx16"],
+      "test_ids": [
+        "tests/test_mesh_coordinates_v02.py::test_scale_mode_emits_reversible_uniform_matrix",
+        "tests/test_mesh_coordinates_v02.py::test_matrix_mode_accepts_explicit_affine_and_rejects_singular_or_non_affine",
+        "tests/test_mesh_coordinates_v02.py::test_control_points_solve_orientation_preserving_similarity_with_residuals",
+        "tests/test_geometry_v02.py::test_scale_registration_emits_manual_and_derived_evidence_without_changing_source_mesh",
+        "tests/test_geometry_v02.py::test_matrix_crs_and_control_point_profiles_emit_reversible_deterministic_results",
+        "tests/test_geometry_v02.py::test_source_manual_conflict_remains_explicit_and_emits_no_calibrated_artifact"
+      ],
+      "evidence": "docs/evidence/ACX-16.md"
+    },
     {"id": "step-iges.brep", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "dwg.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "rvt.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},

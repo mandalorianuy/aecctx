@@ -1,0 +1,50 @@
+{
+  "entries": [
+    {
+      "id": "obj-unknown-scale",
+      "input": "fixtures/v0.2/mesh/triangle-unknown.obj",
+      "input_sha256": "eff920108246b8b6e87433cf4a615ba1057144e6d03ef0a265f757013ddaa355",
+      "profile": "fixtures/v0.2/mesh/profiles/scale-mm-to-m.json",
+      "profile_sha256": "a392cb24a610352b2ec0429b1b90e272c7eedba0ead2c6ab8b3160bdb62d8bed"
+    },
+    {
+      "id": "stl-unknown",
+      "input": "fixtures/v0.2/mesh/triangle-unknown.stl",
+      "input_sha256": "f721a2fd247e1f367ce181750b2fb5b18dccd2e966e3dc04ef25a9b435d9af1e"
+    },
+    {
+      "id": "gltf2-declared-meters-matrix",
+      "input": "fixtures/v0.2/mesh/triangle-meters.gltf",
+      "input_sha256": "ceffe08cc7d257d5191ea7db99b9a3ce1e869975d66ad5ff97c64cdc37001bc3",
+      "profile": "fixtures/v0.2/mesh/profiles/matrix-local-to-crs.json",
+      "profile_sha256": "821f52482fede59b620278d54435149ebd698c85867ee879c8b52f8ab4937805"
+    },
+    {
+      "id": "glb2-declared-meters",
+      "input": "fixtures/v0.2/mesh/triangle-meters.glb",
+      "input_sha256": "40daec8b07875b627326c2cc7cf0fd5ec4f3dfcf5d51ba28a05d4fe14b551b77"
+    },
+    {
+      "id": "obj-control-points",
+      "input": "fixtures/v0.2/mesh/triangle-unknown.obj",
+      "input_sha256": "eff920108246b8b6e87433cf4a615ba1057144e6d03ef0a265f757013ddaa355",
+      "profile": "fixtures/v0.2/mesh/profiles/control-points.json",
+      "profile_sha256": "eb1214037f0c22ca7fcfc70ed7968fbae087d1779de1e7d8c3cc5dc6abe4ab9d"
+    },
+    {
+      "id": "gltf2-source-manual-conflict",
+      "input": "fixtures/v0.2/mesh/triangle-meters.gltf",
+      "input_sha256": "ceffe08cc7d257d5191ea7db99b9a3ce1e869975d66ad5ff97c64cdc37001bc3",
+      "profile": "fixtures/v0.2/mesh/profiles/conflict-gltf-mm.json",
+      "profile_sha256": "a392cb24a610352b2ec0429b1b90e272c7eedba0ead2c6ab8b3160bdb62d8bed"
+    },
+    {
+      "expected_error": "AECCTX_MESH_EXTERNAL_RESOURCE_UNSUPPORTED",
+      "id": "gltf2-external-resource-rejected",
+      "input": "fixtures/v0.2/mesh/unsafe-external.gltf",
+      "input_sha256": "9719181bea12f91dd2d080e037b5910358a160d6d0f7d8448ef5e72ad3358cc0"
+    }
+  ],
+  "profile": "mesh-coordinate-v02-profile",
+  "version": "0.2.0"
+}
