@@ -178,6 +178,16 @@ Status: Active
 - Consequence: the ACX-18 instance of ACXD-019 is resolved for this exact provider/profile. RVT retains its separate open ACXD-019 instance.
 - Evidence owner: `docs/specs/dwg-v02-profile.md`, ACX-18 provider recipe/descriptor, generated corpus, license/security review, tests and acceptance evidence.
 
+## Proposed decisions
+
+### ACXD-030: No admissible RVT provider for ACX-19
+
+- Decision: no RVT provider is selected. Autodesk Revit desktop requires a licensed Windows Revit runtime; APS Automation requires credentials, egress, remote transfer, billing and retention governance; ODA BimRv requires a separately licensed commercial module; Autodesk's open-source IFC exporter still depends on Revit and proprietary assemblies. The repository has none of the required entitlement/runtime/sandbox/CI/fixture-rights combinations.
+- Functional outcome: ACX-19 implements only the machine-checked blocked boundary in `docs/specs/rvt-v02-blocked-profile.md`: provider-decision validation, anti-claim registry enforcement, exact opaque fallback for a project-authored non-RVT sentinel, restricted-dependency scans and consumer-boundary scans. It MUST NOT create an RVT adapter, descriptor, replay or extraction event.
+- Reopening: a human must authorize and supply either a licensed local runtime plus complete enforcement/CI/fixture evidence, or APS credentials plus billing/upload/retention/jurisdiction approval and a reviewed network-provider profile. The implementation plan must be updated before any decoder code.
+- Consequence: ACX-19 may close only as `blocked`; RVT remains public `unsupported` with opaque fallback. This is not an RVT capability claim.
+- Evidence owner: `docs/specs/rvt-v02-blocked-profile.md`, the ACX-19 decision record/checker/tests and `docs/evidence/ACX-19.md`.
+
 ## Open decisions
 
 ### ACXD-018: Signing and trust profile
@@ -188,9 +198,10 @@ Status: Active
 
 ### ACXD-019: Restricted decoder distribution and entitlement
 
-- Owner: the remaining ACX-19 RVT provider instance before implementation. ACX-17 and ACX-18 are resolved by ACXD-028 and ACXD-029.
-- Decision required: for each selected STEP/IGES, DWG, or RVT provider, record license compatibility, entitlement, redistribution, CI access, fixture rights, telemetry/network behavior, supported platforms, and support lifecycle.
-- Blocking effect: only the affected provider/format. An adapter may remain unsupported while other tasks continue.
+- Owner: ACX-19 written design review. ACX-17 and ACX-18 are resolved by ACXD-028 and ACXD-029.
+- Proposed resolution: accept ACXD-030 and select no RVT provider because no candidate satisfies license/entitlement, runtime, sandbox, CI and fixture-rights gates in the current repository.
+- Decision required: approve or reject `docs/specs/rvt-v02-blocked-profile.md`. Rejection must identify an authorized provider route and supply its missing entitlement, runtime, sandbox, CI, privacy and fixture-rights evidence before implementation planning.
+- Blocking effect: all RVT provider and blocked-boundary implementation. RVT extraction remains `unsupported` with opaque fallback while this decision is open.
 
 ### ACXD-023: Quality-gate policy and IDS implementation profile
 

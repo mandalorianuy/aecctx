@@ -197,6 +197,8 @@ The provider MUST preserve original source identifiers, version/producer, contai
 
 RVT work MUST remain neutral BIM extraction and MUST NOT introduce WoodFraming or another consumer mapping.
 
+Proposed ACXD-030 and `docs/specs/rvt-v02-blocked-profile.md` define the ACX-19 no-provider outcome awaiting written approval. While ACXD-019 remains open, RVT semantic extraction remains `unsupported`, ordinary unknown-input ingest remains `opaque`, and no RVT adapter/provider/version claim may be created.
+
 ## 12. Authenticity and signing
 
 Integrity and authenticity are distinct. The existing artifact hashes and logical package digest detect change but do not identify a producer or establish trust.

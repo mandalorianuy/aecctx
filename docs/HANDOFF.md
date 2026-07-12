@@ -12,7 +12,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 now inclu
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09 and ACX-11 through ACX-18 are complete; ACX-10 remains deferred. Execute only ACX-19, currently `pending-next`.
+4. ACX-01 through ACX-09 and ACX-11 through ACX-18 are complete; ACX-10 remains deferred. Execute only ACX-19, currently `in_progress` in written design review for its proposed no-provider blocked profile.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -57,7 +57,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 now inclu
 
 ## Next implementation task
 
-ACX-19: evaluate and, only after its remaining ACXD-019 decision gate, implement or formally block the optional RVT external-provider profile. It must resolve entitlement, redistribution, CI credentials, telemetry/retention, supported versions/platforms and publishable fixture rights before any decoder code or capability claim. It MUST NOT begin signing, quality-gate or consumer work.
+ACX-19: review the proposed functional blocked boundary in [`docs/specs/rvt-v02-blocked-profile.md`](specs/rvt-v02-blocked-profile.md). Proposed ACXD-030 selects no provider: after written approval and a detailed execution plan, implement only the decision checker, anti-claim/opaque-fallback conformance and dependency/consumer scans. It MUST NOT create an RVT adapter or begin signing, quality-gate or consumer work.
 
 Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request. ACX-18 acceptance evidence is in [`docs/evidence/ACX-18.md`](evidence/ACX-18.md).
 

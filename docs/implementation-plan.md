@@ -164,7 +164,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-16 | completed | Mesh units, calibration and CRS registration |
 | ACX-17 | completed | Experimental bounded STEP/IGES source graph and translator-derived BREP profiles |
 | ACX-18 | completed | Experimental bounded R2000/AC1015 DWG source-object and converted-DXF evidence profile |
-| ACX-19 | pending-next | Optional RVT external-provider adapter |
+| ACX-19 | in_progress | Governed RVT provider-blocker resolution; no adapter is authorized |
 | ACX-20 | pending | Package authenticity and signing profile |
 | ACX-21 | pending | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
 | ACX-22 | pending | Optional `aecctx-inspector` plugin for Codex |
@@ -658,37 +658,26 @@ Completion resolution: ACXD-029 selected only GNU LibreDWG 0.13.4 behind the exa
 
 Objective: provide optional, version-scoped RVT neutral evidence extraction through a legally reviewed ACX-12 provider.
 
+Proposed blocked profile: [`docs/specs/rvt-v02-blocked-profile.md`](specs/rvt-v02-blocked-profile.md), awaiting written approval under ACXD-019 and proposed ACXD-030. No provider or blocked-boundary implementation is authorized until approval and a detailed execution plan are recorded.
+
 Decision gate: resolve the RVT ACXD-019 instance for API/service/runtime, entitlement, supported host versions/platform, automation constraints, CI, telemetry/retention, redistribution and fixture rights. If unavailable, document `blocked` and retain opaque fallback.
 
 Deliverables:
 
-- allowlisted RVT provider descriptor/profile outside core dependencies;
-- mapping for original element IDs, classes/categories, documents/links, levels/views, properties, types/materials, relations, geometry references, units and coordinates;
-- converter/intermediate provenance when extraction is indirect;
-- publishable generated corpus strategy or exact legal blocker;
+- when a provider is selected through a future reopening decision: allowlisted RVT provider descriptor/profile outside core dependencies, neutral mappings, converter provenance and a publishable generated corpus;
+- for the current ACXD-030 no-provider decision: the machine-readable decision record, executable anti-claim/opaque-fallback boundary, restricted-dependency scans and exact reopening requirements defined by the blocked profile;
 - explicit scan proving no WoodFraming, `WFDomain`, `WFImport` or consumer classification enters output/code.
 
 Work breakdown:
 
 1. Review official supported APIs/providers and close the legal/operational decision.
-2. Define version-specific source locator and identity rules before normalization.
-3. Add replay fixtures and provider-unavailable tests independent of proprietary runtime access.
-4. Implement bounded neutral extraction for enumerated versions/features.
-5. Preserve original class/category as evidence; normalized neutral kinds remain non-consumer interpretations.
-6. Record document links, views/levels, properties, relations, geometry, units and coordinate transforms with loss.
-7. Record every conversion step and intermediate hash when native evidence cannot be returned directly.
-8. Exercise sandbox limits, unsupported versions and protected/corrupt inputs.
+2. If the decision selects a provider, stop and govern its version-specific source locator, identity, extraction, provenance, sandbox and corpus contract before implementation.
+3. If the decision selects no provider, stop adapter work and execute only the separately approved blocked-profile implementation plan.
 
 Test matrix:
 
-- each claimed RVT version/profile;
-- element/type/material/property and hierarchy/relationship evidence;
-- linked documents, levels/views, units, local/project/geographic coordinates;
-- supported geometry and representation loss;
-- unsupported/future version, protected/corrupt file and unsupported custom content;
-- provider entitlement/unavailable/timeout/resource failure;
-- replay parity and indirect-conversion provenance;
-- core install without provider and repository scan for consumer dependencies.
+- selected-provider branch: each claimed RVT version/profile, neutral evidence, loss, failures, replay parity, provenance and core isolation;
+- current blocked branch: decision-record schema, anti-claim registry, extension-independent opaque ingest determinism, core distribution/dependency isolation and consumer-boundary scans.
 
 Non-scope: no authoring mutation, no engineering approval, no consumer ontology and no WoodFraming integration.
 
