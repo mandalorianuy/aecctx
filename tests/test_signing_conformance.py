@@ -94,6 +94,26 @@ def test_signing_corpus_paths_are_safe_and_every_configured_file_is_hashed() -> 
             assert hashed_package in hashes
 
 
+def test_every_publishable_signing_corpus_file_is_tracked() -> None:
+    entries = corpus_value()["entries"]
+    tracked_paths = sorted(
+        {
+            configured_path
+            for entry in entries
+            for configured_path in entry["file_sha256"]
+        }
+    )
+    completed = subprocess.run(
+        ["git", "ls-files", "--error-unmatch", "--", *tracked_paths],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+
+
 def test_signing_corpus_rejects_duplicate_missing_unmapped_and_unsafe_cases(tmp_path: Path) -> None:
     base = corpus_value()
     mutations: list[tuple[dict[str, object], str]] = []
