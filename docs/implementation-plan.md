@@ -1,6 +1,6 @@
 # AECCTX Implementation Plan
 
-Date: 2026-07-11
+Date: 2026-07-12
 Status: Active implementation authority
 Specification readiness: `0.2.0-EXPANSION-SPEC-READY`
 
@@ -160,8 +160,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-12 | completed | Reviewed external sandbox/provider foundation |
 | ACX-13 | completed | IFC source-native 2D and georeferencing |
 | ACX-14 | completed | DXF source-native semantics and bounded 3D |
-| ACX-15 | pending-next | Optional OCR/vision evidence with explicit hidden-geometry boundary |
-| ACX-16 | pending | Mesh units, calibration and CRS registration |
+| ACX-15 | completed | Experimental bounded OCR evidence; vision remains target and hidden geometry remains public unsupported |
+| ACX-16 | pending-next | Mesh units, calibration and CRS registration |
 | ACX-17 | pending | STEP/IGES adapter profiles |
 | ACX-18 | pending | Optional DWG external-provider adapter |
 | ACX-19 | pending | Optional RVT external-provider adapter |
@@ -474,6 +474,8 @@ Evidence: [`docs/evidence/ACX-14.md`](evidence/ACX-14.md).
 
 Objective: add optional OCR/vision evidence while keeping core ingest offline and hidden geometry unsupported as source evidence.
 
+Normative profile: [`docs/specs/inference-v02-profile.md`](specs/inference-v02-profile.md), accepted by ACXD-020 before implementation. ACX-15 first strengthens the shared OCI preflight to verify a registered local image tag against its allowlisted immutable image ID; this is a functional prerequisite for the selected provider and does not broaden ACX-12 platform claims.
+
 Decision gate: resolve ACXD-020 separately for each provider profile, including license, install extra, execution boundary, model/runtime versioning, network/privacy/retention and reproducibility.
 
 Deliverables:
@@ -510,7 +512,9 @@ Non-scope: no mandatory LLM/network, no implicit upload, no hidden-geometry extr
 
 Acceptance: ACXD-020 profile decisions are recorded; optional installs and offline replay pass; hidden geometry remains `unsupported`; `./scripts/verify.sh` passes.
 
-Evidence: `docs/evidence/ACX-15.md` when completed.
+Evidence: [`docs/evidence/ACX-15.md`](evidence/ACX-15.md).
+
+Completion resolution: ACXD-020 selected only the exact local English OCR profile in `docs/specs/inference-v02-profile.md`. The provider-neutral v0.2 inference envelope, OCI execution, replay, PDF/image SDK/CLI opt-in, native/OCR comparisons, confidence/provenance mapping and failure degradation are implemented and tested. No vision/reconstruction vocabulary or provider was accepted, so those work-breakdown branches close as governed `unsupported` boundaries rather than implementation claims. Cropped/rotated regions, other languages and portable live-runtime matrices remain registered residuals requiring a future plan update before work begins.
 
 ## ACX-16: Mesh units and CRS
 

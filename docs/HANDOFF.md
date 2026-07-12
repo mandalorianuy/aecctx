@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
-Date: 2026-07-11
-Handoff status: `0.2.0-ACX-14-COMPLETE`
+Date: 2026-07-12
+Handoff status: `0.2.0-ACX-15-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 completed the v0.2 shared substrate, ACX-12 the bounded external-provider foundation, ACX-13 the opt-in partial IFC 2D/georeferencing profiles, and ACX-14 the opt-in partial DXF source-semantics/bounded-3D profiles. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-14 completed the shared/provider/IFC/DXF expansion foundations. ACX-15 now adds the experimental opt-in English OCR profile, portable replay and public unsupported hidden-geometry boundary. Vision remains unsupported. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09 and ACX-11 through ACX-14 are complete; ACX-10 remains deferred. Execute only ACX-15, currently `pending-next`, when continuation is explicitly requested.
+4. ACX-01 through ACX-09 and ACX-11 through ACX-15 are complete; ACX-10 remains deferred. Execute only ACX-16, currently `pending-next`, when continuation is explicitly requested.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -34,6 +34,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 completed the v0.2 share
 - ACX-12 is complete only for `oci-docker-v1` on `linux-container` with the digest-pinned reference runtime; native Linux/macOS and Windows profiles remain unsupported under ACXB-001.
 - ACX-13 IFC claims are partial and limited to `docs/specs/ifc-v02-profile.md`; IFC4.1/4.2/4X3 and unlisted 2D/coordinate profiles remain unclaimed.
 - ACX-14 DXF claims are partial and limited to `docs/specs/dxf-v02-profile.md`; unlisted releases/entities, ACIS/proxy/custom interpretation and xref traversal remain unclaimed.
+- ACX-15 OCR is experimental and partial only for the exact English Tesseract/replay profile in `docs/specs/inference-v02-profile.md`; vision and hidden geometry remain unsupported.
 - DWG/RVT remain optional provider capabilities outside the Apache-2.0 core distribution.
 - Authenticity remains unsupported until ACXD-018 and ACX-20 are complete.
 - The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
@@ -53,7 +54,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 completed the v0.2 share
 
 ## Next implementation task
 
-ACX-15: implement optional OCR/vision evidence and reconstruction hypotheses under a separately resolved ACXD-020 provider profile. It must keep native PDF text distinct from OCR, preserve provider/model/config/request/response provenance and confidence separation, require explicit network/privacy consent where applicable, and keep hidden/unobserved geometry unsupported as source evidence. It MUST NOT begin mesh, STEP/IGES, DWG/RVT or signing work.
+ACX-16: qualify mesh coordinates and add explicit, provenance-bearing manual unit calibration and CRS registration under ACXD-021. It must preserve original mesh coordinates, keep declared/detected/manual values separate, require reversible transforms and reject incomplete/conflicted registrations. It MUST NOT begin STEP/IGES, DWG/RVT, signing, quality-gate or consumer work.
 
 Its detailed work breakdown, threat boundary, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). Do not begin it without an explicit continuation request.
 

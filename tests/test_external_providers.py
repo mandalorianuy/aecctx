@@ -49,6 +49,15 @@ def test_reference_provider_replay_corpus_is_portable_and_valid() -> None:
     }
 
 
+def test_provider_replay_entry_can_drive_offline_functional_mapping() -> None:
+    replay = providers.load_provider_replay_entry("conformance/v0.2/provider-corpus.json", "reference-provider-echo")
+
+    assert replay.descriptor.provider_id == "org.aecctx.reference-provider"
+    assert replay.request["input"]["sha256"] == hashlib.sha256(replay.input_bytes).hexdigest()
+    assert replay.result.ok is True
+    assert replay.result.artifact_bytes["artifacts/echo.bin"] == replay.input_bytes
+
+
 REQUIRED_AXES = {
     "cpu",
     "decompression",
@@ -414,6 +423,55 @@ def test_oci_profile_rejects_missing_runtime(tmp_path: Path) -> None:
         profile.preflight(registration)
 
     assert captured.value.code == "AECCTX_PROVIDER_PROFILE_UNAVAILABLE"
+
+
+def test_oci_profile_verifies_allowlisted_local_image_id(tmp_path: Path) -> None:
+    docker = tmp_path / "docker"
+    docker.write_text(
+        "#!/bin/sh\n"
+        "if [ \"$1\" = version ]; then echo linux; exit 0; fi\n"
+        "if [ \"$1\" = image ]; then echo sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; exit 0; fi\n"
+        "exit 1\n",
+        encoding="utf-8",
+    )
+    docker.chmod(0o755)
+    base = providers.reference_provider_registry().resolve("org.aecctx.reference-provider")
+    registration = providers.ProviderRegistration(
+        descriptor=base.descriptor,
+        worker_module=base.worker_module,
+        container_image="aecctx-local-provider:0.2.0",
+        container_image_id="sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        container_command=base.container_command,
+        worker_path=base.worker_path,
+    )
+
+    providers.OCIDockerProfile(docker_executable=docker, image="aecctx-local-provider:0.2.0").preflight(registration)
+
+
+def test_oci_profile_rejects_local_image_id_mismatch(tmp_path: Path) -> None:
+    docker = tmp_path / "docker"
+    docker.write_text(
+        "#!/bin/sh\n"
+        "if [ \"$1\" = version ]; then echo linux; exit 0; fi\n"
+        "if [ \"$1\" = image ]; then echo sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb; exit 0; fi\n"
+        "exit 1\n",
+        encoding="utf-8",
+    )
+    docker.chmod(0o755)
+    base = providers.reference_provider_registry().resolve("org.aecctx.reference-provider")
+    registration = providers.ProviderRegistration(
+        descriptor=base.descriptor,
+        worker_module=base.worker_module,
+        container_image="aecctx-local-provider:0.2.0",
+        container_image_id="sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        container_command=base.container_command,
+        worker_path=base.worker_path,
+    )
+
+    with pytest.raises(providers.ProviderExecutionError) as captured:
+        providers.OCIDockerProfile(docker_executable=docker, image="aecctx-local-provider:0.2.0").preflight(registration)
+
+    assert captured.value.code == "AECCTX_PROVIDER_IMAGE_DIGEST_MISMATCH"
 
 
 def test_oci_profile_command_enforces_network_filesystem_user_and_resources(tmp_path: Path) -> None:

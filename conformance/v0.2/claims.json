@@ -5,7 +5,8 @@
     {"id": "v02-shared", "path": "fixtures/v0.2/shared/minimal-v02"},
     {"id": "v02-provider-reference", "path": "fixtures/v0.2/providers"},
     {"id": "v02-ifc-acx13", "path": "fixtures/v0.2/ifc"},
-    {"id": "v02-dxf-acx14", "path": "fixtures/v0.2/dxf"}
+    {"id": "v02-dxf-acx14", "path": "fixtures/v0.2/dxf"},
+    {"id": "v02-inference-acx15", "path": "fixtures/v0.2/inference"}
   ],
   "claims": [
     {
@@ -167,7 +168,39 @@
       ],
       "evidence": "docs/evidence/ACX-14.md"
     },
-    {"id": "pdf-image.ocr-vision", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {
+      "id": "pdf-image.ocr",
+      "status": "experimental",
+      "support_level": "partial",
+      "profile": "tesseract-5.3.4-capi-eng-psm6-v1",
+      "platform_scope": ["linux-arm64-container-live", "any-offline-replay"],
+      "provider_scope": "org.aecctx.ocr.tesseract-tsv@0.2.0; local image ID sha256:6d52ebcafef0ccdf59f58beccc7483c16a6e160fc94e3c3ea59f3f10c991f492",
+      "fixture_ids": ["v02-inference-acx15"],
+      "test_ids": [
+        "tests/test_tesseract_provider.py::test_tesseract_ocr_replay_corpus_is_portable_and_valid",
+        "tests/test_pdf_image_v02.py::test_image_v02_maps_validated_replay_as_inferred_word_evidence",
+        "tests/test_pdf_image_v02.py::test_pdf_v02_keeps_native_ocr_conflict_explicit",
+        "tests/test_pdf_image_v02.py::test_image_v02_ocr_packages_are_deterministic",
+        "tests/test_inference_v02.py::test_ocr_result_rejects_out_of_bounds_or_duplicate_reading_order",
+        "tests/test_inference_v02.py::test_prompt_like_ocr_text_is_preserved_only_as_unverified_data"
+      ],
+      "evidence": "docs/evidence/ACX-15.md"
+    },
+    {
+      "id": "pdf-image.hidden-geometry",
+      "status": "public",
+      "support_level": "unsupported",
+      "profile": "hidden-unobserved-source-geometry-boundary-v1",
+      "platform_scope": ["any"],
+      "provider_scope": "none accepted",
+      "fixture_ids": ["v02-inference-acx15"],
+      "test_ids": [
+        "tests/test_pdf_image_v02.py::test_image_v02_without_provider_preserves_unsupported_boundaries",
+        "tests/test_pdf_image_adapters.py::test_raster_pdf_extracts_image_evidence_without_ocr_or_hidden_geometry"
+      ],
+      "evidence": "docs/evidence/ACX-15.md"
+    },
+    {"id": "pdf-image.vision", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none accepted", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "mesh.units-crs", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "step-iges.brep", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "dwg.external-provider", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "tbd", "fixture_ids": [], "test_ids": [], "evidence": null},

@@ -129,6 +129,7 @@ class ProviderRegistration:
     worker_module: str
     runtime_roots: tuple[str, ...] = field(default_factory=tuple)
     container_image: str | None = None
+    container_image_id: str | None = None
     container_command: tuple[str, ...] = field(default_factory=tuple)
     worker_path: Path | None = None
 

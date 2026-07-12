@@ -11,7 +11,11 @@ from .protocol import (
 )
 from .registry import ProviderRegistry
 from .reference import reference_provider_registry
-from .replay import validate_provider_replay_corpus
+from .replay import ProviderReplay, load_provider_replay_entry, validate_provider_replay_corpus
+from .tesseract import IMAGE as TESSERACT_OCR_IMAGE
+from .tesseract import IMAGE_ID as TESSERACT_OCR_IMAGE_ID
+from .tesseract import PROVIDER_ID as TESSERACT_OCR_PROVIDER_ID
+from .tesseract import tesseract_ocr_descriptor, tesseract_ocr_registry
 from .runner import ProviderRunner
 
 __all__ = [
@@ -21,12 +25,19 @@ __all__ = [
     "ProviderExecutionError",
     "ProviderLimits",
     "ProviderRegistration",
+    "ProviderReplay",
     "ProviderRegistry",
     "ProviderRunner",
     "build_provider_request",
     "provider_descriptor_digest",
     "provider_response_payload_digest",
     "reference_provider_registry",
+    "load_provider_replay_entry",
     "validate_provider_response",
     "validate_provider_replay_corpus",
+    "TESSERACT_OCR_IMAGE",
+    "TESSERACT_OCR_IMAGE_ID",
+    "TESSERACT_OCR_PROVIDER_ID",
+    "tesseract_ocr_descriptor",
+    "tesseract_ocr_registry",
 ]

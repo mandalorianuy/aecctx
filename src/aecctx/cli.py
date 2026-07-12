@@ -57,6 +57,8 @@ def build_parser() -> argparse.ArgumentParser:
     ingest.add_argument("--embedding-policy", choices=("external", "embedded", "redacted"), default="external")
     ingest.add_argument("--adapter", choices=("auto", "opaque", "ifc", "dxf", "pdf", "image", "geometry"), default="auto")
     ingest.add_argument("--aecctx-version", choices=("0.1.0", "0.2.0"), default="0.1.0")
+    ingest.add_argument("--inference-replay", help="validated provider replay corpus (v0.2 PDF/image only)")
+    ingest.add_argument("--inference-entry", help="entry ID inside --inference-replay")
     ingest.add_argument("--created-at")
     ingest.add_argument("--json", action="store_true", dest="as_json")
     query = subparsers.add_parser("query")
@@ -108,8 +110,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                     adapter = "image"
                 else:
                     adapter = "opaque"
-            if arguments.aecctx_version == "0.2.0" and adapter not in {"ifc", "dxf"}:
+            if arguments.aecctx_version == "0.2.0" and adapter not in {"ifc", "dxf", "pdf", "image"}:
                 raise IngestVersionError(f"Adapter {adapter} has no governed AECCTX v0.2 profile")
+            if bool(arguments.inference_replay) != bool(arguments.inference_entry):
+                raise ValueError("--inference-replay and --inference-entry must be provided together")
+            inference_result = None
+            if arguments.inference_replay:
+                if arguments.aecctx_version != "0.2.0" or adapter not in {"pdf", "image"}:
+                    raise ValueError("inference replay is limited to governed v0.2 PDF/image profiles")
+                from .providers import load_provider_replay_entry
+
+                inference_result = load_provider_replay_entry(arguments.inference_replay, arguments.inference_entry).result
             if adapter == "ifc":
                 from .adapters.ifc import ingest_ifc
 
@@ -141,6 +152,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     created_at=arguments.created_at,
                     embedding_policy=arguments.embedding_policy,
                     package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
+                    ocr_result=inference_result,
                 )
             elif adapter == "image":
                 from .adapters.image import ingest_image
@@ -151,6 +164,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     created_at=arguments.created_at,
                     embedding_policy=arguments.embedding_policy,
                     package_form=arguments.form,
+                    aecctx_version=arguments.aecctx_version,
+                    ocr_result=inference_result,
                 )
             elif adapter == "geometry":
                 from .adapters.geometry import ingest_geometry

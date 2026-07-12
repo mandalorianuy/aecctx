@@ -151,6 +151,8 @@ Unsupported solid/surface kernels, proxy graphics, encrypted data, external refe
 
 ## 8. PDF and image OCR, vision, and hidden geometry
 
+ACXD-020 and `docs/specs/inference-v02-profile.md` define the ACX-15 experimental OCR profile and the public hidden-geometry boundary. Vision and reconstruction remain targets without an accepted provider.
+
 ### 8.1 OCR target
 
 OCR is an optional provider capability over rasterized page/image regions. It emits region/span evidence with text, reading order when supported, pixel/page coordinates, language/script metadata, provider provenance, confidence, and exact input/output hashes. Native PDF text and OCR text remain distinguishable and may conflict explicitly.

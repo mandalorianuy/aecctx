@@ -1,11 +1,60 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from .models import ProviderDescriptor, ProviderExecutionError, ProviderLimits
-from .protocol import _validate_schema, build_provider_request, validate_provider_response
+from .protocol import ProviderResult, _validate_schema, build_provider_request, validate_provider_response
+
+
+@dataclass(frozen=True, slots=True)
+class ProviderReplay:
+    descriptor: ProviderDescriptor
+    input_bytes: bytes
+    request: dict[str, Any]
+    result: ProviderResult
+
+
+def load_provider_replay_entry(corpus_path: str | Path, entry_id: str) -> ProviderReplay:
+    path = Path(corpus_path).resolve()
+    try:
+        corpus = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ProviderExecutionError("AECCTX_PROVIDER_CORPUS_INVALID", f"Provider corpus is unreadable: {error}") from error
+    if not isinstance(corpus, dict) or corpus.get("version") != "0.2.0" or not isinstance(corpus.get("entries"), list):
+        raise ProviderExecutionError("AECCTX_PROVIDER_CORPUS_INVALID", "Provider corpus must declare version 0.2.0 and entries")
+    matches = [entry for entry in corpus["entries"] if isinstance(entry, dict) and entry.get("id") == entry_id]
+    if len(matches) != 1:
+        raise ProviderExecutionError("AECCTX_PROVIDER_CORPUS_INVALID", f"Provider replay entry must exist exactly once: {entry_id}")
+    configured = matches[0]
+    repository_root = path.parents[2]
+    descriptor_raw = _read_json(repository_root, configured, "descriptor")
+    _validate_schema(descriptor_raw, "provider-descriptor.schema.json")
+    descriptor = ProviderDescriptor.from_dict(descriptor_raw)
+    limits_raw = configured.get("limits", {})
+    if not isinstance(limits_raw, dict):
+        raise ProviderExecutionError("AECCTX_PROVIDER_CORPUS_INVALID", f"{entry_id}: limits must be an object")
+    try:
+        limits = ProviderLimits(**limits_raw)
+    except TypeError as error:
+        raise ProviderExecutionError("AECCTX_PROVIDER_CORPUS_INVALID", f"{entry_id}: invalid limits: {error}") from error
+    input_bytes = _repo_path(repository_root, configured, "input").read_bytes()
+    request = _read_json(repository_root, configured, "request")
+    expected_request = build_provider_request(
+        descriptor.provider_id,
+        configured.get("action", "extract"),
+        input_bytes,
+        limits=limits,
+        configuration=configured.get("configuration", {}),
+    )
+    if request != expected_request:
+        raise ProviderExecutionError("AECCTX_PROVIDER_CORPUS_MISMATCH", f"{entry_id}: committed request is not reproducible")
+    response = _read_json(repository_root, configured, "response")
+    output_root = _repo_path(repository_root, configured, "output_root")
+    result = validate_provider_response(response, request, descriptor, output_root, limits=limits)
+    return ProviderReplay(descriptor, input_bytes, request, result)
 
 
 def validate_provider_replay_corpus(corpus_path: str | Path) -> dict[str, Any]:

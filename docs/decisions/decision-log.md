@@ -1,6 +1,6 @@
 # AECCTX Decision Log
 
-Date: 2026-07-11
+Date: 2026-07-12
 Status: Active
 
 ## Accepted decisions
@@ -134,6 +134,15 @@ Status: Active
 - Consequence: both DXF claims remain public `partial` claims bounded by exact releases, entities, dependency version and corpus evidence.
 - Evidence owner: ACX-14 fixtures, claim mappings, deterministic replay, security/loss tests and acceptance evidence.
 
+### ACXD-020: Optional inference provider profiles
+
+- OCR decision: ACX-15 selects experimental `org.aecctx.ocr.tesseract-tsv@0.2.0`, bounded to Ubuntu Noble `tesseract-ocr=5.3.4-1build5`, its official C API loaded through Python `ctypes`, English data `1:4.1.0-2`, LSTM and PSM 6 under ACX-12 `oci-docker-v1`. OpenMP is fixed to one thread so the existing `pids=1` sandbox is preserved. It is local, deterministic for fixed bytes/config/runtime, network-disabled and emits `aecctx.ocr.words.v1` word evidence.
+- Image verification: a locally built provider image may be registered by allowlisted tag only when registration also pins its inspected immutable Docker image ID. Preflight rejects an ID mismatch; it never pulls/builds or trusts a mutable tag alone. The original digest-addressed ACX-12 path remains valid.
+- Replay/claim boundary: validated offline replay is portable conformance for protocol and mapping but does not prove provider runtime availability. OCR remains release-governance `experimental` until the exact image/provider/platform execution matrix is public and green.
+- Vision decision: no vision or reconstruction provider is accepted in ACX-15. Those capabilities remain `unsupported`; hidden/unobserved geometry remains unsupported as source evidence under ACXD-015.
+- Privacy/licensing: the selected runtime is local with no egress, telemetry or retention; Tesseract and selected English trained data are Apache-2.0. Pillow remains an isolated provider dependency under its own license. No inference dependency enters the Apache-2.0 core wheel.
+- Evidence owner: ACX-15 provider descriptor/worker/build recipe, replay corpus, mapping/adversarial tests and acceptance evidence.
+
 ## Open decisions
 
 ### ACXD-018: Signing and trust profile
@@ -147,12 +156,6 @@ Status: Active
 - Owner: adapter-specific ACX-17, ACX-18, or ACX-19 task before implementation.
 - Decision required: for each selected STEP/IGES, DWG, or RVT provider, record license compatibility, entitlement, redistribution, CI access, fixture rights, telemetry/network behavior, supported platforms, and support lifecycle.
 - Blocking effect: only the affected provider/format. An adapter may remain unsupported while other tasks continue.
-
-### ACXD-020: Optional inference provider profiles
-
-- Owner: ACX-15.
-- Decision required: define the first local and/or network OCR/vision profiles, supported vocabulary, privacy/retention policy, nondeterminism class, thresholds, packaging extras, and conformance scope.
-- Blocking effect: the affected inference profile; baseline PDF/image extraction remains available without it.
 
 ### ACXD-023: Quality-gate policy and IDS implementation profile
 

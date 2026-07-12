@@ -1,7 +1,7 @@
 # AECCTX v0.2 Compatibility and Migration
 
-Date: 2026-07-11
-Status: ACX-11 compatibility contract
+Date: 2026-07-12
+Status: ACX-11 contract with ACX-13 through ACX-15 producer profiles
 Decision authority: ACXD-017
 
 ## Version matrix
@@ -15,7 +15,7 @@ Decision authority: ACXD-017
 | unknown required extension | not applicable | invalid with `AECCTX_REQUIRED_EXTENSION_UNSUPPORTED` |
 | unknown optional namespaced extension | governed by v0.1 contract | accepted as package data; retained when explicitly passed through a lossless rewrite |
 
-The reference implementation remains version `0.1.0` until the governed expansion release. Supporting v0.2 schemas in ACX-11 is a bounded compatibility capability. ACX-13 and ACX-14 add opt-in v0.2 producers for the exact IFC and DXF profiles in `docs/specs/ifc-v02-profile.md` and `docs/specs/dxf-v02-profile.md`; they do not imply other v0.2 format adapters.
+The reference implementation remains version `0.1.0` until the governed expansion release. Supporting v0.2 schemas in ACX-11 is a bounded compatibility capability. ACX-13 through ACX-15 add opt-in v0.2 producers for the exact IFC, DXF and PDF/image inference profiles in their normative profile documents; they do not imply other v0.2 format adapters or vision support.
 
 ## Schema boundary
 
@@ -55,7 +55,7 @@ Changing only version strings is not a conforming migration when v0.2 semantic f
 
 `PackageWriter` defaults to v0.1 for compatibility. A caller must explicitly request `aecctx_version="0.2.0"` and provide v0.2 record artifacts. The writer adds sorted `required_extensions` and optional `extensions`; it does not invent evidence-class, coordinate, provider or fidelity values.
 
-`ingest_ifc()`, `ingest_dxf()` and `aecctx ingest --aecctx-version 0.2.0` provide the ACX-13 IFC and ACX-14 DXF opt-ins. The CLI rejects v0.2 requests for adapters whose owning task has not yet published a governed profile. Omitting the option remains v0.1 and is byte-compatible with explicit `--aecctx-version 0.1.0`.
+`ingest_ifc()`, `ingest_dxf()`, `ingest_pdf()`, `ingest_image()` and `aecctx ingest --aecctx-version 0.2.0` provide the completed bounded profiles. PDF/image inference additionally requires an explicit validated `ProviderResult` in the SDK or `--inference-replay` plus `--inference-entry` in the CLI. Omitting the version remains v0.1 and is byte-compatible with explicit `--aecctx-version 0.1.0`; omitting inference in v0.2 invokes no provider and keeps OCR unsupported.
 
 ## Conformance material
 
@@ -64,4 +64,5 @@ Changing only version strings is not a conforming migration when v0.2 semantic f
 - dynamic negative fixtures: `tests/test_v02_compatibility.py`;
 - claim registry: `conformance/v0.2/claims.json`;
 - bounded DXF corpus: `conformance/v0.2/dxf-corpus.json`;
+- bounded OCR replay corpus: `conformance/v0.2/inference-corpus.json`;
 - acceptance evidence: `docs/evidence/ACX-11.md`.

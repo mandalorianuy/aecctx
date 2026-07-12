@@ -1,0 +1,32 @@
+{
+  "entries": [
+    {
+      "action": "extract",
+      "configuration": {
+        "dpi": 300,
+        "language": "eng",
+        "minimum_confidence": 0,
+        "page_segmentation_mode": 6
+      },
+      "descriptor": "fixtures/v0.2/inference/ocr-descriptor.json",
+      "id": "tesseract-ocr-aecctx-15",
+      "input": "fixtures/v0.2/inference/ocr-aecctx-15.png",
+      "limits": {
+        "cpu_seconds": 30,
+        "max_decompression_ratio": 20.0,
+        "max_files": 10,
+        "max_input_bytes": 1000000,
+        "max_memory_bytes": 536870912,
+        "max_open_files": 32,
+        "max_output_bytes": 1000000,
+        "max_records": 100,
+        "max_recursion_depth": 8,
+        "wall_time_seconds": 30.0
+      },
+      "output_root": "fixtures/v0.2/inference/ocr-output",
+      "request": "fixtures/v0.2/inference/ocr-request.json",
+      "response": "fixtures/v0.2/inference/ocr-output/response.json"
+    }
+  ],
+  "version": "0.2.0"
+}

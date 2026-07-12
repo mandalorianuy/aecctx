@@ -1,6 +1,6 @@
 # AECCTX Capability Matrix
 
-Date: 2026-07-11
+Date: 2026-07-12
 Status: v0.1.0 release claim registry plus non-claim expansion targets
 
 ## Support levels
@@ -22,7 +22,7 @@ Opaque fallback ingest is implemented in the core. Format-specific adapter value
 | IFC 2x3/4.x | `full` schema/GUID/class provenance | `full` when representable; dynamic `partial` with unsupported preservation | `partial` with native refs | `full` for successfully tessellated representations; dynamic `partial` on failures | ACX-04 completed |
 | ASCII/binary DXF | `full` version/unit/layout/layer/block/handle provenance | `partial` source semantics for the ACX-14 AC1015/AC1032 profile with no automatic domain classification | `full` for normalized v0.1 entities; dynamic `partial` with exact raw-tag fallback | `partial` for enumerated ACX-14 entities/transforms plus derived tessellation | ACX-05 and ACX-14 completed |
 | Vector PDF | `full` source/page identity | `partial` text and content-stream evidence | `partial` path operators per page/viewport | `unsupported` as inferred hidden geometry | ACX-06 completed |
-| Raster PDF/image | `full` source/pixel identity | `partial` metadata; OCR/vision `unsupported` without provider | `partial` raster regions with explicit calibration state; image pixels `full` | `unsupported` as inferred hidden geometry | ACX-06 completed |
+| Raster PDF/image | `full` source/pixel identity | `partial` metadata; experimental `partial` English OCR under the exact ACX-15 local/replay profile; vision `unsupported` | `partial` raster regions with explicit calibration state; image pixels `full` | `unsupported` as inferred hidden geometry | ACX-06 and ACX-15 completed |
 | OBJ/STL/glTF | `full` source/object identity | `partial` metadata with explicit unknown units | deterministic SVG preview only | `full` preserved mesh evidence plus derived GLB with reversible transform | ACX-07 completed |
 | STEP/IGES | Target `full` | Target `partial` names/colors/assembly metadata | Target preview only | Target `full` B-Rep plus tessellation where supported | post-v0.1 |
 | DWG/DGN | Adapter-specific | Adapter-specific | Adapter-specific | Adapter-specific | optional plugin, post-v0.1 |
@@ -54,9 +54,9 @@ This table is a roadmap, not a support claim. Current claims in the release regi
 | IFC georeferencing | `partial`: public for explicit IFC4 Add2 TC1 `IfcMapConversion` + `IfcProjectedCRS` with compatible declared units and reversible transforms | IFC2X3 property sets, omitted/multiple/conflicted operations and later schemas remain unknown/unsupported/conflicted | ACX-13 completed |
 | DXF source semantics | `partial`: public for AC1015/AC1032 with `ezdxf==1.4.4`, bounded dictionaries/XRECORD, extension dictionaries, XDATA/AppID, ownership, groups, attributes, materials and block structure | Other releases/objects and custom/proxy interpretation remain raw/opaque/unsupported; no consumer classification | ACX-14 completed |
 | DXF 3D | `partial`: public for enumerated point/line/face/mesh/polyline, OCS/WCS and bounded insert transforms with derived tessellation/GLB | ACIS/proxy/custom/encrypted/external-reference and unlisted geometry remain explicit loss | ACX-14 completed |
-| Raster OCR | `unsupported` without provider | Optional OCR spans/regions with provider provenance and native-text conflict handling | ACX-15 |
-| Image/PDF vision | `unsupported` without provider | Optional inferred candidates with explicit confidence, privacy, reproducibility, and evidence links | ACX-15 |
-| Hidden/unobserved geometry | `unsupported` | Remains unsupported as source geometry; optional reconstruction hypotheses never become measurement authority | ACX-15 |
+| Raster OCR | `experimental partial`: English word evidence under `tesseract-5.3.4-capi-eng-psm6-v1`; `unsupported` without explicit provider/replay | Additional languages, layouts, rotation profiles and portable live-runtime matrices remain separately governed | ACX-15 completed |
+| Image/PDF vision | `unsupported`; no provider or output vocabulary accepted | Future inferred candidates require a new governed profile with confidence, privacy, reproducibility and evidence links | ACX-15 completed boundary; future task required |
+| Hidden/unobserved geometry | public `unsupported` boundary | Remains unsupported as source geometry; reconstruction hypotheses never become measurement authority without a future separately governed profile | ACX-15 completed |
 | Mesh units and CRS | units often `unknown`; CRS unresolved | Preserve declared metadata and accept separately proven manual calibration/registration | ACX-16 |
 | STEP/IGES | `unsupported`/opaque fallback | Bounded profiles preserving B-Rep/assembly evidence plus derived tessellation | ACX-17 |
 | DWG | `unsupported`/opaque fallback | Optional reviewed external provider with adapter-specific claims | ACX-18 |

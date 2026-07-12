@@ -25,8 +25,15 @@ class OCIDockerProfile:
             raise ProviderExecutionError("AECCTX_PROVIDER_PROFILE_MISMATCH", "Provider descriptor does not admit the OCI profile")
         if descriptor.network_mode != "disabled":
             raise ProviderExecutionError("AECCTX_PROVIDER_NETWORK_POLICY_UNSUPPORTED", "Reference OCI profile requires network_mode=disabled")
-        if registration.container_image != self.image or "@sha256:" not in self.image:
-            raise ProviderExecutionError("AECCTX_PROVIDER_IMAGE_UNPINNED", "Provider image must match the reviewed digest-pinned image")
+        if registration.container_image != self.image:
+            raise ProviderExecutionError("AECCTX_PROVIDER_IMAGE_UNPINNED", "Provider image must match the reviewed image registration")
+        local_image_id = registration.container_image_id
+        if "@sha256:" not in self.image and local_image_id is None:
+            raise ProviderExecutionError("AECCTX_PROVIDER_IMAGE_UNPINNED", "Mutable image tags require an allowlisted immutable local image ID")
+        if local_image_id is not None:
+            digest = local_image_id.removeprefix("sha256:")
+            if not local_image_id.startswith("sha256:") or len(digest) != 64 or any(character not in "0123456789abcdef" for character in digest):
+                raise ProviderExecutionError("AECCTX_PROVIDER_IMAGE_UNPINNED", "Local image ID must be a sha256 digest")
         if registration.worker_path is None or not registration.worker_path.is_file() or not registration.container_command:
             raise ProviderExecutionError("AECCTX_PROVIDER_LAUNCH_TARGET_UNREVIEWED", "Provider container launch target is incomplete")
         try:
@@ -38,7 +45,7 @@ class OCIDockerProfile:
                 timeout=5,
             )
             image = subprocess.run(
-                [str(self.docker_executable), "image", "inspect", self.image],
+                [str(self.docker_executable), "image", "inspect", "--format", "{{.Id}}", self.image],
                 check=False,
                 capture_output=True,
                 text=True,
@@ -51,6 +58,8 @@ class OCIDockerProfile:
                 "AECCTX_PROVIDER_PROFILE_UNAVAILABLE",
                 "Reviewed Linux-container runtime or digest-pinned image is unavailable; images are never pulled implicitly",
             )
+        if local_image_id is not None and image.stdout.strip() != local_image_id:
+            raise ProviderExecutionError("AECCTX_PROVIDER_IMAGE_DIGEST_MISMATCH", "Installed provider image ID does not match the reviewed registration")
 
     def command(
         self,

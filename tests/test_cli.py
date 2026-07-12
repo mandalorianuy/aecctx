@@ -189,13 +189,15 @@ def test_ingest_dxf_v02_is_explicitly_available_from_cli(tmp_path: Path) -> None
 
 
 def test_ingest_v02_rejects_adapter_without_governed_v02_profile(tmp_path: Path) -> None:
-    fixture = ROOT / "fixtures" / "pdf" / "minimal-vector.pdf"
+    fixture = ROOT / "fixtures" / "geometry" / "minimal-triangle.obj"
 
     completed = run_cli(
         "ingest",
         str(fixture),
         "--output",
-        str(tmp_path / "pdf-v02.aecctx"),
+        str(tmp_path / "geometry-v02.aecctx"),
+        "--adapter",
+        "geometry",
         "--aecctx-version",
         "0.2.0",
         "--json",
@@ -203,6 +205,34 @@ def test_ingest_v02_rejects_adapter_without_governed_v02_profile(tmp_path: Path)
 
     assert completed.returncode == 2
     assert json.loads(completed.stdout)["diagnostics"][0]["code"] == "AECCTX_INGEST_VERSION_UNSUPPORTED"
+
+
+def test_ingest_image_v02_accepts_explicit_validated_inference_replay(tmp_path: Path) -> None:
+    fixture = ROOT / "fixtures" / "v0.2" / "inference" / "ocr-aecctx-15.png"
+    corpus = ROOT / "conformance" / "v0.2" / "inference-corpus.json"
+    output = tmp_path / "image-ocr-v02"
+
+    completed = run_cli(
+        "ingest",
+        str(fixture),
+        "--output",
+        str(output),
+        "--adapter",
+        "image",
+        "--aecctx-version",
+        "0.2.0",
+        "--inference-replay",
+        str(corpus),
+        "--inference-entry",
+        "tesseract-ocr-aecctx-15",
+        "--created-at",
+        "2026-07-12T00:00:00Z",
+        "--json",
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert json.loads(completed.stdout)["data"]["aecctx_version"] == "0.2.0"
+    assert PackageReader(output).manifest["capabilities"]["text"] == "partial"
 
 
 def test_ingest_auto_selects_dxf_adapter(tmp_path: Path) -> None:

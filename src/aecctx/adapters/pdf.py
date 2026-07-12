@@ -5,7 +5,9 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from ..ingest import CAPABILITIES, IngestResult, _timestamp
+from ..inference import InferenceMappingError, map_ocr_result
 from ..package import PackageArtifact, PackageWriter, canonical_json, hash_file
+from ..providers.protocol import ProviderResult
 
 
 PLUGIN_ID = "aecctx.adapter.pdf.pypdf"
@@ -145,6 +147,8 @@ def ingest_pdf(
     created_at: str | None = None,
     embedding_policy: str = "external",
     package_form: str = "directory",
+    aecctx_version: str = "0.1.0",
+    ocr_result: ProviderResult | None = None,
 ) -> IngestResult:
     pypdf, ContentStream = _pypdf()
     source = Path(source_path)
@@ -153,6 +157,10 @@ def ingest_pdf(
         raise ValueError("source_path must be a regular PDF file")
     if embedding_policy not in {"external", "embedded", "redacted"}:
         raise ValueError("embedding_policy must be external, embedded, or redacted")
+    if aecctx_version not in {"0.1.0", "0.2.0"}:
+        raise ValueError("aecctx_version must be 0.1.0 or 0.2.0")
+    if ocr_result is not None and aecctx_version != "0.2.0":
+        raise ValueError("ocr_result requires aecctx_version of 0.2.0")
     source_digest, source_bytes = hash_file(source)
     identity = source_digest[:24]
     source_id = f"src_{identity}"
@@ -161,8 +169,10 @@ def ingest_pdf(
     reader = pypdf.PdfReader(source, strict=True)
     runtime = str(pypdf.__version__)
     primitives: list[dict[str, Any]] = []
+    assertions: list[dict[str, Any]] = []
     entities: list[dict[str, Any]] = []
     derived_artifacts: list[PackageArtifact] = []
+    raster_candidates: list[tuple[bytes, int, int, str, str, int]] = []
     text_count = 0
     image_count = 0
     path_count = 0
@@ -261,6 +271,48 @@ def ingest_pdf(
                     "viewport": {"media_box": media_box},
                 }
             )
+            raster_candidates.append((data, width, height, record_id, f"page:{page_index}/image:{image_file.name}", page_index))
+
+    inference_diagnostics: list[dict[str, Any]] = []
+    mapping = None
+    ocr_error: InferenceMappingError | None = None
+    if ocr_result is not None:
+        try:
+            locators = [
+                event.get("source_locator")
+                for event in ocr_result.events
+                if event.get("event_type") == "primitive" and event.get("payload", {}).get("schema") == "aecctx.ocr.words.v1"
+            ]
+            if len(locators) != 1 or not isinstance(locators[0], str) or not locators[0].startswith("sha256:"):
+                raise InferenceMappingError("AECCTX_OCR_EVENT_PROFILE_INVALID", "OCR response does not identify exactly one input artifact")
+            expected_digest = locators[0].removeprefix("sha256:")
+            matching = [candidate for candidate in raster_candidates if hashlib.sha256(candidate[0]).hexdigest() == expected_digest]
+            if len(matching) != 1:
+                raise InferenceMappingError("AECCTX_OCR_INPUT_ARTIFACT_AMBIGUOUS", "OCR input must match exactly one decoded PDF raster artifact")
+            data, width, height, parent_id, locator, page_index = matching[0]
+            native_text = [
+                primitive
+                for primitive in primitives
+                if primitive.get("original_class") == "PDF_TEXT"
+                and primitive.get("source_refs", [{}])[0].get("locator", "").startswith(f"page:{page_index}/")
+            ]
+            mapping = map_ocr_result(
+                ocr_result,
+                input_bytes=data,
+                source_id=source_id,
+                parent_record_id=parent_id,
+                source_locator=locator,
+                width=width,
+                height=height,
+                recorded_at=instant,
+                native_text_records=native_text,
+            )
+        except InferenceMappingError as error:
+            ocr_error = error
+        else:
+            primitives.extend(mapping.primitives)
+            assertions.extend(mapping.assertions)
+            inference_diagnostics.extend(mapping.diagnostics)
 
     capabilities = {name: "full" for name in CAPABILITIES}
     capabilities.update(
@@ -273,11 +325,11 @@ def ingest_pdf(
             "georeferencing": "unsupported",
         }
     )
-    capabilities["text"] = "full" if text_count else "unsupported"
+    capabilities["text"] = "partial" if mapping is not None else "full" if text_count else "unsupported"
     reasons = {
         "properties": "AECCTX_PDF_PROPERTIES_PARTIAL",
         "relationships": "AECCTX_PDF_RELATIONSHIPS_OPAQUE",
-        "text": "AECCTX_OCR_PROVIDER_NOT_CONFIGURED",
+        "text": "AECCTX_OCR_INFERRED_UNVERIFIED" if mapping is not None else "AECCTX_OCR_PROVIDER_RESULT_REJECTED" if ocr_error is not None else "AECCTX_OCR_PROVIDER_NOT_CONFIGURED",
         "2d_geometry": "AECCTX_PDF_VECTOR_EXTRACTION_PARTIAL" if path_count else "AECCTX_PDF_RASTER_PIXEL_GEOMETRY_PARTIAL",
         "3d_geometry": "AECCTX_PDF_HIDDEN_GEOMETRY_UNSUPPORTED",
         "materials_styles": "AECCTX_PDF_STYLES_PARTIAL",
@@ -302,6 +354,24 @@ def ingest_pdf(
                 "severity": "info",
                 "source_refs": [{"locator": "pdf-document", "source_id": source_id}],
                 "support_level": level,
+            }
+        )
+    diagnostics.extend(inference_diagnostics)
+    if ocr_error is not None:
+        diagnostics.append(
+            {
+                "affected_count": 1,
+                "capability": "text",
+                "code": ocr_error.code,
+                "fallback": "Retain native PDF text and observed raster evidence; inspect or rerun the rejected provider result.",
+                "message": "OCR provider result was rejected; baseline PDF evidence remains available.",
+                "provenance": _provenance(instant, [source_id], runtime),
+                "record_id": _stable_id("diag_pdf_ocr_rejected", source_digest, ocr_error.code),
+                "record_type": "diagnostic",
+                "record_version": "0.1",
+                "severity": "warning",
+                "source_refs": [{"locator": "pdf-document", "source_id": source_id}],
+                "support_level": "unsupported",
             }
         )
     diagnostics.sort(key=lambda item: item["record_id"])
@@ -337,10 +407,14 @@ def ingest_pdf(
         source_record["storage_ref"] = storage_ref
     elif embedding_policy == "redacted":
         source_record["redaction_reason"] = "AECCTX_SOURCE_CONTENT_REDACTED_BY_POLICY"
+    if aecctx_version == "0.2.0":
+        for record in [source_record, *primitives, *assertions, *entities, *diagnostics]:
+            record.setdefault("evidence_class", "observed")
+            record["record_version"] = "0.2"
     record_sets = {
         "sources/sources.jsonl": [source_record],
         "evidence/primitives.jsonl": primitives,
-        "evidence/assertions.jsonl": [],
+        "evidence/assertions.jsonl": assertions,
         "model/entities.jsonl": entities,
         "model/relations.jsonl": [],
         "diagnostics/diagnostics.jsonl": diagnostics,
@@ -366,5 +440,6 @@ def ingest_pdf(
         embedding_policy=embedding_policy,
         producer={"name": PLUGIN_ID, "version": f"{PLUGIN_VERSION}+pypdf.{runtime}"},
         artifacts=artifacts,
+        aecctx_version=aecctx_version,
     )
     return IngestResult(package_id, source_id, manifest["logical_digest"], output)
