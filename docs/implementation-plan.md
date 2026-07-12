@@ -693,7 +693,9 @@ Objective: define and implement optional package signature verification without 
 
 Normative profile: [`docs/specs/signing-v1-profile.md`](specs/signing-v1-profile.md), accepted under ACXD-018. Its threat boundary is [`docs/security/signing-threat-model.md`](security/signing-threat-model.md). Acceptance authorizes implementation planning but does not create an authenticity claim.
 
-Decision gate: resolved. ACXD-018 selects detached JWS General JSON, the fully specified `Ed25519` JOSE identifier, canonical semantic-manifest binding and caller-owned offline registry/policy evaluation. The written profile requires user review before the subordinate TDD execution cut is authored.
+Execution cut: [`docs/plans/acx-20-implementation.md`](plans/acx-20-implementation.md). It is subordinate to the normative profile, threat model and this plan; it adds no ACX-21 scope.
+
+Decision gate: resolved. ACXD-018 selects detached JWS General JSON, the fully specified `Ed25519` JOSE identifier, canonical semantic-manifest binding, protected statement digest and caller-owned offline registry/policy evaluation with independent key-lifecycle/trust fields. The written profile and subordinate TDD execution cut require explicit user approval before implementation begins.
 
 Deliverables:
 
@@ -714,7 +716,7 @@ Work breakdown:
 7. Support multiple signatures and rotation without making container metadata authoritative.
 8. Integrate integrity and signature results as separate validation sections and queryable records.
 
-Governed execution rule: no implementation file, schema, fixture or dependency change begins until the accepted written profile has been reviewed and a subordinate ACX-20 implementation plan is committed. That plan MUST preserve the work breakdown and test matrix above, order tests before implementation, name narrow commands per slice and contain no ACX-21 scope.
+Governed execution rule: no implementation file, schema, fixture or dependency change begins until the accepted written profile and committed subordinate ACX-20 implementation plan have explicit user approval. The execution cut preserves the work breakdown and test matrix above, orders tests before implementation, names narrow commands per slice and contains no ACX-21 scope.
 
 Test matrix:
 

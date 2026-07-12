@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-12
-Handoff status: `0.2.0-ACX-20-DESIGN-REVIEW`
+Handoff status: `0.2.0-ACX-20-PLAN-REVIEW`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is `in_progress`: ACXD-018 now accepts the detached JWS/Ed25519 offline signing design, but implementation and the public authenticity claim remain pending written-spec review, a subordinate TDD plan and conformance. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is `in_progress`: ACXD-018 accepts the amended detached JWS/Ed25519 offline signing design and `docs/plans/acx-20-implementation.md` defines the subordinate TDD cut. Implementation and the public authenticity claim remain pending explicit plan approval and conformance. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
@@ -57,9 +57,9 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 
 ## Next implementation task
 
-ACX-20: review the written [`docs/specs/signing-v1-profile.md`](specs/signing-v1-profile.md) and [`docs/security/signing-threat-model.md`](security/signing-threat-model.md). After explicit approval, author the subordinate TDD execution plan before changing schemas, dependencies, fixtures or implementation. The implementation MUST distinguish integrity, signature validity, signer identity, trust and authorization, and MUST NOT begin quality-gate, plugin or consumer work.
+ACX-20: review the subordinate [`docs/plans/acx-20-implementation.md`](plans/acx-20-implementation.md). After explicit approval, execute only its ACX-20 TDD cuts. The implementation MUST distinguish integrity, signature validity, signer identity, key lifecycle, trust and authorization, and MUST NOT begin quality-gate, plugin or consumer work.
 
-Its work breakdown, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). The next authorized action is written-spec review, not implementation. ACX-19 blocked evidence is in [`docs/evidence/ACX-19.md`](evidence/ACX-19.md).
+Its work breakdown, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). The next authorized action is implementation-plan review, not implementation. ACX-19 blocked evidence is in [`docs/evidence/ACX-19.md`](evidence/ACX-19.md).
 
 ## Consumer integration planning entry point
 

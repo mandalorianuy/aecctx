@@ -85,6 +85,7 @@ def check_required_files() -> None:
         ROOT / "docs/specs/rvt-v02-blocked-profile.md",
         ROOT / "docs/specs/signing-v1-profile.md",
         ROOT / "docs/security/signing-threat-model.md",
+        ROOT / "docs/plans/acx-20-implementation.md",
         ROOT / "fixtures/v0.2/dxf/r2018-semantics-3d-ascii.dxf",
         ROOT / "fixtures/v0.2/dxf/r2018-semantics-3d-binary.dxf",
         ROOT / "fixtures/v0.2/dxf/r2000-cyclic-inserts.dxf",
@@ -140,6 +141,16 @@ def check_authorities() -> None:
     ]:
         if phrase not in signing:
             fail(f"signing profile missing authority phrase: {phrase}")
+
+    signing_plan = (ROOT / "docs/plans/acx-20-implementation.md").read_text(encoding="utf-8")
+    for phrase in [
+        "Strict JSON, canonical statement and package binding",
+        "Optional Ed25519 signing and deterministic bundle append",
+        "Multi-signature verification and separated result records",
+        "Publishable signing corpus, portable gates and packaging proof",
+    ]:
+        if phrase not in signing_plan:
+            fail(f"signing implementation plan missing execution slice: {phrase}")
 
     plan = PLAN.read_text(encoding="utf-8")
     for phrase in [

@@ -1,6 +1,6 @@
 # AECCTX Detached Signing Profile v1
 
-Version: `1.0.0-draft.1`
+Version: `1.0.0-draft.2`
 Date: 2026-07-12
 Status: Normative ACX-20 design approved 2026-07-12; implementation and public authenticity claims remain pending conformance
 
@@ -76,11 +76,14 @@ The protected header contains exactly:
 
 ```json
 {
+  "https://aecctx.dev/jws/statement-sha256": "<lowercase sha256>",
   "alg": "Ed25519",
   "kid": "<explicit key id>",
   "typ": "aecctx-signing-statement+jws"
 }
 ```
+
+`https://aecctx.dev/jws/statement-sha256` is SHA-256 of the exact canonical statement bytes. It is a collision-resistant private JOSE header name and lets a verifier distinguish a sidecar bound to another package statement from a corrupted signature. A mismatched statement hash produces `AECCTX_SIGNING_STATEMENT_BINDING_MISMATCH` before signature verification; a matching hash with failed Ed25519 verification produces `AECCTX_SIGNING_SIGNATURE_INVALID`.
 
 Protected-header JSON uses UTF-8, sorted keys and no insignificant whitespace, without a terminal LF before base64url encoding. Base64url encoding MUST be unpadded and canonical. The JWS signing input follows RFC 7515: ASCII base64url of the protected header, a period and base64url of the canonical statement bytes.
 
@@ -141,11 +144,12 @@ Each signature result contains:
 
 - `cryptographic_status`: `valid`, `invalid`, `malformed`, `unknown_key` or `unsupported_algorithm`;
 - `identity_status`: `resolved` or `unresolved`;
-- `trust_status`: `trusted`, `untrusted`, `expired`, `revoked`, `unknown_status` or `not_evaluated`;
+- `key_status`: `valid`, `not_yet_valid`, `expired`, `revoked`, `unknown_status` or `not_evaluated`;
+- `trust_status`: `trusted`, `untrusted` or `not_evaluated`;
 - `authorization_status`: `authorized`, `unauthorized` or `not_evaluated`;
 - `kid`, algorithm, resolved subject when available and cited diagnostic codes.
 
-An unsigned result contains no fabricated signature entry. Unknown, expired, revoked and unsupported states remain explicit. Aggregate policy satisfaction counts unique authorized signatures only.
+Key lifecycle and administrator trust are independent: a key can be both `expired` and `untrusted`. A registry key with `revocation_status = "revoked"` is `valid` before `revoked_at` and `revoked` at or after that instant. `not_yet_valid` applies before `valid_from`; `expired` applies at or after `valid_until`; `unknown_status` applies when a resolved key's revocation status is unknown. `not_evaluated` applies only when no registry key is resolved or no trust policy supplies `verification_time`; it MUST NOT be substituted for an evaluated unknown revocation state. An unsigned result contains no fabricated signature entry. Unknown, expired, revoked and unsupported states remain explicit. Aggregate policy satisfaction counts unique signatures whose cryptographic, key, trust and authorization statuses are respectively `valid`, `valid`, `trusted` and `authorized`.
 
 ## 10. SDK and CLI contract
 
