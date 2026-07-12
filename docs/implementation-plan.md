@@ -613,6 +613,8 @@ Objective: provide optional, version-scoped DWG extraction through a legally rev
 
 Normative profile: [`docs/specs/dwg-v02-profile.md`](specs/dwg-v02-profile.md), governed by ACXD-007, ACXD-014, ACXD-019, ACXD-024 and ACXD-029. The selected GPL runtime is restricted to the reviewed ACX-12 OCI boundary.
 
+Execution cut: [`docs/plans/acx-18-implementation.md`](plans/acx-18-implementation.md). It is subordinate to this plan and the normative profile; it adds no scope.
+
 Decision gate: resolve the DWG ACXD-019 instance, including SDK/service entitlement, user deployment model, CI credentials, redistribution, telemetry/retention, version support and publishable fixture rights. If no compliant provider is available, record `blocked` evidence and retain opaque fallback.
 
 Deliverables:

@@ -21,8 +21,9 @@ The provider image is built explicitly by an operator from the official LibreDWG
 
 - source: `https://github.com/LibreDWG/libredwg/releases/download/0.13.4/libredwg-0.13.4.tar.xz`;
 - SHA-256: `7e153ea4dac4cbf3dc9c50b9ef7a5604e09cdd4c5520bcf8017877bbe1422cd5`;
-- build mode: `./configure --enable-release --disable-write`;
-- runtime tools: `dwgread` and `dwg2dxf` only.
+- build mode: `./configure --enable-release`;
+- provider runtime tool: `dwgread` only;
+- project-fixture generation tool: `dxf2dwg`, invoked only by the explicit repository generator and never from a provider request.
 
 The immutable locally inspected image ID is a mandatory implementation output. Core ingest never builds, pulls, installs or discovers the image. The repository does not distribute the image by default. Any later image distribution must ship complete GPL notices, corresponding source/build instructions and relinking/replacement rights appropriate to that distribution.
 
@@ -47,7 +48,7 @@ DWG bytes, LibreDWG JSON/DXF, stderr, object graphs, strings, handles and geomet
 - schema, sequence, path, symlink, size, hash, attestation and host-path validation before mapping;
 - complete process-tree termination and workspace cleanup.
 
-The provider accepts no caller command, shell, callback, environment, plugin, resource path or LibreDWG option. It never executes VBA, macros, links, xrefs, embedded OLE content or source-provided commands. stderr becomes only stable diagnostic codes, never raw package evidence.
+The provider accepts no caller command, shell, callback, environment, plugin, resource path or LibreDWG option. Its worker invokes only the fixed `dwgread` binary; the image's writer utilities are not reachable through provider actions or configuration. It never executes VBA, macros, links, xrefs, embedded OLE content or source-provided commands. stderr becomes only stable diagnostic codes, never raw package evidence.
 
 ## 5. Request, output and conversion provenance
 
@@ -66,7 +67,7 @@ The only action is `extract`. Configuration is exact canonical JSON:
 The provider verifies the `AC1015` header before invoking LibreDWG. It runs:
 
 1. `dwgread --format JSON --file <bounded-output> <content-addressed-input>`;
-2. `dwg2dxf --as r2000 --overwrite <content-addressed-input>`.
+2. `dwgread --format DXF --file <bounded-output> <content-addressed-input>`.
 
 The provider response contains:
 
