@@ -10,7 +10,8 @@
     {"id": "v02-mesh-acx16", "path": "fixtures/v0.2/mesh"},
     {"id": "v02-step-iges-acx17", "path": "fixtures/v0.2/step-iges"},
     {"id": "v02-dwg-acx18", "path": "fixtures/v0.2/dwg"},
-    {"id": "v02-rvt-acx19-anti-claim", "path": "fixtures/v0.2/rvt/not-a-real-rvt.rvt"}
+    {"id": "v02-rvt-acx19-anti-claim", "path": "fixtures/v0.2/rvt/not-a-real-rvt.rvt"},
+    {"id": "v02-signing-acx20", "path": "fixtures/v0.2/signing"}
   ],
   "claims": [
     {
@@ -293,7 +294,20 @@
       ],
       "evidence": "docs/evidence/ACX-19.md"
     },
-    {"id": "package.authenticity-signing", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {
+      "id": "package.authenticity-signing",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "detached-jws-ed25519-offline-v1",
+      "platform_scope": ["python-3.12-linux-macos-windows"],
+      "provider_scope": "cryptography>=45,<50 optional; caller-owned registry and policy",
+      "fixture_ids": ["v02-signing-acx20"],
+      "test_ids": [
+        "tests/test_signing_conformance.py::test_signing_corpus_executes_offline_and_matches_governed_results",
+        "tests/test_signing_conformance.py::test_clean_install_base_and_signing_extra_boundaries"
+      ],
+      "evidence": "docs/evidence/ACX-20.md"
+    },
     {"id": "quality-gate.policy-ids", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "codex.aecctx-inspector", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null}
   ]

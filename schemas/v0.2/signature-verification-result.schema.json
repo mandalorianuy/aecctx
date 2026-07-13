@@ -1,0 +1,80 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.2/signature-verification-result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "diagnostic": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {"maxLength": 256, "minLength": 1, "type": "string"},
+        "message": {"maxLength": 2048, "minLength": 1, "type": "string"},
+        "path": {"maxLength": 2048, "minLength": 1, "type": "string"},
+        "record_id": {"maxLength": 1024, "minLength": 1, "type": "string"},
+        "severity": {"enum": ["error", "warning", "info"]},
+        "suggested_action": {"maxLength": 2048, "minLength": 1, "type": "string"}
+      },
+      "required": ["code", "message", "severity"],
+      "type": "object"
+    },
+    "hex_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "signature_result": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {"maxLength": 64, "minLength": 1, "type": "string"},
+        "authorization_status": {"enum": ["authorized", "unauthorized", "not_evaluated"]},
+        "cryptographic_status": {"enum": ["valid", "invalid", "malformed", "unknown_key", "unsupported_algorithm"]},
+        "diagnostic_codes": {"items": {"maxLength": 256, "minLength": 1, "type": "string"}, "maxItems": 64, "type": "array", "uniqueItems": true},
+        "identity_status": {"enum": ["resolved", "unresolved"]},
+        "key_status": {"enum": ["valid", "not_yet_valid", "expired", "revoked", "unknown_status", "not_evaluated"]},
+        "kid": {"maxLength": 256, "minLength": 1, "type": "string"},
+        "subject": {"type": ["string", "null"]},
+        "trust_status": {"enum": ["trusted", "untrusted", "not_evaluated"]}
+      },
+      "required": ["kid", "algorithm", "subject", "cryptographic_status", "identity_status", "key_status", "trust_status", "authorization_status", "diagnostic_codes"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "diagnostics": {"items": {"$ref": "#/$defs/diagnostic"}, "maxItems": 256, "type": "array"},
+    "package_validation": {
+      "additionalProperties": false,
+      "properties": {
+        "diagnostic_codes": {"items": {"maxLength": 256, "minLength": 1, "type": "string"}, "maxItems": 256, "type": "array", "uniqueItems": true},
+        "logical_digest": {"anyOf": [{"$ref": "#/$defs/hex_digest"}, {"type": "null"}]},
+        "package_id": {"type": ["string", "null"]},
+        "valid": {"type": "boolean"}
+      },
+      "required": ["valid", "package_id", "logical_digest", "diagnostic_codes"],
+      "type": "object"
+    },
+    "policy_evaluation": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "authorized_kids": {"items": {"maxLength": 256, "minLength": 1, "type": "string"}, "maxItems": 64, "type": "array", "uniqueItems": true},
+        "minimum_authorized_signatures": {"maximum": 64, "minimum": 1, "type": "integer"},
+        "policy_satisfied": {"type": "boolean"},
+        "policy_sha256": {"$ref": "#/$defs/hex_digest"}
+      },
+      "required": ["policy_sha256", "minimum_authorized_signatures", "authorized_kids", "policy_satisfied"]
+    },
+    "result_version": {"const": "1"},
+    "signature_presence": {"enum": ["unsigned", "signed"]},
+    "signatures": {"items": {"$ref": "#/$defs/signature_result"}, "maxItems": 64, "type": "array"},
+    "statement": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {"const": "https://aecctx.dev/signing/v1"},
+        "semantic_manifest_sha256": {"$ref": "#/$defs/hex_digest"},
+        "sha256": {"$ref": "#/$defs/hex_digest"},
+        "statement_version": {"const": "1"}
+      },
+      "required": ["profile", "statement_version", "sha256", "semantic_manifest_sha256"],
+      "type": "object"
+    },
+    "verification_completed": {"type": "boolean"}
+  },
+  "required": ["result_version", "package_validation", "statement", "signature_presence", "verification_completed", "signatures", "policy_evaluation", "diagnostics"],
+  "title": "AECCTX signature verification result v1",
+  "type": "object"
+}

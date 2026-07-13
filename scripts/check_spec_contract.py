@@ -67,7 +67,9 @@ def check_required_files() -> None:
         ROOT / "conformance/v0.2/step-iges-corpus.json",
         ROOT / "conformance/v0.2/dwg-corpus.json",
         ROOT / "conformance/v0.2/rvt-provider-decision.json",
+        ROOT / "conformance/v0.2/signing-corpus.json",
         ROOT / "scripts/check_rvt_blocked_conformance.py",
+        ROOT / "scripts/check_signing_conformance.py",
         ROOT / "fixtures/v0.2/providers/reference-descriptor.json",
         ROOT / "fixtures/v0.2/providers/reference-request.json",
         ROOT / "fixtures/v0.2/providers/reference-output/response.json",
@@ -83,12 +85,20 @@ def check_required_files() -> None:
         ROOT / "docs/specs/step-iges-v02-profile.md",
         ROOT / "docs/specs/dwg-v02-profile.md",
         ROOT / "docs/specs/rvt-v02-blocked-profile.md",
+        ROOT / "docs/specs/signing-v1-profile.md",
+        ROOT / "docs/security/signing-threat-model.md",
+        ROOT / "docs/plans/acx-20-implementation.md",
         ROOT / "fixtures/v0.2/dxf/r2018-semantics-3d-ascii.dxf",
         ROOT / "fixtures/v0.2/dxf/r2018-semantics-3d-binary.dxf",
         ROOT / "fixtures/v0.2/dxf/r2000-cyclic-inserts.dxf",
         ROOT / "fixtures/v0.2/dxf/malformed-tags.dxf",
         ROOT / "fixtures/v0.2/shared/minimal-v02/manifest.json",
         ROOT / "fixtures/v0.2/rvt/not-a-real-rvt.rvt",
+        ROOT / "fixtures/v0.2/signing/README.md",
+        ROOT / "fixtures/v0.2/signing/generate_fixtures.py",
+        ROOT / "fixtures/v0.2/signing/bundles/valid-a.json",
+        ROOT / "fixtures/v0.2/signing/registries/valid.json",
+        ROOT / "fixtures/v0.2/signing/policies/trust-a.json",
         ROOT / "CHANGELOG.md",
         ROOT / "docs/compatibility.md",
         ROOT / "docs/compatibility-v0.2.md",
@@ -128,6 +138,26 @@ def check_authorities() -> None:
     ]:
         if phrase not in expansion:
             fail(f"expansion spec missing authority phrase: {phrase}")
+
+    signing = (ROOT / "docs/specs/signing-v1-profile.md").read_text(encoding="utf-8")
+    for phrase in [
+        "Integrity, cryptographic validity, signer identity, verifier trust and policy authorization",
+        "Detached JWS envelope",
+        "Algorithm profile and agility",
+        "Claim boundary",
+    ]:
+        if phrase not in signing:
+            fail(f"signing profile missing authority phrase: {phrase}")
+
+    signing_plan = (ROOT / "docs/plans/acx-20-implementation.md").read_text(encoding="utf-8")
+    for phrase in [
+        "Strict JSON, canonical statement and package binding",
+        "Optional Ed25519 signing and deterministic bundle append",
+        "Multi-signature verification and separated result records",
+        "Publishable signing corpus, portable gates and packaging proof",
+    ]:
+        if phrase not in signing_plan:
+            fail(f"signing implementation plan missing execution slice: {phrase}")
 
     plan = PLAN.read_text(encoding="utf-8")
     for phrase in [

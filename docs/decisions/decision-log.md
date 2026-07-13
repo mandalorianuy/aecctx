@@ -97,6 +97,15 @@ Status: Active
 - Consequence: Later capabilities share one typed v0.2 substrate instead of encoding normative semantics as loosely governed v0.1 extensions. Existing v0.1 package identity, query, diff, context, validation and conformance behavior remain stable.
 - Evidence: `schemas/v0.2/`, `fixtures/v0.2/shared/minimal-v02`, `conformance/v0.2/claims.json`, `docs/compatibility-v0.2.md`, and `docs/evidence/ACX-11.md`.
 
+### ACXD-018: Detached JWS Ed25519 signing and offline verifier trust
+
+- Statement decision: Sign a canonical `https://aecctx.dev/signing/v1` JSON statement containing package/version identity, logical digest, required extensions and SHA-256 of the canonical semantic manifest. The semantic manifest removes only `package_form`; every other manifest field remains bound so directory/ZIP repackaging is neutral without making semantic mutation invisible.
+- Envelope decision: Use detached JWS General JSON Serialization in an explicit sidecar. The payload is omitted and reconstructed from the validated package. Each protected header carries the collision-resistant `https://aecctx.dev/jws/statement-sha256` value so a foreign-package binding mismatch remains distinct from a corrupt signature. Signatures are independent and deterministically ordered; unprotected/unknown headers, embedded/remote keys and duplicate `kid` values are rejected. Countersignatures remain unsupported.
+- Algorithm decision: Profile v1 permits only the fully specified JOSE `Ed25519` identifier. Algorithm agility requires a profile revision and conformance; the older polymorphic `EdDSA` and all unreviewed algorithms are rejected. PyCA `cryptography>=45,<50` is an optional signing extra, not a core dependency.
+- Identity/trust decision: The verifier explicitly supplies an offline candidate-key registry and a separate trust policy with verification time, trust allowlists, required scopes and signature threshold. Cryptographic validity, identity resolution, key lifecycle (`valid`, `not_yet_valid`, `expired`, `revoked`, `unknown_status`, `not_evaluated`), administrator trust and authorization are independent machine fields. `not_evaluated` is limited to a missing resolved key or policy time and cannot replace an evaluated unknown revocation state. No key generation, discovery, network, host clock or trust selection is implicit.
+- Compatibility and claim decision: Unsigned v0.1/v0.2 packages remain valid. Signing never mutates package bytes or logical identity. Acceptance of this design authorizes ACX-20 implementation but does not promote authenticity from `unsupported` until conformance and all gates pass.
+- Evidence owner: `docs/specs/signing-v1-profile.md`, `docs/security/signing-threat-model.md`, ACX-20 schemas/corpus/tests and `docs/evidence/ACX-20.md`.
+
 ### ACXD-021: Quality gates express policy conformance only
 
 - Decision: The AEC Delivery Quality Gate evaluates versioned policies over authoritative AECCTX records, capabilities, loss, diagnostics, diffs, and bounded IDS requirements. Its `pass` result is not engineering approval, regulatory acceptance, construction readiness, or consumer canonical acceptance.
@@ -193,12 +202,6 @@ Status: Active
 - Evidence owner: `docs/specs/rvt-v02-blocked-profile.md`, the ACX-19 decision record/checker/tests and `docs/evidence/ACX-19.md`.
 
 ## Open decisions
-
-### ACXD-018: Signing and trust profile
-
-- Owner: ACX-20.
-- Decision required: select the canonical signed statement, envelope/serialization, algorithm agility, signer identity model, trust-root policy, offline verification, expiry/revocation, multiple-signature, and repackaging behavior.
-- Blocking effect: authenticity/signing implementation and claims only; other capability tasks may proceed.
 
 ### ACXD-023: Quality-gate policy and IDS implementation profile
 

@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+import tempfile
+from collections import Counter
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -42,6 +45,53 @@ def _emit_result(result: ValidationResult, *, as_json: bool, info: bool = False)
     return 0 if result.valid else 2
 
 
+def _emit_signing_error(error: Exception, *, as_json: bool) -> int:
+    from .signing import SigningError
+
+    code = error.code if isinstance(error, SigningError) else "AECCTX_SIGNING_OPERATION_FAILED"
+    message = str(error) if isinstance(error, SigningError) else "signing operation failed safely"
+    diagnostic = {"code": code, "message": message, "severity": "error"}
+    if as_json:
+        print(json.dumps(_envelope(False, None, [diagnostic]), sort_keys=True, separators=(",", ":")))
+    else:
+        print(f"{code}: {message}", file=sys.stderr)
+    return 2
+
+
+def _write_new_sidecar(path: str | Path, data: bytes) -> None:
+    from .signing import SigningError
+
+    output = Path(path)
+    if output.exists() or output.is_symlink():
+        raise SigningError("AECCTX_SIGNING_OUTPUT_EXISTS", "signing output already exists")
+    temporary_path: Path | None = None
+    try:
+        descriptor, temporary_name = tempfile.mkstemp(dir=output.parent, prefix=f".{output.name}.")
+        temporary_path = Path(temporary_name)
+        try:
+            os.chmod(temporary_path, 0o600)
+            with os.fdopen(descriptor, "wb") as handle:
+                descriptor = -1
+                handle.write(data)
+                handle.flush()
+                os.fsync(handle.fileno())
+        finally:
+            if descriptor >= 0:
+                os.close(descriptor)
+        if output.exists() or output.is_symlink():
+            raise SigningError("AECCTX_SIGNING_OUTPUT_EXISTS", "signing output already exists")
+        os.link(temporary_path, output)
+    except FileExistsError as error:
+        raise SigningError("AECCTX_SIGNING_OUTPUT_EXISTS", "signing output already exists") from error
+    except SigningError:
+        raise
+    except OSError as error:
+        raise SigningError("AECCTX_SIGNING_OUTPUT_FAILED", "signing output could not be published safely") from error
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="aecctx")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -79,6 +129,20 @@ def build_parser() -> argparse.ArgumentParser:
     context.add_argument("--token-budget", type=int, default=40_000)
     context.add_argument("--chunk-token-budget", type=int, default=4_000)
     context.add_argument("--json", action="store_true", dest="as_json")
+    sign = subparsers.add_parser("sign")
+    sign.add_argument("package")
+    sign.add_argument("--private-key", required=True)
+    sign.add_argument("--kid", required=True)
+    sign.add_argument("--output", required=True)
+    sign.add_argument("--password-file")
+    sign.add_argument("--append-to")
+    sign.add_argument("--json", action="store_true", dest="as_json")
+    verify_signatures = subparsers.add_parser("verify-signatures")
+    verify_signatures.add_argument("package")
+    verify_signatures.add_argument("--signature-bundle")
+    verify_signatures.add_argument("--key-registry", required=True)
+    verify_signatures.add_argument("--trust-policy")
+    verify_signatures.add_argument("--json", action="store_true", dest="as_json")
     return parser
 
 
@@ -90,6 +154,132 @@ def main(argv: Sequence[str] | None = None) -> int:
         else:
             print(__version__)
         return 0
+    if arguments.command == "sign":
+        from ._signing_io import read_bounded_regular_file
+        from .signing import SigningError, SigningLimits, append_signature, parse_signature_bundle, sign_package
+
+        limits = SigningLimits()
+        try:
+            output = Path(arguments.output)
+            if arguments.append_to and output.resolve(strict=False) == Path(arguments.append_to).resolve(strict=False):
+                raise SigningError("AECCTX_SIGNING_OUTPUT_CONFLICT", "append input and output must be distinct")
+            private_key = read_bounded_regular_file(
+                arguments.private_key,
+                max_bytes=limits.max_private_key_bytes,
+                label="private key",
+            )
+            password = None
+            if arguments.password_file:
+                password = read_bounded_regular_file(
+                    arguments.password_file,
+                    max_bytes=limits.max_password_bytes,
+                    label="password",
+                )
+                if password.endswith(b"\n"):
+                    password = password[:-1]
+            if arguments.append_to:
+                bundle_bytes = read_bounded_regular_file(
+                    arguments.append_to,
+                    max_bytes=limits.max_document_bytes,
+                    label="signature bundle",
+                )
+                bundle = append_signature(
+                    arguments.package,
+                    parse_signature_bundle(bundle_bytes, limits=limits),
+                    private_key_pem=private_key,
+                    kid=arguments.kid,
+                    password=password,
+                    limits=limits,
+                )
+            else:
+                bundle = sign_package(
+                    arguments.package,
+                    private_key_pem=private_key,
+                    kid=arguments.kid,
+                    password=password,
+                    limits=limits,
+                )
+            _write_new_sidecar(output, bundle.to_bytes())
+        except (OSError, SigningError, ValueError) as error:
+            return _emit_signing_error(error, as_json=arguments.as_json)
+        data = {"kids": [entry.kid for entry in bundle.signatures], "signature_count": len(bundle.signatures)}
+        if arguments.as_json:
+            print(json.dumps(_envelope(True, data, []), sort_keys=True, separators=(",", ":")))
+        else:
+            print(f"AECCTX signature bundle created: {len(bundle.signatures)} signature(s)")
+        return 0
+    if arguments.command == "verify-signatures":
+        from ._signing_io import read_bounded_regular_file
+        from .signing import (
+            SigningError,
+            SigningLimits,
+            parse_key_registry,
+            parse_signature_bundle,
+            parse_trust_policy,
+            verify_package_signatures,
+        )
+
+        limits = SigningLimits()
+        try:
+            registry = parse_key_registry(
+                read_bounded_regular_file(
+                    arguments.key_registry,
+                    max_bytes=limits.max_document_bytes,
+                    label="key registry",
+                ),
+                limits=limits,
+            )
+            bundle = None
+            if arguments.signature_bundle:
+                bundle = parse_signature_bundle(
+                    read_bounded_regular_file(
+                        arguments.signature_bundle,
+                        max_bytes=limits.max_document_bytes,
+                        label="signature bundle",
+                    ),
+                    limits=limits,
+                )
+            policy = None
+            if arguments.trust_policy:
+                policy = parse_trust_policy(
+                    read_bounded_regular_file(
+                        arguments.trust_policy,
+                        max_bytes=limits.max_document_bytes,
+                        label="trust policy",
+                    ),
+                    limits=limits,
+                )
+            result = verify_package_signatures(
+                arguments.package,
+                bundle=bundle,
+                registry=registry,
+                policy=policy,
+                limits=limits,
+            )
+        except (OSError, SigningError, ValueError) as error:
+            return _emit_signing_error(error, as_json=arguments.as_json)
+        data = result.to_dict()
+        diagnostics = [item.to_dict() for item in result.diagnostics]
+        if arguments.as_json:
+            print(json.dumps(_envelope(True, data, diagnostics), sort_keys=True, separators=(",", ":")))
+        elif result.signature_presence == "unsigned":
+            print("AECCTX signatures: unsigned")
+        else:
+            def counts(field: str) -> str:
+                values = Counter(getattr(item, field) for item in result.signatures)
+                return ",".join(f"{value}:{values[value]}" for value in sorted(values))
+
+            policy_state = "none" if result.policy_satisfied is None else str(result.policy_satisfied).lower()
+            print(
+                "AECCTX signatures: signed "
+                f"signatures={len(result.signatures)} "
+                f"cryptographic={counts('cryptographic_status')} "
+                f"key={counts('key_status')} "
+                f"trust={counts('trust_status')} "
+                f"authorization={counts('authorization_status')} "
+                f"policy_satisfied={policy_state}"
+            )
+        return 0 if result.policy_satisfied is True else 1
     if arguments.command == "ingest":
         try:
             adapter = arguments.adapter

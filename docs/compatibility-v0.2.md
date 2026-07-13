@@ -1,7 +1,7 @@
 # AECCTX v0.2 Compatibility and Migration
 
 Date: 2026-07-12
-Status: ACX-11 contract with ACX-13 through ACX-17 producer profiles
+Status: ACX-11 contract with ACX-13 through ACX-20 bounded profiles
 Decision authority: ACXD-017
 
 ## Version matrix
@@ -16,6 +16,8 @@ Decision authority: ACXD-017
 | unknown optional namespaced extension | governed by v0.1 contract | accepted as package data; retained when explicitly passed through a lossless rewrite |
 
 The reference implementation remains version `0.1.0` until the governed expansion release. Supporting v0.2 schemas in ACX-11 is a bounded compatibility capability. ACX-13 through ACX-18 add opt-in v0.2 producers for exact IFC, DXF, PDF/image inference, mesh coordinate, STEP/IGES and R2000 DWG profiles; they do not imply other DWG versions, other v0.2 format adapters, vision support, survey authority or source-exact translated BREP.
+
+ACX-20 adds an optional detached signing sidecar profile without changing either package version. Unsigned v0.1/v0.2 packages remain valid and all existing read/query/diff/context behavior is unchanged.
 
 ## Schema boundary
 
@@ -68,4 +70,12 @@ Changing only version strings is not a conforming migration when v0.2 semantic f
 - bounded mesh coordinate corpus: `conformance/v0.2/mesh-corpus.json`;
 - bounded STEP/IGES replay corpus: `conformance/v0.2/step-iges-corpus.json`;
 - bounded R2000 DWG replay corpus: `conformance/v0.2/dwg-corpus.json`;
-- acceptance evidence: `docs/evidence/ACX-11.md`.
+- bounded signing corpus: `conformance/v0.2/signing-corpus.json`;
+- shared compatibility evidence: `docs/evidence/ACX-11.md`;
+- signing evidence: `docs/evidence/ACX-20.md`.
+
+## Detached signing compatibility
+
+The `detached-jws-ed25519-offline-v1` statement validates the package first, binds its logical digest and a canonical manifest with only `package_form` removed, and therefore produces the same statement for equivalent directory and ZIP forms. The signature bundle is never a package artifact, required extension, logical-digest input or Markdown authority.
+
+Verification requires explicit caller-supplied registry and optional policy bytes. Unknown keys, lifecycle status, trust and authorization are never inferred. Repacking without semantic change preserves the statement; changing an artifact, manifest semantic field, digest, protected header or signature produces a distinct governed result.

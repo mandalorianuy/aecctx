@@ -165,8 +165,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-17 | completed | Experimental bounded STEP/IGES source graph and translator-derived BREP profiles |
 | ACX-18 | completed | Experimental bounded R2000/AC1015 DWG source-object and converted-DXF evidence profile |
 | ACX-19 | blocked | No admissible RVT provider; public unsupported boundary with deterministic opaque anti-claim evidence |
-| ACX-20 | pending-next | Package authenticity and signing profile |
-| ACX-21 | pending | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
+| ACX-20 | completed | Optional detached JWS/Ed25519 signing and caller-owned offline trust-policy evaluation |
+| ACX-21 | pending-next | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
 | ACX-22 | pending | Optional `aecctx-inspector` plugin for Codex |
 | ACX-23 | pending | Expansion conformance corpus, packaging, documentation and release |
 
@@ -691,7 +691,11 @@ Completion resolution: ACXD-030 selected no provider because Revit desktop, APS 
 
 Objective: define and implement optional package signature verification without conflating integrity, identity, trust or authorization.
 
-Decision gate: threat-model package author, distributor, storage, signer, verifier, trust administrator and attacker; resolve ACXD-018 using reviewed standards/libraries and official documentation before public implementation.
+Normative profile: [`docs/specs/signing-v1-profile.md`](specs/signing-v1-profile.md), accepted under ACXD-018. Its threat boundary is [`docs/security/signing-threat-model.md`](security/signing-threat-model.md). Acceptance authorizes implementation planning but does not create an authenticity claim.
+
+Execution cut: [`docs/plans/acx-20-implementation.md`](plans/acx-20-implementation.md). It is subordinate to the normative profile, threat model and this plan; it adds no ACX-21 scope.
+
+Decision gate: resolved. ACXD-018 selects detached JWS General JSON, the fully specified `Ed25519` JOSE identifier, canonical semantic-manifest binding, protected statement digest and caller-owned offline registry/policy evaluation with independent key-lifecycle/trust fields. The written profile and subordinate TDD execution cut require explicit user approval before implementation begins.
 
 Deliverables:
 
@@ -712,6 +716,8 @@ Work breakdown:
 7. Support multiple signatures and rotation without making container metadata authoritative.
 8. Integrate integrity and signature results as separate validation sections and queryable records.
 
+Governed execution rule: no implementation file, schema, fixture or dependency change begins until the accepted written profile and committed subordinate ACX-20 implementation plan have explicit user approval. The execution cut preserves the work breakdown and test matrix above, orders tests before implementation, names narrow commands per slice and contains no ACX-21 scope.
+
 Test matrix:
 
 - unsigned valid package;
@@ -728,6 +734,8 @@ Non-scope: no universal authorization policy, no mandatory signing, no secret/ke
 Acceptance: ACXD-018 is accepted, all states are machine-distinct, unsigned v0.1/v0.2 compatibility passes and `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-20.md` when completed.
+
+Completion resolution: ACX-20 publishes the bounded `detached-jws-ed25519-offline-v1` profile as optional public `partial` support. Valid v0.1/v0.2 packages can be signed and verified through detached sidecars with explicit caller-owned registry/policy inputs; integrity, cryptographic validity, lifecycle, trust and authorization remain machine-distinct. X.509, online revocation/discovery, timestamps, countersignatures, implicit trust and universal approval remain unsupported. ACX-21 alone is promoted to `pending-next`.
 
 ## ACX-21: AEC Delivery Quality Gate
 

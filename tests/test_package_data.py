@@ -33,6 +33,21 @@ def test_bundled_v02_schemas_match_normative_repository_copies() -> None:
         assert bundled == normative
 
 
+def test_signing_contract_schemas_are_public_and_bundled() -> None:
+    bundled_root = files("aecctx.schemas.v0_2")
+    repository = Path(__file__).parents[1] / "schemas" / "v0.2"
+
+    for name in (
+        "signature-bundle.schema.json",
+        "signing-key-registry.schema.json",
+        "signing-trust-policy.schema.json",
+        "signature-verification-result.schema.json",
+    ):
+        assert bundled_root.joinpath(name).is_file()
+        assert (repository / name).is_file()
+        assert bundled_root.joinpath(name).read_bytes() == (repository / name).read_bytes()
+
+
 def test_portable_verify_checks_v02_schemas_and_claim_registry() -> None:
     script = (Path(__file__).parents[1] / "scripts" / "verify_portable.sh").read_text(encoding="utf-8")
 

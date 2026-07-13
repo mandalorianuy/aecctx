@@ -4,7 +4,7 @@ AECCTX is an open, application-agnostic specification and local-first Python too
 
 Version **0.1.0** is implemented, packaged and covered by a public conformance corpus.
 
-The post-v0.1 implementation line is active. ACX-11 implements the bounded v0.2 shared schema/compatibility substrate, ACX-12 the reviewed external-provider foundation, ACX-13 bounded IFC 2D/georeferencing, ACX-14 DXF source-semantics/bounded-3D, ACX-15 experimental English OCR, ACX-16 mesh coordinate qualification/manual registration, ACX-17 experimental STEP/IGES source-graph plus translator-derived BREP extraction, and ACX-18 experimental R2000 DWG source-object plus converted-DXF evidence. Claims remain exact and bounded by their corpora.
+The post-v0.1 implementation line is active. ACX-11 implements the bounded v0.2 shared schema/compatibility substrate, ACX-12 the reviewed external-provider foundation, ACX-13 bounded IFC 2D/georeferencing, ACX-14 DXF source-semantics/bounded-3D, ACX-15 experimental English OCR, ACX-16 mesh coordinate qualification/manual registration, ACX-17 experimental STEP/IGES source-graph plus translator-derived BREP extraction, ACX-18 experimental R2000 DWG source-object plus converted-DXF evidence, and ACX-20 optional detached Ed25519 signing with caller-owned offline trust policy. Claims remain exact and bounded by their corpora.
 
 ## Why this exists
 
@@ -35,6 +35,14 @@ cd aecctx
 python -m pip install '.[all]'
 ```
 
+The current post-v0.1 source checkout exposes signing as a separate optional dependency boundary:
+
+```bash
+python -m pip install '.[signing]'
+```
+
+Core validation and unsigned packages do not require the signing extra.
+
 ## Status and authority
 
 - Format specification: [`docs/specs/aec-context-package-spec.md`](docs/specs/aec-context-package-spec.md)
@@ -57,6 +65,13 @@ aecctx info building.aecctx --json
 aecctx query building.aecctx 'entity.original_class == "IfcWall"'
 aecctx context building.aecctx --profile agent --token-budget 40000
 aecctx diff revision-a.aecctx revision-b.aecctx
+
+# Detached sidecar signing; package bytes are not modified.
+aecctx sign building.aecctx --private-key signer.pem --kid project-key-1 \
+  --output building.signatures.json
+aecctx verify-signatures building.aecctx \
+  --signature-bundle building.signatures.json \
+  --key-registry registry.json --trust-policy policy.json --json
 ```
 
 Unknown inputs use the honest opaque fallback. IFC, DXF, PDF, image and OBJ/STL/glTF content are selected by bounded content probes; `--adapter` can make the choice explicit.
@@ -86,6 +101,8 @@ aecctx ingest drawing.dwg --output drawing-dwg-v02.aecctx --adapter dwg \
 ```
 
 Other adapters currently reject `--aecctx-version 0.2.0` until their governed expansion task publishes a profile. OCR, STEP/IGES and DWG remain experimental and partial under their normative profiles. STEP/IGES and DWG require a validated replay in CLI or validated `ProviderResult` in SDK. DWG is limited to self-contained `AC1015`; JSON objects are observed decoder evidence while DXF/geometry are converted evidence. Other DWG releases, xref traversal, ACIS/proxy/custom semantics, qualified units/CRS and complete 3D remain unsupported. Mesh registration never guesses units/CRS or rewrites source coordinates. Vision and hidden geometry are not inferred.
+
+Signing accepts valid v0.1/v0.2 directory or ZIP packages and emits a detached JWS General JSON sidecar. Integrity, cryptographic validity, key lifecycle, trust and authorization remain separate fields. A valid signature proves key possession over the governed statement; it does not by itself prove organizational identity, engineering approval or construction readiness. X.509, online revocation, timestamps, countersignatures and implicit trust discovery remain unsupported.
 
 ## Python API
 
