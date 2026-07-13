@@ -142,6 +142,8 @@ class GateWaiver:
 
     def __post_init__(self) -> None:
         _require_identifier("waiver_id", self.waiver_id)
+        if not isinstance(self.check_id, str) or not self.check_id.startswith("aecctx.policy."):
+            raise ValueError("check_id must be an exact aecctx.policy result ID")
         _require_identifier("check_id", self.check_id.removeprefix("aecctx.policy."))
         _require_digest("finding_fingerprint", self.finding_fingerprint)
         for field in ("reason", "approved_by", "issued_at", "expires_at"):

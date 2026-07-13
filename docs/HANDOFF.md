@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.2.0-ACX-21-TASK-01`
+Handoff status: `0.2.0-ACX-21-TASK-02`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Task 1 now provides closed policy/check/waiver/result schemas, byte-identical packaged mirrors and immutable public model types. No strict parser, evaluator, CLI, corpus or quality-gate claim exists. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Tasks 1-2 provide closed policy/check/waiver/result schemas, immutable public models, strict bounded policy parsing, NFC canonical bytes, a fixed offline schema registry, semantic validation and deterministic policy digests. No evaluator, finding aggregation, CLI, corpus or quality-gate claim exists. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
@@ -64,11 +64,20 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - `./scripts/verify.sh` passes with 430 tests, 9 intentional skips, wheel/sdist build, portable verification, release verification and baseline integration healthy.
 - No dependency, fixture, CLI command, evaluator or capability claim changed.
 
+## ACX-21 Task 2 evidence
+
+- Governance first: profile draft.2 and ACXD-023 define v1 hard maxima, JSON depth counting, exact declared waiver result IDs and stable loader error codes before parser implementation.
+- RED: `tests/test_gate_policy.py tests/test_gate_contract.py` failed during collection because `canonical_gate_json` and the Task 2 facade did not exist.
+- GREEN: `tests/test_gate_policy.py tests/test_gate_contract.py tests/test_package_data.py` pass with 63 tests, including canonical digest, malicious/deep JSON, exact SemVer, schema/semantic failures, caller-reduced limits, symlink/non-regular input and waiver-target contract coverage.
+- Determinism: the narrow suite runs twice and asserts the same canonical bytes and golden SHA-256 independent of object key order/whitespace while preserving array order.
+- `./scripts/verify.sh` passes with 466 tests, 9 intentional skips, wheel/sdist build, portable/release verification and baseline integration healthy.
+- No new dependency, fixture, CLI command, evaluator, finding aggregation or capability claim was added.
+
 ## Next implementation task
 
-ACX-21 Task 2: implement strict bounded policy input, canonical NFC JSON, the fixed offline four-schema registry, semantic validation and stable policy digest exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin with the failing malicious-input/canonicalization tests and stop at that task's checkpoint.
+ACX-21 Task 3: implement canonical finding identity, aggregate outcome precedence and exact-finding waiver application exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin with failing aggregation/fingerprint tests and stop at that task's checkpoint.
 
-The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Task 1 added no dependency, fixture, parser, evaluator, CLI or capability claim. Do not execute ACX-21 Task 2 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
+The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Tasks 1-2 added no optional dependency, fixture, evaluator, CLI or capability claim. Do not execute ACX-21 Task 3 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
 
 ## Consumer integration planning entry point
 
