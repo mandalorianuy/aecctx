@@ -35,6 +35,7 @@ all = [
   "cryptography>=45,<50",
   "ezdxf==1.4.4",
   "ifcopenshell==0.8.5",
+  "ifctester==0.8.5",
   "mcp>=1.20,<2",
   "Pillow>=12.1,<13",
   "pypdf>=6.6,<7",
@@ -44,6 +45,7 @@ dxf = ["ezdxf==1.4.4"]
 geometry = ["trimesh>=4.12,<5"]
 image = ["Pillow>=12.1,<13"]
 ifc = ["ifcopenshell==0.8.5"]
+gate-ids = ["ifctester==0.8.5", "ifcopenshell==0.8.5"]
 mcp = ["mcp>=1.20,<2"]
 pdf = ["pypdf>=6.6,<7", "Pillow>=12.1,<13"]
 signing = ["cryptography>=45,<50"]
@@ -52,6 +54,7 @@ test = [
   "cryptography>=45,<50",
   "ezdxf==1.4.4",
   "ifcopenshell==0.8.5",
+  "ifctester==0.8.5",
   "mcp>=1.20,<2",
   "Pillow>=12.1,<13",
   "pypdf>=6.6,<7",

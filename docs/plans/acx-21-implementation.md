@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12+, JSON Schema 2020-12, existing AECCTX v0.1/v0.2 validation/records/diff APIs, optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`, pytest, hatchling, buildingSMART IDS 1.0 unchanged conformance fixtures.
 
-**Execution status:** Tasks 1-5 completed on 2026-07-13. Task 6 is `pending-next`; Tasks 7-9 remain `pending`. The public quality-gate capability remains `unsupported`.
+**Execution status:** Tasks 1-6 completed on 2026-07-13. Task 7 is `pending-next`; Tasks 8-9 remain `pending`. The public quality-gate capability remains `unsupported`.
 
 ## Global Constraints
 
@@ -422,7 +422,9 @@ git commit -m "feat: gate semantic baseline regressions"
 - Create: `src/aecctx/gate/ids.py`
 - Create: `src/aecctx/gate/_ids_worker.py`
 - Create: `tests/test_gate_ids.py`
+- Modify: `tests/test_gate_diff.py` to replace Task 5's IDS-not-implemented checkpoint with the Task 6 paired-input system error
 - Modify: `src/aecctx/gate/evaluator.py`
+- Modify: `src/aecctx/gate/models.py` to expose the already normative IDS specification/facet/entity maxima through `GateLimits`
 - Modify: `pyproject.toml`
 - Modify: `uv.lock`
 - Create unchanged attributed subset under `fixtures/third_party/buildingsmart-ids-1.0/`
@@ -433,10 +435,13 @@ git commit -m "feat: gate semantic baseline regressions"
 - Produce `evaluate_ids_check(candidate_store, check, ids_path, ifc_source_path, limits) -> GateCheckResult`.
 - Produce worker command only as `[sys.executable, "-I", "-m", "aecctx.gate._ids_worker"]` with no shell/caller executable.
 - Worker stdin request contains exact content-addressed paths/digests, allowed profile and hard limits; stdout is one closed JSON result.
+- `GateLimits` adds non-expandable `max_ids_specifications=256`, `max_ids_facets=4096` and `max_ids_entities=250000`; callers may only reduce them under the existing hard-limit comparison.
 
-- [ ] **Step 1: Vendor only unchanged official cases selected by a manifest.** Copy exact IDS v1.0.0 tag files without editing; add `LICENSE-CC-BY-ND-4.0.txt`, `ORIGIN.json` with tag/commit/path/SHA-256 and a test that byte hashes match. Keep project-authored IFC/IDS fixtures in a separate Apache-2.0 directory.
+- [x] **Step 1: Vendor only unchanged official cases selected by a manifest.** Copy exact IDS v1.0.0 tag files without editing; add `LICENSE-CC-BY-ND-4.0.txt`, `ORIGIN.json` with tag/commit/path/SHA-256 and a test that byte hashes match. Keep project-authored IFC/IDS fixtures in a separate Apache-2.0 directory.
 
-- [ ] **Step 2: Write failing IDS contract/safety tests before adding dependencies.** Cover dependency absence, exact version mismatch, IDS/source missing pair, source ID/hash mismatch, IFC2X3/IFC4 success, IFC4X3 rejection, each selected simple facet, `partOf`/restriction rejection, invalid XML, DTD/entity/XInclude, oversize, timeout/crash/output overflow and prompt/command-like inert text.
+  The selected upstream manifest contains paired positive/negative cases for `entity/pass-a_matching_entity_should_pass`, `entity/fail-an_entity_not_matching_a_specified_predefined_type_will_fail`, `attribute/pass-a_required_facet_checks_all_parameters_as_normal`, `attribute/fail-attributes_should_check_strings_case_sensitively_2_2`, `classification/pass-both_system_and_value_must_match__all__not_any__if_specified_1_2`, `classification/fail-both_system_and_value_must_match__all__not_any__if_specified_2_2`, `property/pass-a_required_facet_checks_all_parameters_as_normal`, `property/fail-elements_with_no_properties_always_fail`, `material/pass-a_required_facet_checks_all_parameters_as_normal` and `material/fail-elements_without_a_material_always_fail`, each with `.ids` and `.ifc` bytes from commit `1effec6f419798ce09617416d258a35bdc58320a`.
+
+- [x] **Step 2: Write failing IDS contract/safety tests before adding dependencies.** Cover dependency absence, exact version mismatch, IDS/source missing pair, source ID/hash mismatch, IFC2X3/IFC4 success, IFC4X3 rejection, each selected simple facet, `partOf`/restriction rejection, invalid XML, DTD/entity/XInclude, oversize, timeout/crash/output overflow and prompt/command-like inert text.
 
 ```python
 def test_ids_source_must_match_registered_candidate_source(tmp_path: Path) -> None:
@@ -454,13 +459,13 @@ def test_unsupported_ids_restriction_is_not_reported_as_pass(ids_fixture_with_pa
     assert result.findings[0].code == "AECCTX_GATE_IDS_RESTRICTION_UNSUPPORTED"
 ```
 
-- [ ] **Step 3: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_ids.py -q`; expect missing modules/extra and explicit dependency-unavailable behavior.
+- [x] **Step 3: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_ids.py -q`; expect missing modules/extra and explicit dependency-unavailable behavior.
 
-- [ ] **Step 4: Add the optional pinned dependency boundary.** Update `pyproject.toml` and `uv.lock`; verify `ifctester==0.8.5`/`ifcopenshell==0.8.5`, LGPL-3.0-or-later metadata, transitive dependency list and that a core-only wheel install imports/runs non-IDS checks without them.
+- [x] **Step 4: Add the optional pinned dependency boundary.** Update `pyproject.toml` and `uv.lock`; verify `ifctester==0.8.5`/`ifcopenshell==0.8.5`, LGPL-3.0-or-later metadata, transitive dependency list and that a core-only wheel install imports/runs non-IDS checks without them.
 
-- [ ] **Step 5: Implement parent input binding and XML preflight.** Reject symlinks/non-regular/oversize files, hash before parse, match exact source record, reject active XML markers/unknown namespace/version/facets/restrictions and count specifications/facets before worker launch.
+- [x] **Step 5: Implement parent input binding and XML preflight.** Reject symlinks/non-regular/oversize files, hash before parse, match exact source record, reject active XML markers/unknown namespace/version/facets/restrictions and count specifications/facets before worker launch.
 
-- [ ] **Step 6: Implement the fixed worker.** Import exact dependency versions, use `ifctester.ids.open(path, validate=True)`, open the bound IFC with IfcOpenShell, validate only allowed schema/facet/simple-value subset and map `Ids`/`Specification`/facet state directly. Do not call `reporter.Json`, do not include host time and cap entities/findings.
+- [x] **Step 6: Implement the fixed worker.** Import exact dependency versions, use `ifctester.ids.open(path, validate=True)`, open the bound IFC with IfcOpenShell, validate only allowed schema/facet/simple-value subset and map `Ids`/`Specification`/facet state directly. Do not call `reporter.Json`, do not include host time and cap entities/findings.
 
 ```python
 ids_file = ids.open(request.ids_path, validate=True)
@@ -470,11 +475,11 @@ response = normalize_ids_state(ids_file, limits=request.limits)
 sys.stdout.buffer.write(canonical_json(response))
 ```
 
-- [ ] **Step 7: Enforce worker timeout/output/version protocol.** Start a new process group/session where supported, terminate then kill the complete worker on timeout, validate one JSON response and map crash/timeout/malformed/oversize output to stable gate `error` diagnostics.
+- [x] **Step 7: Enforce worker timeout/output/version protocol.** Start a new process group/session where supported, terminate then kill the complete worker on timeout, validate one JSON response and map crash/timeout/malformed/oversize output to stable gate `error` diagnostics.
 
-- [ ] **Step 8: Run official and project conformance subsets.** Run `.venv/bin/python -m pytest tests/test_gate_ids.py -q`; require every claimed official case to match its `pass-`/`fail-` expectation. If any target combination fails, stop IDS claim work, amend the normative profile, ACXD-023/decision log, this plan and the claim registry to register it as unsupported before proceeding; never weaken expected results.
+- [x] **Step 8: Run official and project conformance subsets.** Run `.venv/bin/python -m pytest tests/test_gate_ids.py -q`; require every claimed official case to match its `pass-`/`fail-` expectation. If any target combination fails, stop IDS claim work, amend the normative profile, ACXD-023/decision log, this plan and the claim registry to register it as unsupported before proceeding; never weaken expected results.
 
-- [ ] **Step 9: Commit.**
+- [x] **Step 9: Commit.**
 
 ```bash
 git add src/aecctx/gate/ids.py src/aecctx/gate/_ids_worker.py src/aecctx/gate/evaluator.py \
@@ -610,4 +615,4 @@ Tasks 1 through 9 are sequential. Each task begins only after the preceding task
 
 ## Planning checkpoint
 
-Tasks 1-5 now materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks and semantic baseline regression checks. Task 5 independently validates and snapshots every supplied baseline, maps all nine governed `PackageDiff` categories with exact actions and role-qualified evidence, preserves capability improvements/additions as visible non-regressions, and excludes generated Markdown plus non-authoritative artifacts from gate authority. It adds no dependency, fixture, IDS worker, CLI, projection, corpus or capability claim. ACX-21 remains `in_progress` at 5/9 detailed tasks (55.6%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 6 bounded IDS 1.0 evaluation is the next governed action only after a new user continuation request.
+Tasks 1-6 now materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks, semantic baseline regression checks and the bounded IDS 1.0 evaluator. Task 6 binds caller IDS/IFC bytes to authoritative source identity and hashes, performs inert bounded XML preflight, evaluates only the governed IFC2X3/IFC4 simple-value facet subset through a fixed isolated worker, preserves unsupported/nonconforming outcomes as exact findings and keeps dependency/protocol failures as non-waivable system errors. Exact optional pins and unchanged attributed upstream fixtures remain outside the core-only install. It adds no CLI, projection, corpus or public capability claim. ACX-21 remains `in_progress` at 6/9 detailed tasks (66.7%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 7 CLI/canonical-output/projections is the next governed action only after a new user continuation request.

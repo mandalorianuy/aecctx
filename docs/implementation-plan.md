@@ -166,7 +166,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-18 | completed | Experimental bounded R2000/AC1015 DWG source-object and converted-DXF evidence profile |
 | ACX-19 | blocked | No admissible RVT provider; public unsupported boundary with deterministic opaque anti-claim evidence |
 | ACX-20 | completed | Optional detached JWS/Ed25519 signing and caller-owned offline trust-policy evaluation |
-| ACX-21 | in_progress | Tasks 1-5 contracts/parser/waivers/package checks/baseline semantic diff complete; Task 6 bounded IDS evaluation is pending-next |
+| ACX-21 | in_progress | Tasks 1-6 contracts/parser/waivers/package checks/baseline diff/bounded IDS complete; Task 7 CLI and projections is pending-next |
 | ACX-22 | pending | Optional `aecctx-inspector` plugin for Codex |
 | ACX-23 | pending | Expansion conformance corpus, packaging, documentation and release |
 
@@ -766,7 +766,7 @@ Work breakdown:
 7. Emit `pass`, `fail`, `requires_review` or `error` with policy/package digests, evaluator versions and exact evidence IDs.
 8. Generate Markdown/CI annotations from the JSON result and prove projection parity.
 
-Governed execution rule: Tasks 1-5 completed the closed schemas/models, strict deterministic policy parser, canonical finding identity, aggregate outcome/exit precedence, exact-finding waiver lifecycle, authoritative package checks and all governed semantic baseline-diff categories with test-first evidence. They added no IDS dependency/worker, fixture, CLI, projection, corpus or capability claim. Task 6 in the subordinate plan is `pending-next` and may begin only on a new continuation request. ACX-21 remains `in_progress`, ACX-22 remains `pending` and the capability remains public `unsupported`.
+Governed execution rule: Tasks 1-6 completed the closed schemas/models, strict deterministic policy parser, canonical finding identity, aggregate outcome/exit precedence, exact-finding waiver lifecycle, authoritative package checks, all governed semantic baseline-diff categories and bounded IDS v1.0 simple-value evaluation with test-first evidence. Task 6 adds exact optional dependencies, attributed fixtures and a fixed isolated worker but no CLI, projection, corpus or capability claim. Task 7 in the subordinate plan is `pending-next` and may begin only on a new continuation request. ACX-21 remains `in_progress`, ACX-22 remains `pending` and the capability remains public `unsupported`.
 
 Test matrix:
 
