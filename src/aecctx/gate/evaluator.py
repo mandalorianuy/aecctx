@@ -679,6 +679,10 @@ def _build_result(
     limits: GateLimits,
     baseline_package_id: str | None = None,
     baseline_logical_digest: str | None = None,
+    evaluator_dependencies: tuple[tuple[str, str], ...] = (),
+    ids_digest: str | None = None,
+    ifc_source_id: str | None = None,
+    ifc_source_digest: str | None = None,
 ) -> GateResult:
     findings = tuple(finding for check in checks for finding in check.findings)
     if len(findings) > limits.max_findings:
@@ -686,7 +690,7 @@ def _build_result(
     outcome, exit_code = aggregate_gate_outcome(checks)
     result = GateResult(
         evaluator_version=__version__,
-        evaluator_dependencies=(("aecctx", __version__),),
+        evaluator_dependencies=(("aecctx", __version__), *evaluator_dependencies),
         candidate_package_id=candidate_package_id,
         candidate_logical_digest=candidate_logical_digest,
         policy_id=policy.policy_id,
@@ -699,6 +703,9 @@ def _build_result(
         diagnostics=diagnostics,
         baseline_package_id=baseline_package_id,
         baseline_logical_digest=baseline_logical_digest,
+        ids_digest=ids_digest,
+        ifc_source_id=ifc_source_id,
+        ifc_source_digest=ifc_source_digest,
     )
     if len(canonical_gate_json(result.to_dict())) > limits.max_result_bytes:
         raise GateError("AECCTX_GATE_RESULT_LIMIT_EXCEEDED", "gate result exceeds its byte limit")
@@ -752,10 +759,9 @@ def evaluate_gate(
     hard = GateLimits()
     if any(getattr(limits, field) > getattr(hard, field) for field in hard.__dataclass_fields__):
         raise GateError("AECCTX_GATE_LIMIT_INVALID", "limits exceed the v1 hard maximum")
-    if ids_document is not None or ifc_source is not None:
-        raise GateError("AECCTX_GATE_CHECK_NOT_IMPLEMENTED", "IDS gate input is not implemented by this task")
-    if any(check.kind == "ids.specification" for check in policy.checks):
-        raise GateError("AECCTX_GATE_CHECK_NOT_IMPLEMENTED", "policy check kind is not implemented by this task")
+    ids_policy_checks = tuple(check for check in policy.checks if check.kind == "ids.specification")
+    ids_pair_supplied = ids_document is not None and ifc_source is not None
+    ids_pair_incomplete = (ids_document is None) != (ifc_source is None)
     diff_required = any(check.kind == "diff.regression" for check in policy.checks)
 
     candidate_path = Path(candidate_package)
@@ -897,7 +903,54 @@ def evaluate_gate(
                 ("manifest.json",),
             )
 
+        def ids_error(code: str, message: str) -> GateResult:
+            return _build_result(
+                policy=policy,
+                candidate_package_id=str(manifest["package_id"]),
+                candidate_logical_digest=str(manifest["logical_digest"]),
+                checks=(
+                    *((baseline_check,) if baseline_check is not None else ()),
+                    _system_check("aecctx.system.ids-input", "error", message),
+                    _system_check("aecctx.system.integrity", "pass", "candidate integrity checks passed", ("manifest.json",)),
+                    _system_check("aecctx.system.policy", "pass", "policy validation and digest passed"),
+                    _system_check("aecctx.system.validation", "pass", "candidate structural validation passed", ("manifest.json",)),
+                ),
+                diagnostics=(
+                    GateDiagnostic(
+                        code=code,
+                        severity="error",
+                        message=message,
+                        check_id="aecctx.system.ids-input",
+                    ),
+                ),
+                limits=limits,
+                baseline_package_id=(str(baseline_manifest["package_id"]) if baseline_manifest is not None else None),
+                baseline_logical_digest=(str(baseline_manifest["logical_digest"]) if baseline_manifest is not None else None),
+            )
+
+        if ids_pair_incomplete or (ids_policy_checks and not ids_pair_supplied):
+            return ids_error("AECCTX_GATE_IDS_INPUT_PAIR_REQUIRED", "IDS document and IFC source are required together")
+        if ids_pair_supplied and not ids_policy_checks:
+            return ids_error("AECCTX_GATE_IDS_INPUT_INVALID", "IDS inputs require an ids.specification policy check")
+
+        ids_path: Path | None = None
+        if ids_pair_supplied:
+            if isinstance(ids_document, bytes):
+                if len(ids_document) > limits.max_ids_bytes:
+                    return ids_error("AECCTX_GATE_IDS_LIMIT_EXCEEDED", "IDS input exceeds its byte limit")
+                ids_path = Path(temporary) / "caller.ids"
+                ids_path.write_bytes(ids_document)
+            elif isinstance(ids_document, (str, Path)):
+                ids_path = Path(ids_document)
+            else:
+                return ids_error("AECCTX_GATE_IDS_INPUT_INVALID", "IDS input type is invalid")
+            if not isinstance(ifc_source, (str, Path)):
+                return ids_error("AECCTX_GATE_IDS_INPUT_INVALID", "IFC source input type is invalid")
+
         policy_checks: list[GateCheckResult] = []
+        ids_input_check: GateCheckResult | None = None
+        ids_identity: tuple[str, str, str] | None = None
+        ids_dependencies: tuple[tuple[str, str], ...] = ()
         for check in policy.checks:
             if check.kind == "capability.minimum":
                 policy_checks.append(evaluate_capability_check(check, manifest))
@@ -915,11 +968,41 @@ def evaluate_gate(
                 policy_checks.append(
                     evaluate_diff_policy(check, diff_packages(baseline_snapshot, snapshot))
                 )
+            elif check.kind == "ids.specification":
+                from .ids import (
+                    IdsEvaluationError,
+                    dependency_versions,
+                    evaluate_prepared_ids_check,
+                    prepare_ids_input,
+                )
+
+                assert ids_path is not None and ifc_source is not None
+                try:
+                    prepared = prepare_ids_input(store, check, ids_path, Path(ifc_source), limits)
+                    current_identity = (prepared.ids_digest, prepared.source_id, prepared.source_digest)
+                    if ids_identity is not None and ids_identity != current_identity:
+                        return ids_error("AECCTX_GATE_IDS_INPUT_INVALID", "IDS checks do not bind one input identity")
+                    ids_identity = current_identity
+                    policy_checks.append(evaluate_prepared_ids_check(check, prepared, limits))
+                    if not prepared.unsupported:
+                        ids_dependencies = dependency_versions()
+                except IdsEvaluationError as error:
+                    return ids_error(error.code, str(error))
+                ids_input_check = _system_check(
+                    "aecctx.system.ids-input",
+                    "pass",
+                    "IDS and IFC source binding checks passed",
+                    (
+                        f"ids:{prepared.ids_digest}",
+                        f"source:{prepared.source_id}:{prepared.source_digest}",
+                    ),
+                )
             else:
                 raise GateError("AECCTX_GATE_CHECK_NOT_IMPLEMENTED", "policy check kind is not implemented by this task")
         waived_checks, waiver_diagnostics = apply_waivers(tuple(policy_checks), policy)
         checks = (
             *((baseline_check,) if baseline_check is not None else ()),
+            *((ids_input_check,) if ids_input_check is not None else ()),
             _system_check("aecctx.system.integrity", "pass", "candidate integrity checks passed", ("manifest.json",)),
             _system_check("aecctx.system.policy", "pass", "policy validation and digest passed"),
             _system_check("aecctx.system.validation", "pass", "candidate structural validation passed", ("manifest.json",)),
@@ -942,4 +1025,8 @@ def evaluate_gate(
                 if baseline_manifest is not None
                 else None
             ),
+            evaluator_dependencies=ids_dependencies,
+            ids_digest=ids_identity[0] if ids_identity is not None else None,
+            ifc_source_id=ids_identity[1] if ids_identity is not None else None,
+            ifc_source_digest=ids_identity[2] if ids_identity is not None else None,
         )

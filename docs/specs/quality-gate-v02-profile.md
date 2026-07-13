@@ -1,6 +1,6 @@
 # AECCTX v0.2 Delivery Quality Gate Profile
 
-Version: `1.0.0-draft.5`
+Version: `1.0.0-draft.6`
 Date: 2026-07-13
 Status: ACX-21 normative design; implementation and public quality-gate claims remain pending conformance
 Decision authority: ACXD-021 and ACXD-023
@@ -127,7 +127,7 @@ IDS results are labeled `ids` and never replace package validation, integrity, g
 
 ## 7. IDS 1.0 bounded profile
 
-The selected standard is buildingSMART IDS `v1.0.0`, final release commit `1effec6`, namespace `http://standards.buildingsmart.org/IDS`. Earlier drafts and later versions are unsupported by this profile.
+The selected standard is buildingSMART IDS `v1.0.0`, final release commit `1effec6f419798ce09617416d258a35bdc58320a`, namespace `http://standards.buildingsmart.org/IDS`. IDS 1.0 has no root version attribute: the namespace, closed AECCTX profile and byte provenance establish the selected version. `xsi:schemaLocation` is inert metadata and is never dereferenced or treated as version authority; this preserves unchanged official v1.0 tag fixtures whose historical hint names `0.9.7`. Earlier drafts and later namespaces/profiles remain unsupported.
 
 The selected implementation is exactly `ifctester==0.8.5` with `ifcopenshell==0.8.5`. The supported IFC schema identifiers are `IFC2X3` and `IFC4`, matching the existing AECCTX bounded IFC corpus. IFC4X1, IFC4X2, IFC4X3 and custom schemas remain unsupported here even if the dependency can parse them.
 
@@ -142,6 +142,8 @@ The initial public target is a partial simple-value subset of these IDS facet fa
 Required, optional and prohibited cardinalities are supported only where an unchanged buildingSMART v1.0 conformance case and an AECCTX project fixture both pass. `partOf`, XSD restrictions/patterns/ranges/enumerations, URI dereference, bSDD lookup, geometry, quantities not represented by the selected property subset and every unlisted facet/profile remain explicit `unsupported` findings. Passing an unsupported facet as though it were evaluated is prohibited.
 
 Official buildingSMART fixtures MAY be vendored only unchanged from the tagged release, with exact hashes and the upstream CC BY-ND 4.0 license/attribution. Project-authored fixtures remain Apache-2.0 and are kept separate. No official fixture may be edited and still described as an official conformance case.
+
+Task 6 selects exactly the paired `.ids`/`.ifc` cases named in `fixtures/third_party/buildingsmart-ids-1.0/ORIGIN.json`: one positive and one negative simple-value case for each of `entity`, `attribute`, `classification`, `property` and `material`. No restriction, `partOf`, URI, unlisted facet or additional upstream case is claimed by this selection. The manifest binds every relative upstream path and SHA-256 to commit `1effec6f419798ce09617416d258a35bdc58320a`.
 
 ## 8. IDS worker boundary
 
@@ -266,6 +268,8 @@ Task 3 adds `AECCTX_GATE_FINDING_IDENTITY_INVALID`, `AECCTX_GATE_WAIVER_DUPLICAT
 Task 4 adds `AECCTX_GATE_CANDIDATE_INVALID`, `AECCTX_GATE_CANDIDATE_CHANGED_DURING_EVALUATION`, `AECCTX_GATE_CAPABILITY_MISSING`, `AECCTX_GATE_CAPABILITY_BELOW_MINIMUM`, `AECCTX_GATE_LOSS_MAXIMUM_EXCEEDED`, `AECCTX_GATE_LOSS_REASON_MAXIMUM_EXCEEDED`, `AECCTX_GATE_LOSS_EVIDENCE_MISSING`, `AECCTX_GATE_LOSS_EVIDENCE_INCONSISTENT`, `AECCTX_GATE_VALUE_FIELD_MISSING`, `AECCTX_GATE_VALUE_STATE_INVALID`, `AECCTX_GATE_VALUE_STATE_REQUIRES_REVIEW`, `AECCTX_GATE_VALUE_STATE_FAILED`, `AECCTX_GATE_DIAGNOSTIC_MAXIMUM_EXCEEDED`, `AECCTX_GATE_DIAGNOSTIC_CODE_MAXIMUM_EXCEEDED`, `AECCTX_GATE_DIAGNOSTIC_EVIDENCE_INVALID`, `AECCTX_GATE_FINDING_LIMIT_EXCEEDED`, `AECCTX_GATE_RESULT_LIMIT_EXCEEDED` and `AECCTX_GATE_CHECK_NOT_IMPLEMENTED` as stable codes. Until their owning tasks land, `diff.regression`, `ids.specification` and their optional inputs fail closed with `AECCTX_GATE_CHECK_NOT_IMPLEMENTED`; they are never ignored or reported as evaluated.
 
 Task 5 adds `AECCTX_GATE_BASELINE_MISSING`, `AECCTX_GATE_BASELINE_INVALID`, `AECCTX_GATE_BASELINE_CHANGED_DURING_EVALUATION`, `AECCTX_GATE_DIFF_ADDED_RECORD`, `AECCTX_GATE_DIFF_REMOVED_RECORD`, `AECCTX_GATE_DIFF_CHANGED_RECORD`, `AECCTX_GATE_DIFF_ARTIFACT_CHANGED`, `AECCTX_GATE_CAPABILITY_REGRESSION`, `AECCTX_GATE_DIFF_LOSS_CHANGED`, `AECCTX_GATE_DIFF_IDENTITY_CHANGED`, `AECCTX_GATE_DIFF_PRODUCER_CHANGED`, `AECCTX_GATE_DIFF_VERSION_CHANGED` and `AECCTX_GATE_DIFF_CATEGORY_UNHANDLED` as stable codes. Task 5 implements only `diff.regression`; `ids.specification` and IDS inputs continue to fail closed with `AECCTX_GATE_CHECK_NOT_IMPLEMENTED` until Task 6.
+
+Task 6 adds `AECCTX_GATE_IDS_INPUT_PAIR_REQUIRED`, `AECCTX_GATE_IDS_INPUT_INVALID`, `AECCTX_GATE_IDS_DIGEST_MISMATCH`, `AECCTX_GATE_IDS_SOURCE_ID_MISMATCH`, `AECCTX_GATE_IDS_SOURCE_HASH_MISMATCH`, `AECCTX_GATE_IDS_SOURCE_SCHEMA_MISMATCH`, `AECCTX_GATE_IDS_XML_INVALID`, `AECCTX_GATE_IDS_XML_ACTIVE_CONTENT`, `AECCTX_GATE_IDS_NAMESPACE_UNSUPPORTED`, `AECCTX_GATE_IDS_FACET_UNSUPPORTED`, `AECCTX_GATE_IDS_RESTRICTION_UNSUPPORTED`, `AECCTX_GATE_IDS_LIMIT_EXCEEDED`, `AECCTX_GATE_IDS_DEPENDENCY_UNAVAILABLE`, `AECCTX_GATE_IDS_DEPENDENCY_VERSION_MISMATCH`, `AECCTX_GATE_IDS_WORKER_TIMEOUT`, `AECCTX_GATE_IDS_WORKER_CRASH`, `AECCTX_GATE_IDS_WORKER_OUTPUT_INVALID`, `AECCTX_GATE_IDS_WORKER_OUTPUT_LIMIT`, `AECCTX_GATE_IDS_SPECIFICATION_FAILED` and `AECCTX_GATE_IDS_REQUIREMENT_FAILED` as stable codes. Pairing, binding, XML safety, dependency and worker-protocol failures are `aecctx.system.ids-input` errors. A safely parsed unsupported facet/restriction or completed IDS nonconformance is an exact policy finding using the check's `failure_mode`; it is never reported as a system pass or silently evaluated.
 
 ## 15. Conformance and claim promotion
 

@@ -11,7 +11,7 @@ from typing import Any
 import pytest
 
 from aecctx.diff import PackageDiff
-from aecctx.gate import GateError, canonical_gate_json, evaluate_gate, load_gate_policy
+from aecctx.gate import canonical_gate_json, evaluate_gate, load_gate_policy
 from aecctx.gate.diff_checks import evaluate_diff_policy
 
 
@@ -297,7 +297,7 @@ def test_generated_markdown_and_archive_metadata_do_not_regress(tmp_path: Path) 
     assert archive_result.outcome == "pass"
 
 
-def test_ids_remain_fail_closed_after_diff_task(minimal_package: Path) -> None:
-    with pytest.raises(GateError) as caught:
-        evaluate_gate(minimal_package, _policy(), ids_document=b"<ids/>")
-    assert caught.value.code == "AECCTX_GATE_CHECK_NOT_IMPLEMENTED"
+def test_ids_input_without_policy_or_source_is_explicit_system_error(minimal_package: Path) -> None:
+    result = evaluate_gate(minimal_package, _policy(), ids_document=b"<ids/>")
+    assert result.outcome == "error"
+    assert result.diagnostics[0].code == "AECCTX_GATE_IDS_INPUT_PAIR_REQUIRED"

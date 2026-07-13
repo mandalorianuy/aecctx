@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ids xmlns="http://standards.buildingsmart.org/IDS" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <info><title>AECCTX simple-value negative profile</title></info>
+  <specifications>
+    <specification name="entity" ifcVersion="IFC4"><applicability minOccurs="1" maxOccurs="unbounded"><entity><name><simpleValue>IFCWALL</simpleValue></name></entity></applicability><requirements><entity><name><simpleValue>IFCBEAM</simpleValue></name></entity></requirements></specification>
+    <specification name="attribute" ifcVersion="IFC4"><applicability minOccurs="1" maxOccurs="unbounded"><entity><name><simpleValue>IFCWALL</simpleValue></name></entity></applicability><requirements><attribute><name><simpleValue>Name</simpleValue></name><value><simpleValue>Wrong Wall</simpleValue></value></attribute></requirements></specification>
+    <specification name="classification" ifcVersion="IFC4"><applicability minOccurs="1" maxOccurs="unbounded"><entity><name><simpleValue>IFCWALL</simpleValue></name></entity></applicability><requirements><classification><value><simpleValue>Wrong</simpleValue></value><system><simpleValue>Uniclass</simpleValue></system></classification></requirements></specification>
+    <specification name="property" ifcVersion="IFC4"><applicability minOccurs="1" maxOccurs="unbounded"><entity><name><simpleValue>IFCWALL</simpleValue></name></entity></applicability><requirements><property dataType="IFCIDENTIFIER"><propertySet><simpleValue>Pset_WallCommon</simpleValue></propertySet><baseName><simpleValue>Reference</simpleValue></baseName><value><simpleValue>WRONG</simpleValue></value></property></requirements></specification>
+    <specification name="material" ifcVersion="IFC4"><applicability minOccurs="1" maxOccurs="unbounded"><entity><name><simpleValue>IFCWALL</simpleValue></name></entity></applicability><requirements><material><value><simpleValue>Steel</simpleValue></value></material></requirements></specification>
+  </specifications>
+</ids>

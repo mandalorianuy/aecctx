@@ -87,6 +87,9 @@ class GateLimits:
     max_checks: int = 256
     max_waivers: int = 1_024
     max_ifc_bytes: int = 268_435_456
+    max_ids_specifications: int = 256
+    max_ids_facets: int = 4_096
+    max_ids_entities: int = 250_000
     max_findings: int = 100_000
     max_result_bytes: int = 16_777_216
     ids_timeout_seconds: float = 60.0
