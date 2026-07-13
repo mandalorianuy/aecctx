@@ -1,7 +1,7 @@
 {
   "version": "1",
   "claim_id": "codex.aecctx-inspector",
-  "claim_status": "target",
+  "claim_status": "public",
   "maximum_support": "partial",
   "profile": "aecctx-inspector-v1",
   "file_sha256": {

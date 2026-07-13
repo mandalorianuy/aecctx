@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.2.0-ACX-21-COMPLETE`
+Handoff status: `0.2.0-ACX-22-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and caller-owned offline trust evaluation. ACX-21 is completed: its exact 27-case `aecctx-gate-v1-ids-1.0-simple-v1` subset is public `partial` on Python 3.12 Linux/macOS/Windows. ACX-22 alone is `pending-next`. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 and ACX-21 provide optional signing and the bounded quality gate. ACX-22 is completed: `aecctx-inspector-v1` is public `partial` on Python 3.12 Linux/macOS/Windows. ACX-23 alone is `pending-next`. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-21 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. Execute only ACX-22, currently `pending-next`, after explicit continuation.
+4. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-22 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. Execute only ACX-23, currently `pending-next`, after explicit continuation.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -42,7 +42,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - ACX-20 signing is public `partial` only for `detached-jws-ed25519-offline-v1`, valid v0.1/v0.2 packages, optional `cryptography>=45,<50` and explicit caller-owned registry/policy inputs. X.509, remote discovery/revocation, timestamps, countersignatures, implicit trust and universal authorization remain unsupported.
 - The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
 - ACX-21 is public `partial` only for `aecctx-gate-v1-ids-1.0-simple-v1` on Python 3.12 Linux/macOS/Windows, with optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`; unlisted combinations and all approval semantics remain unsupported.
-- The ACX-22 Codex plugin remains optional, local-first and semantically subordinate to library/CLI results.
+- ACX-22 is public `partial` only for the exact optional, local-first `aecctx-inspector-v1` distribution; it remains semantically subordinate to library/CLI/MCP/gate results.
 
 ## Explicitly deferred
 
@@ -140,9 +140,9 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 
 ## Next implementation task
 
-ACX-22 is the sole `pending-next` task: implement the optional `aecctx-inspector` Codex plugin exactly as governed by [`docs/implementation-plan.md`](implementation-plan.md), with no unique AECCTX semantics.
+ACX-23 is the sole `pending-next` task: audit and publish the expansion conformance release exactly as governed by [`docs/implementation-plan.md`](implementation-plan.md). It has not started.
 
-The normative quality-gate behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Do not execute ACX-22 until a new continuation request.
+The plugin behavior remains fixed by expansion-spec section 14, ACXD-022 and [`docs/evidence/ACX-22.md`](evidence/ACX-22.md). Do not execute ACX-23 until a new continuation request.
 
 ## Consumer integration planning entry point
 

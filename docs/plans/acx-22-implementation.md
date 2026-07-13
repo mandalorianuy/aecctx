@@ -1,7 +1,7 @@
 # ACX-22 Codex Inspector Plugin Implementation Plan
 
 Date: 2026-07-13
-Status: Active subordinate execution plan
+Status: Completed subordinate execution plan
 
 ## Goal and authority
 
@@ -100,7 +100,7 @@ Steps:
 
 ## Task 6: Conformance, evidence and acceptance candidate
 
-Status: in progress; local conformance and clean-install gates pass, exact-SHA remote acceptance remains pending.
+Status: completed; local, clean-install and exact-SHA remote acceptance gates pass.
 
 Files:
 
@@ -119,6 +119,8 @@ Steps:
 6. Publish an acceptance candidate and require exact-SHA Ubuntu/macOS/Windows CI.
 
 ## Task 7: Close, publish and stop
+
+Status: completed; ACX-23 is promoted but not executed.
 
 1. Promote only `codex.aecctx-inspector` to public `partial` for `aecctx-inspector-v1` after all evidence gates pass.
 2. Set ACX-22 `completed`, promote only ACX-23 to `pending-next`, and update capability matrix, HANDOFF, evidence and this plan.
@@ -141,4 +143,4 @@ Steps:
 
 ## Progress checkpoint
 
-ACX-22 is `in_progress` at 5/7 implementation tasks completed. The claim remains `target` until the candidate passes the complete local and exact-SHA cross-platform gates. ACX-23 remains `pending` and is not executable.
+ACX-22 is `completed` at 7/7 implementation tasks. `codex.aecctx-inspector` is public `partial` only for `aecctx-inspector-v1`. ACX-23 alone is `pending-next`; it is not executed by this plan.

@@ -1,8 +1,8 @@
-# ACX-22 Acceptance Evidence — Candidate
+# ACX-22 Acceptance Evidence — Completed
 
 ## 1. Status and authority
 
-- Status: `in_progress`; local candidate evidence is being assembled and the public claim remains `target`.
+- Status: `completed`; local, clean-install and exact-SHA cross-platform acceptance pass.
 - Date: 2026-07-13.
 - Authority: expansion-spec section 14, ACXD-022, ACX-22 in the parent implementation plan, and the subordinate ACX-22 execution plan.
 
@@ -14,7 +14,7 @@ The candidate supplies an optional `aecctx-inspector` Codex plugin with a determ
 
 | Capability | Profile | Ceiling | Current state |
 |---|---|---|---|
-| `codex.aecctx-inspector` | `aecctx-inspector-v1` | `partial` | `target` |
+| `codex.aecctx-inspector` | `aecctx-inspector-v1` | `partial` | `public partial` |
 
 The corpus binds ten distribution/adversarial artifacts by SHA-256 and maps six distinct read-only operations: validate, info, query, diff, budgeted context and quality gate. Five adversarial surfaces cover filename, PDF text, IFC/DXF metadata, OCR/provider output and generated context.
 
@@ -28,7 +28,7 @@ The corpus binds ten distribution/adversarial artifacts by SHA-256 and maps six 
 - Plugin installation and exact-inventory uninstall pass in a fresh virtual environment.
 - Focused gate/package subset: 206 tests passed.
 - Full repository suite: 619 tests passed, 9 intentional skips; portable packaging, release and baseline integration gates passed.
-- Complete remote exact-SHA gates remain to be recorded before promotion.
+- Candidate `dec94a158f120285f802aa7c0b5f87cf9334eef5` passed [CI run 29269632838](https://github.com/mandalorianuy/aecctx/actions/runs/29269632838) on Ubuntu, macOS and Windows.
 
 ## 5. Determinism, security and loss boundaries
 
@@ -44,4 +44,4 @@ No ACX-22 executable, manifest, skill, fixture or conformance payload contains W
 
 ## 8. Promotion conditions
 
-Promotion to public `partial`, ACX-22 closure and ACX-23 `pending-next` require the complete local gate, exact-SHA Ubuntu/macOS/Windows CI, an atomic claim/evidence/governance update, merged-main verification and final publication evidence. Scaffolding, prose, fixtures, isolated focused tests, a local commit or an unverified push do not count as accepted progress.
+The complete local and candidate exact-SHA gates passed, enabling the atomic public-partial transition. Closure, merged-main and final publication SHAs are recorded after their respective gates. Scaffolding, prose, fixtures, isolated focused tests, a local commit or an unverified push do not count as accepted progress.

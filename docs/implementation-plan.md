@@ -167,8 +167,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-19 | blocked | No admissible RVT provider; public unsupported boundary with deterministic opaque anti-claim evidence |
 | ACX-20 | completed | Optional detached JWS/Ed25519 signing and caller-owned offline trust-policy evaluation |
 | ACX-21 | completed | Bounded deterministic policy/IDS quality gate is public partial under the exact accepted profile |
-| ACX-22 | in_progress | Optional `aecctx-inspector` plugin for Codex; governed execution cut active |
-| ACX-23 | pending | Expansion conformance corpus, packaging, documentation and release |
+| ACX-22 | completed | Optional `aecctx-inspector-v1` plugin is public partial with parity/adversarial/install evidence |
+| ACX-23 | pending-next | Expansion conformance corpus, packaging, documentation and release |
 
 ## ACX-00: Specification and repository foundation
 
@@ -830,6 +830,10 @@ Non-scope: no LLM requirement for core, no write tool, no trust-root/waiver sele
 Acceptance: plugin is optional, installable and parity-tested; adversarial behavior passes; `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-22.md` when completed.
+
+Governed execution rule: Tasks 1-7 completed the bounded manifest, exact local stdio MCP allowlist, six read-only parity operations, five validate-first skills, adversarial source-data contract, safe install/uninstall, hash-bound corpus, clean packaging boundary and cross-platform acceptance. ACX-22 is `completed`; only `aecctx-inspector-v1` is public `partial`. ACX-23 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+Completion resolution: ACX-22 publishes `codex.aecctx-inspector` as public `partial` on Python 3.12 Linux/macOS/Windows for the exact local distribution and conformance mapping. Marketplace publication, universal model behavior, third-party Codex hosts, native/GPL/commercial sandbox approval and any semantics beyond the stable library/CLI/MCP/gate surfaces remain unclaimed.
 
 ## ACX-23: Expansion release
 

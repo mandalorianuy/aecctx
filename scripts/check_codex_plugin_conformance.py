@@ -50,6 +50,12 @@ def validate(repo: Path, corpus_path: Path, claims_path: Path, plugin: Path) -> 
         errors.append("plugin claim is absent from claim registry")
     elif claim.get("status") != corpus.get("claim_status"):
         errors.append("claim status does not match corpus")
+    elif claim.get("status") == "public" and (
+        claim.get("support_level") != "partial"
+        or claim.get("profile") != "aecctx-inspector-v1"
+        or claim.get("evidence") != "docs/evidence/ACX-22.md"
+    ):
+        errors.append("public plugin claim mapping is invalid")
 
     if corpus.get("maximum_support") != "partial" or corpus.get("profile") != "aecctx-inspector-v1":
         errors.append("plugin corpus profile or maximum support is invalid")

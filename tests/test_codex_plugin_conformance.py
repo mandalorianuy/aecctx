@@ -28,7 +28,7 @@ def test_plugin_corpus_is_hash_bound_and_checker_is_green() -> None:
     assert CHECKER.is_file()
     payload = json.loads(CORPUS.read_text(encoding="utf-8"))
     assert payload["claim_id"] == "codex.aecctx-inspector"
-    assert payload["claim_status"] == "target"
+    assert payload["claim_status"] == "public"
     assert payload["maximum_support"] == "partial"
     assert payload["profile"] == "aecctx-inspector-v1"
     assert len(payload["file_sha256"]) >= 10
@@ -41,8 +41,8 @@ def test_plugin_conformance_rejects_claim_state_drift(tmp_path: Path) -> None:
     claims_path = tmp_path / "claims.json"
     claims = json.loads(CLAIMS.read_text(encoding="utf-8"))
     claim = next(entry for entry in claims["claims"] if entry["id"] == "codex.aecctx-inspector")
-    claim["status"] = "public"
-    claim["support_level"] = "partial"
+    claim["status"] = "target"
+    claim["support_level"] = None
     claims_path.write_text(json.dumps(claims), encoding="utf-8")
 
     result = _run_checker("--claims", str(claims_path))
