@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.3.0-ACX-25-IN-PROGRESS`
+Handoff status: `0.3.0-ACX-25-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 is complete with public partial Linux arm64/amd64 OCI evidence; ACX-25 alone is `in_progress`. WoodFraming integration remains intentionally deferred and consumer-owned.
+AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 and ACX-25 are complete; ACX-26 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
 
 ## Start here
 
@@ -13,19 +13,19 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
 4. Read `docs/specs/aecctx-post-v02-functional-debt-spec.md` and `docs/plans/post-v02-functional-debt-implementation.md` completely.
-5. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-24 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-25 is the only authorized next task and has not started.
+5. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-25 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-26 is the only authorized next task and has not started.
 6. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 7. Run `./scripts/verify.sh` before handoff.
 
 ## Active post-v0.2 plan
 
 - Plan: ACX-24 through ACX-38, dependency-first.
-- Completed: ACX-24, live OCI providers on Linux arm64 and amd64.
-- Sole `in_progress`: ACX-25, additional reviewed local enforcement profiles.
-- ACX-26 through ACX-38: `pending`.
-- Claim posture: `sandbox.oci-multiarch` is public `partial`; every later post-v0.2 entry remains a target until its owning milestone closes.
+- Completed: ACX-24 live OCI providers and ACX-25 deterministic native-profile rejection/reporting.
+- Sole `pending-next`: ACX-26, optional remote/customer-managed provider protocol.
+- ACX-27 through ACX-38: `pending`.
+- Claim posture: `sandbox.oci-multiarch` is public `partial`; `sandbox.local-enforcement` is public `unsupported`; every later post-v0.2 entry remains a target until its owning milestone closes.
 - Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
-- Execution boundary: ACX-25 alone may execute; ACX-26 and later remain unauthorized.
+- Execution boundary: ACX-26 alone may execute after an explicit continuation request; ACX-27 and later remain unauthorized.
 
 ## ACX-24 evidence
 
@@ -35,6 +35,15 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 - Local gates: 221 focused tests; 640 full tests with 10 intentional skips; live matrix, wheel/sdist, baseline and release verification green.
 - Remote gate: corrected implementation `3cbf3378dffe52bed270eee7e338bb4fbfd552a5` passed CI run `29286654324` on Ubuntu, macOS and Windows after a contract-error-precedence portability defect was reproduced and fixed.
 - Residuals: native macOS/Windows, other architectures/providers, registry publication, automatic image acquisition, remote execution and image signing remain unsupported and owned by later governed tasks.
+
+## ACX-25 evidence
+
+- Contract: immutable deterministic 16-axis `LocalEnforcementReport` values for native Linux, macOS and Windows.
+- Functional boundary: all three draft-1 profiles reject with structured details before workspace creation or provider launch; no best-effort fallback exists.
+- Corpus/package gate: ten digest-bound adversarial cases plus wheel/sdist scan proving no native broker, restricted decoder binary or new dependency is bundled.
+- Local gates: 48 focused tests and 655 full tests with 10 intentional skips; portable artifacts, release verification and baseline integration green.
+- Remote gate: candidate `24b63bdef116d7e3bd1ed1d4f980a02a7abc9d13` passed CI run `29289903480` on Ubuntu, macOS and Windows.
+- Claim/residual: `sandbox.local-enforcement` is public `unsupported`; native execution remains unsupported and OCI remains the only positive restricted-provider profile.
 
 ## Fixed decisions
 
@@ -178,7 +187,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 ## Next implementation task
 
-ACX-25 is the sole `in_progress` task in the active post-v0.2 plan. ACXD-033 and the local-enforcement profile govern its executable per-platform rejection/report outcome. ACX-26 and later remain `pending` and must not execute.
+ACX-26 is the sole `pending-next` task in the active post-v0.2 plan because the accepted dependency line places the optional remote/customer-managed provider protocol after local enforcement decisions. It has not started and must not execute without a new continuation request. ACX-27 and later remain `pending`.
 
 ## Consumer integration planning entry point
 

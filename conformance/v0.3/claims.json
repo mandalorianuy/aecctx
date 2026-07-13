@@ -21,19 +21,36 @@
       ]
     },
     {
-      "fixture_ids": [],
+      "evidence": "docs/evidence/ACX-25.md",
+      "fixture_ids": [
+        "v03-local-enforcement"
+      ],
       "id": "sandbox.local-enforcement",
-      "platform_scope": [],
+      "platform_scope": [
+        "native-linux",
+        "native-macos",
+        "native-windows"
+      ],
       "profile": "provider-local-enforcement-v03",
       "provider_scope": "restricted external providers; no native provider admitted",
-      "status": "target",
-      "test_ids": []
+      "status": "public",
+      "support_level": "unsupported",
+      "test_ids": [
+        "tests/test_local_provider_profiles.py::test_each_native_platform_has_a_complete_deterministic_rejection_report",
+        "tests/test_local_provider_profiles.py::test_provider_runner_rejects_before_workspace_creation_or_launch",
+        "tests/test_local_provider_profiles.py::test_local_enforcement_corpus_is_digest_bound_and_deterministic",
+        "tests/test_local_provider_profiles.py::test_local_enforcement_checker_rejects_native_binary_in_distribution"
+      ]
     }
   ],
   "fixtures": [
     {
       "id": "v03-provider-multiarch",
       "path": "fixtures/v0.3/provider-multiarch"
+    },
+    {
+      "id": "v03-local-enforcement",
+      "path": "fixtures/v0.3/local-providers"
     }
   ],
   "version": "0.3.0"

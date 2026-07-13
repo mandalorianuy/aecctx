@@ -148,7 +148,7 @@ def test_local_enforcement_corpus_is_digest_bound_and_deterministic() -> None:
     report = json.loads(completed.stdout)
     assert report == {
         "attack_cases": 10,
-        "claim_status": "target",
+        "claim_status": "public",
         "ok": True,
         "profiles": 3,
     }
