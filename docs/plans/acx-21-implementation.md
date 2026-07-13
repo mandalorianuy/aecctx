@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12+, JSON Schema 2020-12, existing AECCTX v0.1/v0.2 validation/records/diff APIs, optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`, pytest, hatchling, buildingSMART IDS 1.0 unchanged conformance fixtures.
 
-**Execution status:** Tasks 1-2 completed on 2026-07-13. Task 3 is `pending-next`; Tasks 4-9 remain `pending`. The public quality-gate capability remains `unsupported`.
+**Execution status:** Tasks 1-3 completed on 2026-07-13. Task 4 is `pending-next`; Tasks 5-9 remain `pending`. The public quality-gate capability remains `unsupported`.
 
 ## Global Constraints
 
@@ -243,14 +243,23 @@ git commit -m "feat: parse deterministic gate policies"
 - Create: `src/aecctx/gate/evaluator.py`
 - Create: `tests/test_gate_checks.py`
 - Modify: `src/aecctx/gate/__init__.py`
+- Modify: `src/aecctx/gate/models.py`
+- Modify: `schemas/v0.2/gate-result.schema.json`
+- Modify: `src/aecctx/schemas/v0_2/gate-result.schema.json`
+- Modify: `tests/test_gate_contract.py`
+- Modify: `docs/specs/quality-gate-v02-profile.md`
+- Modify: `docs/decisions/decision-log.md`
+- Modify: `docs/implementation-plan.md`
+- Modify: `docs/HANDOFF.md`
 
 **Interfaces:**
 - Produce `finding_fingerprint(*, check_id, code, subject_id, observed_state, evidence_refs) -> str`.
-- Produce `apply_waivers(checks, policy) -> tuple[GateCheckResult, ...]`.
+- Produce `apply_waivers(checks, policy) -> tuple[tuple[GateCheckResult, ...], tuple[GateDiagnostic, ...]]`.
 - Produce `aggregate_gate_outcome(checks) -> tuple[str, int]`.
 - Finding fingerprints exclude message text and include sorted unique evidence refs.
+- `GateFinding.disposition` is one of `error`, `fail`, `requires_review` or `waived`; `waived` requires `waiver_id` and other dispositions require null. Fingerprints are unique per check and non-empty check results equal their highest finding disposition except for the governed active-mismatch review floor. Waiver application classifies against the original set, applies exact mutations collectively, recomputes mixed-finding status, applies the floor once and never infers disposition from severity.
 
-- [ ] **Step 1: Write failing aggregation tests for all precedence combinations.** Include pass, review, fail, error, mixed order, active waiver, expired waiver, not-yet-valid waiver, mismatched fingerprint and attempted system-check waiver.
+- [x] **Step 1: Write failing aggregation tests for all precedence combinations.** Include pass, review, fail, error, mixed order, message-independent fingerprint, evidence normalization, mixed finding dispositions, active waiver, expired waiver, not-yet-valid waiver, mismatched fingerprint, duplicate target, invalid lifecycle and attempted system-check waiver.
 
 ```python
 @pytest.mark.parametrize(
@@ -267,20 +276,24 @@ def test_aggregate_precedence(statuses: tuple[str, ...], expected: tuple[str, in
     assert aggregate_gate_outcome(tuple(check_result(status) for status in statuses)) == expected
 ```
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_checks.py -q`; expect missing evaluator functions.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_checks.py -q`; expect missing evaluator functions.
 
-- [ ] **Step 3: Implement canonical finding fingerprints.** Normalize the exact identity object, reject empty check/code/subject, sort unique evidence refs and hash canonical bytes.
+- [x] **Step 3: Implement canonical finding fingerprints.** Normalize the exact identity object, reject empty check/code/subject, sort unique evidence refs and hash canonical bytes.
 
-- [ ] **Step 4: Implement waiver lifecycle against policy `evaluation_time`.** Active is `issued_at <= evaluation_time < expires_at`; expired/not-yet-valid/mismatched waivers retain the original finding and add stable diagnostics. Active waiver preserves original finding/evidence, sets `waiver_id`, changes only its disposition and sets check `waived` unless a higher check state exists.
+- [x] **Step 4: Implement waiver lifecycle against policy `evaluation_time`.** Active is `issued_at <= evaluation_time < expires_at`; expired/not-yet-valid waivers retain the original finding/check and add stable warning diagnostics. An active exact waiver preserves finding identity/evidence/message, sets `waiver_id`, changes only `fail`/`requires_review` disposition to `waived` and recomputes the check from all finding dispositions. An active mismatch adds a review diagnostic and floors its check at `requires_review`. Classify against the original check set and apply exact mutations plus the final floor as a batch so policy order is immaterial.
 
-- [ ] **Step 5: Reject unsafe waiver behavior.** No wildcard, no system check, no missing finding, no duplicate target and no policy clock fallback. Invalid policy lifecycle is `error`; an unused but valid waiver is a review diagnostic, not silent success.
+- [x] **Step 5: Reject unsafe waiver behavior.** No wildcard, no system/missing check, no duplicate target, no invalid policy clock/interval, no error/already-waived target and no policy clock fallback. Invalid control state raises a stable `GateError`; lifecycle evidence remains in the separately returned diagnostics.
 
-- [ ] **Step 6: Verify GREEN and order independence.** Run `.venv/bin/python -m pytest tests/test_gate_checks.py -q`; shuffle input check/finding order and prove canonical output order/outcome unchanged.
+- [x] **Step 6: Verify GREEN and order independence.** Run `.venv/bin/python -m pytest tests/test_gate_checks.py -q`; shuffle input check/finding order and prove canonical output order/outcome unchanged.
 
-- [ ] **Step 7: Commit.**
+- [x] **Step 7: Commit.**
 
 ```bash
-git add src/aecctx/gate/evaluator.py src/aecctx/gate/__init__.py tests/test_gate_checks.py
+git add docs/specs/quality-gate-v02-profile.md docs/decisions/decision-log.md \
+  docs/implementation-plan.md docs/plans/acx-21-implementation.md docs/HANDOFF.md \
+  schemas/v0.2/gate-result.schema.json src/aecctx/schemas/v0_2/gate-result.schema.json \
+  src/aecctx/gate/evaluator.py src/aecctx/gate/models.py src/aecctx/gate/__init__.py \
+  tests/test_gate_contract.py tests/test_gate_checks.py
 git commit -m "feat: aggregate gate outcomes and waivers"
 ```
 
@@ -572,4 +585,4 @@ Tasks 1 through 9 are sequential. Each task begins only after the preceding task
 
 ## Planning checkpoint
 
-Tasks 1-2 now materialize the closed public schemas, immutable models, strict bounded regular-file/JSON input, NFC canonical bytes, fixed offline schema registry, semantic policy validation and deterministic SHA-256 policy digest. Task 2 also closes the waiver target contract to exact declared `aecctx.policy.<check-id>` result IDs and records stable loader errors and v1 hard maxima. It adds no evaluator, finding aggregation, waiver application, dependency, fixture, CLI, claim or gate result. ACX-21 remains `in_progress` at 2/9 detailed tasks (22.2%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 3 is the next governed action only after a new user continuation request.
+Tasks 1-3 now materialize the closed public schemas, immutable models, strict bounded policy input, NFC canonical bytes, fixed offline schema registry, semantic validation, deterministic policy/finding digests, explicit finding dispositions, aggregate outcome/exit precedence and exact-finding waiver lifecycle with separately ordered diagnostics. Task 3 proves policy/check/finding order independence, batch application of exact waivers plus active-mismatch review floors, closed waiver-ID/disposition invariants and stable unsafe-control errors. It adds no candidate package preflight, authoritative package check dispatch, dependency, fixture, CLI, result assembly, projection, corpus or capability claim. ACX-21 remains `in_progress` at 3/9 detailed tasks (33.3%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 4 is the next governed action only after a new user continuation request.

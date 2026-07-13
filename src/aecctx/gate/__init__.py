@@ -3,6 +3,7 @@ from __future__ import annotations
 from .models import (
     CHECK_KINDS,
     CHECK_STATUSES,
+    FINDING_DISPOSITIONS,
     OUTCOMES,
     SEVERITIES,
     VALUE_ACTIONS,
@@ -16,11 +17,13 @@ from .models import (
     GateResult,
     GateWaiver,
 )
+from .evaluator import aggregate_gate_outcome, apply_waivers, finding_fingerprint
 from .policy import canonical_gate_json, load_gate_policy, read_gate_document, validate_gate_document
 
 __all__ = [
     "CHECK_KINDS",
     "CHECK_STATUSES",
+    "FINDING_DISPOSITIONS",
     "OUTCOMES",
     "SEVERITIES",
     "VALUE_ACTIONS",
@@ -33,7 +36,10 @@ __all__ = [
     "GatePolicy",
     "GateResult",
     "GateWaiver",
+    "aggregate_gate_outcome",
+    "apply_waivers",
     "canonical_gate_json",
+    "finding_fingerprint",
     "load_gate_policy",
     "read_gate_document",
     "validate_gate_document",

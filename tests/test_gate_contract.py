@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import FrozenInstanceError
+from dataclasses import FrozenInstanceError, replace
 from importlib.resources import files
 from pathlib import Path
 
@@ -12,6 +12,7 @@ from referencing import Registry
 from aecctx.gate import (
     CHECK_KINDS,
     CHECK_STATUSES,
+    FINDING_DISPOSITIONS,
     OUTCOMES,
     SEVERITIES,
     VALUE_ACTIONS,
@@ -48,6 +49,7 @@ def test_gate_enums_match_the_normative_profile() -> None:
         }
     )
     assert CHECK_STATUSES == frozenset({"pass", "fail", "requires_review", "waived", "error"})
+    assert FINDING_DISPOSITIONS == frozenset({"fail", "requires_review", "waived", "error"})
     assert OUTCOMES == frozenset({"pass", "fail", "requires_review", "error"})
     assert SEVERITIES == ("info", "warning", "error", "blocking")
     assert VALUE_ACTIONS == frozenset({"allow", "requires_review", "fail"})
@@ -76,6 +78,7 @@ def test_gate_finding_keeps_state_and_evidence_explicit_and_immutable() -> None:
         code="AECCTX_GATE_VALUE_STATE_UNSUPPORTED",
         check_id="aecctx.policy.required-values",
         severity="error",
+        disposition="fail",
         subject_id="assertion:door-fire-rating",
         observed_state="unsupported",
         evidence_refs=("source:ifc", "assertion:door-fire-rating", "source:ifc"),
@@ -93,6 +96,7 @@ def test_gate_finding_keeps_state_and_evidence_explicit_and_immutable() -> None:
             code="AECCTX_GATE_VALUE_STATE_UNSUPPORTED",
             check_id="aecctx.policy.required-values",
             severity="error",
+            disposition="fail",
             subject_id="assertion:door-fire-rating",
             observed_state="unsupported",
             evidence_refs=["source:ifc"],  # type: ignore[arg-type]
@@ -134,6 +138,7 @@ def test_gate_result_to_dict_is_authoritative_and_deterministically_ordered() ->
         code="AECCTX_GATE_CAPABILITY_BELOW_MINIMUM",
         check_id="aecctx.policy.capabilities",
         severity="error",
+        disposition="fail",
         subject_id="ifc.read",
         observed_state="opaque",
         evidence_refs=("manifest.json#/capabilities/ifc.read",),
@@ -193,6 +198,66 @@ def test_gate_result_to_dict_is_authoritative_and_deterministically_ordered() ->
             }
         ],
     }
+
+
+def test_finding_disposition_and_check_status_are_structurally_consistent() -> None:
+    with pytest.raises(ValueError, match="waiver_id"):
+        GateFinding(
+            code="AECCTX_GATE_TEST",
+            check_id="aecctx.policy.capabilities",
+            severity="error",
+            disposition="waived",
+            subject_id="ifc.read",
+            observed_state="opaque",
+            evidence_refs=(),
+            fingerprint=SHA256,
+            message="waived without authority",
+        )
+    with pytest.raises(ValueError, match="waiver_id"):
+        GateFinding(
+            code="AECCTX_GATE_TEST",
+            check_id="aecctx.policy.capabilities",
+            severity="error",
+            disposition="fail",
+            subject_id="ifc.read",
+            observed_state="opaque",
+            evidence_refs=(),
+            fingerprint=SHA256,
+            message="non-waived with authority",
+            waiver_id="exception",
+        )
+
+    finding = GateFinding(
+        code="AECCTX_GATE_TEST",
+        check_id="aecctx.policy.capabilities",
+        severity="error",
+        disposition="fail",
+        subject_id="ifc.read",
+        observed_state="opaque",
+        evidence_refs=(),
+        fingerprint=SHA256,
+        message="failure",
+    )
+    with pytest.raises(ValueError, match="highest finding disposition"):
+        GateCheckResult(
+            check_id="aecctx.policy.capabilities",
+            kind="capability.minimum",
+            status="requires_review",
+            severity="error",
+            evidence_refs=(),
+            findings=(finding,),
+            message="inconsistent aggregate",
+        )
+    with pytest.raises(ValueError, match="fingerprints must be unique"):
+        GateCheckResult(
+            check_id="aecctx.policy.capabilities",
+            kind="capability.minimum",
+            status="fail",
+            severity="error",
+            evidence_refs=(),
+            findings=(finding, replace(finding, code="AECCTX_GATE_OTHER")),
+            message="ambiguous finding identity",
+        )
 
 
 def test_policy_models_preserve_caller_order_and_are_frozen() -> None:
@@ -378,6 +443,7 @@ def test_gate_policy_and_result_schemas_accept_only_the_closed_contract() -> Non
         code="AECCTX_GATE_CAPABILITY_BELOW_MINIMUM",
         check_id="aecctx.policy.capabilities",
         severity="error",
+        disposition="fail",
         subject_id="ifc.read",
         observed_state="opaque",
         evidence_refs=("manifest.json#/capabilities/ifc.read",),
@@ -409,3 +475,19 @@ def test_gate_policy_and_result_schemas_accept_only_the_closed_contract() -> Non
     ).to_dict()
     result_validator.validate(result)
     assert list(result_validator.iter_errors({**result, "approved": True}))
+    missing_disposition = json.loads(json.dumps(result))
+    del missing_disposition["findings"][0]["disposition"]
+    del missing_disposition["checks"][0]["findings"][0]["disposition"]
+    assert list(result_validator.iter_errors(missing_disposition))
+    invalid_disposition = json.loads(json.dumps(result))
+    invalid_disposition["findings"][0]["disposition"] = "pass"
+    invalid_disposition["checks"][0]["findings"][0]["disposition"] = "pass"
+    assert list(result_validator.iter_errors(invalid_disposition))
+    waived_without_id = json.loads(json.dumps(result))
+    waived_without_id["findings"][0]["disposition"] = "waived"
+    waived_without_id["checks"][0]["findings"][0]["disposition"] = "waived"
+    assert list(result_validator.iter_errors(waived_without_id))
+    fail_with_id = json.loads(json.dumps(result))
+    fail_with_id["findings"][0]["waiver_id"] = "exception"
+    fail_with_id["checks"][0]["findings"][0]["waiver_id"] = "exception"
+    assert list(result_validator.iter_errors(fail_with_id))
