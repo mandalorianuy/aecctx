@@ -88,7 +88,7 @@
           "required": ["unknown", "unsupported", "conflicted", "explicit_null", "not_applicable"],
           "type": "object"
         },
-        "field_path": {"maxLength": 4096, "minLength": 1, "type": "string"},
+        "field_path": {"maxLength": 4096, "pattern": "^[A-Za-z_][A-Za-z0-9_-]*(?:\\.[A-Za-z_][A-Za-z0-9_-]*)*$", "type": "string"},
         "record_types": {
           "items": {"maxLength": 128, "minLength": 1, "type": "string"},
           "maxItems": 256,

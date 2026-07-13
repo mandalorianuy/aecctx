@@ -76,11 +76,12 @@
   "allOf": [
     {"if": {"properties": {"outcome": {"const": "pass"}}}, "then": {"properties": {"exit_code": {"const": 0}}}},
     {"if": {"properties": {"outcome": {"enum": ["fail", "requires_review"]}}}, "then": {"properties": {"exit_code": {"const": 1}}}},
-    {"if": {"properties": {"outcome": {"const": "error"}}}, "then": {"properties": {"exit_code": {"const": 2}}}}
+    {"if": {"properties": {"outcome": {"const": "error"}}}, "then": {"properties": {"exit_code": {"const": 2}}}},
+    {"if": {"properties": {"outcome": {"enum": ["pass", "fail", "requires_review"]}}}, "then": {"properties": {"candidate": {"$ref": "#/$defs/package_identity"}}}}
   ],
   "properties": {
     "baseline": {"anyOf": [{"$ref": "#/$defs/package_identity"}, {"type": "null"}]},
-    "candidate": {"$ref": "#/$defs/package_identity"},
+    "candidate": {"anyOf": [{"$ref": "#/$defs/package_identity"}, {"type": "null"}]},
     "checks": {"items": {"$ref": "#/$defs/check_result"}, "maxItems": 260, "type": "array"},
     "diagnostics": {"items": {"$ref": "#/$defs/diagnostic"}, "maxItems": 100000, "type": "array"},
     "evaluator": {

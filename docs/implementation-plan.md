@@ -166,7 +166,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-18 | completed | Experimental bounded R2000/AC1015 DWG source-object and converted-DXF evidence profile |
 | ACX-19 | blocked | No admissible RVT provider; public unsupported boundary with deterministic opaque anti-claim evidence |
 | ACX-20 | completed | Optional detached JWS/Ed25519 signing and caller-owned offline trust-policy evaluation |
-| ACX-21 | in_progress | Tasks 1-3 contracts/parser/finding aggregation/waivers complete; Task 4 candidate preflight and authoritative package checks is pending-next; diff/IDS remain unimplemented |
+| ACX-21 | in_progress | Tasks 1-4 contracts/parser/waivers/candidate package checks complete; Task 5 baseline semantic regression checks is pending-next; IDS remains unimplemented |
 | ACX-22 | pending | Optional `aecctx-inspector` plugin for Codex |
 | ACX-23 | pending | Expansion conformance corpus, packaging, documentation and release |
 
@@ -766,7 +766,7 @@ Work breakdown:
 7. Emit `pass`, `fail`, `requires_review` or `error` with policy/package digests, evaluator versions and exact evidence IDs.
 8. Generate Markdown/CI annotations from the JSON result and prove projection parity.
 
-Governed execution rule: Tasks 1-3 completed the closed schemas/models, strict deterministic policy parser, canonical finding identity, aggregate outcome/exit precedence and exact-finding waiver lifecycle with test-first evidence. They added no candidate preflight, authoritative package checks, optional dependency, fixture, CLI, result assembly or capability claim. Task 4 in the subordinate plan is `pending-next` and may begin only on a new continuation request. ACX-21 remains `in_progress`, ACX-22 remains `pending` and the capability remains public `unsupported`.
+Governed execution rule: Tasks 1-4 completed the closed schemas/models, strict deterministic policy parser, canonical finding identity, aggregate outcome/exit precedence, exact-finding waiver lifecycle, candidate validation/integrity preflight and authoritative capability/loss/value-state/diagnostic checks with test-first evidence. They added no baseline diff, IDS dependency/worker, fixture, CLI, projection, corpus or capability claim. Task 5 in the subordinate plan is `pending-next` and may begin only on a new continuation request. ACX-21 remains `in_progress`, ACX-22 remains `pending` and the capability remains public `unsupported`.
 
 Test matrix:
 

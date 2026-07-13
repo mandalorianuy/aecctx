@@ -1,6 +1,6 @@
 # AECCTX v0.2 Delivery Quality Gate Profile
 
-Version: `1.0.0-draft.3`
+Version: `1.0.0-draft.4`
 Date: 2026-07-13
 Status: ACX-21 normative design; implementation and public quality-gate claims remain pending conformance
 Decision authority: ACXD-021 and ACXD-023
@@ -34,6 +34,8 @@ A gate invocation contains:
 - evaluator limits and no implicit environment, clock, network, trust or consumer context.
 
 The candidate and baseline MUST pass ordinary AECCTX structural and integrity validation before policy checks run. Invalid packages produce gate outcome `error`, not `fail`, because evaluation did not complete safely.
+
+Candidate validation is a two-phase bounded preflight. The evaluator validates the caller path, copies only package members accepted by `PackageReader` into a private temporary snapshot, validates that snapshot and requires its complete manifest to equal the initially validated manifest before opening `RecordStore`. A symlink candidate root or a package that changes during this sequence is rejected. Policy checks read only the snapshot, closing the validation/use race without treating the caller path as trusted storage.
 
 The policy, IDS and explicit IFC source are caller-selected paths. AECCTX MUST NOT follow source storage references, external links, schema locations, XIncludes, catalog references or URLs from a package or IDS file.
 
@@ -88,15 +90,21 @@ Every finding carries an authoritative `disposition` of `error`, `fail`, `requir
 
 `loss.maximum` evaluates authoritative manifest loss summary and cited diagnostics. It supports an overall maximum and per-reason-code maxima. Missing detailed evidence, inconsistent counts or a reason code absent from the policy is reported according to the check's explicit `failure_mode`; counts are never guessed from prose.
 
+Each `loss_summary` entry is one exact reason code. Every reason MUST have at least one authoritative diagnostic with the same `code` and a non-negative integer `affected_count`; that reason's count is the sum of those values and the overall count is the sum of all reason counts. Duplicate summary codes, missing/invalid counts and diagnostics that cite an undeclared loss reason are inconsistent evidence. When `reason_code_maxima` is present, every observed reason absent from that map is a finding; an omitted map does not invent a zero maximum.
+
 ### 6.3 Value-state action
 
 `value_state.action` scans authoritative records selected by record type and optional exact field path. The policy MUST provide an action for each non-known state: `unknown`, `unsupported`, `conflicted`, `explicit_null` and `not_applicable`. Each action is exactly `allow`, `requires_review` or `fail`.
 
 An `allow` action is explicit policy, remains visible in check details and does not rewrite the value. Missing state actions make the policy invalid. `known` values pass this check but are not thereby validated as correct.
 
+An exact field path is dot-separated and each segment matches `[A-Za-z_][A-Za-z0-9_-]*`; it is data selection, not an expression language. Without a field path, mappings and arrays are traversed in deterministic key/index order and every object containing `state` is evaluated. A missing selected field emits `AECCTX_GATE_VALUE_FIELD_MISSING`. A malformed or unrecognized state object emits invalid-evidence error rather than being coerced to any value state. Findings cite the authoritative record ID plus a deterministic field path/JSON pointer; an `allow` observation remains in check evidence and message even though it creates no failing finding.
+
 ### 6.4 Diagnostic maximum
 
 `diagnostic.maximum` counts authoritative diagnostics at or above an exact severity threshold and MAY define per-code maxima. It never treats a successful adapter/process exit as evidence that diagnostics are absent.
+
+Both the overall and per-code counts count diagnostic records, never `affected_count`. Missing/invalid `code` or `severity` is invalid evidence and cannot be silently excluded from a budget.
 
 ### 6.5 Baseline regression
 
@@ -180,6 +188,8 @@ The result binds:
 - ordered system and policy check results;
 - ordered findings, waiver decisions, diagnostics and evidence references.
 
+`candidate` is the exact validated package identity. It MAY be `null` only when outcome is `error` because structural/integrity preflight could not establish a trusted identity; non-error results MUST contain it. No placeholder package ID or digest is synthesized. Validation diagnostics are partitioned deterministically: artifact path/hash/size/required-reference/logical-digest failures belong to `aecctx.system.integrity`; all other package validation failures belong to `aecctx.system.validation`. `aecctx.system.policy`, validation and integrity are always present after successful preflight and cannot be waived.
+
 Checks sort by result ID. Findings sort by check ID, code, subject, fingerprint and evidence reference. Diagnostics sort by code and path. Presentation messages do not participate in finding identity.
 
 Repeated evaluation with identical bytes, versions, limits and platform-normalized settings MUST produce byte-identical canonical JSON. The result contains no host clock, random ID, temporary path or filesystem ordering.
@@ -223,7 +233,7 @@ The following defaults are also the v1 hard maxima; callers MAY reduce them but 
 - 100,000 findings and 16 MiB canonical result;
 - 60 seconds IDS worker wall time.
 
-Regular-file inputs only are accepted; symlinks are rejected. Over-limit behavior is a stable `error`, never partial `pass`.
+Regular-file inputs only are accepted; symlinks are rejected. Findings are accumulated only up to `max_findings`, and canonical result bytes only up to `max_result_bytes`. Exceeding either bound raises the stable operational `GateError` `AECCTX_GATE_FINDING_LIMIT_EXCEEDED` or `AECCTX_GATE_RESULT_LIMIT_EXCEEDED`; it never returns a truncated result or partial `pass`.
 
 ## 14. Stable diagnostic families
 
@@ -245,6 +255,8 @@ Diagnostics MUST NOT embed source text, policy contents, host paths or dependenc
 Task 2 policy loading uses these stable `GateError.code` values: `AECCTX_GATE_INPUT_TYPE_INVALID`, `AECCTX_GATE_INPUT_LIMIT_EXCEEDED`, `AECCTX_GATE_INPUT_UNREADABLE`, `AECCTX_GATE_JSON_INVALID`, `AECCTX_GATE_JSON_DUPLICATE_KEY`, `AECCTX_GATE_JSON_NORMALIZATION_COLLISION`, `AECCTX_GATE_JSON_NONFINITE`, `AECCTX_GATE_JSON_DEPTH_EXCEEDED`, `AECCTX_GATE_SCHEMA_UNSUPPORTED`, `AECCTX_GATE_SCHEMA_INVALID`, `AECCTX_GATE_LIMIT_INVALID`, `AECCTX_GATE_PROFILE_UNSUPPORTED`, `AECCTX_GATE_POLICY_VERSION_INVALID`, `AECCTX_GATE_EVALUATION_TIME_INVALID`, `AECCTX_GATE_CHECK_ID_DUPLICATE`, `AECCTX_GATE_WAIVER_ID_DUPLICATE`, `AECCTX_GATE_CHECK_ID_RESERVED`, `AECCTX_GATE_WAIVER_TARGET_INVALID`, `AECCTX_GATE_WAIVER_INTERVAL_INVALID`, `AECCTX_GATE_CHECK_LIMIT_EXCEEDED`, `AECCTX_GATE_WAIVER_LIMIT_EXCEEDED` and `AECCTX_GATE_POLICY_INVALID`. Messages are bounded control diagnostics and MUST NOT copy source contents or host paths.
 
 Task 3 adds `AECCTX_GATE_FINDING_IDENTITY_INVALID`, `AECCTX_GATE_WAIVER_DUPLICATE_TARGET`, `AECCTX_GATE_WAIVER_CHECK_INVALID`, `AECCTX_GATE_WAIVER_CHECK_MISSING` and `AECCTX_GATE_WAIVER_DISPOSITION_INVALID` as stable control-error codes. Lifecycle diagnostics are `AECCTX_GATE_WAIVER_EXPIRED`, `AECCTX_GATE_WAIVER_NOT_YET_VALID` and `AECCTX_GATE_WAIVER_FINDING_MISMATCH`, all with diagnostic severity `warning`. The mismatch diagnostic additionally floors its target check at `requires_review`; the first two do not change the original check disposition.
+
+Task 4 adds `AECCTX_GATE_CANDIDATE_INVALID`, `AECCTX_GATE_CANDIDATE_CHANGED_DURING_EVALUATION`, `AECCTX_GATE_CAPABILITY_MISSING`, `AECCTX_GATE_CAPABILITY_BELOW_MINIMUM`, `AECCTX_GATE_LOSS_MAXIMUM_EXCEEDED`, `AECCTX_GATE_LOSS_REASON_MAXIMUM_EXCEEDED`, `AECCTX_GATE_LOSS_EVIDENCE_MISSING`, `AECCTX_GATE_LOSS_EVIDENCE_INCONSISTENT`, `AECCTX_GATE_VALUE_FIELD_MISSING`, `AECCTX_GATE_VALUE_STATE_INVALID`, `AECCTX_GATE_VALUE_STATE_REQUIRES_REVIEW`, `AECCTX_GATE_VALUE_STATE_FAILED`, `AECCTX_GATE_DIAGNOSTIC_MAXIMUM_EXCEEDED`, `AECCTX_GATE_DIAGNOSTIC_CODE_MAXIMUM_EXCEEDED`, `AECCTX_GATE_DIAGNOSTIC_EVIDENCE_INVALID`, `AECCTX_GATE_FINDING_LIMIT_EXCEEDED`, `AECCTX_GATE_RESULT_LIMIT_EXCEEDED` and `AECCTX_GATE_CHECK_NOT_IMPLEMENTED` as stable codes. Until their owning tasks land, `diff.regression`, `ids.specification` and their optional inputs fail closed with `AECCTX_GATE_CHECK_NOT_IMPLEMENTED`; they are never ignored or reported as evaluated.
 
 ## 15. Conformance and claim promotion
 
