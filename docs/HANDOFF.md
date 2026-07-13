@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.2.0-ACX-21-PLANNED`
+Handoff status: `0.2.0-ACX-21-TASK-01`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: ACXD-023, the normative quality-gate profile and the detailed TDD execution cut are complete, but no gate implementation or claim exists. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Task 1 now provides closed policy/check/waiver/result schemas, byte-identical packaged mirrors and immutable public model types. No strict parser, evaluator, CLI, corpus or quality-gate claim exists. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
@@ -56,11 +56,19 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 
 `ACX-01` created the Python package, CLI command surface, offline schema loader, directory package validator, typed diagnostics, and packaging gates. Acceptance evidence is recorded in [`docs/evidence/ACX-01.md`](evidence/ACX-01.md).
 
+## ACX-21 Task 1 evidence
+
+- RED: the contract/package-data test command failed during collection with `ModuleNotFoundError: No module named 'aecctx.gate'` before implementation.
+- GREEN: `tests/test_gate_contract.py` plus `tests/test_package_data.py` pass with 27 tests.
+- All eight public/packaged schema files pass `python -m json.tool`; each mirror passes byte comparison against its normative repository copy.
+- `./scripts/verify.sh` passes with 430 tests, 9 intentional skips, wheel/sdist build, portable verification, release verification and baseline integration healthy.
+- No dependency, fixture, CLI command, evaluator or capability claim changed.
+
 ## Next implementation task
 
-ACX-21 Task 1: create the closed gate policy/check/waiver/result schemas, byte-identical packaged mirrors and immutable public result types exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin with the failing contract/package-data tests and stop at that task's checkpoint.
+ACX-21 Task 2: implement strict bounded policy input, canonical NFC JSON, the fixed offline four-schema registry, semantic validation and stable policy digest exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin with the failing malicious-input/canonicalization tests and stop at that task's checkpoint.
 
-The normative behavior is fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. No implementation file, schema, fixture, dependency or capability claim was added by the planning checkpoint. Do not execute ACX-21 Task 1 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
+The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Task 1 added no dependency, fixture, parser, evaluator, CLI or capability claim. Do not execute ACX-21 Task 2 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
 
 ## Consumer integration planning entry point
 

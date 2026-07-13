@@ -8,6 +8,8 @@
 
 **Tech Stack:** Python 3.12+, JSON Schema 2020-12, existing AECCTX v0.1/v0.2 validation/records/diff APIs, optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`, pytest, hatchling, buildingSMART IDS 1.0 unchanged conformance fixtures.
 
+**Execution status:** Task 1 completed on 2026-07-13. Task 2 is `pending-next`; Tasks 3-9 remain `pending`. The public quality-gate capability remains `unsupported`.
+
 ## Global Constraints
 
 - Execute only ACX-21. ACX-22 remains `pending` and is only promoted, never executed, by this plan.
@@ -75,7 +77,7 @@
 - Define exact outcome/status/severity/check-kind/value-action enums from the normative profile.
 - `GateResult.to_dict() -> dict[str, Any]` is the only source for serialization/projections.
 
-- [ ] **Step 1: Write failing schema-mirror and public-type tests.**
+- [x] **Step 1: Write failing schema-mirror and public-type tests.**
 
 ```python
 from importlib.resources import files
@@ -111,9 +113,9 @@ def test_public_and_packaged_gate_schemas_are_identical() -> None:
     assert public == packaged
 ```
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_contract.py tests/test_package_data.py -q`; expect import/file failures for the new gate contract.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_contract.py tests/test_package_data.py -q`; expect import/file failures for the new gate contract.
 
-- [ ] **Step 3: Add four closed Draft 2020-12 schemas.** Use `additionalProperties: false`, exact enum sets, bounded arrays/strings, lowercase SHA-256 patterns, unique IDs and conditional check configuration by `kind`. `gate-policy` references the fixed public `$id` values for check/waiver; `gate-result` requires candidate/policy identity, outcome, exit code, evaluator versions, checks, findings and diagnostics.
+- [x] **Step 3: Add four closed Draft 2020-12 schemas.** Use `additionalProperties: false`, exact enum sets, bounded arrays/strings, lowercase SHA-256 patterns, unique IDs and conditional check configuration by `kind`. `gate-policy` references the fixed public `$id` values for check/waiver; `gate-result` requires candidate/policy identity, outcome, exit code, evaluator versions, checks, findings and diagnostics.
 
 ```json
 {
@@ -134,7 +136,7 @@ def test_public_and_packaged_gate_schemas_are_identical() -> None:
 }
 ```
 
-- [ ] **Step 4: Add immutable exact-state dataclasses.** Validate enum membership and normalized tuple ordering at construction; reject mutable/raw mappings as public result state.
+- [x] **Step 4: Add immutable exact-state dataclasses.** Validate enum membership and normalized tuple ordering at construction; reject mutable/raw mappings as public result state.
 
 ```python
 CHECK_KINDS = frozenset({
@@ -153,11 +155,11 @@ class GateError(ValueError):
         self.code = code
 ```
 
-- [ ] **Step 5: Export only the governed public facade.** `gate/__init__.py` exports models/limits/error now and reserves `evaluate_gate` for Task 4; no implementation stub returns a false result.
+- [x] **Step 5: Export only the governed public facade.** `gate/__init__.py` exports models/limits/error now and reserves `evaluate_gate` for Task 4; no implementation stub returns a false result.
 
-- [ ] **Step 6: Verify GREEN and package data.** Run `.venv/bin/python -m pytest tests/test_gate_contract.py tests/test_package_data.py -q`; run `.venv/bin/python -m json.tool` over all eight public/mirrored schema files.
+- [x] **Step 6: Verify GREEN and package data.** Run `.venv/bin/python -m pytest tests/test_gate_contract.py tests/test_package_data.py -q`; run `.venv/bin/python -m json.tool` over all eight public/mirrored schema files.
 
-- [ ] **Step 7: Commit.**
+- [x] **Step 7: Commit.**
 
 ```bash
 git add schemas/v0.2/gate-*.schema.json src/aecctx/schemas/v0_2/gate-*.schema.json \
@@ -557,4 +559,4 @@ Tasks 1 through 9 are sequential. Each task begins only after the preceding task
 
 ## Planning checkpoint
 
-This document resolves implementation rediscovery only. At this checkpoint no schema, gate module, dependency, fixture, claim or runtime behavior exists. ACX-21 remains `in_progress`, the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 1 is the next authorized implementation action only after a new user continuation request.
+Task 1 now materializes only the closed public schemas, byte-identical packaged mirrors and immutable result/policy model layer. It adds no policy parser, evaluator, dependency, fixture, CLI, claim or gate result. ACX-21 remains `in_progress`, the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 2 is the next governed action only after a new user continuation request.

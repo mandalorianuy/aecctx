@@ -1,0 +1,126 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.2/gate-result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "check_result": {
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {"maxLength": 128, "minLength": 1, "type": "string"},
+        "evidence_refs": {"$ref": "#/$defs/evidence_refs"},
+        "findings": {"items": {"$ref": "#/$defs/finding"}, "maxItems": 100000, "type": "array"},
+        "kind": {"enum": ["system", "capability.minimum", "loss.maximum", "value_state.action", "diagnostic.maximum", "diff.regression", "ids.specification"]},
+        "message": {"maxLength": 4096, "minLength": 1, "type": "string"},
+        "severity": {"enum": ["info", "warning", "error", "blocking"]},
+        "status": {"enum": ["pass", "fail", "requires_review", "waived", "error"]}
+      },
+      "required": ["check_id", "kind", "status", "severity", "evidence_refs", "findings", "message"],
+      "type": "object"
+    },
+    "diagnostic": {
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {"type": ["string", "null"]},
+        "code": {"maxLength": 256, "minLength": 1, "type": "string"},
+        "message": {"maxLength": 4096, "minLength": 1, "type": "string"},
+        "path": {"type": ["string", "null"]},
+        "severity": {"enum": ["info", "warning", "error", "blocking"]}
+      },
+      "required": ["code", "severity", "message", "path", "check_id"],
+      "type": "object"
+    },
+    "evidence_refs": {
+      "items": {"maxLength": 4096, "minLength": 1, "type": "string"},
+      "maxItems": 8192,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "finding": {
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {"maxLength": 128, "minLength": 1, "type": "string"},
+        "code": {"maxLength": 256, "minLength": 1, "type": "string"},
+        "evidence_refs": {"$ref": "#/$defs/evidence_refs"},
+        "fingerprint": {"$ref": "#/$defs/hex_digest"},
+        "message": {"maxLength": 4096, "minLength": 1, "type": "string"},
+        "observed_state": {"maxLength": 128, "minLength": 1, "type": "string"},
+        "severity": {"enum": ["info", "warning", "error", "blocking"]},
+        "subject_id": {"maxLength": 4096, "minLength": 1, "type": "string"},
+        "waiver_id": {"type": ["string", "null"]}
+      },
+      "required": ["code", "check_id", "severity", "subject_id", "observed_state", "evidence_refs", "fingerprint", "message", "waiver_id"],
+      "type": "object"
+    },
+    "hex_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "package_identity": {
+      "additionalProperties": false,
+      "properties": {
+        "logical_digest": {"$ref": "#/$defs/hex_digest"},
+        "package_id": {"maxLength": 1024, "minLength": 1, "type": "string"}
+      },
+      "required": ["package_id", "logical_digest"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {"if": {"properties": {"outcome": {"const": "pass"}}}, "then": {"properties": {"exit_code": {"const": 0}}}},
+    {"if": {"properties": {"outcome": {"enum": ["fail", "requires_review"]}}}, "then": {"properties": {"exit_code": {"const": 1}}}},
+    {"if": {"properties": {"outcome": {"const": "error"}}}, "then": {"properties": {"exit_code": {"const": 2}}}}
+  ],
+  "properties": {
+    "baseline": {"anyOf": [{"$ref": "#/$defs/package_identity"}, {"type": "null"}]},
+    "candidate": {"$ref": "#/$defs/package_identity"},
+    "checks": {"items": {"$ref": "#/$defs/check_result"}, "maxItems": 260, "type": "array"},
+    "diagnostics": {"items": {"$ref": "#/$defs/diagnostic"}, "maxItems": 100000, "type": "array"},
+    "evaluator": {
+      "additionalProperties": false,
+      "properties": {
+        "dependencies": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "name": {"maxLength": 128, "minLength": 1, "type": "string"},
+              "version": {"maxLength": 128, "minLength": 1, "type": "string"}
+            },
+            "required": ["name", "version"],
+            "type": "object"
+          },
+          "maxItems": 64,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "version": {"maxLength": 128, "minLength": 1, "type": "string"}
+      },
+      "required": ["version", "dependencies"],
+      "type": "object"
+    },
+    "exit_code": {"enum": [0, 1, 2]},
+    "findings": {"items": {"$ref": "#/$defs/finding"}, "maxItems": 100000, "type": "array"},
+    "ids_input": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "ids_digest": {"$ref": "#/$defs/hex_digest"},
+        "source_digest": {"$ref": "#/$defs/hex_digest"},
+        "source_id": {"maxLength": 128, "minLength": 1, "type": "string"}
+      },
+      "required": ["ids_digest", "source_id", "source_digest"]
+    },
+    "outcome": {"enum": ["pass", "fail", "requires_review", "error"]},
+    "policy": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {"$ref": "#/$defs/hex_digest"},
+        "policy_id": {"maxLength": 64, "minLength": 1, "type": "string"},
+        "policy_version": {"maxLength": 128, "minLength": 1, "type": "string"}
+      },
+      "required": ["policy_id", "policy_version", "digest"],
+      "type": "object"
+    },
+    "profile": {"const": "https://aecctx.dev/gate/v1"},
+    "result_version": {"const": "1"}
+  },
+  "required": ["profile", "result_version", "evaluator", "candidate", "baseline", "policy", "ids_input", "outcome", "exit_code", "checks", "findings", "diagnostics"],
+  "title": "AECCTX quality gate result v1",
+  "type": "object"
+}

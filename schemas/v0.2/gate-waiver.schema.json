@@ -1,0 +1,17 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.2/gate-waiver.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approved_by": {"maxLength": 4096, "minLength": 1, "type": "string"},
+    "check_id": {"pattern": "^[a-z][a-z0-9._-]{0,63}$", "type": "string"},
+    "expires_at": {"format": "date-time", "maxLength": 64, "type": "string"},
+    "finding_fingerprint": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "issued_at": {"format": "date-time", "maxLength": 64, "type": "string"},
+    "reason": {"maxLength": 4096, "minLength": 1, "type": "string"},
+    "waiver_id": {"pattern": "^[a-z][a-z0-9._-]{0,63}$", "type": "string"}
+  },
+  "required": ["waiver_id", "check_id", "finding_fingerprint", "reason", "approved_by", "issued_at", "expires_at"],
+  "title": "AECCTX quality gate waiver v1",
+  "type": "object"
+}
