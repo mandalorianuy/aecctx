@@ -221,3 +221,15 @@ Status: Active
 ## Open decisions
 
 None.
+
+## Post-v0.2 program decisions
+
+### ACXD-031: Dependency-first functional debt program
+
+- Date: 2026-07-13.
+- Status: Accepted for specification and planning; it creates no implementation or release claim.
+- Decision: post-`0.2.0` work follows the dependency-first sequence in `docs/specs/aecctx-post-v02-functional-debt-spec.md`. Multi-architecture execution of the existing OCI providers precedes new format or inference claims; additional local and remote provider profiles precede capabilities that depend on them.
+- Functional rule: every residual maps to an executable outcome, a bounded anti-claim or a documented external blocker. A document, mock, replay-only mapping or unavailable provider is not sufficient evidence for a live capability.
+- Claim rule: public support may advance only for exact profile, dependency, provider and platform combinations with legally publishable fixtures and mapped conformance. Existing `0.2.0` claims remain unchanged until a future owning task completes.
+- Sequencing consequence: the subordinate implementation plan may promote only ACX-24 to `pending-next`; ACX-25 through ACX-38 remain `pending`, ACX-10 remains `deferred`, and no implementation begins from this decision alone.
+- Boundary: WoodFraming and all consumer mappings remain outside AECCTX.
