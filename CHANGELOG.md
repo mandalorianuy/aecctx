@@ -4,13 +4,16 @@ All notable changes are documented here. AECCTX follows Semantic Versioning for 
 
 ## Unreleased
 
+## 0.2.0 - 2026-07-13
+
 - Added the ACX-11 v0.2 shared schema substrate for observation/inference, coordinate qualification, representation fidelity and provider attestation.
 - Added dual v0.1/v0.2 validation and writing, required-extension negotiation, cross-version diff metadata, publishable shared fixtures and a governed claim-to-test registry.
 - Added the ACX-12 external-provider protocol, allowlisted registry, content-addressed replay corpus and digest-pinned `oci-docker-v1` enforcement profile with adversarial conformance.
 - Added explicit rejection for unenforceable native/macOS provider profiles plus security, licensing and privacy review gates.
 - Added ACX-13 opt-in IFC v0.2 source-native 2D and explicit projected-georeferencing profiles, reversible transform validation, deterministic cited SVG previews and degraded-state conformance fixtures.
 - Added ACX-14 opt-in DXF v0.2 source-semantic and bounded-3D profiles, ASCII/binary corpus, explicit OCS/insert transforms, deterministic cited tessellation/GLB and stable unsupported-kernel/resource diagnostics.
-- Remaining format-specific v0.2 targets remain unchanged until their owning tasks complete conformance.
+- Added bounded OCR, mesh registration, STEP/IGES, R2000 DWG, detached signing, quality-gate/IDS and Codex inspector profiles with claim-complete conformance mappings.
+- Kept RVT blocked and vision, hidden geometry, unlisted versions/platforms and consumer mappings explicitly unsupported or unclaimed.
 
 ## 0.1.0 - 2026-07-11
 

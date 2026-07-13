@@ -1,7 +1,7 @@
 # AECCTX Capability Matrix
 
 Date: 2026-07-13
-Status: v0.1.0 release claim registry plus non-claim expansion targets
+Status: v0.2.0 release claims plus explicit unsupported and future targets
 
 ## Support levels
 

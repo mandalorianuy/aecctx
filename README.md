@@ -4,7 +4,7 @@ AECCTX is an open, application-agnostic specification and local-first Python too
 
 Version **0.1.0** is implemented, packaged and covered by a public conformance corpus.
 
-The post-v0.1 implementation line is active. ACX-11 implements the bounded v0.2 shared schema/compatibility substrate, ACX-12 the reviewed external-provider foundation, ACX-13 bounded IFC 2D/georeferencing, ACX-14 DXF source-semantics/bounded-3D, ACX-15 experimental English OCR, ACX-16 mesh coordinate qualification/manual registration, ACX-17 experimental STEP/IGES source-graph plus translator-derived BREP extraction, ACX-18 experimental R2000 DWG source-object plus converted-DXF evidence, and ACX-20 optional detached Ed25519 signing with caller-owned offline trust policy. Claims remain exact and bounded by their corpora.
+AECCTX 0.2.0 is the released expansion line. It includes the bounded v0.2 shared schema, reviewed provider boundary, IFC 2D/georeferencing, DXF semantics/3D, experimental English OCR, mesh registration, experimental STEP/IGES and R2000 DWG, optional detached Ed25519 signing, the quality gate and the optional Codex inspector plugin. Claims remain exact and bounded by the aggregate v0.2 corpus.
 
 ## Why this exists
 
@@ -24,7 +24,7 @@ AECCTX instead produces a package with:
 Python 3.12 or newer is required.
 
 ```bash
-python -m pip install https://github.com/mandalorianuy/aecctx/releases/download/v0.1.0/aecctx-0.1.0-py3-none-any.whl
+python -m pip install https://github.com/mandalorianuy/aecctx/releases/download/v0.2.0/aecctx-0.2.0-py3-none-any.whl
 ```
 
 For optional adapters or MCP, install from the tagged source checkout:
@@ -149,6 +149,6 @@ The optional MCP server is installed with `aecctx[mcp]` and launched with `aecct
 
 `verify.sh` includes the baseline integration gate and expects the baseline package or sibling checkout available to maintainers. Public CI runs `scripts/verify_portable.sh` so external contributors need no private dependency.
 
-Public CI runs on Linux, macOS and Windows. The governed fixture claims live in [`conformance/v0.1/corpus.json`](conformance/v0.1/corpus.json); compatibility and current release limitations are documented in [`docs/compatibility.md`](docs/compatibility.md) and [`docs/releases/v0.1.0.md`](docs/releases/v0.1.0.md).
+Public CI runs on Linux, macOS and Windows. v0.1 compatibility remains governed by [`conformance/v0.1/corpus.json`](conformance/v0.1/corpus.json); v0.2 claims are aggregated by [`conformance/v0.2/corpus.json`](conformance/v0.2/corpus.json). See [`docs/compatibility-v0.2.md`](docs/compatibility-v0.2.md) and [`docs/releases/v0.2.0.md`](docs/releases/v0.2.0.md).
 
 AECCTX is licensed under Apache-2.0. Optional adapters retain their separately documented permissive or LGPL dependency boundaries. See [`LICENSE`](LICENSE) and [`docs/licenses/`](docs/licenses/).

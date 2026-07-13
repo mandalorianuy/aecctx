@@ -58,7 +58,7 @@ def test_version_command_is_machine_readable() -> None:
 
     assert completed.returncode == 0
     assert json.loads(completed.stdout) == {
-        "data": {"version": "0.1.0"},
+        "data": {"version": "0.2.0"},
         "diagnostics": [],
         "ok": True,
     }
