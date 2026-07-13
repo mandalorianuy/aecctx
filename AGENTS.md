@@ -20,6 +20,7 @@ Rules:
 - `docs/specs/aec-context-package-spec.md` is the normative format authority.
 - `docs/specs/aec-context-plugin-contract.md` is the normative extractor/plugin authority.
 - `docs/specs/aecctx-capability-expansion-spec.md` governs post-v0.1 capability targets without promoting them to release claims.
+- `docs/specs/aecctx-post-v02-functional-debt-spec.md` governs post-v0.2 functional debt and claim ceilings without changing the `0.2.0` release claims.
 - `docs/specs/signing-v1-profile.md` is the normative optional signing and offline trust authority for ACX-20.
 - `docs/specs/quality-gate-v02-profile.md` is the normative policy, result, waiver and bounded IDS authority for ACX-21.
 - `docs/decisions/decision-log.md` records accepted and open design decisions. Do not silently resolve an open decision in code.
