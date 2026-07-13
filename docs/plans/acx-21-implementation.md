@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12+, JSON Schema 2020-12, existing AECCTX v0.1/v0.2 validation/records/diff APIs, optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`, pytest, hatchling, buildingSMART IDS 1.0 unchanged conformance fixtures.
 
-**Execution status:** Task 1 completed on 2026-07-13. Task 2 is `pending-next`; Tasks 3-9 remain `pending`. The public quality-gate capability remains `unsupported`.
+**Execution status:** Tasks 1-2 completed on 2026-07-13. Task 3 is `pending-next`; Tasks 4-9 remain `pending`. The public quality-gate capability remains `unsupported`.
 
 ## Global Constraints
 
@@ -173,7 +173,14 @@ git commit -m "feat: define ACX-21 gate contracts"
 **Files:**
 - Create: `src/aecctx/gate/policy.py`
 - Modify: `src/aecctx/gate/__init__.py`
+- Modify: `src/aecctx/gate/models.py`
+- Modify: `src/aecctx/schemas/v0_2/gate-waiver.schema.json`
+- Modify: `schemas/v0.2/gate-waiver.schema.json`
+- Modify: `src/aecctx/schemas/v0_2/gate-policy.schema.json`
+- Modify: `schemas/v0.2/gate-policy.schema.json`
+- Modify: `docs/HANDOFF.md`
 - Create: `tests/test_gate_policy.py`
+- Modify: `tests/test_gate_contract.py`
 
 **Interfaces:**
 - Produce `load_gate_policy(data: bytes, *, limits=GateLimits()) -> GatePolicy`.
@@ -181,8 +188,9 @@ git commit -m "feat: define ACX-21 gate contracts"
 - Produce `canonical_gate_json(value: Any) -> bytes` with strict duplicate rejection, NFC normalization and one LF.
 - Produce `validate_gate_document(value, schema_name) -> None` with an offline `referencing.Registry` containing all four packaged schemas.
 - `GatePolicy.digest` is SHA-256 of canonical parsed policy bytes.
+- Section 13 defaults are v1 hard maxima. JSON depth uses scalar depth 0/root-container depth 1. Waivers use the full `aecctx.policy.<check-id>` result ID and reference a declared policy check.
 
-- [ ] **Step 1: Write failing strict-input and canonicalization tests.** Cover duplicate keys, normalized-key collisions, invalid UTF-8, NaN/Infinity, booleans in integer slots, unknown fields, invalid semantic version/time, duplicate IDs, check/waiver overflow, nesting depth and symlink inputs.
+- [x] **Step 1: Write failing strict-input and canonicalization tests.** Cover duplicate keys, normalized-key collisions, invalid UTF-8, NaN/Infinity, booleans in integer slots, unknown fields, full SemVer 2.0.0/time validation, duplicate IDs, check/waiver overflow, nesting depth including parser recursion exhaustion, symlink inputs, non-expandable hard maxima and exact declared waiver targets.
 
 ```python
 def test_policy_digest_is_independent_of_json_whitespace_and_key_order() -> None:
@@ -198,11 +206,11 @@ def test_policy_rejects_duplicate_check_ids() -> None:
     assert caught.value.code == "AECCTX_GATE_CHECK_ID_DUPLICATE"
 ```
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_policy.py -q`; expect missing `aecctx.gate.policy` and facade functions.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_policy.py -q`; expect missing `aecctx.gate.policy` and facade functions.
 
-- [ ] **Step 3: Implement strict JSON/NFC primitives.** Adapt the proven signing strict-JSON pattern without importing private signing semantics. Reject normalized key collisions, finite-number violations and recursion deeper than 32 before schema validation.
+- [x] **Step 3: Implement strict JSON/NFC primitives.** Adapt the proven signing strict-JSON pattern without importing private signing semantics. Reject normalized key collisions, finite-number violations and recursion deeper than 32 before schema validation.
 
-- [ ] **Step 4: Build the fixed offline schema registry.** Load only `gate-check.schema.json`, `gate-waiver.schema.json`, `gate-policy.schema.json` and `gate-result.schema.json` via `importlib.resources`; no input `$schema` or URI causes a fetch.
+- [x] **Step 4: Build the fixed offline schema registry.** Load only `gate-check.schema.json`, `gate-waiver.schema.json`, `gate-policy.schema.json` and `gate-result.schema.json` via `importlib.resources`; no input `$schema` or URI causes a fetch.
 
 ```python
 resources = {
@@ -213,14 +221,19 @@ registry = Registry().with_resources(resources.items())
 validator = Draft202012Validator(policy_schema, registry=registry, format_checker=FormatChecker())
 ```
 
-- [ ] **Step 5: Implement semantic validation.** Require exact profile, semver, UTC `Z` instant, unique check/waiver IDs, no `aecctx.system.*` policy ID, all five value-state actions, baseline/IDS configuration only on matching kinds, and waiver interval `issued_at < expires_at`.
+- [x] **Step 5: Implement semantic validation.** Require exact profile, semver, UTC `Z` instant, unique check/waiver IDs, no `aecctx.system.*` policy ID, all five value-state actions, baseline/IDS configuration only on matching kinds, exact full waiver result IDs referencing declared policy checks, and waiver interval `issued_at < expires_at`. Correct the Task 1 waiver schema/model to enforce the same full-ID contract before parsing can rely on it.
 
-- [ ] **Step 6: Verify GREEN and deterministic digest.** Run `.venv/bin/python -m pytest tests/test_gate_policy.py tests/test_gate_contract.py -q` twice and assert the golden digest stays identical.
+- [x] **Step 6: Verify GREEN and deterministic digest.** Run `.venv/bin/python -m pytest tests/test_gate_policy.py tests/test_gate_contract.py -q` twice and assert the golden digest stays identical.
 
-- [ ] **Step 7: Commit.**
+- [x] **Step 7: Commit.**
 
 ```bash
-git add src/aecctx/gate/policy.py src/aecctx/gate/__init__.py tests/test_gate_policy.py
+git add docs/specs/quality-gate-v02-profile.md docs/decisions/decision-log.md \
+  docs/plans/acx-21-implementation.md schemas/v0.2/gate-policy.schema.json \
+  schemas/v0.2/gate-waiver.schema.json src/aecctx/schemas/v0_2/gate-policy.schema.json \
+  src/aecctx/schemas/v0_2/gate-waiver.schema.json src/aecctx/gate/models.py \
+  src/aecctx/gate/policy.py src/aecctx/gate/__init__.py \
+  tests/test_gate_contract.py tests/test_gate_policy.py
 git commit -m "feat: parse deterministic gate policies"
 ```
 
@@ -559,4 +572,4 @@ Tasks 1 through 9 are sequential. Each task begins only after the preceding task
 
 ## Planning checkpoint
 
-Task 1 now materializes only the closed public schemas, byte-identical packaged mirrors and immutable result/policy model layer. It adds no policy parser, evaluator, dependency, fixture, CLI, claim or gate result. ACX-21 remains `in_progress`, the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 2 is the next governed action only after a new user continuation request.
+Tasks 1-2 now materialize the closed public schemas, immutable models, strict bounded regular-file/JSON input, NFC canonical bytes, fixed offline schema registry, semantic policy validation and deterministic SHA-256 policy digest. Task 2 also closes the waiver target contract to exact declared `aecctx.policy.<check-id>` result IDs and records stable loader errors and v1 hard maxima. It adds no evaluator, finding aggregation, waiver application, dependency, fixture, CLI, claim or gate result. ACX-21 remains `in_progress` at 2/9 detailed tasks (22.2%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 3 is the next governed action only after a new user continuation request.

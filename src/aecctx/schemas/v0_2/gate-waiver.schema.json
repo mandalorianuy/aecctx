@@ -4,7 +4,7 @@
   "additionalProperties": false,
   "properties": {
     "approved_by": {"maxLength": 4096, "minLength": 1, "type": "string"},
-    "check_id": {"pattern": "^[a-z][a-z0-9._-]{0,63}$", "type": "string"},
+    "check_id": {"pattern": "^aecctx\\.policy\\.[a-z][a-z0-9._-]{0,63}$", "type": "string"},
     "expires_at": {"format": "date-time", "maxLength": 64, "type": "string"},
     "finding_fingerprint": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
     "issued_at": {"format": "date-time", "maxLength": 64, "type": "string"},

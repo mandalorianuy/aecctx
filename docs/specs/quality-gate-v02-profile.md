@@ -1,6 +1,6 @@
 # AECCTX v0.2 Delivery Quality Gate Profile
 
-Version: `1.0.0-draft.1`
+Version: `1.0.0-draft.2`
 Date: 2026-07-13
 Status: ACX-21 normative design; implementation and public quality-gate claims remain pending conformance
 Decision authority: ACXD-021 and ACXD-023
@@ -48,7 +48,9 @@ The policy profile identifier is `https://aecctx.dev/gate/v1`. The policy root c
 - `checks`, an ordered JSON array with unique check IDs;
 - `waivers`, an ordered JSON array with unique waiver IDs.
 
-Strict parsing rejects duplicate JSON names, invalid UTF-8, non-finite numbers, unknown fields, Unicode-normalized key collisions and excessive nesting. Canonical policy bytes use UTF-8, Unicode NFC strings, sorted object keys, no insignificant whitespace and one terminal LF. `policy_digest` is SHA-256 of those exact bytes. Array order is significant and is never silently reordered; stable result ordering is defined separately.
+Strict parsing rejects duplicate JSON names, invalid UTF-8, non-finite numbers, unknown fields, Unicode-normalized key collisions and excessive nesting. JSON depth is counted after parsing and NFC normalization: a scalar has depth 0 and the root object has depth 1; no value may exceed depth 32. Canonical policy bytes use UTF-8, Unicode NFC strings, sorted object keys, no insignificant whitespace and one terminal LF. `policy_digest` is SHA-256 of those exact bytes. Array order is significant and is never silently reordered; stable result ordering is defined separately.
+
+`policy_version` conforms to SemVer 2.0.0: core numeric identifiers do not contain leading zeroes, prerelease identifiers are non-empty and numeric prerelease identifiers do not contain leading zeroes, and build identifiers are non-empty. Parser recursion exhaustion is mapped to `AECCTX_GATE_JSON_DEPTH_EXCEEDED`; it is never exposed as a host exception.
 
 The policy contains no executable expressions, templating, regular expressions, imports, callbacks, paths, commands, macros or active links.
 
@@ -139,11 +141,11 @@ Waivers target one exact finding fingerprint. A finding fingerprint is SHA-256 o
 Each waiver contains exactly:
 
 - unique `waiver_id`;
-- `check_id` and exact `finding_fingerprint`;
+- `check_id`, which is the exact result ID `aecctx.policy.<check-id>` of one check declared by the same policy, and exact `finding_fingerprint`;
 - non-empty `reason` and `approved_by` strings;
 - `issued_at` inclusive and `expires_at` exclusive UTC instants.
 
-The policy's explicit `evaluation_time` decides lifecycle. Invalid intervals make policy evaluation `error`. Expired or not-yet-valid waivers do not suppress the finding and emit a waiver diagnostic. An active waiver changes the exact finding/check state to `waived`, preserves the original evidence and forces aggregate outcome at least `requires_review`. A waiver can never create `pass`, target a system check, use a wildcard or authorize consumer/engineering acceptance.
+The policy's explicit `evaluation_time` decides lifecycle. Invalid intervals make policy evaluation `error`. Expired or not-yet-valid waivers do not suppress the finding and emit a waiver diagnostic. An active waiver changes the exact finding/check state to `waived`, preserves the original evidence and forces aggregate outcome at least `requires_review`. A waiver can never create `pass`, target a system check, target an undeclared policy check, use a wildcard or authorize consumer/engineering acceptance. The waiver schema therefore accepts only the full `aecctx.policy.` result-ID form; a short check ID or `aecctx.system.*` value is invalid control input.
 
 ## 10. Aggregate outcome and exit codes
 
@@ -206,7 +208,7 @@ aecctx gate CANDIDATE --policy POLICY [--baseline BASELINE]
 
 ## 13. Safety limits
 
-Default limits are:
+The following defaults are also the v1 hard maxima; callers MAY reduce them but MUST NOT expand them:
 
 - 1 MiB each for policy and IDS;
 - 256 policy checks and 1,024 waivers;
@@ -217,7 +219,7 @@ Default limits are:
 - 100,000 findings and 16 MiB canonical result;
 - 60 seconds IDS worker wall time.
 
-Regular-file inputs only are accepted; symlinks are rejected. Limits are caller-reducible but not caller-expandable beyond separately governed hard maxima. Over-limit behavior is a stable `error`, never partial `pass`.
+Regular-file inputs only are accepted; symlinks are rejected. Over-limit behavior is a stable `error`, never partial `pass`.
 
 ## 14. Stable diagnostic families
 
@@ -235,6 +237,8 @@ The implementation provides stable diagnostics for at least:
 - result/projection parity failure.
 
 Diagnostics MUST NOT embed source text, policy contents, host paths or dependency tracebacks by default.
+
+Task 2 policy loading uses these stable `GateError.code` values: `AECCTX_GATE_INPUT_TYPE_INVALID`, `AECCTX_GATE_INPUT_LIMIT_EXCEEDED`, `AECCTX_GATE_INPUT_UNREADABLE`, `AECCTX_GATE_JSON_INVALID`, `AECCTX_GATE_JSON_DUPLICATE_KEY`, `AECCTX_GATE_JSON_NORMALIZATION_COLLISION`, `AECCTX_GATE_JSON_NONFINITE`, `AECCTX_GATE_JSON_DEPTH_EXCEEDED`, `AECCTX_GATE_SCHEMA_UNSUPPORTED`, `AECCTX_GATE_SCHEMA_INVALID`, `AECCTX_GATE_LIMIT_INVALID`, `AECCTX_GATE_PROFILE_UNSUPPORTED`, `AECCTX_GATE_POLICY_VERSION_INVALID`, `AECCTX_GATE_EVALUATION_TIME_INVALID`, `AECCTX_GATE_CHECK_ID_DUPLICATE`, `AECCTX_GATE_WAIVER_ID_DUPLICATE`, `AECCTX_GATE_CHECK_ID_RESERVED`, `AECCTX_GATE_WAIVER_TARGET_INVALID`, `AECCTX_GATE_WAIVER_INTERVAL_INVALID`, `AECCTX_GATE_CHECK_LIMIT_EXCEEDED`, `AECCTX_GATE_WAIVER_LIMIT_EXCEEDED` and `AECCTX_GATE_POLICY_INVALID`. Messages are bounded control diagnostics and MUST NOT copy source contents or host paths.
 
 ## 15. Conformance and claim promotion
 

@@ -229,6 +229,20 @@ def test_policy_models_preserve_caller_order_and_are_frozen() -> None:
         policy.policy_id = "other"  # type: ignore[misc]
 
 
+@pytest.mark.parametrize("check_id", ["capabilities", "aecctx.system.validation"])
+def test_waiver_model_requires_exact_policy_result_id(check_id: str) -> None:
+    with pytest.raises(ValueError, match="aecctx.policy"):
+        GateWaiver(
+            waiver_id="reviewed-exception",
+            check_id=check_id,
+            finding_fingerprint=SHA256,
+            reason="reviewed exception",
+            approved_by="delivery-authority",
+            issued_at="2026-07-01T00:00:00Z",
+            expires_at="2026-08-01T00:00:00Z",
+        )
+
+
 def _load_public_schema(name: str) -> dict[str, object]:
     path = Path(__file__).parents[1] / "schemas" / "v0.2" / name
     return json.loads(path.read_text(encoding="utf-8"))
@@ -343,6 +357,22 @@ def test_gate_policy_and_result_schemas_accept_only_the_closed_contract() -> Non
     }
     policy_validator.validate(policy)
     assert list(policy_validator.iter_errors({**policy, "callback": "run"}))
+    assert list(policy_validator.iter_errors({**policy, "policy_version": "1.0.0-01"}))
+
+    waiver_schema = store["https://aecctx.dev/schemas/v0.2/gate-waiver.schema.json"]
+    waiver_validator = Draft202012Validator(waiver_schema, format_checker=FormatChecker())
+    waiver = {
+        "waiver_id": "reviewed-exception",
+        "check_id": "aecctx.policy.capabilities",
+        "finding_fingerprint": SHA256,
+        "reason": "reviewed exception",
+        "approved_by": "delivery-authority",
+        "issued_at": "2026-07-01T00:00:00Z",
+        "expires_at": "2026-08-01T00:00:00Z",
+    }
+    waiver_validator.validate(waiver)
+    assert list(waiver_validator.iter_errors({**waiver, "check_id": "capabilities"}))
+    assert list(waiver_validator.iter_errors({**waiver, "check_id": "aecctx.system.validation"}))
 
     finding = GateFinding(
         code="AECCTX_GATE_CAPABILITY_BELOW_MINIMUM",

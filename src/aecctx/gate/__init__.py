@@ -16,6 +16,7 @@ from .models import (
     GateResult,
     GateWaiver,
 )
+from .policy import canonical_gate_json, load_gate_policy, read_gate_document, validate_gate_document
 
 __all__ = [
     "CHECK_KINDS",
@@ -32,4 +33,8 @@ __all__ = [
     "GatePolicy",
     "GateResult",
     "GateWaiver",
+    "canonical_gate_json",
+    "load_gate_policy",
+    "read_gate_document",
+    "validate_gate_document",
 ]
