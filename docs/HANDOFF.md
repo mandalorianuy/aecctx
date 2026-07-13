@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.2.0-ACX-21-TASK-07`
+Handoff status: `0.2.0-ACX-21-TASK-08`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Tasks 1-7 provide closed policy/check/waiver/result schemas, strict bounded policy parsing, exact-finding waiver lifecycle, authoritative package checks, semantic baseline regression evaluation, bounded IDS 1.0 simple-value evaluation and a deterministic CLI with canonical JSON plus derived Markdown/CI projections. The conformance corpus and public quality-gate claim remain unimplemented. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Tasks 1-8 provide the closed gate runtime/CLI/projections plus a 27-case hash-bound offline conformance corpus, portable verification and clean-install packaging boundaries. Task 9 acceptance/publication and any public quality-gate claim remain pending. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
@@ -118,11 +118,21 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - `./scripts/verify.sh` passes with 596 tests, 9 intentional skips, wheel/sdist build, portable/release verification and baseline integration healthy.
 - No conformance corpus, capability-matrix promotion or public quality-gate claim was added; those remain governed by Tasks 8-9.
 
+## ACX-21 Task 8 evidence
+
+- RED: `tests/test_gate_conformance.py tests/test_claim_registry.py` produced seven expected failures for the missing checker, corpus, fixture/claim mapping, portable hooks and packaging boundaries.
+- GREEN: the focused gate/claim/package suite passes 205 tests; its conformance/claim/package subset passes 24 tests.
+- Corpus: all 27 hash-bound offline cases match exact expected results and produce byte-identical canonical bytes across two evaluations, including directory/ZIP equivalence, invalid waiver, malicious JSON/XML, missing optional dependencies and ten unchanged official IDS pairs.
+- Packaging and licensing: clean core wheel inspection excludes unconditional IfcTester, IfcOpenShell, Flask and BCF dependencies; sdist includes the checker, generator, corpus, referenced fixtures and unchanged buildingSMART attribution/license files.
+- Repository gates: `./scripts/verify_portable.sh` and `./scripts/verify.sh` pass with 604 tests, 9 intentional skips, wheel/sdist build, release verification and healthy baseline integration.
+- Claim boundary: `quality-gate.policy-ids` remains `target`, the capability matrix remains public `unsupported`, and Task 9 alone owns acceptance/publication and any promotion.
+- WoodFraming, consumer mapping, source mutation, network/LLM requirements and approval/certification semantics were not added.
+
 ## Next implementation task
 
-ACX-21 Task 8: implement the conformance corpus, portable verification and packaging boundaries exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin with failing corpus/claim tests and stop at that task's checkpoint.
+ACX-21 Task 9: run acceptance, audit and publication exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). It is the sole `pending-next` task because Task 8 now supplies the candidate corpus and packaging evidence required by its gates.
 
-The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Task 7 added no corpus or public capability claim. Do not execute ACX-21 Task 8 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
+The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Task 8 added no public capability claim. Do not execute ACX-21 Task 9 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
 
 ## Consumer integration planning entry point
 

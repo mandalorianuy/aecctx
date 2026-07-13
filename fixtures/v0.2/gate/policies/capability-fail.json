@@ -1,0 +1,1 @@
+{"checks":[{"check_id":"quality","configuration":{"capabilities":{"ifc.read":"full"}},"failure_mode":"fail","kind":"capability.minimum","severity":"error"}],"evaluation_time":"2026-07-13T00:00:00Z","policy_id":"delivery","policy_version":"1.0.0","profile":"https://aecctx.dev/gate/v1","waivers":[]}

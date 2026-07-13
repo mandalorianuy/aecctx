@@ -8,6 +8,8 @@ dist/
 build/
 *.egg-info/
 *.aecctx
+!fixtures/v0.2/gate/packages/*.aecctx
+!fixtures/v0.2/gate/packages/**/*.aecctx
 *.aecctx.zip
 .DS_Store
 .env

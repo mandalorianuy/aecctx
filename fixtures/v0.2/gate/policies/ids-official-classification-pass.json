@@ -1,0 +1,1 @@
+{"checks":[{"check_id":"ids","configuration":{"ids_sha256":"8ff22cc6ebcb7a1ac7d5fecb6c5802a2eacc6d9535704d2d40e78c8b3f69630f","source_id":"src_fa2f5faab50ad0b2dad37212"},"failure_mode":"fail","kind":"ids.specification","severity":"error"}],"evaluation_time":"2026-07-13T00:00:00Z","policy_id":"delivery","policy_version":"1.0.0","profile":"https://aecctx.dev/gate/v1","waivers":[]}
