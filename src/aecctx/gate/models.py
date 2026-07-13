@@ -311,8 +311,8 @@ class GateDiagnostic:
 class GateResult:
     evaluator_version: str
     evaluator_dependencies: tuple[tuple[str, str], ...]
-    candidate_package_id: str
-    candidate_logical_digest: str
+    candidate_package_id: str | None
+    candidate_logical_digest: str | None
     policy_id: str
     policy_version: str
     policy_digest: str
@@ -328,9 +328,17 @@ class GateResult:
     ifc_source_digest: str | None = None
 
     def __post_init__(self) -> None:
-        for field in ("evaluator_version", "candidate_package_id", "policy_id", "policy_version"):
+        for field in ("evaluator_version", "policy_id", "policy_version"):
             _require_string(field, getattr(self, field))
-        _require_digest("candidate_logical_digest", self.candidate_logical_digest)
+        candidate = (self.candidate_package_id, self.candidate_logical_digest)
+        if any(item is not None for item in candidate) and not all(item is not None for item in candidate):
+            raise ValueError("candidate package ID and digest must be provided together")
+        if self.candidate_package_id is None:
+            if self.outcome != "error":
+                raise ValueError("candidate identity may be null only for error outcome")
+        else:
+            _require_string("candidate_package_id", self.candidate_package_id)
+            _require_digest("candidate_logical_digest", self.candidate_logical_digest)  # type: ignore[arg-type]
         _require_digest("policy_digest", self.policy_digest)
         _require_state("outcome", self.outcome, OUTCOMES)
         expected_exit = {"pass": 0, "fail": 1, "requires_review": 1, "error": 2}[self.outcome]
@@ -419,7 +427,9 @@ class GateResult:
                     for name, version in self.evaluator_dependencies
                 ],
             },
-            "candidate": {
+            "candidate": None
+            if self.candidate_package_id is None
+            else {
                 "package_id": self.candidate_package_id,
                 "logical_digest": self.candidate_logical_digest,
             },

@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12+, JSON Schema 2020-12, existing AECCTX v0.1/v0.2 validation/records/diff APIs, optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`, pytest, hatchling, buildingSMART IDS 1.0 unchanged conformance fixtures.
 
-**Execution status:** Tasks 1-3 completed on 2026-07-13. Task 4 is `pending-next`; Tasks 5-9 remain `pending`. The public quality-gate capability remains `unsupported`.
+**Execution status:** Tasks 1-4 completed on 2026-07-13. Task 5 is `pending-next`; Tasks 6-9 remain `pending`. The public quality-gate capability remains `unsupported`.
 
 ## Global Constraints
 
@@ -302,15 +302,25 @@ git commit -m "feat: aggregate gate outcomes and waivers"
 **Files:**
 - Modify: `src/aecctx/gate/evaluator.py`
 - Modify: `src/aecctx/gate/__init__.py`
+- Modify: `src/aecctx/gate/models.py`
+- Modify: `schemas/v0.2/gate-result.schema.json`
+- Modify: `src/aecctx/schemas/v0_2/gate-result.schema.json`
+- Modify: `schemas/v0.2/gate-check.schema.json`
+- Modify: `src/aecctx/schemas/v0_2/gate-check.schema.json`
+- Modify: `tests/test_gate_contract.py`
 - Modify: `tests/test_gate_checks.py`
 - Modify: `src/aecctx/records.py` only if a read-only iterator is required; do not change record authority
+- Modify: this profile/decision/plan/HANDOFF governance when Task 4 changes behavior or status
 
 **Interfaces:**
 - Produce `evaluate_gate(candidate_package, policy, *, baseline_package=None, ids_document=None, ifc_source=None, limits=GateLimits()) -> GateResult`.
 - Produce internal `evaluate_capability_check`, `evaluate_loss_check`, `evaluate_value_state_check`, `evaluate_diagnostic_check`.
 - System preflight check IDs are fixed and non-waivable.
+- Invalid preflight returns a valid error result with `candidate: null`; non-error results require exact candidate identity.
+- Evaluate records only from a revalidated private snapshot; reject candidate mutation and symlink roots.
+- Task 5/6 checks or optional inputs fail closed with the governed not-implemented error until those tasks land.
 
-- [ ] **Step 1: Write failing preflight/core-check tests.** Cover invalid hash/digest/schema, missing capability, support-level ordering, loss totals/reason budgets, all five value states/actions, field-path selection, diagnostic severity/code budgets and missing evidence.
+- [x] **Step 1: Write failing preflight/core-check tests.** Cover invalid hash/digest/schema, missing capability, support-level ordering, loss totals/reason budgets, all five value states/actions, field-path selection, diagnostic severity/code budgets and missing evidence.
 
 ```python
 def test_unknown_state_fails_only_by_explicit_policy_action(tmp_path: Path) -> None:
@@ -328,22 +338,26 @@ def test_invalid_candidate_is_error_not_policy_failure(mutated_fixture: Path) ->
     assert result.checks[0].check_id == "aecctx.system.validation"
 ```
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_checks.py -q`; expect missing `evaluate_gate` and check dispatch.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_checks.py -q`; expect missing `evaluate_gate` and check dispatch.
 
-- [ ] **Step 3: Implement validation/integrity preflight.** Call `validate_package` first, never open `RecordStore` on invalid input, bind package ID/version/logical digest and map existing diagnostics without copying unsafe source text.
+- [x] **Step 3: Implement validation/integrity preflight.** Call `validate_package` first, never open `RecordStore` on invalid input, bind package ID/version/logical digest and map existing diagnostics without copying unsafe source text. Copy accepted members to a private snapshot, revalidate the complete manifest and read only that snapshot.
 
-- [ ] **Step 4: Implement capability and loss checks.** Compare exact manifest fields, cite `manifest.json#/capabilities/<name>` or loss diagnostics, use no prose inference and emit stable missing/inconsistent diagnostics.
+- [x] **Step 4: Implement capability and loss checks.** Compare exact manifest fields, cite `manifest.json#/capabilities/<name>` or loss diagnostics, use no prose inference and emit stable missing/inconsistent diagnostics.
 
-- [ ] **Step 5: Implement value-state checks.** Traverse only validated record dictionaries using exact dot-separated field paths with no expression syntax; preserve state/reason/evidence and apply the policy's explicit action. An absent field is a separate `AECCTX_GATE_VALUE_FIELD_MISSING` finding.
+- [x] **Step 5: Implement value-state checks.** Traverse only validated record dictionaries using exact dot-separated field paths with no expression syntax; preserve state/reason/evidence and apply the policy's explicit action. An absent field is a separate `AECCTX_GATE_VALUE_FIELD_MISSING` finding.
 
-- [ ] **Step 6: Implement diagnostic budgets and deterministic result serialization.** Reuse authoritative diagnostic records, enforce exact severity order, cap findings before serialization and return `error` on result-size overflow.
+- [x] **Step 6: Implement diagnostic budgets and deterministic result serialization.** Reuse authoritative diagnostic records, enforce exact severity order, cap findings before serialization and raise stable bounded operational errors on finding/result overflow. Update mirrored result/check schemas for nullable invalid-candidate identity and the closed field-path grammar.
 
-- [ ] **Step 7: Verify GREEN and regressions.** Run `.venv/bin/python -m pytest tests/test_gate_checks.py tests/test_validation.py tests/test_records.py -q`; run the gate twice over directory and ZIP equivalents and compare canonical result bytes.
+- [x] **Step 7: Verify GREEN and regressions.** Run `.venv/bin/python -m pytest tests/test_gate_checks.py tests/test_validation.py tests/test_records.py -q`; run the gate twice over directory and ZIP equivalents and compare canonical result bytes.
 
-- [ ] **Step 8: Commit.**
+- [x] **Step 8: Commit.**
 
 ```bash
-git add src/aecctx/gate src/aecctx/records.py tests/test_gate_checks.py
+git add docs/specs/quality-gate-v02-profile.md docs/decisions/decision-log.md \
+  docs/implementation-plan.md docs/plans/acx-21-implementation.md docs/HANDOFF.md \
+  schemas/v0.2/gate-result.schema.json src/aecctx/schemas/v0_2/gate-result.schema.json \
+  schemas/v0.2/gate-check.schema.json src/aecctx/schemas/v0_2/gate-check.schema.json \
+  src/aecctx/gate tests/test_gate_contract.py tests/test_gate_checks.py
 git commit -m "feat: evaluate authoritative package gate checks"
 ```
 
@@ -585,4 +599,4 @@ Tasks 1 through 9 are sequential. Each task begins only after the preceding task
 
 ## Planning checkpoint
 
-Tasks 1-3 now materialize the closed public schemas, immutable models, strict bounded policy input, NFC canonical bytes, fixed offline schema registry, semantic validation, deterministic policy/finding digests, explicit finding dispositions, aggregate outcome/exit precedence and exact-finding waiver lifecycle with separately ordered diagnostics. Task 3 proves policy/check/finding order independence, batch application of exact waivers plus active-mismatch review floors, closed waiver-ID/disposition invariants and stable unsafe-control errors. It adds no candidate package preflight, authoritative package check dispatch, dependency, fixture, CLI, result assembly, projection, corpus or capability claim. ACX-21 remains `in_progress` at 3/9 detailed tasks (33.3%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 4 is the next governed action only after a new user continuation request.
+Tasks 1-4 now materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation and the public candidate evaluator for validation/integrity plus authoritative capability, loss, value-state and diagnostic checks. Task 4 proves invalid-candidate error identity, revalidated private snapshots, exact evidence/count semantics, explicit five-state actions, bounded findings/results and directory/ZIP canonical parity. It adds no dependency, fixture, baseline diff, IDS worker, CLI, projection, corpus or capability claim. ACX-21 remains `in_progress` at 4/9 detailed tasks (44.4%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 5 baseline semantic regression checks are the next governed action only after a new user continuation request.

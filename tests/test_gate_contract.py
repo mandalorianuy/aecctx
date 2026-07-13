@@ -491,3 +491,23 @@ def test_gate_policy_and_result_schemas_accept_only_the_closed_contract() -> Non
     fail_with_id["findings"][0]["waiver_id"] = "exception"
     fail_with_id["checks"][0]["findings"][0]["waiver_id"] = "exception"
     assert list(result_validator.iter_errors(fail_with_id))
+
+    invalid_candidate = GateResult(
+        evaluator_version="0.1.0",
+        evaluator_dependencies=(("aecctx", "0.1.0"),),
+        candidate_package_id=None,
+        candidate_logical_digest=None,
+        policy_id="delivery",
+        policy_version="1.0.0",
+        policy_digest="2" * 64,
+        outcome="error",
+        exit_code=2,
+        checks=(),
+        findings=(),
+        diagnostics=(),
+    ).to_dict()
+    result_validator.validate(invalid_candidate)
+    assert invalid_candidate["candidate"] is None
+    invalid_candidate["outcome"] = "pass"
+    invalid_candidate["exit_code"] = 0
+    assert list(result_validator.iter_errors(invalid_candidate))

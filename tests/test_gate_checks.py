@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from dataclasses import replace
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -11,17 +13,112 @@ from aecctx.gate import (
     GateCheckResult,
     GateError,
     GateFinding,
+    GateLimits,
     GatePolicy,
     GateWaiver,
     aggregate_gate_outcome,
     apply_waivers,
+    canonical_gate_json,
+    evaluate_gate,
     finding_fingerprint,
+    load_gate_policy,
 )
+from aecctx.package import PackageArtifact, PackageWriter, canonical_json
 
 
 FP_A = "a" * 64
 FP_B = "b" * 64
 FP_C = "c" * 64
+
+
+def _loaded_policy(checks: list[dict[str, Any]]) -> GatePolicy:
+    return load_gate_policy(
+        canonical_gate_json(
+            {
+                "profile": "https://aecctx.dev/gate/v1",
+                "policy_id": "delivery",
+                "policy_version": "1.0.0",
+                "evaluation_time": "2026-07-13T00:00:00Z",
+                "checks": checks,
+                "waivers": [],
+            }
+        )
+    )
+
+
+def _policy_item(
+    kind: str,
+    configuration: dict[str, Any],
+    *,
+    check_id: str = "quality",
+    failure_mode: str = "fail",
+) -> dict[str, Any]:
+    return {
+        "check_id": check_id,
+        "kind": kind,
+        "severity": "error",
+        "failure_mode": failure_mode,
+        "configuration": configuration,
+    }
+
+
+def _package_with_records(
+    tmp_path: Path,
+    *,
+    assertions: list[dict[str, Any]] | None = None,
+    diagnostics: list[dict[str, Any]] | None = None,
+    capabilities: dict[str, str] | None = None,
+    loss_summary: list[str] | None = None,
+    package_form: str = "directory",
+) -> Path:
+    fixture = Path(__file__).parents[1] / "fixtures" / "minimal-aecctx"
+    manifest = json.loads((fixture / "manifest.json").read_text())
+    artifacts: list[PackageArtifact] = []
+    for entry in manifest["artifacts"]:
+        path = entry["path"]
+        content = (fixture / path).read_bytes()
+        if path == "evidence/assertions.jsonl" and assertions is not None:
+            content = b"".join(canonical_json(item) for item in assertions)
+        if path == "diagnostics/diagnostics.jsonl" and diagnostics is not None:
+            content = b"".join(canonical_json(item) for item in diagnostics)
+        artifacts.append(
+            PackageArtifact(
+                path=path,
+                content=content,
+                media_type=entry["media_type"],
+                role=entry["role"],
+                authoritative=entry["authoritative"],
+            )
+        )
+    output = tmp_path / ("candidate.aecctx" if package_form == "zip" else "candidate")
+    PackageWriter(output, package_form=package_form).write(
+        package_id="pkg_gate_candidate",
+        created_at=manifest["created_at"],
+        source_ids=manifest["source_ids"],
+        capabilities=capabilities or manifest["capabilities"],
+        loss_summary=manifest["loss_summary"] if loss_summary is None else loss_summary,
+        embedding_policy=manifest["source_embedding_policy"],
+        producer=manifest["producer"],
+        artifacts=artifacts,
+    )
+    return output
+
+
+def _assertion_with_value(value: dict[str, Any]) -> dict[str, Any]:
+    fixture = Path(__file__).parents[1] / "fixtures" / "minimal-aecctx" / "evidence" / "assertions.jsonl"
+    record = json.loads(fixture.read_text())
+    record["value"] = value
+    return record
+
+
+def _diagnostic_record(*, code: str, severity: str, affected_count: int | None = None) -> dict[str, Any]:
+    fixture = Path(__file__).parents[1] / "fixtures" / "minimal-aecctx" / "diagnostics" / "diagnostics.jsonl"
+    record = json.loads(fixture.read_text())
+    record["code"] = code
+    record["severity"] = severity
+    if affected_count is not None:
+        record["affected_count"] = affected_count
+    return record
 
 
 def _finding(
@@ -136,6 +233,283 @@ def test_finding_fingerprint_has_one_canonical_identity() -> None:
         subject_id="ifc.read",
         observed_state="opaque",
         evidence_refs=("a", "z"),
+    )
+
+
+def test_empty_policy_returns_valid_system_preflight(minimal_package: Path) -> None:
+    result = evaluate_gate(minimal_package, _loaded_policy([]))
+
+    assert result.outcome == "pass"
+    assert tuple(check.check_id for check in result.checks) == (
+        "aecctx.system.integrity",
+        "aecctx.system.policy",
+        "aecctx.system.validation",
+    )
+    assert result.candidate_package_id == "pkg_minimal_fixture"
+
+
+@pytest.mark.parametrize(
+    ("mutation", "expected_check"),
+    [
+        ("schema", "aecctx.system.validation"),
+        ("hash", "aecctx.system.integrity"),
+        ("digest", "aecctx.system.integrity"),
+    ],
+)
+def test_invalid_candidate_is_error_without_invented_identity(
+    minimal_package: Path,
+    mutation: str,
+    expected_check: str,
+) -> None:
+    if mutation == "schema":
+        manifest = json.loads((minimal_package / "manifest.json").read_text())
+        del manifest["package_id"]
+        (minimal_package / "manifest.json").write_bytes(canonical_json(manifest))
+    elif mutation == "hash":
+        (minimal_package / "evidence" / "assertions.jsonl").write_bytes(b"corrupt\n")
+    else:
+        manifest = json.loads((minimal_package / "manifest.json").read_text())
+        manifest["logical_digest"] = "0" * 64
+        (minimal_package / "manifest.json").write_bytes(canonical_json(manifest))
+
+    result = evaluate_gate(minimal_package, _loaded_policy([]))
+
+    assert result.outcome == "error"
+    assert result.exit_code == 2
+    assert result.candidate_package_id is None
+    assert result.candidate_logical_digest is None
+    assert any(check.check_id == expected_check and check.status == "error" for check in result.checks)
+
+
+@pytest.mark.parametrize(
+    ("minimum", "expected"),
+    [("opaque", "pass"), ("partial", "fail")],
+)
+def test_capability_support_level_ordering(minimal_package: Path, minimum: str, expected: str) -> None:
+    policy = _loaded_policy([_policy_item("capability.minimum", {"capabilities": {"hierarchy": minimum}})])
+    result = evaluate_gate(minimal_package, policy)
+    assert result.outcome == expected
+
+
+def test_missing_capability_is_explicit_finding(minimal_package: Path) -> None:
+    policy = _loaded_policy([_policy_item("capability.minimum", {"capabilities": {"ifc.read": "partial"}})])
+    result = evaluate_gate(minimal_package, policy)
+    assert result.findings[0].code == "AECCTX_GATE_CAPABILITY_MISSING"
+    assert result.findings[0].observed_state == "missing"
+
+
+def test_loss_totals_and_reason_budgets_use_affected_count(tmp_path: Path) -> None:
+    package = _package_with_records(
+        tmp_path,
+        diagnostics=[_diagnostic_record(code="NO_3D", severity="warning", affected_count=3)],
+        loss_summary=["NO_3D"],
+    )
+    policy = _loaded_policy(
+        [_policy_item("loss.maximum", {"overall_max": 2, "reason_code_maxima": {"NO_3D": 2}})]
+    )
+    result = evaluate_gate(package, policy)
+    assert {finding.code for finding in result.findings} == {
+        "AECCTX_GATE_LOSS_MAXIMUM_EXCEEDED",
+        "AECCTX_GATE_LOSS_REASON_MAXIMUM_EXCEEDED",
+    }
+
+
+def test_loss_without_detailed_count_is_missing_evidence(minimal_package: Path) -> None:
+    policy = _loaded_policy([_policy_item("loss.maximum", {"overall_max": 5})])
+    result = evaluate_gate(minimal_package, policy)
+    assert result.findings[0].code == "AECCTX_GATE_LOSS_EVIDENCE_MISSING"
+
+
+def test_invalid_loss_count_is_inconsistent_error(tmp_path: Path) -> None:
+    diagnostic = _diagnostic_record(code="NO_3D", severity="warning")
+    diagnostic["affected_count"] = "three"
+    package = _package_with_records(
+        tmp_path,
+        diagnostics=[diagnostic],
+        loss_summary=["NO_3D"],
+    )
+    policy = _loaded_policy([_policy_item("loss.maximum", {"overall_max": 5})])
+    result = evaluate_gate(package, policy)
+    assert result.outcome == "error"
+    assert result.findings[0].code == "AECCTX_GATE_LOSS_EVIDENCE_INCONSISTENT"
+
+
+def test_unlisted_observed_loss_reason_is_not_silently_allowed(tmp_path: Path) -> None:
+    package = _package_with_records(
+        tmp_path,
+        diagnostics=[_diagnostic_record(code="NO_3D", severity="warning", affected_count=1)],
+        loss_summary=["NO_3D"],
+    )
+    policy = _loaded_policy(
+        [_policy_item("loss.maximum", {"reason_code_maxima": {"OTHER": 10}})]
+    )
+    result = evaluate_gate(package, policy)
+    assert result.findings[0].code == "AECCTX_GATE_LOSS_REASON_MAXIMUM_EXCEEDED"
+
+
+@pytest.mark.parametrize("state", ["unknown", "unsupported", "conflicted", "explicit_null", "not_applicable"])
+def test_nonknown_states_follow_only_explicit_policy_action(tmp_path: Path, state: str) -> None:
+    package = _package_with_records(
+        tmp_path,
+        assertions=[_assertion_with_value({"state": state, "reason_code": "TEST_STATE"})],
+        loss_summary=[],
+        diagnostics=[],
+    )
+    actions = {name: "allow" for name in ("unknown", "unsupported", "conflicted", "explicit_null", "not_applicable")}
+    actions[state] = "fail"
+    policy = _loaded_policy(
+        [_policy_item("value_state.action", {"record_types": ["assertion"], "field_path": "value", "actions": actions})]
+    )
+    result = evaluate_gate(package, policy)
+    assert result.outcome == "fail"
+    assert result.findings[0].observed_state == state
+    assert result.findings[0].evidence_refs == ("assert_layer_1",)
+
+
+@pytest.mark.parametrize(
+    ("action", "expected"),
+    [("allow", "pass"), ("requires_review", "requires_review"), ("fail", "fail")],
+)
+def test_value_state_action_outcomes_are_explicit(tmp_path: Path, action: str, expected: str) -> None:
+    package = _package_with_records(
+        tmp_path,
+        assertions=[_assertion_with_value({"state": "unknown", "reason_code": "TEST_STATE"})],
+        loss_summary=[],
+        diagnostics=[],
+    )
+    actions = {name: "allow" for name in ("unknown", "unsupported", "conflicted", "explicit_null", "not_applicable")}
+    actions["unknown"] = action
+    policy = _loaded_policy(
+        [_policy_item("value_state.action", {"record_types": ["assertion"], "field_path": "value", "actions": actions})]
+    )
+    result = evaluate_gate(package, policy)
+    assert result.outcome == expected
+    if action == "allow":
+        assert result.findings == ()
+        assert "explicitly allowed" in next(
+            check.message for check in result.checks if check.check_id == "aecctx.policy.quality"
+        )
+
+
+def test_missing_exact_value_field_is_separate_finding(minimal_package: Path) -> None:
+    actions = {name: "allow" for name in ("unknown", "unsupported", "conflicted", "explicit_null", "not_applicable")}
+    policy = _loaded_policy(
+        [_policy_item("value_state.action", {"record_types": ["assertion"], "field_path": "missing.field", "actions": actions})]
+    )
+    result = evaluate_gate(minimal_package, policy)
+    assert result.findings[0].code == "AECCTX_GATE_VALUE_FIELD_MISSING"
+
+
+def test_diagnostic_threshold_and_code_budgets_count_records(tmp_path: Path) -> None:
+    package = _package_with_records(
+        tmp_path,
+        diagnostics=[_diagnostic_record(code="TEST_DIAG", severity="error", affected_count=99)],
+        loss_summary=[],
+    )
+    policy = _loaded_policy(
+        [_policy_item("diagnostic.maximum", {"threshold": "warning", "max_count": 0, "per_code_maxima": {"TEST_DIAG": 0}})]
+    )
+    result = evaluate_gate(package, policy)
+    assert {finding.code for finding in result.findings} == {
+        "AECCTX_GATE_DIAGNOSTIC_MAXIMUM_EXCEEDED",
+        "AECCTX_GATE_DIAGNOSTIC_CODE_MAXIMUM_EXCEEDED",
+    }
+    assert {finding.observed_state for finding in result.findings} == {"1"}
+
+
+def test_invalid_diagnostic_evidence_is_error_not_excluded(tmp_path: Path) -> None:
+    package = _package_with_records(
+        tmp_path,
+        diagnostics=[_diagnostic_record(code="TEST_DIAG", severity="invented")],
+        loss_summary=[],
+    )
+    policy = _loaded_policy(
+        [_policy_item("diagnostic.maximum", {"threshold": "warning", "max_count": 0})]
+    )
+    result = evaluate_gate(package, policy)
+    assert result.outcome == "error"
+    assert result.findings[0].code == "AECCTX_GATE_DIAGNOSTIC_EVIDENCE_INVALID"
+
+
+def test_diagnostic_threshold_excludes_lower_severity_records(tmp_path: Path) -> None:
+    low = _diagnostic_record(code="INFO_ONLY", severity="info")
+    high = _diagnostic_record(code="ERROR_ONE", severity="error")
+    high["record_id"] = "diag_2"
+    package = _package_with_records(tmp_path, diagnostics=[low, high], loss_summary=[])
+    policy = _loaded_policy(
+        [_policy_item("diagnostic.maximum", {"threshold": "warning", "max_count": 1})]
+    )
+    result = evaluate_gate(package, policy)
+    assert result.outcome == "pass"
+
+
+def test_candidate_symlink_root_is_rejected(tmp_path: Path) -> None:
+    fixture = Path(__file__).parents[1] / "fixtures" / "minimal-aecctx"
+    link = tmp_path / "candidate-link"
+    link.symlink_to(fixture, target_is_directory=True)
+    result = evaluate_gate(link, _loaded_policy([]))
+    assert result.outcome == "error"
+    assert result.candidate_package_id is None
+    assert result.diagnostics[0].code == "AECCTX_GATE_CANDIDATE_INVALID"
+
+
+def test_value_field_path_rejects_expression_syntax() -> None:
+    actions = {name: "allow" for name in ("unknown", "unsupported", "conflicted", "explicit_null", "not_applicable")}
+    with pytest.raises(GateError) as caught:
+        _loaded_policy(
+            [_policy_item("value_state.action", {"record_types": ["assertion"], "field_path": "value[0]", "actions": actions})]
+        )
+    assert caught.value.code == "AECCTX_GATE_SCHEMA_INVALID"
+
+
+def test_finding_and_result_limits_fail_closed(minimal_package: Path) -> None:
+    policy = _loaded_policy(
+        [_policy_item("capability.minimum", {"capabilities": {"ifc.read": "partial", "rvt.read": "partial"}})]
+    )
+    with pytest.raises(GateError) as findings_error:
+        evaluate_gate(minimal_package, policy, limits=GateLimits(max_findings=1))
+    assert findings_error.value.code == "AECCTX_GATE_FINDING_LIMIT_EXCEEDED"
+
+    with pytest.raises(GateError) as bytes_error:
+        evaluate_gate(minimal_package, _loaded_policy([]), limits=GateLimits(max_result_bytes=1))
+    assert bytes_error.value.code == "AECCTX_GATE_RESULT_LIMIT_EXCEEDED"
+
+
+def test_later_task_check_kind_fails_closed(minimal_package: Path) -> None:
+    policy = _loaded_policy(
+        [
+            _policy_item(
+                "diff.regression",
+                {
+                    "categories": {
+                        name: "fail"
+                        for name in (
+                            "added_records",
+                            "removed_records",
+                            "changed_records",
+                            "artifact_changes",
+                            "capability_regressions",
+                            "loss_changes",
+                            "identity_changes",
+                            "producer_changes",
+                            "version_changes",
+                        )
+                    }
+                },
+            )
+        ]
+    )
+    with pytest.raises(GateError) as caught:
+        evaluate_gate(minimal_package, policy)
+    assert caught.value.code == "AECCTX_GATE_CHECK_NOT_IMPLEMENTED"
+
+
+def test_directory_and_zip_gate_results_are_canonical_equivalents(tmp_path: Path) -> None:
+    directory = _package_with_records(tmp_path / "dir", loss_summary=[], diagnostics=[])
+    archive = _package_with_records(tmp_path / "zip", loss_summary=[], diagnostics=[], package_form="zip")
+    policy = _loaded_policy([_policy_item("capability.minimum", {"capabilities": {"identity": "full"}})])
+    assert canonical_gate_json(evaluate_gate(directory, policy).to_dict()) == canonical_gate_json(
+        evaluate_gate(archive, policy).to_dict()
     )
 
 

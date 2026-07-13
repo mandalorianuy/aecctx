@@ -17,7 +17,7 @@ from .models import (
     GateResult,
     GateWaiver,
 )
-from .evaluator import aggregate_gate_outcome, apply_waivers, finding_fingerprint
+from .evaluator import aggregate_gate_outcome, apply_waivers, evaluate_gate, finding_fingerprint
 from .policy import canonical_gate_json, load_gate_policy, read_gate_document, validate_gate_document
 
 __all__ = [
@@ -39,6 +39,7 @@ __all__ = [
     "aggregate_gate_outcome",
     "apply_waivers",
     "canonical_gate_json",
+    "evaluate_gate",
     "finding_fingerprint",
     "load_gate_policy",
     "read_gate_document",
