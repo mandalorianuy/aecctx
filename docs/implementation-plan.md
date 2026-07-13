@@ -167,7 +167,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-19 | blocked | No admissible RVT provider; public unsupported boundary with deterministic opaque anti-claim evidence |
 | ACX-20 | completed | Optional detached JWS/Ed25519 signing and caller-owned offline trust-policy evaluation |
 | ACX-21 | completed | Bounded deterministic policy/IDS quality gate is public partial under the exact accepted profile |
-| ACX-22 | pending-next | Optional `aecctx-inspector` plugin for Codex |
+| ACX-22 | in_progress | Optional `aecctx-inspector` plugin for Codex; governed execution cut active |
 | ACX-23 | pending | Expansion conformance corpus, packaging, documentation and release |
 
 ## ACX-00: Specification and repository foundation
@@ -791,6 +791,8 @@ Completion resolution: ACX-21 publishes `quality-gate.policy-ids` as public `par
 ## ACX-22: Codex plugin
 
 Objective: package `aecctx-inspector` as an optional Codex orchestration layer with no unique AECCTX semantics.
+
+Execution cut: [`docs/plans/acx-22-implementation.md`](plans/acx-22-implementation.md). It is subordinate to expansion-spec section 14, ACXD-022 and this plan; it adds no ACX-23 scope.
 
 Deliverables:
 
