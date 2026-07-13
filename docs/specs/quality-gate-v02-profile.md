@@ -1,6 +1,6 @@
 # AECCTX v0.2 Delivery Quality Gate Profile
 
-Version: `1.0.0-draft.4`
+Version: `1.0.0-draft.5`
 Date: 2026-07-13
 Status: ACX-21 normative design; implementation and public quality-gate claims remain pending conformance
 Decision authority: ACXD-021 and ACXD-023
@@ -63,6 +63,7 @@ System checks are always enabled and cannot be waived:
 - `aecctx.system.validation` verifies structural conformance;
 - `aecctx.system.integrity` verifies artifact hashes, byte sizes, logical digest and required references;
 - `aecctx.system.policy` verifies policy schema, semantics and digest;
+- `aecctx.system.baseline` verifies an explicitly supplied or policy-required baseline before semantic diff evaluation;
 - `aecctx.system.ids-input` verifies the optional IDS/IFC binding before IDS evaluation.
 
 Policy check IDs match `^[a-z][a-z0-9._-]{0,63}$`. Their result IDs are `aecctx.policy.<check-id>`. Duplicate IDs are invalid. Check kinds are exactly:
@@ -108,9 +109,15 @@ Both the overall and per-code counts count diagnostic records, never `affected_c
 
 ### 6.5 Baseline regression
 
-`diff.regression` requires an explicit validated baseline. It consumes the stable AECCTX semantic diff and can independently allow, review or fail added, removed and changed records, artifact changes, capability regressions, loss changes, identity changes, producer changes and version changes. It cites both package digests and exact changed IDs/paths.
+`diff.regression` requires an explicit validated baseline. It consumes the stable AECCTX semantic diff and can independently allow, review or fail added, removed and changed records, artifact changes, capability regressions, loss changes, identity changes, producer changes and version changes. It cites both package roles/digests as `baseline-package:<logical-digest>` and `candidate-package:<logical-digest>` plus exact changed IDs/paths. Role qualification is mandatory because manifest-only semantic changes can legitimately leave the artifact-derived logical digests equal; equal unqualified refs would collapse and lose the two-sided evidence relation.
 
 A missing baseline when this check is enabled is gate `error`. Archive metadata or record ordering alone remains non-semantic.
+
+An explicitly supplied baseline is always validated, recorded in the result and exposed through `aecctx.system.baseline`, even when no `diff.regression` policy check is declared; that condition MUST NOT invent a policy check. Baseline evaluation uses the same private-copy, complete-manifest revalidation and mutation/symlink rejection as the candidate. Missing or invalid required baseline identity remains null and produces gate `error`; no placeholder identity is synthesized.
+
+The stable diff primitive distinguishes all artifact inventory changes from authoritative non-record artifact changes. Gate regression policy consumes only authoritative non-record artifact changes: the six authoritative JSONL record streams are compared by normalized record dictionaries/IDs instead of byte serialization, while generated Markdown and other non-authoritative projections cannot create a regression. It exposes exact field changes for identity (`package_id`, `source_ids`, `source_embedding_policy`), producer fields and loss summary so findings cite exact JSON pointers. Existing all-artifact observations remain available for compatibility but are not gate authority.
+
+Category actions are exact and independent. Added, removed and changed records; authoritative artifacts; loss; identity; producer and version changes use their configured action. `capability_regressions` applies only when an explicit support level decreases or disappears; an added capability or support increase is recorded in check evidence/message but creates no regression finding. Missing support is preserved as `missing`, never rewritten to `unsupported`. An observed semantic diff category not handled by this closed mapping is an `error`, never an implicit pass.
 
 ### 6.6 IDS specification
 
@@ -257,6 +264,8 @@ Task 2 policy loading uses these stable `GateError.code` values: `AECCTX_GATE_IN
 Task 3 adds `AECCTX_GATE_FINDING_IDENTITY_INVALID`, `AECCTX_GATE_WAIVER_DUPLICATE_TARGET`, `AECCTX_GATE_WAIVER_CHECK_INVALID`, `AECCTX_GATE_WAIVER_CHECK_MISSING` and `AECCTX_GATE_WAIVER_DISPOSITION_INVALID` as stable control-error codes. Lifecycle diagnostics are `AECCTX_GATE_WAIVER_EXPIRED`, `AECCTX_GATE_WAIVER_NOT_YET_VALID` and `AECCTX_GATE_WAIVER_FINDING_MISMATCH`, all with diagnostic severity `warning`. The mismatch diagnostic additionally floors its target check at `requires_review`; the first two do not change the original check disposition.
 
 Task 4 adds `AECCTX_GATE_CANDIDATE_INVALID`, `AECCTX_GATE_CANDIDATE_CHANGED_DURING_EVALUATION`, `AECCTX_GATE_CAPABILITY_MISSING`, `AECCTX_GATE_CAPABILITY_BELOW_MINIMUM`, `AECCTX_GATE_LOSS_MAXIMUM_EXCEEDED`, `AECCTX_GATE_LOSS_REASON_MAXIMUM_EXCEEDED`, `AECCTX_GATE_LOSS_EVIDENCE_MISSING`, `AECCTX_GATE_LOSS_EVIDENCE_INCONSISTENT`, `AECCTX_GATE_VALUE_FIELD_MISSING`, `AECCTX_GATE_VALUE_STATE_INVALID`, `AECCTX_GATE_VALUE_STATE_REQUIRES_REVIEW`, `AECCTX_GATE_VALUE_STATE_FAILED`, `AECCTX_GATE_DIAGNOSTIC_MAXIMUM_EXCEEDED`, `AECCTX_GATE_DIAGNOSTIC_CODE_MAXIMUM_EXCEEDED`, `AECCTX_GATE_DIAGNOSTIC_EVIDENCE_INVALID`, `AECCTX_GATE_FINDING_LIMIT_EXCEEDED`, `AECCTX_GATE_RESULT_LIMIT_EXCEEDED` and `AECCTX_GATE_CHECK_NOT_IMPLEMENTED` as stable codes. Until their owning tasks land, `diff.regression`, `ids.specification` and their optional inputs fail closed with `AECCTX_GATE_CHECK_NOT_IMPLEMENTED`; they are never ignored or reported as evaluated.
+
+Task 5 adds `AECCTX_GATE_BASELINE_MISSING`, `AECCTX_GATE_BASELINE_INVALID`, `AECCTX_GATE_BASELINE_CHANGED_DURING_EVALUATION`, `AECCTX_GATE_DIFF_ADDED_RECORD`, `AECCTX_GATE_DIFF_REMOVED_RECORD`, `AECCTX_GATE_DIFF_CHANGED_RECORD`, `AECCTX_GATE_DIFF_ARTIFACT_CHANGED`, `AECCTX_GATE_CAPABILITY_REGRESSION`, `AECCTX_GATE_DIFF_LOSS_CHANGED`, `AECCTX_GATE_DIFF_IDENTITY_CHANGED`, `AECCTX_GATE_DIFF_PRODUCER_CHANGED`, `AECCTX_GATE_DIFF_VERSION_CHANGED` and `AECCTX_GATE_DIFF_CATEGORY_UNHANDLED` as stable codes. Task 5 implements only `diff.regression`; `ids.specification` and IDS inputs continue to fail closed with `AECCTX_GATE_CHECK_NOT_IMPLEMENTED` until Task 6.
 
 ## 15. Conformance and claim promotion
 

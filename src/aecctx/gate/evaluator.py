@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from .. import __version__
+from ..diff import diff_packages
 from ..package import PackageReadError, PackageReader
 from ..records import RecordStore, VALUE_STATES
 from ..validation import ValidationResult, validate_package
@@ -676,6 +677,8 @@ def _build_result(
     checks: tuple[GateCheckResult, ...],
     diagnostics: tuple[GateDiagnostic, ...],
     limits: GateLimits,
+    baseline_package_id: str | None = None,
+    baseline_logical_digest: str | None = None,
 ) -> GateResult:
     findings = tuple(finding for check in checks for finding in check.findings)
     if len(findings) > limits.max_findings:
@@ -694,6 +697,8 @@ def _build_result(
         checks=checks,
         findings=findings,
         diagnostics=diagnostics,
+        baseline_package_id=baseline_package_id,
+        baseline_logical_digest=baseline_logical_digest,
     )
     if len(canonical_gate_json(result.to_dict())) > limits.max_result_bytes:
         raise GateError("AECCTX_GATE_RESULT_LIMIT_EXCEEDED", "gate result exceeds its byte limit")
@@ -747,10 +752,11 @@ def evaluate_gate(
     hard = GateLimits()
     if any(getattr(limits, field) > getattr(hard, field) for field in hard.__dataclass_fields__):
         raise GateError("AECCTX_GATE_LIMIT_INVALID", "limits exceed the v1 hard maximum")
-    if baseline_package is not None or ids_document is not None or ifc_source is not None:
-        raise GateError("AECCTX_GATE_CHECK_NOT_IMPLEMENTED", "optional gate input is not implemented by this task")
-    if any(check.kind in {"diff.regression", "ids.specification"} for check in policy.checks):
+    if ids_document is not None or ifc_source is not None:
+        raise GateError("AECCTX_GATE_CHECK_NOT_IMPLEMENTED", "IDS gate input is not implemented by this task")
+    if any(check.kind == "ids.specification" for check in policy.checks):
         raise GateError("AECCTX_GATE_CHECK_NOT_IMPLEMENTED", "policy check kind is not implemented by this task")
+    diff_required = any(check.kind == "diff.regression" for check in policy.checks)
 
     candidate_path = Path(candidate_package)
     if candidate_path.is_symlink():
@@ -829,6 +835,68 @@ def evaluate_gate(
             )
         store = RecordStore.open(snapshot)
         manifest = snapshot_validation.manifest
+        baseline_snapshot: Path | None = None
+        baseline_manifest: dict[str, Any] | None = None
+        baseline_check: GateCheckResult | None = None
+
+        def baseline_error(code: str, message: str) -> GateResult:
+            return _build_result(
+                policy=policy,
+                candidate_package_id=str(manifest["package_id"]),
+                candidate_logical_digest=str(manifest["logical_digest"]),
+                checks=(
+                    _system_check("aecctx.system.baseline", "error", message),
+                    _system_check("aecctx.system.integrity", "pass", "candidate integrity checks passed", ("manifest.json",)),
+                    _system_check("aecctx.system.policy", "pass", "policy validation and digest passed"),
+                    _system_check("aecctx.system.validation", "pass", "candidate structural validation passed", ("manifest.json",)),
+                ),
+                diagnostics=(
+                    GateDiagnostic(
+                        code=code,
+                        severity="error",
+                        message=message,
+                        check_id="aecctx.system.baseline",
+                    ),
+                ),
+                limits=limits,
+            )
+
+        if baseline_package is None:
+            if diff_required:
+                return baseline_error("AECCTX_GATE_BASELINE_MISSING", "required baseline package is missing")
+        else:
+            baseline_path = Path(baseline_package)
+            if baseline_path.is_symlink():
+                return baseline_error("AECCTX_GATE_BASELINE_INVALID", "baseline package is invalid")
+            baseline_initial = validate_package(baseline_path)
+            if not baseline_initial.valid or baseline_initial.manifest is None:
+                return baseline_error("AECCTX_GATE_BASELINE_INVALID", "baseline package is invalid")
+            baseline_snapshot = Path(temporary) / "baseline"
+            try:
+                PackageReader(baseline_path).extract_to(baseline_snapshot)
+            except PackageReadError:
+                return baseline_error(
+                    "AECCTX_GATE_BASELINE_CHANGED_DURING_EVALUATION",
+                    "baseline changed during evaluation",
+                )
+            baseline_validation = validate_package(baseline_snapshot)
+            if (
+                not baseline_validation.valid
+                or baseline_validation.manifest is None
+                or baseline_validation.manifest != baseline_initial.manifest
+            ):
+                return baseline_error(
+                    "AECCTX_GATE_BASELINE_CHANGED_DURING_EVALUATION",
+                    "baseline changed during evaluation",
+                )
+            baseline_manifest = baseline_validation.manifest
+            baseline_check = _system_check(
+                "aecctx.system.baseline",
+                "pass",
+                "baseline structural and integrity validation passed",
+                ("manifest.json",),
+            )
+
         policy_checks: list[GateCheckResult] = []
         for check in policy.checks:
             if check.kind == "capability.minimum":
@@ -839,10 +907,19 @@ def evaluate_gate(
                 policy_checks.append(evaluate_value_state_check(check, store))
             elif check.kind == "diagnostic.maximum":
                 policy_checks.append(evaluate_diagnostic_check(check, store))
+            elif check.kind == "diff.regression":
+                if baseline_snapshot is None:
+                    return baseline_error("AECCTX_GATE_BASELINE_MISSING", "required baseline package is missing")
+                from .diff_checks import evaluate_diff_policy
+
+                policy_checks.append(
+                    evaluate_diff_policy(check, diff_packages(baseline_snapshot, snapshot))
+                )
             else:
                 raise GateError("AECCTX_GATE_CHECK_NOT_IMPLEMENTED", "policy check kind is not implemented by this task")
         waived_checks, waiver_diagnostics = apply_waivers(tuple(policy_checks), policy)
         checks = (
+            *((baseline_check,) if baseline_check is not None else ()),
             _system_check("aecctx.system.integrity", "pass", "candidate integrity checks passed", ("manifest.json",)),
             _system_check("aecctx.system.policy", "pass", "policy validation and digest passed"),
             _system_check("aecctx.system.validation", "pass", "candidate structural validation passed", ("manifest.json",)),
@@ -855,4 +932,14 @@ def evaluate_gate(
             checks=checks,
             diagnostics=waiver_diagnostics,
             limits=limits,
+            baseline_package_id=(
+                str(baseline_manifest["package_id"])
+                if baseline_manifest is not None
+                else None
+            ),
+            baseline_logical_digest=(
+                str(baseline_manifest["logical_digest"])
+                if baseline_manifest is not None
+                else None
+            ),
         )

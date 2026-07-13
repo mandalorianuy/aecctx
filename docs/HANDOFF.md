@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.2.0-ACX-21-TASK-04`
+Handoff status: `0.2.0-ACX-21-TASK-05`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Tasks 1-4 provide closed policy/check/waiver/result schemas, strict bounded policy parsing, exact-finding waiver lifecycle, candidate validation/integrity preflight and authoritative capability/loss/value-state/diagnostic checks over revalidated snapshots. Baseline diff, IDS, CLI, projections, corpus and a public quality-gate claim remain unimplemented. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Tasks 1-5 provide closed policy/check/waiver/result schemas, strict bounded policy parsing, exact-finding waiver lifecycle, authoritative package checks and semantic baseline regression evaluation over independently revalidated snapshots. IDS, CLI, projections, corpus and a public quality-gate claim remain unimplemented. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
@@ -91,11 +91,20 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - `./scripts/verify.sh` passes with 525 tests, 9 intentional skips, wheel/sdist build, portable/release verification and baseline integration healthy.
 - No dependency, fixture, baseline diff, IDS worker, CLI command, result projection, corpus or capability claim was added.
 
+## ACX-21 Task 5 evidence
+
+- Governance first: profile draft.5 and ACXD-023 define the fixed baseline system check, independent baseline snapshots, nine exact semantic-diff categories, authoritative artifact boundaries, capability improvement/regression semantics, stable error codes and role-qualified baseline/candidate evidence before the final implementation.
+- RED: `tests/test_gate_diff.py tests/test_query_diff_context.py` failed during collection with `ModuleNotFoundError: No module named 'aecctx.gate.diff_checks'` before the diff-check module existed.
+- GREEN: `tests/test_gate_diff.py tests/test_query_diff_context.py tests/test_v02_compatibility.py` pass with 41 tests; the expanded gate/policy/contract/diff suite passes with 153 tests.
+- Determinism and authority: every supplied baseline is copied and revalidated independently; all nine governed categories map exact allow/review/fail actions, capability upgrades/additions remain visible non-regressions, and Markdown plus non-authoritative artifacts do not create semantic findings.
+- `./scripts/verify.sh` passes with 550 tests, 9 intentional skips, wheel/sdist build, portable/release verification and baseline integration healthy.
+- No dependency, fixture, IDS worker, CLI command, result projection, corpus or capability claim was added.
+
 ## Next implementation task
 
-ACX-21 Task 5: implement baseline semantic regression checks using only the existing stable `PackageDiff` API exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin with failing tests for every governed diff category and stop at that task's checkpoint.
+ACX-21 Task 6: implement the bounded buildingSMART IDS 1.0 evaluator exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin by vendoring only the governed unchanged attributed fixture subset, then write the full failing contract/safety matrix before adding optional dependencies or production code, and stop at that task's checkpoint.
 
-The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Task 4 added no optional dependency, fixture, baseline diff, IDS, CLI, projection, corpus or capability claim. Do not execute ACX-21 Task 5 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
+The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Task 5 added no optional dependency, fixture, IDS, CLI, projection, corpus or capability claim. Do not execute ACX-21 Task 6 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
 
 ## Consumer integration planning entry point
 
