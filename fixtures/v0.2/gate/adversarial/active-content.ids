@@ -1,0 +1,1 @@
+<!DOCTYPE ids [<!ENTITY x "boom">]><ids xmlns="http://standards.buildingsmart.org/IDS">&x;</ids>

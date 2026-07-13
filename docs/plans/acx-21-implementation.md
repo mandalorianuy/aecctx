@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12+, JSON Schema 2020-12, existing AECCTX v0.1/v0.2 validation/records/diff APIs, optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`, pytest, hatchling, buildingSMART IDS 1.0 unchanged conformance fixtures.
 
-**Execution status:** Tasks 1-7 completed on 2026-07-13. Task 8 is `pending-next`; Task 9 remains `pending`. The public quality-gate capability remains `unsupported`.
+**Execution status:** Tasks 1-8 completed on 2026-07-13. Task 9 is `pending-next`. The public quality-gate capability remains `unsupported`.
 
 ## Global Constraints
 
@@ -560,23 +560,23 @@ git commit -m "feat: expose deterministic delivery gate CLI"
 - `scripts/check_gate_conformance.py` runs offline and emits one canonical JSON summary with `ok` and ordered entries.
 - Proposed claim ID is `quality-gate.policy-ids`, profile `aecctx-gate-v1-ids-1.0-simple-v1`, maximum support `partial`.
 
-- [ ] **Step 1: Write failing corpus/claim tests.** Require positive, fail, review, error, malicious-policy, baseline-regression, IDS and missing-extra cases; fail for unmapped claim/case, stale hash, duplicate case and expected/public claim mismatch.
+- [x] **Step 1: Write failing corpus/claim tests.** Require positive, fail, review, error, malicious-policy, baseline-regression, IDS and missing-extra cases; fail for unmapped claim/case, stale hash, duplicate case and expected/public claim mismatch.
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_conformance.py tests/test_claim_registry.py -q`; expect missing corpus/checker and target claim evidence.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_conformance.py tests/test_claim_registry.py -q`; expect missing corpus/checker and target claim evidence.
 
-- [ ] **Step 3: Build deterministic project-authored fixtures.** Generate directory/ZIP equivalents, capability/loss/value-state/diagnostic packages, baseline pairs, malicious JSON/XML, policies/waivers and expected canonical results. Record origin/license/hash in the corpus.
+- [x] **Step 3: Build deterministic project-authored fixtures.** Generate directory/ZIP equivalents, capability/loss/value-state/diagnostic packages, baseline pairs, malicious JSON/XML, policies/waivers and expected canonical results. Record origin/license/hash in the corpus.
 
-- [ ] **Step 4: Implement the portable corpus checker.** Validate schemas/hashes, run non-IDS cases in core mode, run IDS cases only in the test/IDS environment, compare exact outcome/exit/check/finding sets and run each deterministic case twice for byte equality.
+- [x] **Step 4: Implement the portable corpus checker.** Validate schemas/hashes, run non-IDS cases in core mode, run IDS cases only in the test/IDS environment, compare exact outcome/exit/check/finding sets and run each deterministic case twice for byte equality.
 
-- [ ] **Step 5: Add packaging and dependency isolation tests.** Build wheel/sdist, inspect that public/packaged schemas and intended project fixtures/corpus exist, ensure no third-party fixture is accidentally relicensed, and prove core-only install has no `ifctester`, Flask, BCF client or IfcOpenShell requirement.
+- [x] **Step 5: Add packaging and dependency isolation tests.** Build wheel/sdist, inspect that public/packaged schemas and intended project fixtures/corpus exist, ensure no third-party fixture is accidentally relicensed, and prove core-only install has no `ifctester`, Flask, BCF client or IfcOpenShell requirement.
 
-- [ ] **Step 6: Add portable verification hooks.** Add JSON syntax, schema mirror, corpus checker and gate tests to `verify_portable.sh`; preserve GitHub Actions on Ubuntu/macOS/Windows with missing optional IDS behavior deterministic. IDS-extra platform jobs must use the exact pins before claim promotion.
+- [x] **Step 6: Add portable verification hooks.** Add JSON syntax, schema mirror, corpus checker and gate tests to `verify_portable.sh`; preserve GitHub Actions on Ubuntu/macOS/Windows with missing optional IDS behavior deterministic. IDS-extra platform jobs must use the exact pins before claim promotion.
 
-- [ ] **Step 7: Draft acceptance evidence without promoting the claim.** Fill all 12 evidence sections with spec/decision coverage, fixture hashes/licenses, commands, determinism, diagnostics, dependency/security/platform review, residuals, WoodFraming proof and promotion conditions. Keep claim `target` and capability matrix `unsupported` until Task 9 gates pass.
+- [x] **Step 7: Draft acceptance evidence without promoting the claim.** Fill all 12 evidence sections with spec/decision coverage, fixture hashes/licenses, commands, determinism, diagnostics, dependency/security/platform review, residuals, WoodFraming proof and promotion conditions. Keep claim `target` and capability matrix `unsupported` until Task 9 gates pass.
 
-- [ ] **Step 8: Verify GREEN narrowly.** Run `.venv/bin/python -m pytest tests/test_gate_*.py tests/test_claim_registry.py tests/test_package_data.py -q`, `.venv/bin/python scripts/check_gate_conformance.py` and `python3 scripts/check_spec_contract.py`.
+- [x] **Step 8: Verify GREEN narrowly.** Run `.venv/bin/python -m pytest tests/test_gate_*.py tests/test_claim_registry.py tests/test_package_data.py -q`, `.venv/bin/python scripts/check_gate_conformance.py` and `python3 scripts/check_spec_contract.py`.
 
-- [ ] **Step 9: Commit implementation candidate.**
+- [x] **Step 9: Commit implementation candidate.**
 
 ```bash
 git add fixtures/v0.2/gate fixtures/third_party/buildingsmart-ids-1.0 \
@@ -621,4 +621,4 @@ Tasks 1 through 9 are sequential. Each task begins only after the preceding task
 
 ## Planning checkpoint
 
-Tasks 1-7 now materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks, semantic baseline regression checks, bounded IDS 1.0 evaluation and the deterministic `gate` CLI. Task 7 adds canonical raw results, non-authoritative Markdown/provider-neutral JSONL projections, exact outcome exits and one rollback-capable create-only output primitive shared with signing. RED was 18 expected failures; the focused gate/CLI/signing suite passes 220 tests and `./scripts/verify.sh` passes with 596 tests and 9 intentional skips. It adds no corpus or public capability claim. ACX-21 remains `in_progress` at 7/9 detailed tasks (77.8%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 8 conformance/portable/packaging work is the sole `pending-next` action after a new user continuation request.
+Tasks 1-8 now materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks, semantic baseline regression checks, bounded IDS 1.0 evaluation, deterministic CLI/projections and a 27-case hash-bound offline corpus with clean-install packaging boundaries. Task 8 began with seven expected conformance failures; its 205-test focused gate/claim/package suite and corpus checker are green. The claim remains `target` and no public support is promoted. ACX-21 remains `in_progress` at 8/9 detailed tasks (88.9%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 9 acceptance/publication is the sole `pending-next` action after a new user continuation request.

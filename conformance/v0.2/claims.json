@@ -11,7 +11,8 @@
     {"id": "v02-step-iges-acx17", "path": "fixtures/v0.2/step-iges"},
     {"id": "v02-dwg-acx18", "path": "fixtures/v0.2/dwg"},
     {"id": "v02-rvt-acx19-anti-claim", "path": "fixtures/v0.2/rvt/not-a-real-rvt.rvt"},
-    {"id": "v02-signing-acx20", "path": "fixtures/v0.2/signing"}
+    {"id": "v02-signing-acx20", "path": "fixtures/v0.2/signing"},
+    {"id": "v02-gate-acx21", "path": "fixtures/v0.2/gate"}
   ],
   "claims": [
     {
@@ -308,7 +309,20 @@
       ],
       "evidence": "docs/evidence/ACX-20.md"
     },
-    {"id": "quality-gate.policy-ids", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
+    {
+      "id": "quality-gate.policy-ids",
+      "status": "target",
+      "support_level": null,
+      "profile": "aecctx-gate-v1-ids-1.0-simple-v1",
+      "platform_scope": ["python-3.12-linux-macos-windows-candidate"],
+      "provider_scope": "core policy gate; optional ifctester==0.8.5 plus ifcopenshell==0.8.5 for bounded IDS",
+      "fixture_ids": ["v02-gate-acx21"],
+      "test_ids": [
+        "tests/test_gate_conformance.py::test_gate_corpus_executes_offline_twice_and_matches_exact_results",
+        "tests/test_gate_conformance.py::test_clean_core_install_and_gate_ids_packaging_boundaries"
+      ],
+      "evidence": "docs/evidence/ACX-21.md"
+    },
     {"id": "codex.aecctx-inspector", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null}
   ]
 }
