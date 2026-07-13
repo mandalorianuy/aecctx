@@ -185,7 +185,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-23 | completed | Expansion conformance corpus, packaging, documentation and `0.2.0` release |
 | ACX-24 | completed | Live OCI providers on Linux arm64 and amd64 with cross-architecture equivalence |
 | ACX-25 | completed | Additional reviewed local enforcement profiles |
-| ACX-26 | pending-next | Optional remote/customer-managed provider protocol |
+| ACX-26 | in_progress | Optional remote/customer-managed provider protocol |
 | ACX-27 | pending | Expanded IFC 2D and georeferencing profiles |
 | ACX-28 | pending | Expanded DXF semantics, geometry and bounded xrefs |
 | ACX-29 | pending | Multilingual and layout-aware OCR profiles |
@@ -927,7 +927,7 @@ Detailed implementation authority: [`docs/plans/post-v02-functional-debt-impleme
 
 Program rules:
 
-- ACX-24 and ACX-25 are complete and ACX-26 alone is `pending-next`; no later ACX may execute or borrow scope.
+- ACX-24 and ACX-25 are complete and ACX-26 alone is `in_progress`; no later ACX may execute or borrow scope.
 - Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
 - Replay cannot satisfy a live platform/provider acceptance item.
 - A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.
@@ -942,3 +942,5 @@ ACX-24 completion resolution: exact `linux/arm64` and `linux/amd64` OCI targets 
 ACX-25 execution cut: ACXD-033 and `docs/specs/provider-local-enforcement-v03-profile.md` evaluate native Linux, macOS and Windows independently. No draft-1 profile is admissible: each must produce a complete deterministic report and reject before workspace creation or provider launch. This is an executable `unsupported` outcome, not successful sandbox evidence. ACX-26 remains `pending`.
 
 ACX-25 completion resolution: `linux-native-v1`, `macos-app-sandbox-v1` and `windows-appcontainer-job-v1` each publish a deterministic complete 16-axis rejection report and fail before workspace creation or provider launch. The digest-bound ten-case attack corpus, wheel/sdist restricted-binary scan, full local gates and exact-SHA CI on Ubuntu, macOS and Windows passed. `sandbox.local-enforcement` is public `unsupported`; no native profile, dependency, broker, decoder or positive execution claim was admitted. Only ACX-26 is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+ACX-26 execution cut: ACXD-034 and `docs/specs/provider-remote-v03-profile.md` select only `remote-https-spki-v1` with explicit invocation consent, exact registered origin/SPKI identity, fixed route, no redirects/proxies/ambient credentials/trust store/clock/discovery, bounded canonical envelopes and deterministic retry/replay. The public ceiling is protocol `partial` backed by repository-owned loopback TLS; third-party service availability, semantics, deletion, jurisdiction and provider-side sandboxing remain non-claims. ACX-27 remains `pending`.
