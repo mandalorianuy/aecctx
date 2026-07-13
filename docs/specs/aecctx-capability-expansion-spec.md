@@ -1,7 +1,7 @@
 # AECCTX Post-v0.1 Capability Expansion Specification
 
-Version: `0.2.0-draft.4`
-Date: 2026-07-11
+Version: `0.2.0-draft.5`
+Date: 2026-07-13
 Status: Planning authority; no new capability claim is implied
 
 ## 1. Purpose
@@ -222,6 +222,8 @@ ACXD-018 selects the detached JWS General JSON, Ed25519 and verifier-owned offli
 ## 13. AEC Delivery Quality Gate
 
 The quality gate is a deterministic policy evaluator over validated AECCTX packages. It MAY compile raw sources through existing adapters before evaluation, but it MUST evaluate authoritative package records, capabilities, loss, diagnostics, and semantic diffs rather than generated Markdown.
+
+ACXD-023 and `docs/specs/quality-gate-v02-profile.md` define the accepted ACX-21 design: closed canonical JSON policy/result/waiver contracts, stable check/outcome/exit semantics, exact-finding waivers, optional baseline diff and a bounded buildingSMART IDS 1.0 simple-value profile through optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`. This accepted design authorizes only the subordinate ACX-21 implementation plan. The public capability remains `unsupported` until conformance, evidence and all gates pass.
 
 ### 13.1 Inputs and policy
 

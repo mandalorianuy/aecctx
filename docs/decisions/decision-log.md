@@ -1,6 +1,6 @@
 # AECCTX Decision Log
 
-Date: 2026-07-12
+Date: 2026-07-13
 Status: Active
 
 ## Accepted decisions
@@ -116,6 +116,17 @@ Status: Active
 - Decision: `aecctx-inspector` packages focused skills and allowlisted MCP access over stable AECCTX library/CLI behavior. It introduces no unique package semantics and keeps v0.2 MCP inspection read-only.
 - Consequence: AECCTX remains usable without Codex or an LLM, source content remains untrusted data, and plugin responses cannot elevate Markdown, inference, or presentation above structured evidence and policy results.
 
+### ACXD-023: Deterministic quality-gate policy and bounded IDS 1.0 profile
+
+- Policy decision: ACX-21 uses the closed `https://aecctx.dev/gate/v1` canonical JSON policy, check, waiver and result model in `docs/specs/quality-gate-v02-profile.md`. Stable system checks cannot be disabled or waived. Policy checks use exact IDs, kinds, severities and explicit failure modes; every non-known value state has an explicit `allow`, `requires_review` or `fail` action.
+- Outcome decision: check states are `pass`, `fail`, `requires_review`, `waived` and `error`; aggregate precedence is error, fail, review/waived, pass. CLI exits are 0 for pass, 1 for completed fail/review and 2 for error. JSON remains authority; Markdown and CI annotations are projections.
+- Waiver decision: a waiver binds one canonical finding fingerprint and explicit lifecycle at policy-owned `evaluation_time`. An active waiver preserves evidence and forces at least `requires_review`; it cannot create pass, target a system check or imply engineering/consumer approval.
+- IDS implementation decision: select optional `ifctester==0.8.5` with `ifcopenshell==0.8.5`, both LGPL-3.0-or-later and outside core dependencies. A fixed bounded local worker maps deterministic library state directly and does not use the host-time-bearing IfcTester JSON reporter.
+- IDS scope: buildingSMART IDS v1.0.0 final commit `1effec6`, IFC2X3/IFC4 and only exact simple-value entity, attribute, classification, property and material facet/cardinality cases proven by unchanged official plus project-authored fixtures. `partOf`, restrictions/patterns/ranges/enumerations, URI/bSDD lookup, later/earlier IDS and unlisted IFC schemas remain unsupported.
+- Source/evidence decision: IDS evaluation requires caller-supplied IDS and IFC files whose hashes match the policy and an authoritative candidate-package source record. Package storage references and IDS links are never followed. IDS results remain distinct from validation, integrity, geometry, provenance and baseline-diff checks.
+- Compatibility and claim decision: acceptance of the design authorizes only `docs/plans/acx-21-implementation.md`. It does not implement the capability or promote its public `unsupported` state. ACX-21 remains `in_progress` until implementation, corpus, evidence, local/remote gates and exact claim mapping pass.
+- Evidence owner: `docs/specs/quality-gate-v02-profile.md`, `docs/plans/acx-21-implementation.md`, future ACX-21 schemas/corpus/tests and `docs/evidence/ACX-21.md`.
+
 ### ACXD-024: External provider protocol and first enforcement profile
 
 - Decision: ACX-12 uses a versioned JSON file protocol over a private content-addressed workspace. Callers select only an allowlisted `provider_id`; registrations own immutable launch targets, runtime roots, license/network posture, supported actions and enforcement claims. Provider output is schema-validated and hash-checked before it reaches package construction.
@@ -203,8 +214,4 @@ Status: Active
 
 ## Open decisions
 
-### ACXD-023: Quality-gate policy and IDS implementation profile
-
-- Owner: ACX-21.
-- Decision required: version the gate policy schema; select the reviewed IDS parser/checker or bounded implementation; enumerate supported IDS versions/facets; define stable check IDs, severities, waivers, outcome aggregation, exit codes, and official conformance-suite scope.
-- Blocking effect: ACX-21 quality-gate implementation and its ACX-22 plugin workflow only; earlier format, signing, and sandbox tasks may proceed.
+None.

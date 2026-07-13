@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
-Date: 2026-07-12
-Handoff status: `0.2.0-ACX-20-COMPLETE`
+Date: 2026-07-13
+Handoff status: `0.2.0-ACX-21-PLANNED`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 alone is `pending-next`. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: ACXD-023, the normative quality-gate profile and the detailed TDD execution cut are complete, but no gate implementation or claim exists. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. Execute only ACX-21, currently `pending-next`.
+4. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. Execute only ACX-21, currently `in_progress`.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -41,6 +41,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - RVT is public `unsupported`; no provider is selected under ACXD-030 and deterministic v0.1 opaque fallback is anti-claim evidence only.
 - ACX-20 signing is public `partial` only for `detached-jws-ed25519-offline-v1`, valid v0.1/v0.2 packages, optional `cryptography>=45,<50` and explicit caller-owned registry/policy inputs. X.509, remote discovery/revocation, timestamps, countersignatures, implicit trust and universal authorization remain unsupported.
 - The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
+- ACXD-023 selects `aecctx-gate-v1`, exact-finding waivers, deterministic outcomes/exits and an optional bounded IDS v1.0 subset through `ifctester==0.8.5` plus `ifcopenshell==0.8.5`; the capability remains public `unsupported` until implementation evidence closes ACX-21.
 - The ACX-22 Codex plugin remains optional, local-first and semantically subordinate to library/CLI results.
 
 ## Explicitly deferred
@@ -57,9 +58,9 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 
 ## Next implementation task
 
-ACX-21: first resolve ACXD-023 and produce a detailed governed implementation plan for the deterministic AEC Delivery Quality Gate. The plan must keep policy conformance distinct from engineering/consumer approval, preserve explicit unknown/unsupported/conflicted/null/not-applicable states, and treat policy/IDS inputs as untrusted data.
+ACX-21 Task 1: create the closed gate policy/check/waiver/result schemas, byte-identical packaged mirrors and immutable public result types exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin with the failing contract/package-data tests and stop at that task's checkpoint.
 
-Its work breakdown, test matrix and exit gate are normative in [`docs/implementation-plan.md`](implementation-plan.md). The next authorized action is ACX-21 decision/specification and detailed planning, not quality-gate implementation. ACX-20 evidence is in [`docs/evidence/ACX-20.md`](evidence/ACX-20.md).
+The normative behavior is fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. No implementation file, schema, fixture, dependency or capability claim was added by the planning checkpoint. Do not execute ACX-21 Task 1 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
 
 ## Consumer integration planning entry point
 
