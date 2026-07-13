@@ -168,7 +168,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-20 | completed | Optional detached JWS/Ed25519 signing and caller-owned offline trust-policy evaluation |
 | ACX-21 | completed | Bounded deterministic policy/IDS quality gate is public partial under the exact accepted profile |
 | ACX-22 | completed | Optional `aecctx-inspector-v1` plugin is public partial with parity/adversarial/install evidence |
-| ACX-23 | in_progress | Expansion conformance corpus, packaging, documentation and release |
+| ACX-23 | completed | Expansion conformance corpus, packaging, documentation and `0.2.0` release |
 
 ## ACX-00: Specification and repository foundation
 
@@ -886,4 +886,6 @@ Acceptance:
 - version/tag/release are created only after those gates;
 - final handoff identifies the exact neutral integration boundary for consumer-owned planning.
 
-Evidence: `docs/evidence/ACX-23.md` when completed.
+Evidence: [`docs/evidence/ACX-23.md`](evidence/ACX-23.md).
+
+Completion resolution: AECCTX `0.2.0` is released from immutable tag `v0.2.0` with 23/23 non-target claims mapped to evidence, one explicit future target, ACX-19 documented blocked, deterministic plugin/checksum metadata, SPDX SBOM, clean core/all-extras installation and verified public assets. A GNU-tar `pipefail` portability defect discovered by the first tag workflow was root-caused, regression-tested and corrected without moving or deleting the tag; the governed recovery workflow rebuilt from that exact tag and published the verified release. No task is promoted to `pending-next`. ACX-10 remains deferred and consumer-owned planning begins only from `docs/integration/woodframing-boundary.md` under a future separately accepted plan.

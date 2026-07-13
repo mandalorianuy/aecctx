@@ -1,7 +1,7 @@
 # ACX-23 Acceptance Evidence
 
 Date: 2026-07-13
-Status: release-ready; publication gates pending
+Status: completed
 
 ## Governed scope
 
@@ -33,6 +33,17 @@ Candidate implementation commit `2a04d1cec49f72ff1dfd24e81ab6604795c1319d` passe
 ## Tag workflow incident
 
 Tag workflow `29275244351` rebuilt the exact immutable `v0.2.0` tag and passed portable verification, then exposed a GNU-tar portability defect in the release member check: `tar -tf ... | grep -q` runs under `pipefail`, so an early successful match closes the pipe and GNU tar exits on SIGPIPE. The required member was present; the gate reported it missing. The tag will not be moved or deleted. The governed recovery path is a RED regression test, a single root-cause fix on `main`, and a dispatch workflow that checks out the same tag as release source while using the reviewed corrected verifier from `main`.
+
+## Remote integration and release evidence
+
+- Evidence-bearing branch commit `2c15e46765a686e4146f3cb1e97050bf7a18b4d9` passed CI `29273977799` on Ubuntu, macOS and Windows.
+- Merge commit `450bc4c14adeabb9b296201e806089354c0a7876` passed a fresh local `./scripts/verify.sh` and main CI `29274784620` on all three platforms before tag creation.
+- The first immutable-tag workflow `29275244351` passed portable verification and exposed the GNU-tar gate defect before asset publication.
+- Root-cause fix `2c75481e7900a862d3fff9f5a9a091b47671890c` passed 625 tests with 9 intentional skips, full local release verification and main CI `29276001711` on all three platforms.
+- Governed recovery workflow `29277550208` checked out the exact `v0.2.0` tag as source, used the reviewed corrected verifier from `main`, passed portable and release gates, and published [AECCTX 0.2.0](https://github.com/mandalorianuy/aecctx/releases/tag/v0.2.0).
+- Downloaded public `SHA256SUMS` verifies the published wheel, sdist and plugin archive. GitHub reports wheel `f039de7c...12da`, sdist `9a0e6fb8...0d77`, plugin `0a8ca0eb...5f73`, SBOM `3563b0f5...19e` and checksum file `1795db75...b173`.
+
+ACX-23 is completed. No next task is promoted. ACX-10 remains deferred; any WoodFraming integration specification is consumer-owned and must start from `docs/integration/woodframing-boundary.md` under a separately accepted plan.
 
 ## Boundaries
 

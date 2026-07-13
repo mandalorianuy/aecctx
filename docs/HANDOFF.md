@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.2.0-ACX-22-COMPLETE`
+Handoff status: `0.2.0-RELEASED-PLAN-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 and ACX-21 provide optional signing and the bounded quality gate. ACX-22 is completed: `aecctx-inspector-v1` is public `partial` on Python 3.12 Linux/macOS/Windows. ACX-23 alone is `pending-next`. WoodFraming integration remains intentionally deferred.
+AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. ACX-11 through ACX-18 provide the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles; ACX-19 is documented `blocked`; ACX-20 through ACX-22 provide signing, quality gate and the optional inspector plugin; ACX-23 closes claim-complete packaging and publication. There is no `pending-next` task. WoodFraming integration remains intentionally deferred and consumer-owned.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-22 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. Execute only ACX-23, currently `pending-next`, after explicit continuation.
+4. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-23 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. No implementation task is currently authorized.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -147,11 +147,18 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - Claim: only `aecctx-inspector-v1` is public `partial`; marketplace, universal/third-party host behavior, unique semantics and native/GPL/commercial sandbox approval remain unclaimed.
 - `/Users/facundo/desarrollo/woodframing` was not modified.
 
+## ACX-23 release evidence
+
+- Local closure: 625 tests passed with 9 intentional skips; wheel/sdist, 23/23 mapped claims, 12 digest-bound suites, clean core/all-extras install, signing/gate/plugin corpora, checksums, SPDX SBOM, restricted-artifact scan and baseline integration passed.
+- Remote: candidate CI `29273482180`, evidence CI `29273977799`, merged-main CI `29274784620` and GNU-tar fix CI `29276001711` passed on Ubuntu, macOS and Windows.
+- Release: immutable tag `v0.2.0` targets merge commit `450bc4c14adeabb9b296201e806089354c0a7876`. Initial tag workflow `29275244351` exposed a GNU-tar/pipefail false negative before publication; fix `2c75481e7900a862d3fff9f5a9a091b47671890c` and recovery workflow `29277550208` preserved the tag, rebuilt from it, passed the corrected release gate and published the release.
+- Public assets: wheel, sdist, deterministic plugin ZIP, `SHA256SUMS` and SPDX SBOM are available at [AECCTX 0.2.0](https://github.com/mandalorianuy/aecctx/releases/tag/v0.2.0); downloaded checksums pass.
+- Residuals remain exact in `docs/capability-matrix.md` and `conformance/v0.2/claims.json`; no unsupported or target profile was promoted.
+- `/Users/facundo/desarrollo/woodframing` was not modified.
+
 ## Next implementation task
 
-ACX-23 is the sole `pending-next` task: audit and publish the expansion conformance release exactly as governed by [`docs/implementation-plan.md`](implementation-plan.md). It has not started.
-
-The plugin behavior remains fixed by expansion-spec section 14, ACXD-022 and [`docs/evidence/ACX-22.md`](evidence/ACX-22.md). Do not execute ACX-23 until a new continuation request.
+None. The active expansion plan is terminal: ACX-23 is completed and no task is `pending-next` or `in_progress`. New functional work must begin with a governed debt/backlog analysis that converts residuals into acceptance-tested outcomes before implementation.
 
 ## Consumer integration planning entry point
 

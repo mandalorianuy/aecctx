@@ -1,6 +1,6 @@
 # ACX-23 Expansion Release Implementation Plan
 
-Status: `release-ready`; candidate CI green, merged-main/tag publication pending
+Status: `completed`; immutable tag, recovered release workflow and published assets verified
 Authority: `docs/implementation-plan.md` ACX-23 and `docs/specs/aecctx-capability-expansion-spec.md` section 17
 Release: reference implementation `0.2.0`, package format support remains `0.1.0` and `0.2.0`
 
