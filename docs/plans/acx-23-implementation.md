@@ -1,6 +1,6 @@
 # ACX-23 Expansion Release Implementation Plan
 
-Status: `in_progress`
+Status: `release-ready`; candidate CI green, merged-main/tag publication pending
 Authority: `docs/implementation-plan.md` ACX-23 and `docs/specs/aecctx-capability-expansion-spec.md` section 17
 Release: reference implementation `0.2.0`, package format support remains `0.1.0` and `0.2.0`
 
@@ -29,4 +29,3 @@ This execution cut adds no capability. It packages only the claims already accep
 - Clean core and optional-extra artifact matrices pass, including v0.1 compatibility and v0.2 signing/gate/plugin corpora.
 - `./scripts/verify.sh` passes before ACX-23 closure.
 - Candidate, merged-main, and tag workflow runs are green for their exact SHAs; published assets match `SHA256SUMS`.
-

@@ -1,7 +1,7 @@
 # ACX-23 Acceptance Evidence
 
 Date: 2026-07-13
-Status: in progress
+Status: release-ready; publication gates pending
 
 ## Governed scope
 
@@ -19,9 +19,17 @@ ACX-23 packages the already accepted ACX-11 through ACX-22 line as reference imp
 
 Focused RED: `tests/test_v02_release.py` initially failed because `aecctx.release_conformance`, the aggregate corpus and v0.2 release documents did not exist.
 
-Final local, candidate CI, merged-main CI, tag workflow and published-asset evidence will be appended only after each gate succeeds.
+`./scripts/verify.sh` passed with 624 tests, 9 intentional optional-runtime skips, the 206-case portable gate slice, wheel/sdist build, RVT restricted-artifact scan, baseline integration, v0.1 corpus, 23/23 mapped non-target v0.2 claims, one explicit target, 12 digest-bound component suites, deterministic plugin ZIP, clean core/all-extras install, checksums and SPDX SBOM.
+
+Local artifact digests before publication:
+
+- wheel: `f039de7cd5bd3870cd92c5957b777be9c8a8d2a83bc907577c34ff5fbece12da`;
+- sdist: `44ae4e9f9b1beb622c98aecefe1d491524b32cb8d806a193366569befe9884ac`;
+- plugin: `0a8ca0eb65d45f6896f5a432dd7236f3149ab1d5c3ba8e5607f894da4e0a5f73`;
+- SPDX SBOM: `3563b0f52f89154956b57a552ada09de0ed2c6a64b88e8987944dc73c31cd19e`.
+
+Candidate implementation commit `2a04d1cec49f72ff1dfd24e81ab6604795c1319d` passed [CI run 29273482180](https://github.com/mandalorianuy/aecctx/actions/runs/29273482180) on Ubuntu, macOS and Windows. ACX-23 remains `in_progress` until this evidence-bearing release commit, merged `main`, tag workflow and published assets all pass their exact gates.
 
 ## Boundaries
 
 No WoodFraming path, `WFDomain`, `WFImport`, proprietary runtime, credential, mandatory network or LLM dependency is authorized or distributed. Markdown remains a generated projection rather than evidence authority.
-
