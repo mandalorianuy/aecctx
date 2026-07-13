@@ -488,11 +488,11 @@ Expected: all signing cases pass, 282 pre-ACX-20 tests remain non-regressed, whe
 - Ledger moves ACX-20 from `in_progress` to `completed` and only ACX-21 from `pending` to `pending-next` after every gate passes.
 - Public claim becomes only: optional offline detached JWS General JSON verification with `Ed25519`, caller-owned registry/policy and the exact documented states. X.509, online revocation, countersignatures, timestamps and universal authorization remain `unsupported`.
 
-- [ ] **Step 1: Write evidence before promotion.** Complete all twelve evidence-template sections with actual commands/results/hashes and explicit non-claims. Keep task status `in_progress` and claim `target` until gates pass.
+- [x] **Step 1: Write evidence before promotion.** Complete all twelve evidence-template sections with actual commands/results/hashes and explicit non-claims. Keep task status `in_progress` and claim `target` until gates pass.
 
-- [ ] **Step 2: Run narrow and adversarial gates.** Run every signing test, corpus checker, schema mirror check, deterministic regeneration/diff, secret/path scan, restricted-header scan, no-network test and clean-install matrix. Record exact counts and artifact hashes.
+- [x] **Step 2: Run narrow and adversarial gates.** Run every signing test, corpus checker, schema mirror check, deterministic regeneration/diff, secret/path scan, restricted-header scan, no-network test and clean-install matrix. Record exact counts and artifact hashes.
 
-- [ ] **Step 3: Run repository gates.** Run:
+- [x] **Step 3: Run repository gates.** Run:
 
 ```bash
 python3 scripts/check_spec_contract.py
