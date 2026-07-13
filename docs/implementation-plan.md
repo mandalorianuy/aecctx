@@ -165,8 +165,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-17 | completed | Experimental bounded STEP/IGES source graph and translator-derived BREP profiles |
 | ACX-18 | completed | Experimental bounded R2000/AC1015 DWG source-object and converted-DXF evidence profile |
 | ACX-19 | blocked | No admissible RVT provider; public unsupported boundary with deterministic opaque anti-claim evidence |
-| ACX-20 | in_progress | Accepted detached JWS/Ed25519 profile; implementation plan and TDD execution pending written-spec review |
-| ACX-21 | pending | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
+| ACX-20 | completed | Optional detached JWS/Ed25519 signing and caller-owned offline trust-policy evaluation |
+| ACX-21 | pending-next | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
 | ACX-22 | pending | Optional `aecctx-inspector` plugin for Codex |
 | ACX-23 | pending | Expansion conformance corpus, packaging, documentation and release |
 
@@ -734,6 +734,8 @@ Non-scope: no universal authorization policy, no mandatory signing, no secret/ke
 Acceptance: ACXD-018 is accepted, all states are machine-distinct, unsigned v0.1/v0.2 compatibility passes and `./scripts/verify.sh` passes.
 
 Evidence: `docs/evidence/ACX-20.md` when completed.
+
+Completion resolution: ACX-20 publishes the bounded `detached-jws-ed25519-offline-v1` profile as optional public `partial` support. Valid v0.1/v0.2 packages can be signed and verified through detached sidecars with explicit caller-owned registry/policy inputs; integrity, cryptographic validity, lifecycle, trust and authorization remain machine-distinct. X.509, online revocation/discovery, timestamps, countersignatures, implicit trust and universal approval remain unsupported. ACX-21 alone is promoted to `pending-next`.
 
 ## ACX-21: AEC Delivery Quality Gate
 

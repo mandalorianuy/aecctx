@@ -296,8 +296,8 @@
     },
     {
       "id": "package.authenticity-signing",
-      "status": "target",
-      "support_level": null,
+      "status": "public",
+      "support_level": "partial",
       "profile": "detached-jws-ed25519-offline-v1",
       "platform_scope": ["python-3.12-linux-macos-windows"],
       "provider_scope": "cryptography>=45,<50 optional; caller-owned registry and policy",
@@ -306,7 +306,7 @@
         "tests/test_signing_conformance.py::test_signing_corpus_executes_offline_and_matches_governed_results",
         "tests/test_signing_conformance.py::test_clean_install_base_and_signing_extra_boundaries"
       ],
-      "evidence": null
+      "evidence": "docs/evidence/ACX-20.md"
     },
     {"id": "quality-gate.policy-ids", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null},
     {"id": "codex.aecctx-inspector", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null}

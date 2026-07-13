@@ -2,11 +2,12 @@
 
 ## 1. Task status, commits and date
 
-- Status while this candidate is evaluated: `in_progress`; the public claim remains `target` until the candidate CI and closure gates pass.
+- Status: `completed` after the exact candidate CI and closure gates described below.
 - Date: 2026-07-12.
 - Design/plan commits: `692a608`, `06b0104`.
 - Implementation commits: `8c2aa5a`, `b830e12`, `52424bc`, `7599cde`, `f73e045`, `d1041df`, `b42271f`.
-- Candidate, closure and main publication commits/runs are recorded in section 12 after their exact SHAs pass CI.
+- Candidate commit: `e01490606238fb3a7c2a1437f7f030bd27af1d9b`.
+- Closure and main publication commits/runs are recorded in section 12 after their exact SHAs pass CI.
 
 ## 2. Normative coverage
 
@@ -107,7 +108,10 @@ The authoritative corpus SHA-256 is `ee4362c1ce21692b2634f289a9ac4da8ba98f33a9eb
 - Candidate build succeeded with hatchling 1.31.0. Candidate wheel SHA-256: `32c2cc65eca26c0cf5908a3e448b2f3d6c10e3f1361180f284fc1d2d4ba81e80`; candidate sdist SHA-256: `2f8af7da40833c4fe8d8288101fa69478f4259830b4598db1525147060138f4c`.
 - Fresh candidate repository gates: `check_spec_contract.py` passed; baseline integration reported healthy with zero issues and bundle `baseline-shared-v1`; portable and full verification each passed 412 tests with nine expected opt-in skips, built wheel/sdist, passed RVT anti-claim and release verification, and ended in `aecctx portable verify: ok` / `aecctx verify: ok`.
 - Task 7 CI `29212954852` for `b42271f`: Ubuntu `86703658768`, macOS `86703658767`, Windows `86703658772`, all passed.
-- Candidate, closure and merged-main CI are pending section 12 publication steps and do not yet justify claim promotion.
+- Candidate CI `29215674309` for `e014906`: Ubuntu `86710961584`, macOS `86710961582`, Windows `86710961580`, all passed.
+- Fresh closure `./scripts/verify.sh`: 412 passed with nine expected opt-in skips; wheel/sdist, portable, baseline, RVT anti-claim and release gates passed; final `aecctx verify: ok`.
+- Closure wheel SHA-256: `37918e608338f452275ee47d1c61095b2013b9dc34b4fa19232203954a3f5a1f`; closure sdist SHA-256: `63c75448c5f17b7bb72bc5818f9362b685854d57cbb9530a97f7bd0c8968c507`.
+- Closure and merged-main CI remain required by section 12 after the bounded promotion.
 
 ## 7. Determinism and reproducibility
 
@@ -140,8 +144,8 @@ All ACX-20 changed paths are within `/Users/facundo/desarrollo/aecctx`. Executab
 
 ## 12. Promotion and publication
 
-Current candidate state: ACX-20 remains `in_progress`, `package.authenticity-signing` remains `target`, ACX-21 remains `pending`, and no merge has occurred. The implementation candidate must first pass exact-SHA Ubuntu, macOS and Windows CI.
+Candidate gate satisfied: `e014906` passed exact-SHA Ubuntu, macOS and Windows CI. The bounded `package.authenticity-signing` claim is promoted to public `partial`, ACX-20 is `completed`, and ACX-21 alone is `pending-next`. No merge has occurred yet.
 
-After that gate, one closure commit may promote only the bounded claim in section 4, set ACX-20 `completed` and ACX-21 `pending-next`. That closure SHA must pass all three CI jobs before a `--no-ff` merge to `main`; the merged main SHA then requires fresh maintainer verification and green main CI. ACX-21 is not executed. No tag or release is authorized here; ACX-23 owns release authority.
+The closure SHA must pass all three CI jobs before a `--no-ff` merge to `main`; the merged main SHA then requires fresh maintainer verification and green main CI. ACX-21 is not executed. No tag or release is authorized here; ACX-23 owns release authority.
 
 Documentation without those exact candidate, closure and main gates; an unmapped fixture; test-only keys; a happy-path signature; or a cryptographically valid but policy-unevaluated signature does not count as public authenticity support.

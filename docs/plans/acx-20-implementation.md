@@ -418,7 +418,7 @@ def test_verify_cli_exit_zero_only_for_satisfied_policy(tmp_path: Path) -> None:
 
 ### Task 7: Publishable signing corpus, portable gates and packaging proof
 
-**Checkpoint:** Completed 2026-07-12. Corpus-contract RED produced 7 expected missing-corpus/checker/fixture failures; the clean-install packaging boundary separately exposed a missing sdist checker and was corrected by including `scripts/` in the sdist. The first remote portable run then exposed that the deterministic ZIP was locally present but excluded from the commit by the repository-wide `*.aecctx` ignore rule; a tracked-corpus regression failed before the fixture was force-added intentionally. GREEN passes all 8 conformance tests and deterministically replays 24/24 signing corpus cases offline. Clean base and `[signing]` installs prove the optional dependency boundary, wheel/sdist contents include all four signing schemas and test-only material remains confined to fixtures. Full `./scripts/verify.sh` passes 412 tests with 9 optional skips, builds wheel and sdist, and passes portable, release and baseline-integration gates. The exact claim remains `target`; promotion is reserved for Task 8.
+**Checkpoint:** Completed 2026-07-12. Corpus-contract RED produced 7 expected missing-corpus/checker/fixture failures; the clean-install packaging boundary separately exposed a missing sdist checker and was corrected by including `scripts/` in the sdist. The first remote portable run then exposed that the deterministic ZIP was locally present but excluded from the commit by the repository-wide `*.aecctx` ignore rule; a tracked-corpus regression failed before the fixture was force-added intentionally. GREEN passes all 8 conformance tests and deterministically replays 24/24 signing corpus cases offline. Clean base and `[signing]` installs prove the optional dependency boundary, wheel/sdist contents include all four signing schemas and test-only material remains confined to fixtures. Full `./scripts/verify.sh` passes 412 tests with 9 optional skips, builds wheel and sdist, and passes portable, release and baseline-integration gates. At this checkpoint the exact claim remained `target`; promotion was reserved for and later executed by Task 8.
 
 **Files:**
 - Create: `fixtures/v0.2/signing/README.md`
@@ -504,9 +504,9 @@ git diff --check
 
 Expected: every command exits 0; no generated timestamp/unrelated diff remains.
 
-- [ ] **Step 4: Create and publish the implementation candidate.** Commit all remaining implementation/evidence work without promoting ACX-21, push `codex/acx-20-signing`, wait for Ubuntu/macOS/Windows CI on the exact SHA and record the run URL/status in evidence.
+- [x] **Step 4: Create and publish the implementation candidate.** Commit all remaining implementation/evidence work without promoting ACX-21, push `codex/acx-20-signing`, wait for Ubuntu/macOS/Windows CI on the exact SHA and record the run URL/status in evidence.
 
-- [ ] **Step 5: Promote only after candidate CI is green.** Change the claim from `target` to the exact bounded public support state, set ACX-20 `completed`, promote only ACX-21 to `pending-next`, update handoff/evidence/this plan, rerun `check_spec_contract.py` and `verify.sh`, and commit as `docs: close ACX-20 signing milestone`.
+- [x] **Step 5: Promote only after candidate CI is green.** Change the claim from `target` to the exact bounded public support state, set ACX-20 `completed`, promote only ACX-21 to `pending-next`, update handoff/evidence/this plan, rerun `check_spec_contract.py` and `verify.sh`, and commit as `docs: close ACX-20 signing milestone`.
 
 - [ ] **Step 6: Publish and validate the closure commit.** Push the branch, require green Ubuntu/macOS/Windows CI for the closure SHA, then merge `codex/acx-20-signing` into `main` with `--no-ff`, rerun `./scripts/verify.sh`, push `main` and require green main CI. Do not execute ACX-21.
 

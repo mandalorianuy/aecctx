@@ -176,7 +176,7 @@ def test_signing_fixture_regeneration_is_byte_stable() -> None:
     assert completed.stdout == "aecctx signing fixtures: deterministic\n"
 
 
-def test_signing_claim_remains_target_but_maps_exact_corpus() -> None:
+def test_signing_claim_is_public_partial_and_maps_exact_corpus() -> None:
     registry = json.loads(CLAIMS.read_text(encoding="utf-8"))
     fixtures = {item["id"]: item for item in registry["fixtures"]}
     claims = {item["id"]: item for item in registry["claims"]}
@@ -186,8 +186,8 @@ def test_signing_claim_remains_target_but_maps_exact_corpus() -> None:
         "path": "fixtures/v0.2/signing",
     }
     claim = claims["package.authenticity-signing"]
-    assert claim["status"] == "target"
-    assert claim["support_level"] is None
+    assert claim["status"] == "public"
+    assert claim["support_level"] == "partial"
     assert claim["profile"] == "detached-jws-ed25519-offline-v1"
     assert claim["platform_scope"] == ["python-3.12-linux-macos-windows"]
     assert claim["provider_scope"] == "cryptography>=45,<50 optional; caller-owned registry and policy"
@@ -196,7 +196,7 @@ def test_signing_claim_remains_target_but_maps_exact_corpus() -> None:
         "tests/test_signing_conformance.py::test_signing_corpus_executes_offline_and_matches_governed_results",
         "tests/test_signing_conformance.py::test_clean_install_base_and_signing_extra_boundaries",
     ]
-    assert claim["evidence"] is None
+    assert claim["evidence"] == "docs/evidence/ACX-20.md"
 
 
 def _venv_python(root: Path) -> Path:
