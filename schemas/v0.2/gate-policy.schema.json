@@ -1,0 +1,24 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.2/gate-policy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "checks": {
+      "items": {"$ref": "https://aecctx.dev/schemas/v0.2/gate-check.schema.json"},
+      "maxItems": 256,
+      "type": "array"
+    },
+    "evaluation_time": {"format": "date-time", "maxLength": 64, "type": "string"},
+    "policy_id": {"pattern": "^[a-z][a-z0-9._-]{0,63}$", "type": "string"},
+    "policy_version": {"pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$", "type": "string"},
+    "profile": {"const": "https://aecctx.dev/gate/v1"},
+    "waivers": {
+      "items": {"$ref": "https://aecctx.dev/schemas/v0.2/gate-waiver.schema.json"},
+      "maxItems": 1024,
+      "type": "array"
+    }
+  },
+  "required": ["profile", "policy_id", "policy_version", "evaluation_time", "checks", "waivers"],
+  "title": "AECCTX quality gate policy v1",
+  "type": "object"
+}

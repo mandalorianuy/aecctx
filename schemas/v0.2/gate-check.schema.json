@@ -1,0 +1,123 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.2/gate-check.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "capability_configuration": {
+      "additionalProperties": false,
+      "properties": {
+        "capabilities": {
+          "additionalProperties": {"enum": ["unsupported", "opaque", "partial", "full"]},
+          "maxProperties": 256,
+          "minProperties": 1,
+          "propertyNames": {"pattern": "^[a-z][a-z0-9._:-]{0,127}$"},
+          "type": "object"
+        }
+      },
+      "required": ["capabilities"],
+      "type": "object"
+    },
+    "count_map": {
+      "additionalProperties": {"maximum": 100000, "minimum": 0, "type": "integer"},
+      "maxProperties": 256,
+      "propertyNames": {"pattern": "^[A-Za-z][A-Za-z0-9._:-]{0,127}$"},
+      "type": "object"
+    },
+    "diagnostic_configuration": {
+      "additionalProperties": false,
+      "properties": {
+        "max_count": {"maximum": 100000, "minimum": 0, "type": "integer"},
+        "per_code_maxima": {"$ref": "#/$defs/count_map"},
+        "threshold": {"enum": ["info", "warning", "error", "blocking"]}
+      },
+      "required": ["threshold", "max_count"],
+      "type": "object"
+    },
+    "diff_configuration": {
+      "additionalProperties": false,
+      "properties": {
+        "categories": {
+          "additionalProperties": false,
+          "properties": {
+            "added_records": {"enum": ["allow", "requires_review", "fail"]},
+            "artifact_changes": {"enum": ["allow", "requires_review", "fail"]},
+            "capability_regressions": {"enum": ["allow", "requires_review", "fail"]},
+            "changed_records": {"enum": ["allow", "requires_review", "fail"]},
+            "identity_changes": {"enum": ["allow", "requires_review", "fail"]},
+            "loss_changes": {"enum": ["allow", "requires_review", "fail"]},
+            "producer_changes": {"enum": ["allow", "requires_review", "fail"]},
+            "removed_records": {"enum": ["allow", "requires_review", "fail"]},
+            "version_changes": {"enum": ["allow", "requires_review", "fail"]}
+          },
+          "required": ["added_records", "removed_records", "changed_records", "artifact_changes", "capability_regressions", "loss_changes", "identity_changes", "producer_changes", "version_changes"],
+          "type": "object"
+        }
+      },
+      "required": ["categories"],
+      "type": "object"
+    },
+    "ids_configuration": {
+      "additionalProperties": false,
+      "properties": {
+        "ids_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "source_id": {"maxLength": 128, "minLength": 1, "type": "string"}
+      },
+      "required": ["ids_sha256", "source_id"],
+      "type": "object"
+    },
+    "loss_configuration": {
+      "additionalProperties": false,
+      "anyOf": [{"required": ["overall_max"]}, {"required": ["reason_code_maxima"]}],
+      "properties": {
+        "overall_max": {"maximum": 100000, "minimum": 0, "type": "integer"},
+        "reason_code_maxima": {"$ref": "#/$defs/count_map"}
+      },
+      "type": "object"
+    },
+    "value_state_configuration": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "additionalProperties": false,
+          "properties": {
+            "conflicted": {"enum": ["allow", "requires_review", "fail"]},
+            "explicit_null": {"enum": ["allow", "requires_review", "fail"]},
+            "not_applicable": {"enum": ["allow", "requires_review", "fail"]},
+            "unknown": {"enum": ["allow", "requires_review", "fail"]},
+            "unsupported": {"enum": ["allow", "requires_review", "fail"]}
+          },
+          "required": ["unknown", "unsupported", "conflicted", "explicit_null", "not_applicable"],
+          "type": "object"
+        },
+        "field_path": {"maxLength": 4096, "minLength": 1, "type": "string"},
+        "record_types": {
+          "items": {"maxLength": 128, "minLength": 1, "type": "string"},
+          "maxItems": 256,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": ["record_types", "actions"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {"if": {"properties": {"kind": {"const": "capability.minimum"}}, "required": ["kind"]}, "then": {"properties": {"configuration": {"$ref": "#/$defs/capability_configuration"}}}},
+    {"if": {"properties": {"kind": {"const": "loss.maximum"}}, "required": ["kind"]}, "then": {"properties": {"configuration": {"$ref": "#/$defs/loss_configuration"}}}},
+    {"if": {"properties": {"kind": {"const": "value_state.action"}}, "required": ["kind"]}, "then": {"properties": {"configuration": {"$ref": "#/$defs/value_state_configuration"}}}},
+    {"if": {"properties": {"kind": {"const": "diagnostic.maximum"}}, "required": ["kind"]}, "then": {"properties": {"configuration": {"$ref": "#/$defs/diagnostic_configuration"}}}},
+    {"if": {"properties": {"kind": {"const": "diff.regression"}}, "required": ["kind"]}, "then": {"properties": {"configuration": {"$ref": "#/$defs/diff_configuration"}}}},
+    {"if": {"properties": {"kind": {"const": "ids.specification"}}, "required": ["kind"]}, "then": {"properties": {"configuration": {"$ref": "#/$defs/ids_configuration"}}}}
+  ],
+  "properties": {
+    "check_id": {"pattern": "^[a-z][a-z0-9._-]{0,63}$", "type": "string"},
+    "configuration": {"type": "object"},
+    "failure_mode": {"enum": ["fail", "requires_review"]},
+    "kind": {"enum": ["capability.minimum", "loss.maximum", "value_state.action", "diagnostic.maximum", "diff.regression", "ids.specification"]},
+    "severity": {"enum": ["info", "warning", "error", "blocking"]}
+  },
+  "required": ["check_id", "kind", "severity", "failure_mode", "configuration"],
+  "title": "AECCTX quality gate policy check v1",
+  "type": "object"
+}
