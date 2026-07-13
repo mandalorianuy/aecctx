@@ -93,6 +93,7 @@ def check_required_files() -> None:
         ROOT / "docs/specs/rvt-v02-blocked-profile.md",
         ROOT / "docs/specs/signing-v1-profile.md",
         ROOT / "docs/specs/provider-oci-multiarch-v03-profile.md",
+        ROOT / "docs/specs/provider-local-enforcement-v03-profile.md",
         ROOT / "docs/security/signing-threat-model.md",
         ROOT / "docs/plans/acx-20-implementation.md",
         ROOT / "fixtures/v0.2/dxf/r2018-semantics-3d-ascii.dxf",

@@ -187,7 +187,7 @@ class LocalEnforcementReport:
     diagnostics: tuple[str, ...]
 ```
 
-- [ ] Govern ACXD-033 with official OS/runtime APIs, CI availability and per-axis proof. Do not combine Linux, macOS and Windows into one claim.
+- [x] Govern ACXD-033 with official OS/runtime APIs, CI availability and per-axis proof. Do not combine Linux, macOS and Windows into one claim.
 - [ ] Write RED tests for complete isolation plus deterministic rejection of every missing axis.
 - [ ] Implement only profiles whose full axis suite is enforceable; keep `MacOSSeatbeltProfile` fail-closed unless the memory and host-read gaps are solved.
 - [ ] Execute the reference provider success and adversarial process/filesystem/network/resource corpus on each claimed platform.

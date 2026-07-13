@@ -184,7 +184,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-22 | completed | Optional `aecctx-inspector-v1` plugin is public partial with parity/adversarial/install evidence |
 | ACX-23 | completed | Expansion conformance corpus, packaging, documentation and `0.2.0` release |
 | ACX-24 | completed | Live OCI providers on Linux arm64 and amd64 with cross-architecture equivalence |
-| ACX-25 | pending-next | Additional reviewed local enforcement profiles |
+| ACX-25 | in_progress | Additional reviewed local enforcement profiles |
 | ACX-26 | pending | Optional remote/customer-managed provider protocol |
 | ACX-27 | pending | Expanded IFC 2D and georeferencing profiles |
 | ACX-28 | pending | Expanded DXF semantics, geometry and bounded xrefs |
@@ -927,7 +927,7 @@ Detailed implementation authority: [`docs/plans/post-v02-functional-debt-impleme
 
 Program rules:
 
-- ACX-24 is complete and ACX-25 alone is `pending-next`; no later ACX may execute or borrow scope.
+- ACX-24 is complete and ACX-25 alone is `in_progress`; no later ACX may execute or borrow scope.
 - Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
 - Replay cannot satisfy a live platform/provider acceptance item.
 - A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.
@@ -938,3 +938,5 @@ Program rules:
 Promotion note: ACX-23 historically closed the v0.2 line with no successor. The separately accepted ACXD-031 post-v0.2 program now promotes ACX-24; this does not alter ACX-23 evidence or `v0.2.0` claims.
 
 ACX-24 completion resolution: exact `linux/arm64` and `linux/amd64` OCI targets for the reviewed Tesseract, OCP/OCCT and LibreDWG providers passed six live positive executions, cross-architecture canonical/artifact equality, fourteen architecture-specific adversarial outcomes, digest/package-lock corpus validation, full local gates and exact-SHA CI on Ubuntu, macOS and Windows. `sandbox.oci-multiarch` is public `partial`; native macOS/Windows, other architectures/providers, automatic acquisition, remote execution and image signing remain explicit residuals. Only ACX-25 is promoted.
+
+ACX-25 execution cut: ACXD-033 and `docs/specs/provider-local-enforcement-v03-profile.md` evaluate native Linux, macOS and Windows independently. No draft-1 profile is admissible: each must produce a complete deterministic report and reject before workspace creation or provider launch. This is an executable `unsupported` outcome, not successful sandbox evidence. ACX-26 remains `pending`.

@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.3.0-ACX-24-COMPLETE`
+Handoff status: `0.3.0-ACX-25-IN-PROGRESS`
 
 ## Outcome
 
-AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 is complete with public partial Linux arm64/amd64 OCI evidence; ACX-25 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
+AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 is complete with public partial Linux arm64/amd64 OCI evidence; ACX-25 alone is `in_progress`. WoodFraming integration remains intentionally deferred and consumer-owned.
 
 ## Start here
 
@@ -21,11 +21,11 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 - Plan: ACX-24 through ACX-38, dependency-first.
 - Completed: ACX-24, live OCI providers on Linux arm64 and amd64.
-- Sole `pending-next`: ACX-25, additional reviewed local enforcement profiles.
+- Sole `in_progress`: ACX-25, additional reviewed local enforcement profiles.
 - ACX-26 through ACX-38: `pending`.
 - Claim posture: `sandbox.oci-multiarch` is public `partial`; every later post-v0.2 entry remains a target until its owning milestone closes.
 - Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
-- Execution pause: this handoff authorizes selection of ACX-25 only. Do not begin it without a new continuation request.
+- Execution boundary: ACX-25 alone may execute; ACX-26 and later remain unauthorized.
 
 ## ACX-24 evidence
 
@@ -178,7 +178,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 ## Next implementation task
 
-ACX-25 is the sole `pending-next` task in the active post-v0.2 plan. It governs additional reviewed local enforcement profiles and must begin by satisfying its DoR and locking any new platform/provider decision in the governing profile and decision log. ACX-26 and later remain `pending`; no ACX-25 implementation is included in this handoff.
+ACX-25 is the sole `in_progress` task in the active post-v0.2 plan. ACXD-033 and the local-enforcement profile govern its executable per-platform rejection/report outcome. ACX-26 and later remain `pending` and must not execute.
 
 ## Consumer integration planning entry point
 
