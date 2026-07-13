@@ -168,7 +168,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-20 | completed | Optional detached JWS/Ed25519 signing and caller-owned offline trust-policy evaluation |
 | ACX-21 | completed | Bounded deterministic policy/IDS quality gate is public partial under the exact accepted profile |
 | ACX-22 | completed | Optional `aecctx-inspector-v1` plugin is public partial with parity/adversarial/install evidence |
-| ACX-23 | pending-next | Expansion conformance corpus, packaging, documentation and release |
+| ACX-23 | in_progress | Expansion conformance corpus, packaging, documentation and release |
 
 ## ACX-00: Specification and repository foundation
 
@@ -838,6 +838,8 @@ Completion resolution: ACX-22 publishes `codex.aecctx-inspector` as public `part
 ## ACX-23: Expansion release
 
 Objective: release the expansion line only with claim-complete evidence, reproducible artifacts and truthful unsupported/blocked reporting.
+
+Execution cut: [`docs/plans/acx-23-implementation.md`](plans/acx-23-implementation.md). It is subordinate to expansion-spec section 17 and this plan; it adds no capability scope.
 
 Deliverables:
 
