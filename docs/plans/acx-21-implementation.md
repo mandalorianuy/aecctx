@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12+, JSON Schema 2020-12, existing AECCTX v0.1/v0.2 validation/records/diff APIs, optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`, pytest, hatchling, buildingSMART IDS 1.0 unchanged conformance fixtures.
 
-**Execution status:** Tasks 1-6 completed on 2026-07-13. Task 7 is `pending-next`; Tasks 8-9 remain `pending`. The public quality-gate capability remains `unsupported`.
+**Execution status:** Tasks 1-7 completed on 2026-07-13. Task 8 is `pending-next`; Task 9 remains `pending`. The public quality-gate capability remains `unsupported`.
 
 ## Global Constraints
 
@@ -491,9 +491,12 @@ git commit -m "feat: evaluate bounded IDS 1.0 requirements"
 ### Task 7: CLI, canonical output and derived projections
 
 **Files:**
+- Create: `src/aecctx/_atomic.py`
 - Create: `src/aecctx/gate/projection.py`
 - Modify: `src/aecctx/cli.py`
+- Modify: `src/aecctx/gate/models.py`
 - Create: `tests/test_gate_cli.py`
+- Modify: `tests/test_signing_cli.py` only to prove the generalized atomic primitive preserves signing behavior
 - Modify: `README.md`
 
 **Interfaces:**
@@ -501,8 +504,11 @@ git commit -m "feat: evaluate bounded IDS 1.0 requirements"
 - Produce `GateResult.canonical_bytes() -> bytes`.
 - Produce `render_gate_markdown(result: GateResult) -> bytes` and `render_ci_annotations(result: GateResult) -> bytes`.
 - Atomic detached output creation rejects existing/symlink/directory targets and never overwrites.
+- `--output` contains raw canonical `GateResult` JSON; `--json` uses the canonical result-producing envelope contract from profile section 12.
+- CI annotations use provider-neutral canonical JSONL profile `aecctx-ci-annotations-v1`; provider workflow commands remain downstream adapters.
+- All requested outputs are collision-preflighted and published through one neutral rollback-capable atomic-create primitive.
 
-- [ ] **Step 1: Write failing parser, exit and parity tests.** Cover pass/fail/review/error exits, JSON envelope semantics, required IDS/IFC pairing, baseline missing, output collisions, Markdown/result parity and hostile messages rendered as escaped data.
+- [x] **Step 1: Write failing parser, exit and parity tests.** Cover pass/fail/review/error exits, JSON envelope semantics, required IDS/IFC pairing, baseline missing, output collisions, Markdown/result parity and hostile messages rendered as escaped data.
 
 ```python
 @pytest.mark.parametrize(
@@ -515,21 +521,21 @@ def test_gate_cli_exit_matches_authoritative_result(outcome: str, exit_code: int
     assert json.loads(completed.stdout)["data"]["outcome"] == outcome
 ```
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_cli.py -q`; expect no `gate` parser/handler/projection.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_cli.py -q`; expect no `gate` parser/handler/projection.
 
-- [ ] **Step 3: Add exact CLI parser and handler.** Parse policy/optional inputs, call only public `evaluate_gate`, print canonical envelope for `--json`, concise non-authoritative text otherwise and return the result exit code.
+- [x] **Step 3: Add exact CLI parser and handler.** Parse policy/optional inputs, call only public `evaluate_gate`, print canonical envelope for `--json`, concise non-authoritative text otherwise and return the result exit code.
 
-- [ ] **Step 4: Implement safe detached output creation.** Generalize the existing signing sidecar atomic-create pattern into a neutral internal helper or duplicate the bounded primitive without importing signing semantics. Never partially publish output.
+- [x] **Step 4: Implement safe detached output creation.** Generalize the existing signing sidecar atomic-create pattern into a neutral internal helper or duplicate the bounded primitive without importing signing semantics. Never partially publish output.
 
-- [ ] **Step 5: Implement Markdown and CI projections.** Render only `GateResult.to_dict()`, include policy/package digests, outcome, check IDs, finding fingerprints/evidence refs and the explicit non-approval disclaimer. Escape source/policy text and never follow links.
+- [x] **Step 5: Implement Markdown and CI projections.** Render only `GateResult.to_dict()`, include policy/package digests, outcome, check IDs, finding fingerprints/evidence refs and the explicit non-approval disclaimer. Escape source/policy text and never follow links.
 
-- [ ] **Step 6: Prove projection parity.** Parse IDs/outcome/evidence refs from both projections in tests and compare to JSON; mutate projection text and prove it cannot affect reevaluation/result.
+- [x] **Step 6: Prove projection parity.** Parse IDs/outcome/evidence refs from both projections in tests and compare to JSON; mutate projection text and prove it cannot affect reevaluation/result.
 
-- [ ] **Step 7: Document installation/usage.** Add core gate and optional `aecctx[gate-ids]` examples, exact exits and non-approval language; do not claim implementation publicly until Task 9.
+- [x] **Step 7: Document installation/usage.** Add core gate and optional `aecctx[gate-ids]` examples, exact exits and non-approval language; do not claim implementation publicly until Task 9.
 
-- [ ] **Step 8: Verify GREEN.** Run `.venv/bin/python -m pytest tests/test_gate_cli.py tests/test_cli.py -q` and direct CLI smoke for all four outcomes.
+- [x] **Step 8: Verify GREEN.** Run `.venv/bin/python -m pytest tests/test_gate_cli.py tests/test_cli.py -q` and direct CLI smoke for all four outcomes.
 
-- [ ] **Step 9: Commit.**
+- [x] **Step 9: Commit.**
 
 ```bash
 git add src/aecctx/cli.py src/aecctx/gate/projection.py tests/test_gate_cli.py README.md
@@ -615,4 +621,4 @@ Tasks 1 through 9 are sequential. Each task begins only after the preceding task
 
 ## Planning checkpoint
 
-Tasks 1-6 now materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks, semantic baseline regression checks and the bounded IDS 1.0 evaluator. Task 6 binds caller IDS/IFC bytes to authoritative source identity and hashes, performs inert bounded XML preflight, evaluates only the governed IFC2X3/IFC4 simple-value facet subset through a fixed isolated worker, preserves unsupported/nonconforming outcomes as exact findings and keeps dependency/protocol failures as non-waivable system errors. Exact optional pins and unchanged attributed upstream fixtures remain outside the core-only install. It adds no CLI, projection, corpus or public capability claim. ACX-21 remains `in_progress` at 6/9 detailed tasks (66.7%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 7 CLI/canonical-output/projections is the next governed action only after a new user continuation request.
+Tasks 1-7 now materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks, semantic baseline regression checks, bounded IDS 1.0 evaluation and the deterministic `gate` CLI. Task 7 adds canonical raw results, non-authoritative Markdown/provider-neutral JSONL projections, exact outcome exits and one rollback-capable create-only output primitive shared with signing. RED was 18 expected failures; the focused gate/CLI/signing suite passes 220 tests and `./scripts/verify.sh` passes with 596 tests and 9 intentional skips. It adds no corpus or public capability claim. ACX-21 remains `in_progress` at 7/9 detailed tasks (77.8%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 8 conformance/portable/packaging work is the sole `pending-next` action after a new user continuation request.

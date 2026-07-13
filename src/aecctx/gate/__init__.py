@@ -19,6 +19,7 @@ from .models import (
 )
 from .evaluator import aggregate_gate_outcome, apply_waivers, evaluate_gate, finding_fingerprint
 from .policy import canonical_gate_json, load_gate_policy, read_gate_document, validate_gate_document
+from .projection import render_ci_annotations, render_gate_markdown
 
 __all__ = [
     "CHECK_KINDS",
@@ -43,5 +44,7 @@ __all__ = [
     "finding_fingerprint",
     "load_gate_policy",
     "read_gate_document",
+    "render_ci_annotations",
+    "render_gate_markdown",
     "validate_gate_document",
 ]

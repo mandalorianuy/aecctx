@@ -449,3 +449,8 @@ class GateResult:
             "findings": [finding.to_dict() for finding in self.findings],
             "diagnostics": [diagnostic.to_dict() for diagnostic in self.diagnostics],
         }
+
+    def canonical_bytes(self) -> bytes:
+        from .policy import canonical_gate_json
+
+        return canonical_gate_json(self.to_dict())

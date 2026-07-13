@@ -1,6 +1,6 @@
 # AECCTX v0.2 Delivery Quality Gate Profile
 
-Version: `1.0.0-draft.6`
+Version: `1.0.0-draft.7`
 Date: 2026-07-13
 Status: ACX-21 normative design; implementation and public quality-gate claims remain pending conformance
 Decision authority: ACXD-021 and ACXD-023
@@ -229,6 +229,12 @@ aecctx gate CANDIDATE --policy POLICY [--baseline BASELINE]
 
 `--ids` and `--ifc-source` are a required pair. Outputs are new files created atomically and never overwrite input packages, policies or sources. Library, CLI, Markdown and CI annotation projections MUST agree on aggregate outcome, check IDs, finding fingerprints and evidence references.
 
+`GateResult.canonical_bytes()` is exactly the canonical JSON serialization of `GateResult.to_dict()` with one terminal LF. `--output` stores those bytes without an envelope. With `--json`, stdout is one canonical CLI envelope: `ok` is true whenever evaluation produced a valid `GateResult`, including outcome `error`; `data` is the complete result dictionary and top-level `diagnostics` repeats only that result's ordered diagnostics for normal CLI consistency. A control/input/output failure that prevents a result uses `ok: false`, `data: null`, one bounded diagnostic and exit 2. Non-JSON stdout is concise projection text and is never result authority.
+
+Markdown is UTF-8 with LF endings, begins with the non-approval/non-authority disclaimer, and renders only values selected from `GateResult.to_dict()`. Untrusted messages are serialized as indented canonical JSON records so Markdown/link/HTML syntax remains inert data. The portable CI annotation format is canonical JSON Lines profile `aecctx-ci-annotations-v1`, not provider command syntax: one summary record, one record per check, finding and diagnostic, all ordered exactly as the result. Each record has `annotation_version`, `kind`, `level`, and the applicable outcome/check/code/fingerprint/evidence/message fields. Consumers map these data records to provider-native annotations outside the core and MUST NOT evaluate embedded text.
+
+All requested output paths are preflighted before evaluation: they must be pairwise distinct and distinct from every supplied candidate/policy/baseline/IDS/IFC input after non-strict absolute resolution. A shared neutral atomic-create primitive stages complete bytes with private permissions, publishes with no-overwrite hard links, and rolls back only files created by the current invocation if any requested publication fails. It never truncates, follows a target symlink, replaces a directory or removes pre-existing data. Signing reuses the same primitive through its existing signing-specific error mapping; this does not couple gate behavior to signing semantics.
+
 ## 13. Safety limits
 
 The following defaults are also the v1 hard maxima; callers MAY reduce them but MUST NOT expand them:
@@ -270,6 +276,8 @@ Task 4 adds `AECCTX_GATE_CANDIDATE_INVALID`, `AECCTX_GATE_CANDIDATE_CHANGED_DURI
 Task 5 adds `AECCTX_GATE_BASELINE_MISSING`, `AECCTX_GATE_BASELINE_INVALID`, `AECCTX_GATE_BASELINE_CHANGED_DURING_EVALUATION`, `AECCTX_GATE_DIFF_ADDED_RECORD`, `AECCTX_GATE_DIFF_REMOVED_RECORD`, `AECCTX_GATE_DIFF_CHANGED_RECORD`, `AECCTX_GATE_DIFF_ARTIFACT_CHANGED`, `AECCTX_GATE_CAPABILITY_REGRESSION`, `AECCTX_GATE_DIFF_LOSS_CHANGED`, `AECCTX_GATE_DIFF_IDENTITY_CHANGED`, `AECCTX_GATE_DIFF_PRODUCER_CHANGED`, `AECCTX_GATE_DIFF_VERSION_CHANGED` and `AECCTX_GATE_DIFF_CATEGORY_UNHANDLED` as stable codes. Task 5 implements only `diff.regression`; `ids.specification` and IDS inputs continue to fail closed with `AECCTX_GATE_CHECK_NOT_IMPLEMENTED` until Task 6.
 
 Task 6 adds `AECCTX_GATE_IDS_INPUT_PAIR_REQUIRED`, `AECCTX_GATE_IDS_INPUT_INVALID`, `AECCTX_GATE_IDS_DIGEST_MISMATCH`, `AECCTX_GATE_IDS_SOURCE_ID_MISMATCH`, `AECCTX_GATE_IDS_SOURCE_HASH_MISMATCH`, `AECCTX_GATE_IDS_SOURCE_SCHEMA_MISMATCH`, `AECCTX_GATE_IDS_XML_INVALID`, `AECCTX_GATE_IDS_XML_ACTIVE_CONTENT`, `AECCTX_GATE_IDS_NAMESPACE_UNSUPPORTED`, `AECCTX_GATE_IDS_FACET_UNSUPPORTED`, `AECCTX_GATE_IDS_RESTRICTION_UNSUPPORTED`, `AECCTX_GATE_IDS_LIMIT_EXCEEDED`, `AECCTX_GATE_IDS_DEPENDENCY_UNAVAILABLE`, `AECCTX_GATE_IDS_DEPENDENCY_VERSION_MISMATCH`, `AECCTX_GATE_IDS_WORKER_TIMEOUT`, `AECCTX_GATE_IDS_WORKER_CRASH`, `AECCTX_GATE_IDS_WORKER_OUTPUT_INVALID`, `AECCTX_GATE_IDS_WORKER_OUTPUT_LIMIT`, `AECCTX_GATE_IDS_SPECIFICATION_FAILED` and `AECCTX_GATE_IDS_REQUIREMENT_FAILED` as stable codes. Pairing, binding, XML safety, dependency and worker-protocol failures are `aecctx.system.ids-input` errors. A safely parsed unsupported facet/restriction or completed IDS nonconformance is an exact policy finding using the check's `failure_mode`; it is never reported as a system pass or silently evaluated.
+
+Task 7 adds `AECCTX_GATE_OUTPUT_EXISTS`, `AECCTX_GATE_OUTPUT_CONFLICT`, `AECCTX_GATE_OUTPUT_FAILED` and `AECCTX_GATE_OPERATION_FAILED` as stable CLI control codes. Output diagnostics never include host paths, input contents or tracebacks. Projection bytes are deterministic pure functions of `GateResult.to_dict()` and therefore do not introduce a separate mutable authority or a provider-specific command parser.
 
 ## 15. Conformance and claim promotion
 

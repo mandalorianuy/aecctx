@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.2.0-ACX-21-TASK-06`
+Handoff status: `0.2.0-ACX-21-TASK-07`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Tasks 1-6 provide closed policy/check/waiver/result schemas, strict bounded policy parsing, exact-finding waiver lifecycle, authoritative package checks, semantic baseline regression evaluation and bounded IDS 1.0 simple-value evaluation through an optional fixed worker. CLI, projections, corpus and a public quality-gate claim remain unimplemented. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Tasks 1-7 provide closed policy/check/waiver/result schemas, strict bounded policy parsing, exact-finding waiver lifecycle, authoritative package checks, semantic baseline regression evaluation, bounded IDS 1.0 simple-value evaluation and a deterministic CLI with canonical JSON plus derived Markdown/CI projections. The conformance corpus and public quality-gate claim remain unimplemented. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
@@ -109,11 +109,20 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - Packaging boundary: a clean `aecctx-0.1.0` wheel installs and runs core IDS fail-closed behavior without IfcTester, IfcOpenShell, Flask or BCF client. The optional test/IDS environment verifies exact `ifctester==0.8.5` and `ifcopenshell==0.8.5` plus IfcTester LGPL metadata.
 - The full repository gate result is recorded by the Task 6 merge commit. No CLI, projection, conformance corpus or public capability claim was added.
 
+## ACX-21 Task 7 evidence
+
+- Governance first: profile draft.7, ACXD-023 and the subordinate plan define canonical result/envelope bytes, provider-neutral JSONL annotations, inert Markdown records, stable CLI/output errors and rollback-capable create-only publication before production implementation.
+- RED: `tests/test_gate_cli.py` produced 18 expected failures because the `gate` parser/handler, `GateResult.canonical_bytes()`, projection module and neutral atomic helper did not exist.
+- GREEN: `tests/test_gate_*.py tests/test_signing_cli.py tests/test_cli.py` pass 220 tests, covering all four outcome/exit pairs, control failures, IDS/baseline errors, projection parity/mutation, hostile inert messages, exact help, collision rejection, rollback and preserved signing semantics.
+- Determinism and safety: `--output` writes the raw canonical `GateResult`; Markdown and `aecctx-ci-annotations-v1` JSONL are derived only from `to_dict()`. Requested outputs are preflighted against every input and each other, staged privately, published create-only and rolled back on current-invocation failure.
+- `./scripts/verify.sh` passes with 596 tests, 9 intentional skips, wheel/sdist build, portable/release verification and baseline integration healthy.
+- No conformance corpus, capability-matrix promotion or public quality-gate claim was added; those remain governed by Tasks 8-9.
+
 ## Next implementation task
 
-ACX-21 Task 7: implement the gate CLI, canonical output and derived Markdown/CI projections exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin with failing parser/exit/parity/safe-output tests and stop at that task's checkpoint.
+ACX-21 Task 8: implement the conformance corpus, portable verification and packaging boundaries exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin with failing corpus/claim tests and stop at that task's checkpoint.
 
-The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Task 6 added no CLI, projection, corpus or public capability claim. Do not execute ACX-21 Task 7 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
+The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Task 7 added no corpus or public capability claim. Do not execute ACX-21 Task 8 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
 
 ## Consumer integration planning entry point
 
