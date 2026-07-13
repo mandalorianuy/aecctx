@@ -8,6 +8,7 @@ Status: reviewed external runtime; not distributed by the AECCTX core package
 - Official source archive: `https://github.com/LibreDWG/libredwg/releases/download/0.13.4/libredwg-0.13.4.tar.xz`
 - Archive SHA-256: `7e153ea4dac4cbf3dc9c50b9ef7a5604e09cdd4c5520bcf8017877bbe1422cd5`
 - Reviewed image ID: `sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1`
+- ACX-24 targets: exact `linux/arm64` and `linux/amd64` image IDs and resolved package locks in `fixtures/v0.3/provider-multiarch/receipts/`
 - Base image: Ubuntu Noble at `sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90`
 
 LibreDWG does not enter `pyproject.toml`, the core import path, wheels, sdists or in-process extras. Operators build the image explicitly; AECCTX never pulls or builds it during ingest. The repository does not publish the image by default.

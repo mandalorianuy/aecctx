@@ -10,3 +10,5 @@ Runtime controls are inherited from ACX-12: no network, non-root UID/GID 65532, 
 The worker accepts one exact configuration. It does not accept commands, environment, plugins, resource paths, callbacks or translator flags. External STEP/IGES references are recorded and rejected; they are never opened. Runtime network, telemetry and retention are absent. Temporary workspaces are parent-owned and deleted after each execution.
 
 OCCT translator processing can alter or heal topology. The provider reports this condition on every successful B-Rep transfer and labels BREP as translator-derived. No output establishes source-exact geometry, survey authority, engineering correctness or consumer classification.
+
+ACX-24 adds no STEP/IGES semantics. The same project-authored AP214 fixture produces identical canonical response, BREP and mesh bytes on the reviewed `linux/arm64` and `linux/amd64` images. Exact image/package-lock receipts and adversarial sandbox results are bound by `conformance/v0.3/provider-multiarch-corpus.json`; other platforms remain unsupported.

@@ -2,13 +2,27 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .models import ProviderDescriptor, ProviderRegistration, REQUIRED_ENFORCEMENT_AXES
+from .models import OCIRuntimeTarget, ProviderDescriptor, ProviderRegistration, REQUIRED_ENFORCEMENT_AXES
 from .registry import ProviderRegistry
 
 
 DWG_PROVIDER_ID = "org.aecctx.dwg.libredwg"
 DWG_IMAGE = "aecctx-dwg-libredwg:0.2.0"
 DWG_IMAGE_ID = "sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1"
+DWG_OCI_TARGETS = (
+    OCIRuntimeTarget(
+        "linux",
+        "arm64",
+        "aecctx-dwg-libredwg:0.3.0-linux-arm64",
+        "sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1",
+    ),
+    OCIRuntimeTarget(
+        "linux",
+        "amd64",
+        "aecctx-dwg-libredwg:0.3.0-linux-amd64",
+        "sha256:bcff6c67080688cb2d4f2cecef36ad5c687e1b895ef2adf23a3e3fb7a9248713",
+    ),
+)
 DWG_WORKER_MODULE = "aecctx.external.libredwg_worker"
 DWG_CONFIGURATION = {
     "dwg_version": "AC1015",
@@ -52,6 +66,7 @@ def dwg_registry(*, repository_root: str | Path | None = None) -> ProviderRegist
             container_command=("python3", "/provider/worker.py"),
             container_pids_limit=2,
             worker_path=root / "providers" / "libredwg" / "worker.py",
+            oci_targets=DWG_OCI_TARGETS,
         )
     )
     return registry

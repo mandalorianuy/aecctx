@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.3.0-FUNCTIONAL-DEBT-PLAN-READY`
+Handoff status: `0.3.0-ACX-24-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The separately approved post-v0.2 functional-debt specification and implementation plan govern ACX-24 through ACX-38. ACX-24 alone is `pending-next`; no implementation has started. WoodFraming integration remains intentionally deferred and consumer-owned.
+AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 is complete with public partial Linux arm64/amd64 OCI evidence; ACX-25 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
 
 ## Start here
 
@@ -13,18 +13,28 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The separately 
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
 4. Read `docs/specs/aecctx-post-v02-functional-debt-spec.md` and `docs/plans/post-v02-functional-debt-implementation.md` completely.
-5. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-23 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-24 is the only authorized next task and has not started.
+5. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-24 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-25 is the only authorized next task and has not started.
 6. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 7. Run `./scripts/verify.sh` before handoff.
 
 ## Active post-v0.2 plan
 
 - Plan: ACX-24 through ACX-38, dependency-first.
-- Sole `pending-next`: ACX-24, live OCI providers on Linux arm64 and amd64.
-- ACX-25 through ACX-38: `pending`.
-- Claim posture: all `0.2.0` claims remain authoritative; post-v0.2 entries are targets until their owning milestones close.
+- Completed: ACX-24, live OCI providers on Linux arm64 and amd64.
+- Sole `pending-next`: ACX-25, additional reviewed local enforcement profiles.
+- ACX-26 through ACX-38: `pending`.
+- Claim posture: `sandbox.oci-multiarch` is public `partial`; every later post-v0.2 entry remains a target until its owning milestone closes.
 - Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
-- Execution pause: this handoff authorizes selection of ACX-24 only. Do not begin it without a new continuation request.
+- Execution pause: this handoff authorizes selection of ACX-25 only. Do not begin it without a new continuation request.
+
+## ACX-24 evidence
+
+- Runtime contract: immutable `OCIRuntimeTarget` pairs, exact selection and Docker image ID/OS/architecture preflight with no implicit pull or build.
+- Live matrix: six positive executions with equal canonical response/artifact evidence across `linux/arm64` and `linux/amd64`; fourteen exact adversarial outcomes across both architectures.
+- Corpus: `conformance/v0.3/provider-multiarch-corpus.json` binds sources, requests, responses, artifacts, descriptors, images, package-lock receipts and live execution summaries.
+- Local gates: 221 focused tests; 640 full tests with 10 intentional skips; live matrix, wheel/sdist, baseline and release verification green.
+- Remote gate: corrected implementation `3cbf3378dffe52bed270eee7e338bb4fbfd552a5` passed CI run `29286654324` on Ubuntu, macOS and Windows after a contract-error-precedence portability defect was reproduced and fixed.
+- Residuals: native macOS/Windows, other architectures/providers, registry publication, automatic image acquisition, remote execution and image signing remain unsupported and owned by later governed tasks.
 
 ## Fixed decisions
 
@@ -41,13 +51,13 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The separately 
 - Targets do not change the v0.1 claim registry until conformance evidence exists.
 - Hidden/unobserved geometry remains unsupported as source evidence; reconstruction can only be an inference hypothesis.
 - Manual mesh calibration augments and never rewrites source coordinates.
-- ACX-12 is complete only for `oci-docker-v1` on `linux-container` with the digest-pinned reference runtime; native Linux/macOS and Windows profiles remain unsupported under ACXB-001.
+- ACX-12 is complete for its digest-pinned reference runtime; ACX-24 additionally proves exact Tesseract, OCP/OCCT and LibreDWG OCI targets on `linux/arm64` and `linux/amd64`. Native macOS/Windows, other architectures and unreviewed providers remain unsupported.
 - ACX-13 IFC claims are partial and limited to `docs/specs/ifc-v02-profile.md`; IFC4.1/4.2/4X3 and unlisted 2D/coordinate profiles remain unclaimed.
 - ACX-14 DXF claims are partial and limited to `docs/specs/dxf-v02-profile.md`; unlisted releases/entities, ACIS/proxy/custom interpretation and xref traversal remain unclaimed.
 - ACX-15 OCR is experimental and partial only for the exact English Tesseract/replay profile in `docs/specs/inference-v02-profile.md`; vision and hidden geometry remain unsupported.
 - ACX-16 mesh claims are partial only for self-contained OBJ/STL/glTF 2.0/GLB 2.0 through exact `trimesh==4.12.2`; manual registration remains manual/derived evidence and cannot establish survey authority.
-- ACX-17 STEP/IGES claims are experimental partial only for the exact AP203/AP214/AP242 edition-1 and IGES 5.3 corpus through `org.aecctx.step-iges.ocp@0.2.0`; XDE correlation, normalized styles/units/placements, source-exact BREP and other live platforms remain unsupported.
-- ACX-18 DWG is experimental partial only for self-contained `AC1015` through `org.aecctx.dwg.libredwg@0.2.0`, exact Linux-arm64 OCI or portable replay. JSON objects are observed decoder evidence; DXF/geometry are converted. Other releases/platforms, xrefs, ACIS/proxy/custom semantics, units/CRS and complete 3D remain unsupported/unknown.
+- ACX-17 STEP/IGES claims are experimental partial only for the exact AP203/AP214/AP242 edition-1 and IGES 5.3 corpus through `org.aecctx.step-iges.ocp@0.2.0`; ACX-24 proves its exact Linux arm64/amd64 target pair. XDE correlation, normalized styles/units/placements, source-exact BREP and other live platforms remain unsupported.
+- ACX-18 DWG is experimental partial only for self-contained `AC1015` through `org.aecctx.dwg.libredwg@0.2.0`, exact Linux arm64/amd64 OCI or portable replay. JSON objects are observed decoder evidence; DXF/geometry are converted. Other releases/platforms, xrefs, ACIS/proxy/custom semantics, units/CRS and complete 3D remain unsupported/unknown.
 - RVT is public `unsupported`; no provider is selected under ACXD-030 and deterministic v0.1 opaque fallback is anti-claim evidence only.
 - ACX-20 signing is public `partial` only for `detached-jws-ed25519-offline-v1`, valid v0.1/v0.2 packages, optional `cryptography>=45,<50` and explicit caller-owned registry/policy inputs. X.509, remote discovery/revocation, timestamps, countersignatures, implicit trust and universal authorization remain unsupported.
 - The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
@@ -168,7 +178,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The separately 
 
 ## Next implementation task
 
-None. The active expansion plan is terminal: ACX-23 is completed and no task is `pending-next` or `in_progress`. New functional work must begin with a governed debt/backlog analysis that converts residuals into acceptance-tested outcomes before implementation.
+ACX-25 is the sole `pending-next` task in the active post-v0.2 plan. It governs additional reviewed local enforcement profiles and must begin by satisfying its DoR and locking any new platform/provider decision in the governing profile and decision log. ACX-26 and later remain `pending`; no ACX-25 implementation is included in this handoff.
 
 ## Consumer integration planning entry point
 

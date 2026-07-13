@@ -14,6 +14,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SPEC = ROOT / "docs/specs/aec-context-package-spec.md"
 PLUGIN_SPEC = ROOT / "docs/specs/aec-context-plugin-contract.md"
 EXPANSION_SPEC = ROOT / "docs/specs/aecctx-capability-expansion-spec.md"
+POST_V02_SPEC = ROOT / "docs/specs/aecctx-post-v02-functional-debt-spec.md"
 PLAN = ROOT / "docs/implementation-plan.md"
 FIXTURE = ROOT / "fixtures/minimal-aecctx"
 
@@ -43,6 +44,7 @@ def check_required_files() -> None:
         SPEC,
         PLUGIN_SPEC,
         EXPANSION_SPEC,
+        POST_V02_SPEC,
         PLAN,
         ROOT / "schemas/v0.1/manifest.schema.json",
         ROOT / "schemas/v0.1/record.schema.json",
@@ -61,6 +63,8 @@ def check_required_files() -> None:
         ROOT / ".github/workflows/release-recovery.yml",
         ROOT / "conformance/v0.1/corpus.json",
         ROOT / "conformance/v0.2/claims.json",
+        ROOT / "conformance/v0.3/claims.json",
+        ROOT / "conformance/v0.3/provider-multiarch-corpus.json",
         ROOT / "conformance/v0.2/corpus.json",
         ROOT / "conformance/v0.2/provider-corpus.json",
         ROOT / "conformance/v0.2/ifc-corpus.json",
@@ -88,6 +92,7 @@ def check_required_files() -> None:
         ROOT / "docs/specs/dwg-v02-profile.md",
         ROOT / "docs/specs/rvt-v02-blocked-profile.md",
         ROOT / "docs/specs/signing-v1-profile.md",
+        ROOT / "docs/specs/provider-oci-multiarch-v03-profile.md",
         ROOT / "docs/security/signing-threat-model.md",
         ROOT / "docs/plans/acx-20-implementation.md",
         ROOT / "fixtures/v0.2/dxf/r2018-semantics-3d-ascii.dxf",
@@ -146,6 +151,11 @@ def check_authorities() -> None:
         if phrase not in expansion:
             fail(f"expansion spec missing authority phrase: {phrase}")
 
+    post_v02 = POST_V02_SPEC.read_text(encoding="utf-8")
+    for phrase in ["Functional result", "Gates and non-claims", "ACX-24", "ACX-38"]:
+        if phrase not in post_v02:
+            fail(f"post-v0.2 spec missing authority phrase: {phrase}")
+
     signing = (ROOT / "docs/specs/signing-v1-profile.md").read_text(encoding="utf-8")
     for phrase in [
         "Integrity, cryptographic validity, signer identity, verifier trust and policy authorization",
@@ -185,7 +195,7 @@ def check_authorities() -> None:
     if ledger.get("ACX-00") != "completed" or ledger.get("ACX-10") != "deferred":
         fail("implementation plan boundary tasks have invalid status")
     executable = [f"ACX-{number:02d}" for number in range(1, 10)] + [
-        f"ACX-{number:02d}" for number in range(11, 24)
+        f"ACX-{number:02d}" for number in range(11, 39)
     ]
     missing_tasks = [task for task in executable if task not in ledger]
     if missing_tasks:

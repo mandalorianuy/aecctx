@@ -36,8 +36,8 @@ class ClaimRegistryResult:
 
 def validate_claim_registry(registry: dict[str, Any]) -> ClaimRegistryResult:
     errors: list[str] = []
-    if registry.get("version") != "0.2.0":
-        errors.append("registry version must be 0.2.0")
+    if registry.get("version") not in {"0.2.0", "0.3.0"}:
+        errors.append("registry version must be 0.2.0 or 0.3.0")
     fixtures = registry.get("fixtures")
     fixture_ids: set[str] = set()
     if not isinstance(fixtures, list):

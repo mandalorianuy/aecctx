@@ -2,7 +2,14 @@
 
 from .macos import MacOSSeatbeltProfile
 from .oci import OCIDockerProfile
-from .models import ProviderDescriptor, ProviderExecutionError, ProviderLimits, ProviderRegistration
+from .models import (
+    OCIRuntimeTarget,
+    ProviderDescriptor,
+    ProviderExecutionError,
+    ProviderLimits,
+    ProviderRegistration,
+    resolve_oci_target,
+)
 from .protocol import (
     build_provider_request,
     provider_descriptor_digest,
@@ -37,6 +44,7 @@ from .dwg import (
 __all__ = [
     "MacOSSeatbeltProfile",
     "OCIDockerProfile",
+    "OCIRuntimeTarget",
     "ProviderDescriptor",
     "ProviderExecutionError",
     "ProviderLimits",
@@ -44,6 +52,7 @@ __all__ = [
     "ProviderReplay",
     "ProviderRegistry",
     "ProviderRunner",
+    "resolve_oci_target",
     "build_provider_request",
     "provider_descriptor_digest",
     "provider_response_payload_digest",
