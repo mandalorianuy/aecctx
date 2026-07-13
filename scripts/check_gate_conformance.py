@@ -105,8 +105,8 @@ def validate_gate_corpus(path: str | Path) -> tuple[str, ...]:
         errors.append("corpus version must be 1")
     if value.get("claim_id") != CLAIM_ID:
         errors.append("corpus claim_id mismatch")
-    if value.get("claim_status") != "target":
-        errors.append("corpus claim status must remain target")
+    if value.get("claim_status") != "public":
+        errors.append("corpus claim status must be public after ACX-21 acceptance")
     if value.get("maximum_support") != "partial":
         errors.append("corpus maximum support must be partial")
     if value.get("profile") != PROFILE:

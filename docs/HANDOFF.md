@@ -1,18 +1,18 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.2.0-ACX-21-TASK-08`
+Handoff status: `0.2.0-ACX-21-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Tasks 1-8 provide the closed gate runtime/CLI/projections plus a 27-case hash-bound offline conformance corpus, portable verification and clean-install packaging boundaries. Task 9 acceptance/publication and any public quality-gate claim remain pending. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and caller-owned offline trust evaluation. ACX-21 is completed: its exact 27-case `aecctx-gate-v1-ids-1.0-simple-v1` subset is public `partial` on Python 3.12 Linux/macOS/Windows. ACX-22 alone is `pending-next`. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. Execute only ACX-21, currently `in_progress`.
+4. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-21 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. Execute only ACX-22, currently `pending-next`, after explicit continuation.
 5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 6. Run `./scripts/verify.sh` before handoff.
 
@@ -41,7 +41,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - RVT is public `unsupported`; no provider is selected under ACXD-030 and deterministic v0.1 opaque fallback is anti-claim evidence only.
 - ACX-20 signing is public `partial` only for `detached-jws-ed25519-offline-v1`, valid v0.1/v0.2 packages, optional `cryptography>=45,<50` and explicit caller-owned registry/policy inputs. X.509, remote discovery/revocation, timestamps, countersignatures, implicit trust and universal authorization remain unsupported.
 - The ACX-21 quality gate reports policy conformance, never engineering or consumer approval.
-- ACXD-023 selects `aecctx-gate-v1`, exact-finding waivers, deterministic outcomes/exits and an optional bounded IDS v1.0 subset through `ifctester==0.8.5` plus `ifcopenshell==0.8.5`; the capability remains public `unsupported` until implementation evidence closes ACX-21.
+- ACX-21 is public `partial` only for `aecctx-gate-v1-ids-1.0-simple-v1` on Python 3.12 Linux/macOS/Windows, with optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`; unlisted combinations and all approval semantics remain unsupported.
 - The ACX-22 Codex plugin remains optional, local-first and semantically subordinate to library/CLI results.
 
 ## Explicitly deferred
@@ -128,11 +128,21 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - Claim boundary: `quality-gate.policy-ids` remains `target`, the capability matrix remains public `unsupported`, and Task 9 alone owns acceptance/publication and any promotion.
 - WoodFraming, consumer mapping, source mutation, network/LLM requirements and approval/certification semantics were not added.
 
+## ACX-21 Task 9 evidence
+
+- RED: the acceptance transition produced three expected failures while the claim registry and corpus still said `target` and the tests required public state.
+- GREEN: the atomic registry/corpus/generator/checker/test transition passes 14 focused claim/conformance tests; the focused gate/claim/package suite passes 205 tests.
+- Acceptance matrix: all 27 hash-bound corpus cases are unique, exact and byte-deterministic; clean core and `gate-ids` installs preserve dependency isolation with exact `ifctester==0.8.5` and `ifcopenshell==0.8.5` pins.
+- Repository gate: `./scripts/verify.sh` passes with 604 tests, 9 intentional skips, deterministic fixtures, wheel/sdist build, release verification and healthy baseline integration.
+- Publication boundary: only `aecctx-gate-v1-ids-1.0-simple-v1` is public `partial` on Python 3.12 Linux/macOS/Windows. Unlisted IDS combinations, approval/certification and consumer mappings remain unsupported.
+- The Task 9 acceptance candidate passed Ubuntu, macOS and Windows in [CI run 29264614149](https://github.com/mandalorianuy/aecctx/actions/runs/29264614149). Closure, merge and final documentation SHAs are recorded in `docs/evidence/ACX-21.md` after publication.
+- `/Users/facundo/desarrollo/woodframing` was not modified.
+
 ## Next implementation task
 
-ACX-21 Task 9 is `in_progress`: run acceptance, audit and publication exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). It is the only active task because Task 8 supplies the candidate corpus and packaging evidence required by its gates.
+ACX-22 is the sole `pending-next` task: implement the optional `aecctx-inspector` Codex plugin exactly as governed by [`docs/implementation-plan.md`](implementation-plan.md), with no unique AECCTX semantics.
 
-The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Task 8 added no public capability claim. Do not execute ACX-21 Task 9 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
+The normative quality-gate behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Do not execute ACX-22 until a new continuation request.
 
 ## Consumer integration planning entry point
 

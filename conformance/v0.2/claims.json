@@ -311,10 +311,10 @@
     },
     {
       "id": "quality-gate.policy-ids",
-      "status": "target",
-      "support_level": null,
+      "status": "public",
+      "support_level": "partial",
       "profile": "aecctx-gate-v1-ids-1.0-simple-v1",
-      "platform_scope": ["python-3.12-linux-macos-windows-candidate"],
+      "platform_scope": ["python-3.12-linux-macos-windows"],
       "provider_scope": "core policy gate; optional ifctester==0.8.5 plus ifcopenshell==0.8.5 for bounded IDS",
       "fixture_ids": ["v02-gate-acx21"],
       "test_ids": [

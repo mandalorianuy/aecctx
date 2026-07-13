@@ -2,7 +2,7 @@
 
 ## 1. Task status, commits and date
 
-- Status: `in_progress`; Task 9 local acceptance, claim audit and non-claim proof pass. Remote candidate/closure/merged-main gates and public claim promotion remain pending.
+- Status: `completed` acceptance decision; local acceptance, claim audit, non-claim proof and acceptance-candidate CI pass. Closure/merged-main publication validation remains in progress.
 - Date: 2026-07-13.
 - Task 8 implementation commit/merge identify the candidate only; Task 9 owns acceptance, exact-SHA publication evidence and any claim promotion.
 
@@ -20,7 +20,7 @@ The candidate contains closed schemas/models, strict bounded policy parsing, det
 
 | Candidate capability | Profile | Candidate ceiling | Current public state |
 |---|---|---|---|
-| `quality-gate.policy-ids` | `aecctx-gate-v1-ids-1.0-simple-v1` | bounded `partial` only after Task 9 acceptance | `target` / public `unsupported` |
+| `quality-gate.policy-ids` | `aecctx-gate-v1-ids-1.0-simple-v1` | bounded `partial` | `public partial` |
 
 The audited ceiling covers the core validation/integrity, capability, loss, explicit value-state, diagnostic, baseline-diff and waiver checks plus only the selected IDS v1.0 entity/attribute/classification/property/material simple-value cases. It is not a support promotion until the remaining exact-SHA gates pass.
 
@@ -47,6 +47,8 @@ Task 8 local evidence:
 
 Task 9 fresh local acceptance evidence:
 
+- claim-state RED: three expected failures while the governed registry/corpus remained `target`;
+- claim-state GREEN: 14 focused conformance/claim tests passed after the atomic public-partial transition;
 - focused gate/claim/package suite: 205 tests passed;
 - corpus checker: 27/27 unique cases matched exact expected results and deterministic bytes;
 - portable and full repository gates: 604 tests passed with 9 intentional skips in each run;
@@ -94,4 +96,4 @@ ACX-21 paths are confined to AECCTX runtime, fixtures, corpus, checker, tests, p
 
 ## 12. Promotion and publication conditions
 
-The complete local/clean-install matrix, claim audit and non-claim proof pass. Task 8 candidate `8f0db26ef4551308ab3e21a6229da7857d616afd` passed [CI run 29262094375](https://github.com/mandalorianuy/aecctx/actions/runs/29262094375); merged candidate `8befac453df9445ae48e54ca2b9b795f35c2d709` passed [CI run 29262864165](https://github.com/mandalorianuy/aecctx/actions/runs/29262864165). Task 9 still requires exact-SHA acceptance-candidate, closure and merged-main CI before promotion. Until then the claim remains `target` and the capability matrix remains `unsupported`; fixtures, docs, a green happy path or an earlier merge alone do not count as public support.
+The complete local/clean-install matrix, claim audit and non-claim proof pass. Task 8 candidate `8f0db26ef4551308ab3e21a6229da7857d616afd` passed [CI run 29262094375](https://github.com/mandalorianuy/aecctx/actions/runs/29262094375); merged candidate `8befac453df9445ae48e54ca2b9b795f35c2d709` passed [CI run 29262864165](https://github.com/mandalorianuy/aecctx/actions/runs/29262864165). Task 9 acceptance candidate `97d8c0b01f343cbd3fee5d0fd6d3be61dc40c48b` passed [CI run 29264614149](https://github.com/mandalorianuy/aecctx/actions/runs/29264614149) on Ubuntu, macOS and Windows. The audited exact subset is promoted to public `partial`; closure and merged-main exact-SHA evidence are recorded after publication. Fixtures, docs, a green happy path or an earlier merge alone do not count as support.
