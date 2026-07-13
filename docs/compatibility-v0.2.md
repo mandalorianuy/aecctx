@@ -1,7 +1,7 @@
 # AECCTX v0.2 Compatibility and Migration
 
 Date: 2026-07-12
-Status: ACX-11 contract with ACX-13 through ACX-20 bounded profiles
+Status: released reference implementation 0.2.0 with ACX-11 through ACX-22 bounded profiles
 Decision authority: ACXD-017
 
 ## Version matrix
@@ -15,7 +15,7 @@ Decision authority: ACXD-017
 | unknown required extension | not applicable | invalid with `AECCTX_REQUIRED_EXTENSION_UNSUPPORTED` |
 | unknown optional namespaced extension | governed by v0.1 contract | accepted as package data; retained when explicitly passed through a lossless rewrite |
 
-The reference implementation remains version `0.1.0` until the governed expansion release. Supporting v0.2 schemas in ACX-11 is a bounded compatibility capability. ACX-13 through ACX-18 add opt-in v0.2 producers for exact IFC, DXF, PDF/image inference, mesh coordinate, STEP/IGES and R2000 DWG profiles; they do not imply other DWG versions, other v0.2 format adapters, vision support, survey authority or source-exact translated BREP.
+The reference implementation is version `0.2.0` after ACX-23. It reads valid v0.1 and v0.2 packages; v0.1 schemas and logical identity remain unchanged. ACX-13 through ACX-18 provide opt-in v0.2 producers for exact IFC, DXF, PDF/image inference, mesh coordinate, STEP/IGES and R2000 DWG profiles; they do not imply other DWG versions, other v0.2 format adapters, vision support, survey authority or source-exact translated BREP.
 
 ACX-20 adds an optional detached signing sidecar profile without changing either package version. Unsigned v0.1/v0.2 packages remain valid and all existing read/query/diff/context behavior is unchanged.
 

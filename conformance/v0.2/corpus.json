@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "claims": "conformance/v0.2/claims.json",
+  "expected": {
+    "claim_registry": "all non-target claims mapped",
+    "gate_corpus": "27 deterministic cases match",
+    "plugin_corpus": "manifest, parity and adversarial checks pass",
+    "rvt": "unsupported with deterministic opaque anti-claim"
+  },
+  "blocked_tasks": ["ACX-19"],
+  "suites": [
+    {"id": "claims", "path": "conformance/v0.2/claims.json", "sha256": "e597fab92de1be0371dc171c9d3a2b1ec70060bd73f3f44210dddd34851e58b7"},
+    {"id": "provider", "path": "conformance/v0.2/provider-corpus.json", "sha256": "d755347e4cce41e86ce079184acc631d10f30b6b70b0921010d90767c7067ca4"},
+    {"id": "ifc", "path": "conformance/v0.2/ifc-corpus.json", "sha256": "5c91c5f6976cddf4e3dfc00f3a6c130da1cc0cdb9a90cb54cbaef5699d4c90de"},
+    {"id": "dxf", "path": "conformance/v0.2/dxf-corpus.json", "sha256": "024f824c86138cdb50ce22ad9dfba7d22ba4fef0c29cfb7e8772f10ed107c24d"},
+    {"id": "inference", "path": "conformance/v0.2/inference-corpus.json", "sha256": "88e106e64b21e0f2441a71e99ee674d7c7358815c374498954fdf2830c9729a4"},
+    {"id": "mesh", "path": "conformance/v0.2/mesh-corpus.json", "sha256": "62f1a88342809afb2c196fc86563635e624fc772b81a6ebba12d82b7e90a4b03"},
+    {"id": "step-iges", "path": "conformance/v0.2/step-iges-corpus.json", "sha256": "2c0aa9781526aae27a723b2c491d3bdacbcafca43e9c105c21378d3069b2c4b5"},
+    {"id": "dwg", "path": "conformance/v0.2/dwg-corpus.json", "sha256": "7f691f2e25c664e683cf299793323281be8e173196307c7e07d910f3e52ab802"},
+    {"id": "rvt-blocked", "path": "conformance/v0.2/rvt-provider-decision.json", "sha256": "d7bc7e0b8f14b9c41e4914675fddb967d1e14d934bd33dd0c8decc05e46f4fa8"},
+    {"id": "signing", "path": "conformance/v0.2/signing-corpus.json", "sha256": "ee4362c1ce21692b2634f289a9ac4da8ba98f33a9eb7cc0d72bb24ca856a3eee"},
+    {"id": "gate", "path": "conformance/v0.2/gate-corpus.json", "sha256": "15e018f2ed8f294c452ef6d1280530ade7fbb4b0438341e8fbf04c1442d65092"},
+    {"id": "plugin", "path": "conformance/v0.2/plugin-corpus.json", "sha256": "c174ef3811ee6cacb6acc51c10e181b27f02a0da616d1e7c59ccc098112994c4"}
+  ]
+}
+

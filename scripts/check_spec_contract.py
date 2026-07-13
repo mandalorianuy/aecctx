@@ -60,6 +60,7 @@ def check_required_files() -> None:
         ROOT / "scripts/verify_release.sh",
         ROOT / "conformance/v0.1/corpus.json",
         ROOT / "conformance/v0.2/claims.json",
+        ROOT / "conformance/v0.2/corpus.json",
         ROOT / "conformance/v0.2/provider-corpus.json",
         ROOT / "conformance/v0.2/ifc-corpus.json",
         ROOT / "conformance/v0.2/dxf-corpus.json",
@@ -103,6 +104,11 @@ def check_required_files() -> None:
         ROOT / "docs/compatibility.md",
         ROOT / "docs/compatibility-v0.2.md",
         ROOT / "docs/releases/v0.1.0.md",
+        ROOT / "docs/releases/v0.2.0.md",
+        ROOT / "docs/release/v0.2.0-evidence-index.md",
+        ROOT / "docs/release/v0.2.0-supply-chain.md",
+        ROOT / "docs/evidence/ACX-23.md",
+        ROOT / "docs/plans/acx-23-implementation.md",
     ]
     missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
     if missing:
