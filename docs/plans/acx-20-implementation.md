@@ -473,6 +473,8 @@ Expected: all signing cases pass, 282 pre-ACX-20 tests remain non-regressed, whe
 
 ### Task 8: Evidence, capability promotion, full gates and publication
 
+**Checkpoint:** Completed 2026-07-12. The 128-case signing suite, 24/24 offline corpus, schema mirrors, deterministic regeneration, secret/path/header/no-network slices and clean-install matrix passed. Full closure and post-merge `./scripts/verify.sh` each passed 412 tests with 9 expected opt-in skips plus wheel/sdist, portable, release and baseline gates. Candidate CI `29215674309`, closure CI `29215917384` and merged-main CI `29216064114` passed on Ubuntu, macOS and Windows. The claim is bounded public `partial`, ACX-20 is `completed`, ACX-21 alone is `pending-next`, and no ACX-21 implementation or release tag was created.
+
 **Files:**
 - Create: `docs/evidence/ACX-20.md`
 - Modify: `README.md`
@@ -508,9 +510,9 @@ Expected: every command exits 0; no generated timestamp/unrelated diff remains.
 
 - [x] **Step 5: Promote only after candidate CI is green.** Change the claim from `target` to the exact bounded public support state, set ACX-20 `completed`, promote only ACX-21 to `pending-next`, update handoff/evidence/this plan, rerun `check_spec_contract.py` and `verify.sh`, and commit as `docs: close ACX-20 signing milestone`.
 
-- [ ] **Step 6: Publish and validate the closure commit.** Push the branch, require green Ubuntu/macOS/Windows CI for the closure SHA, then merge `codex/acx-20-signing` into `main` with `--no-ff`, rerun `./scripts/verify.sh`, push `main` and require green main CI. Do not execute ACX-21.
+- [x] **Step 6: Publish and validate the closure commit.** Push the branch, require green Ubuntu/macOS/Windows CI for the closure SHA, then merge `codex/acx-20-signing` into `main` with `--no-ff`, rerun `./scripts/verify.sh`, push `main` and require green main CI. Do not execute ACX-21.
 
-- [ ] **Step 7: Record final publication evidence without changing claims.** If the evidence file lacks final branch/main run IDs, add one documentation-only commit, push it and require its CI green. Do not rewrite published history or tag a release; release authority remains ACX-23.
+- [x] **Step 7: Record final publication evidence without changing claims.** If the evidence file lacks final branch/main run IDs, add one documentation-only commit, push it and require its CI green. Do not rewrite published history or tag a release; release authority remains ACX-23.
 
 ## Plan self-review
 

@@ -7,7 +7,8 @@
 - Design/plan commits: `692a608`, `06b0104`.
 - Implementation commits: `8c2aa5a`, `b830e12`, `52424bc`, `7599cde`, `f73e045`, `d1041df`, `b42271f`.
 - Candidate commit: `e01490606238fb3a7c2a1437f7f030bd27af1d9b`.
-- Closure and main publication commits/runs are recorded in section 12 after their exact SHAs pass CI.
+- Closure commit: `02aa249603f4c4c99cef66d9a1341eeed3df41c0`.
+- Main merge commit: `97fc57dd5110211310c5c021fa0c3a61b0383ed9`.
 
 ## 2. Normative coverage
 
@@ -111,7 +112,8 @@ The authoritative corpus SHA-256 is `ee4362c1ce21692b2634f289a9ac4da8ba98f33a9eb
 - Candidate CI `29215674309` for `e014906`: Ubuntu `86710961584`, macOS `86710961582`, Windows `86710961580`, all passed.
 - Fresh closure `./scripts/verify.sh`: 412 passed with nine expected opt-in skips; wheel/sdist, portable, baseline, RVT anti-claim and release gates passed; final `aecctx verify: ok`.
 - Closure wheel SHA-256: `37918e608338f452275ee47d1c61095b2013b9dc34b4fa19232203954a3f5a1f`; closure sdist SHA-256: `63c75448c5f17b7bb72bc5818f9362b685854d57cbb9530a97f7bd0c8968c507`.
-- Closure and merged-main CI remain required by section 12 after the bounded promotion.
+- Closure CI `29215917384` for `02aa249`: Ubuntu `86711668965`, macOS `86711668961`, Windows `86711668950`, all passed.
+- Merged-main CI `29216064114` for `97fc57d`: Ubuntu `86712088058`, macOS `86712088055`, Windows `86712088050`, all passed.
 
 ## 7. Determinism and reproducibility
 
@@ -144,8 +146,8 @@ All ACX-20 changed paths are within `/Users/facundo/desarrollo/aecctx`. Executab
 
 ## 12. Promotion and publication
 
-Candidate gate satisfied: `e014906` passed exact-SHA Ubuntu, macOS and Windows CI. The bounded `package.authenticity-signing` claim is promoted to public `partial`, ACX-20 is `completed`, and ACX-21 alone is `pending-next`. No merge has occurred yet.
+Publication gates satisfied: candidate `e014906`, closure `02aa249` and merged main `97fc57d` each passed exact-SHA Ubuntu, macOS and Windows CI. The bounded `package.authenticity-signing` claim is public `partial`, ACX-20 is `completed`, and ACX-21 alone is `pending-next`.
 
-The closure SHA must pass all three CI jobs before a `--no-ff` merge to `main`; the merged main SHA then requires fresh maintainer verification and green main CI. ACX-21 is not executed. No tag or release is authorized here; ACX-23 owns release authority.
+The feature branch was merged to `main` with `--no-ff`; fresh maintainer verification and merged-main CI passed. ACX-21 was not executed. No tag or release was created; ACX-23 owns release authority.
 
 Documentation without those exact candidate, closure and main gates; an unmapped fixture; test-only keys; a happy-path signature; or a cryptographically valid but policy-unevaluated signature does not count as public authenticity support.
