@@ -2,9 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
-import tempfile
 from collections import Counter
 from pathlib import Path
 from typing import Any, Sequence
@@ -59,37 +57,59 @@ def _emit_signing_error(error: Exception, *, as_json: bool) -> int:
 
 
 def _write_new_sidecar(path: str | Path, data: bytes) -> None:
+    from ._atomic import AtomicCreateError, atomic_create
     from .signing import SigningError
 
-    output = Path(path)
-    if output.exists() or output.is_symlink():
-        raise SigningError("AECCTX_SIGNING_OUTPUT_EXISTS", "signing output already exists")
-    temporary_path: Path | None = None
     try:
-        descriptor, temporary_name = tempfile.mkstemp(dir=output.parent, prefix=f".{output.name}.")
-        temporary_path = Path(temporary_name)
-        try:
-            os.chmod(temporary_path, 0o600)
-            with os.fdopen(descriptor, "wb") as handle:
-                descriptor = -1
-                handle.write(data)
-                handle.flush()
-                os.fsync(handle.fileno())
-        finally:
-            if descriptor >= 0:
-                os.close(descriptor)
-        if output.exists() or output.is_symlink():
-            raise SigningError("AECCTX_SIGNING_OUTPUT_EXISTS", "signing output already exists")
-        os.link(temporary_path, output)
-    except FileExistsError as error:
-        raise SigningError("AECCTX_SIGNING_OUTPUT_EXISTS", "signing output already exists") from error
-    except SigningError:
-        raise
-    except OSError as error:
+        atomic_create(path, data)
+    except AtomicCreateError as error:
+        if error.reason == "exists":
+            raise SigningError("AECCTX_SIGNING_OUTPUT_EXISTS", "signing output already exists") from error
         raise SigningError("AECCTX_SIGNING_OUTPUT_FAILED", "signing output could not be published safely") from error
-    finally:
-        if temporary_path is not None:
-            temporary_path.unlink(missing_ok=True)
+
+
+def _emit_gate_error(error: Exception, *, as_json: bool) -> int:
+    from .gate import GateError, canonical_gate_json
+
+    code = error.code if isinstance(error, GateError) else "AECCTX_GATE_OPERATION_FAILED"
+    message = str(error) if isinstance(error, GateError) else "gate operation failed safely"
+    diagnostic = {"code": code, "message": message, "severity": "error"}
+    if as_json:
+        sys.stdout.buffer.write(canonical_gate_json(_envelope(False, None, [diagnostic])))
+    else:
+        print(f"{code}: {message}", file=sys.stderr)
+    return 2
+
+
+def _preflight_gate_outputs(arguments: argparse.Namespace) -> tuple[tuple[Path, str], ...]:
+    from .gate import GateError
+
+    requested = tuple(
+        (Path(value), kind)
+        for value, kind in (
+            (arguments.output, "result"),
+            (arguments.markdown, "markdown"),
+            (arguments.ci_annotations, "ci"),
+        )
+        if value is not None
+    )
+    outputs = tuple(path.resolve(strict=False) for path, _kind in requested)
+    inputs = tuple(
+        Path(value).resolve(strict=False)
+        for value in (
+            arguments.package,
+            arguments.policy,
+            arguments.baseline,
+            arguments.ids,
+            arguments.ifc_source,
+        )
+        if value is not None
+    )
+    if len(set(outputs)) != len(outputs) or any(output in inputs for output in outputs):
+        raise GateError("AECCTX_GATE_OUTPUT_CONFLICT", "gate inputs and outputs must be distinct")
+    if any(path.exists() or path.is_symlink() for path, _kind in requested):
+        raise GateError("AECCTX_GATE_OUTPUT_EXISTS", "gate output already exists")
+    return requested
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -143,6 +163,16 @@ def build_parser() -> argparse.ArgumentParser:
     verify_signatures.add_argument("--key-registry", required=True)
     verify_signatures.add_argument("--trust-policy")
     verify_signatures.add_argument("--json", action="store_true", dest="as_json")
+    gate = subparsers.add_parser("gate")
+    gate.add_argument("package")
+    gate.add_argument("--policy", required=True)
+    gate.add_argument("--baseline")
+    gate.add_argument("--ids")
+    gate.add_argument("--ifc-source")
+    gate.add_argument("--output")
+    gate.add_argument("--markdown")
+    gate.add_argument("--ci-annotations")
+    gate.add_argument("--json", action="store_true", dest="as_json")
     return parser
 
 
@@ -154,6 +184,60 @@ def main(argv: Sequence[str] | None = None) -> int:
         else:
             print(__version__)
         return 0
+    if arguments.command == "gate":
+        from ._atomic import AtomicCreateError, atomic_create_many
+        from .gate import (
+            GateError,
+            GateLimits,
+            canonical_gate_json,
+            evaluate_gate,
+            load_gate_policy,
+            read_gate_document,
+            render_ci_annotations,
+            render_gate_markdown,
+        )
+
+        limits = GateLimits()
+        try:
+            requested = _preflight_gate_outputs(arguments)
+            policy = load_gate_policy(
+                read_gate_document(
+                    arguments.policy,
+                    maximum_bytes=limits.max_policy_bytes,
+                    label="gate policy",
+                ),
+                limits=limits,
+            )
+            result = evaluate_gate(
+                arguments.package,
+                policy,
+                baseline_package=arguments.baseline,
+                ids_document=arguments.ids,
+                ifc_source=arguments.ifc_source,
+                limits=limits,
+            )
+            output_data = {
+                "result": result.canonical_bytes(),
+                "markdown": render_gate_markdown(result),
+                "ci": render_ci_annotations(result),
+            }
+            atomic_create_many(tuple((path, output_data[kind]) for path, kind in requested))
+        except AtomicCreateError as error:
+            code = "AECCTX_GATE_OUTPUT_EXISTS" if error.reason == "exists" else "AECCTX_GATE_OUTPUT_FAILED"
+            return _emit_gate_error(GateError(code, "gate output could not be published safely"), as_json=arguments.as_json)
+        except (GateError, OSError, TypeError, ValueError) as error:
+            return _emit_gate_error(error, as_json=arguments.as_json)
+
+        data = result.to_dict()
+        diagnostics = [item.to_dict() for item in result.diagnostics]
+        if arguments.as_json:
+            sys.stdout.buffer.write(canonical_gate_json(_envelope(True, data, diagnostics)))
+        else:
+            print(
+                f"AECCTX gate outcome={result.outcome} exit={result.exit_code}; "
+                "projection only; canonical GateResult is authority"
+            )
+        return result.exit_code
     if arguments.command == "sign":
         from ._signing_io import read_bounded_regular_file
         from .signing import SigningError, SigningLimits, append_signature, parse_signature_bundle, sign_package

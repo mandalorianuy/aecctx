@@ -43,6 +43,12 @@ python -m pip install '.[signing]'
 
 Core validation and unsigned packages do not require the signing extra.
 
+The in-progress delivery-gate line can be exercised from the current source checkout. Bounded IDS evaluation is optional:
+
+```bash
+python -m pip install -e '.[gate-ids]'
+```
+
 ## Status and authority
 
 - Format specification: [`docs/specs/aec-context-package-spec.md`](docs/specs/aec-context-package-spec.md)
@@ -72,7 +78,17 @@ aecctx sign building.aecctx --private-key signer.pem --kid project-key-1 \
 aecctx verify-signatures building.aecctx \
   --signature-bundle building.signatures.json \
   --key-registry registry.json --trust-policy policy.json --json
+
+# Deterministic delivery-gate evaluation. Exit: pass=0, fail/review=1, error=2.
+aecctx gate building.aecctx --policy delivery-policy.json --json
+aecctx gate building.aecctx --policy delivery-policy.json \
+  --baseline previous.aecctx \
+  --output gate-result.json \
+  --markdown gate-result.md \
+  --ci-annotations gate-annotations.jsonl
 ```
+
+`gate-result.json` is the canonical result. Markdown and provider-neutral JSONL annotations are generated projections only; neither grants engineering approval nor overrides package evidence. Output paths are create-only and inputs are treated as untrusted data. ACX-21 remains an unsupported public capability until its conformance corpus and final acceptance tasks are complete.
 
 Unknown inputs use the honest opaque fallback. IFC, DXF, PDF, image and OBJ/STL/glTF content are selected by bounded content probes; `--adapter` can make the choice explicit.
 
