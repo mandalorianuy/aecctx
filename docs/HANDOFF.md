@@ -1,20 +1,30 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.2.0-RELEASED-PLAN-COMPLETE`
+Handoff status: `0.3.0-FUNCTIONAL-DEBT-PLAN-READY`
 
 ## Outcome
 
-AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. ACX-11 through ACX-18 provide the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles; ACX-19 is documented `blocked`; ACX-20 through ACX-22 provide signing, quality gate and the optional inspector plugin; ACX-23 closes claim-complete packaging and publication. There is no `pending-next` task. WoodFraming integration remains intentionally deferred and consumer-owned.
+AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The separately approved post-v0.2 functional-debt specification and implementation plan govern ACX-24 through ACX-38. ACX-24 alone is `pending-next`; no implementation has started. WoodFraming integration remains intentionally deferred and consumer-owned.
 
 ## Start here
 
 1. Read `AGENTS.md`.
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
-4. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-23 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. No implementation task is currently authorized.
-5. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
-6. Run `./scripts/verify.sh` before handoff.
+4. Read `docs/specs/aecctx-post-v02-functional-debt-spec.md` and `docs/plans/post-v02-functional-debt-implementation.md` completely.
+5. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-23 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-24 is the only authorized next task and has not started.
+6. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
+7. Run `./scripts/verify.sh` before handoff.
+
+## Active post-v0.2 plan
+
+- Plan: ACX-24 through ACX-38, dependency-first.
+- Sole `pending-next`: ACX-24, live OCI providers on Linux arm64 and amd64.
+- ACX-25 through ACX-38: `pending`.
+- Claim posture: all `0.2.0` claims remain authoritative; post-v0.2 entries are targets until their owning milestones close.
+- Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
+- Execution pause: this handoff authorizes selection of ACX-24 only. Do not begin it without a new continuation request.
 
 ## Fixed decisions
 

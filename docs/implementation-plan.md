@@ -2,7 +2,7 @@
 
 Date: 2026-07-13
 Status: Active implementation authority
-Specification readiness: `0.2.0-EXPANSION-SPEC-READY`
+Specification readiness: `0.3.0-FUNCTIONAL-DEBT-PLAN-READY`
 
 ## Execution rule
 
@@ -107,6 +107,20 @@ ACX-11 schemas/claims
 
 ACX-13 through ACX-16 consume ACX-11. ACX-15, ACX-17 when restricted, ACX-18 and ACX-19 consume ACX-12. ACX-21 consumes the stable capability/loss, diff, validation and optional signing results. ACX-22 consumes only stable library/CLI/MCP/gate behavior. ACX-23 consumes all completed or documented-blocked outcomes.
 
+The accepted post-v0.2 dependency line is:
+
+```text
+ACX-24 OCI multiarch
+  -> ACX-25 local enforcement
+  -> ACX-26 remote providers
+  -> ACX-27..31 open-format and inference expansion
+  -> ACX-32..34 kernel/proprietary formats
+  -> ACX-35..37 trust, gate and distribution
+  -> ACX-38 aggregate conformance and release
+```
+
+ACX-24 through ACX-38 are governed by `docs/specs/aecctx-post-v02-functional-debt-spec.md` and the detailed execution plan `docs/plans/post-v02-functional-debt-implementation.md`. They reuse v0.2 shared evidence and namespaced extensions. If an owning task needs to modify a standard v0.2 field, only that task stops until a compatibility/schema/migration decision is accepted.
+
 ## Specification traceability
 
 | Expansion spec section | Owning task | Required durable output |
@@ -169,6 +183,21 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-21 | completed | Bounded deterministic policy/IDS quality gate is public partial under the exact accepted profile |
 | ACX-22 | completed | Optional `aecctx-inspector-v1` plugin is public partial with parity/adversarial/install evidence |
 | ACX-23 | completed | Expansion conformance corpus, packaging, documentation and `0.2.0` release |
+| ACX-24 | pending-next | Live OCI providers on Linux arm64 and amd64 with cross-architecture equivalence |
+| ACX-25 | pending | Additional reviewed local enforcement profiles |
+| ACX-26 | pending | Optional remote/customer-managed provider protocol |
+| ACX-27 | pending | Expanded IFC 2D and georeferencing profiles |
+| ACX-28 | pending | Expanded DXF semantics, geometry and bounded xrefs |
+| ACX-29 | pending | Multilingual and layout-aware OCR profiles |
+| ACX-30 | pending | Bounded vision inference and reconstruction hypotheses |
+| ACX-31 | pending | Mesh CRS registry and datum-operation qualification |
+| ACX-32 | pending | STEP/IGES XDE and fidelity expansion |
+| ACX-33 | pending | DWG version, xref, units and geometry expansion |
+| ACX-34 | pending | RVT provider reopening or renewed executable blocker |
+| ACX-35 | pending | Advanced optional signing and trust profiles |
+| ACX-36 | pending | Expanded bounded IDS and quality-gate profiles |
+| ACX-37 | pending | Inspector distribution and host portability |
+| ACX-38 | pending | Aggregate conformance, packaging and `0.3.0` release |
 
 ## ACX-00: Specification and repository foundation
 
@@ -889,3 +918,21 @@ Acceptance:
 Evidence: [`docs/evidence/ACX-23.md`](evidence/ACX-23.md).
 
 Completion resolution: AECCTX `0.2.0` is released from immutable tag `v0.2.0` with 23/23 non-target claims mapped to evidence, one explicit future target, ACX-19 documented blocked, deterministic plugin/checksum metadata, SPDX SBOM, clean core/all-extras installation and verified public assets. A GNU-tar `pipefail` portability defect discovered by the first tag workflow was root-caused, regression-tested and corrected without moving or deleting the tag; the governed recovery workflow rebuilt from that exact tag and published the verified release. No task is promoted to `pending-next`. ACX-10 remains deferred and consumer-owned planning begins only from `docs/integration/woodframing-boundary.md` under a future separately accepted plan.
+
+## ACX-24 through ACX-38: Post-v0.2 functional debt program
+
+Normative specification: [`docs/specs/aecctx-post-v02-functional-debt-spec.md`](specs/aecctx-post-v02-functional-debt-spec.md), accepted under ACXD-031.
+
+Detailed implementation authority: [`docs/plans/post-v02-functional-debt-implementation.md`](plans/post-v02-functional-debt-implementation.md). Its file ownership, interfaces, TDD cuts, fixtures, claims, provider/security/license gates and exact closure commands are subordinate to this ledger and the normative spec.
+
+Program rules:
+
+- ACX-24 alone is `pending-next`; no later ACX may execute or borrow scope.
+- Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
+- Replay cannot satisfy a live platform/provider acceptance item.
+- A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.
+- An unavailable provider, platform, entitlement or legally publishable fixture may close only the affected task as documented `blocked` with executable anti-claim evidence.
+- ACX-38 excludes every target, blocked or unmapped capability from release claims.
+- ACX-10 remains `deferred`; the post-v0.2 program includes no WoodFraming or consumer work.
+
+Promotion note: ACX-23 historically closed the v0.2 line with no successor. The separately accepted ACXD-031 post-v0.2 program now promotes ACX-24; this does not alter ACX-23 evidence or `v0.2.0` claims.

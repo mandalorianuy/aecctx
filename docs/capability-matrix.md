@@ -3,6 +3,8 @@
 Date: 2026-07-13
 Status: v0.2.0 release claims plus explicit unsupported and future targets
 
+The accepted post-v0.2 roadmap is governed by `docs/specs/aecctx-post-v02-functional-debt-spec.md` and `docs/plans/post-v02-functional-debt-implementation.md`. Its entries remain targets and do not change any support level in this matrix until the owning ACX closes with conformance evidence.
+
 ## Support levels
 
 | Level | Meaning |
