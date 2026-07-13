@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping
 
-from .models import ProviderExecutionError, ProviderLimits, ProviderRegistration
+from .models import ProviderExecutionError, ProviderLimits, ProviderRegistration, resolve_oci_target
 
 
 @dataclass(frozen=True, slots=True)
@@ -16,6 +16,8 @@ class OCIDockerProfile:
     docker_executable: Path = Path("/usr/local/bin/docker")
     image: str = DEFAULT_IMAGE
     profile_id: str = "oci-docker-v1"
+    platform: str | None = None
+    architecture: str | None = None
 
     @staticmethod
     def _pids_limit(registration: ProviderRegistration) -> int:
@@ -29,6 +31,7 @@ class OCIDockerProfile:
 
     def preflight(self, registration: ProviderRegistration) -> None:
         self._pids_limit(registration)
+        multiarch_selected = self.platform is not None and self.architecture is not None
         descriptor = registration.descriptor
         if not self.docker_executable.is_file() or not os.access(self.docker_executable, os.X_OK):
             raise ProviderExecutionError("AECCTX_PROVIDER_PROFILE_UNAVAILABLE", "Reviewed Docker runtime is unavailable")
@@ -36,9 +39,22 @@ class OCIDockerProfile:
             raise ProviderExecutionError("AECCTX_PROVIDER_PROFILE_MISMATCH", "Provider descriptor does not admit the OCI profile")
         if descriptor.network_mode != "disabled":
             raise ProviderExecutionError("AECCTX_PROVIDER_NETWORK_POLICY_UNSUPPORTED", "Reference OCI profile requires network_mode=disabled")
-        if registration.container_image != self.image:
+        if registration.oci_targets and multiarch_selected:
+            target = resolve_oci_target(registration, self.platform, self.architecture)
+            if target.image != self.image:
+                raise ProviderExecutionError("AECCTX_PROVIDER_IMAGE_UNPINNED", "Provider image must match the reviewed architecture target")
+            local_image_id = target.image_id
+        elif registration.container_image == self.image and self.platform is None and self.architecture is None:
+            if registration.container_image != self.image:
+                raise ProviderExecutionError("AECCTX_PROVIDER_IMAGE_UNPINNED", "Provider image must match the reviewed image registration")
+            local_image_id = registration.container_image_id
+        elif registration.oci_targets:
+            raise ProviderExecutionError(
+                "AECCTX_PROVIDER_ARCHITECTURE_UNSUPPORTED",
+                "Multi-architecture OCI providers require an explicit reviewed platform and architecture target",
+            )
+        else:
             raise ProviderExecutionError("AECCTX_PROVIDER_IMAGE_UNPINNED", "Provider image must match the reviewed image registration")
-        local_image_id = registration.container_image_id
         if "@sha256:" not in self.image and local_image_id is None:
             raise ProviderExecutionError("AECCTX_PROVIDER_IMAGE_UNPINNED", "Mutable image tags require an allowlisted immutable local image ID")
         if local_image_id is not None:
@@ -56,7 +72,14 @@ class OCIDockerProfile:
                 timeout=5,
             )
             image = subprocess.run(
-                [str(self.docker_executable), "image", "inspect", "--format", "{{.Id}}", self.image],
+                [
+                    str(self.docker_executable),
+                    "image",
+                    "inspect",
+                    "--format",
+                    "{{.Id}} {{.Os}} {{.Architecture}}",
+                    self.image,
+                ],
                 check=False,
                 capture_output=True,
                 text=True,
@@ -69,8 +92,22 @@ class OCIDockerProfile:
                 "AECCTX_PROVIDER_PROFILE_UNAVAILABLE",
                 "Reviewed Linux-container runtime or digest-pinned image is unavailable; images are never pulled implicitly",
             )
-        if local_image_id is not None and image.stdout.strip() != local_image_id:
+        image_fields = image.stdout.strip().split()
+        if not image_fields or (multiarch_selected and len(image_fields) != 3):
+            raise ProviderExecutionError(
+                "AECCTX_PROVIDER_PROFILE_UNAVAILABLE",
+                "Reviewed provider image identity, OS and architecture are unavailable",
+            )
+        image_id = image_fields[0]
+        if local_image_id is not None and image_id != local_image_id:
             raise ProviderExecutionError("AECCTX_PROVIDER_IMAGE_DIGEST_MISMATCH", "Installed provider image ID does not match the reviewed registration")
+        if self.platform is not None and self.architecture is not None and (
+            len(image_fields) != 3 or image_fields[1] != self.platform or image_fields[2] != self.architecture
+        ):
+            raise ProviderExecutionError(
+                "AECCTX_PROVIDER_ARCHITECTURE_UNSUPPORTED",
+                "Installed provider image does not match the reviewed OS and architecture target",
+            )
 
     def command(
         self,

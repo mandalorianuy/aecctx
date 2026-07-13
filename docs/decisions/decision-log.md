@@ -233,3 +233,16 @@ None.
 - Claim rule: public support may advance only for exact profile, dependency, provider and platform combinations with legally publishable fixtures and mapped conformance. Existing `0.2.0` claims remain unchanged until a future owning task completes.
 - Sequencing consequence: the subordinate implementation plan may promote only ACX-24 to `pending-next`; ACX-25 through ACX-38 remain `pending`, ACX-10 remains `deferred`, and no implementation begins from this decision alone.
 - Boundary: WoodFraming and all consumer mappings remain outside AECCTX.
+
+### ACXD-032: Architecture-bound OCI provider targets
+
+- Date: 2026-07-13.
+- Status: Accepted for ACX-24 implementation; it creates no capability claim until the live matrix passes.
+- Platform decision: the reviewed target set is exactly `linux/arm64` and `linux/amd64`. The host operating system is not a claim axis; native macOS and Windows provider execution remain unsupported. Emulation is admissible only when Docker reports the executed image itself as the requested Linux architecture.
+- Provider decision: ACX-24 covers only `org.aecctx.ocr.tesseract-tsv@0.2.0`, `org.aecctx.step-iges.ocp@0.2.0` and `org.aecctx.dwg.libredwg@0.2.0`, using respectively Tesseract 5.3.4 with English data, cadquery-ocp 7.9.3.1.1 with OCCT 7.9.3, and LibreDWG 0.13.4. No new format, extraction or inference semantics are introduced.
+- Identity decision: each registration binds an exact `(os, architecture, image tag, local image ID)` target. Runtime selection is explicit and exact; unknown targets, target/image architecture mismatch and image-ID drift fail closed. AECCTX never pulls, builds or chooses another architecture implicitly.
+- Attestation decision: normalized live evidence records provider ID/version, platform, architecture, immutable local image ID, base manifest digest, dependency versions, build-recipe digest, source/archive or package-lock digests, request/response/artifact digests and enforced sandbox axes. Host paths, timestamps, builder names and other machine-local values are excluded.
+- Equivalence decision: the same governed positive fixture and configuration must produce byte-identical canonical response, ordered events and artifacts across both architectures after removing only the normalized attestation fields `architecture` and `image_id`. Diagnostics, value states, evidence lineage and loss reports are never normalized away.
+- Build and distribution decision: the repository publishes reviewed recipes and deterministic receipts but does not push provider images. Tesseract remains Apache-2.0 plus HPND dependencies, OCP/OCCT remains behind the Apache/LGPL-with-exception external boundary, and LibreDWG remains GPL-3.0-or-later behind the process boundary. Image distributors remain responsible for SBOM, notices, corresponding source and replacement obligations applicable to their distribution.
+- Claim decision: replay validates portability of evidence only. `sandbox.oci-multiarch` may become public partial solely after all six provider/architecture combinations pass live positive, equivalence and adversarial gates with publishable fixtures and bound receipts.
+- Evidence owner: `docs/specs/provider-oci-multiarch-v03-profile.md`, `conformance/v0.3/provider-multiarch-corpus.json`, `scripts/verify_provider_matrix.sh` and `docs/evidence/ACX-24.md`.

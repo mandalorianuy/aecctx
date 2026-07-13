@@ -124,6 +124,27 @@ class ProviderDescriptor:
 
 
 @dataclass(frozen=True, slots=True)
+class OCIRuntimeTarget:
+    platform: str
+    architecture: str
+    image: str
+    image_id: str
+
+    def __post_init__(self) -> None:
+        digest = self.image_id.removeprefix("sha256:")
+        if self.platform != "linux" or self.architecture not in {"arm64", "amd64"}:
+            raise ValueError("OCI runtime target must be linux/arm64 or linux/amd64")
+        if not self.image:
+            raise ValueError("OCI runtime target image must be non-empty")
+        if (
+            not self.image_id.startswith("sha256:")
+            or len(digest) != 64
+            or any(character not in "0123456789abcdef" for character in digest)
+        ):
+            raise ValueError("OCI runtime target image_id must be a lowercase sha256 digest")
+
+
+@dataclass(frozen=True, slots=True)
 class ProviderRegistration:
     descriptor: ProviderDescriptor
     worker_module: str
@@ -133,6 +154,30 @@ class ProviderRegistration:
     container_command: tuple[str, ...] = field(default_factory=tuple)
     container_pids_limit: int = 1
     worker_path: Path | None = None
+    oci_targets: tuple[OCIRuntimeTarget, ...] = field(default_factory=tuple)
+
+
+def resolve_oci_target(
+    registration: ProviderRegistration,
+    platform: str,
+    architecture: str,
+) -> OCIRuntimeTarget:
+    targets: dict[tuple[str, str], OCIRuntimeTarget] = {}
+    for target in registration.oci_targets:
+        key = (target.platform, target.architecture)
+        if key in targets:
+            raise ProviderExecutionError(
+                "AECCTX_PROVIDER_REGISTRATION_INVALID",
+                f"Provider registration contains duplicate OCI target {target.platform}/{target.architecture}",
+            )
+        targets[key] = target
+    try:
+        return targets[(platform, architecture)]
+    except KeyError as error:
+        raise ProviderExecutionError(
+            "AECCTX_PROVIDER_ARCHITECTURE_UNSUPPORTED",
+            f"Provider has no reviewed OCI target for {platform}/{architecture}",
+        ) from error
 
 
 def _string(raw: Mapping[str, Any], field: str) -> str:

@@ -26,5 +26,7 @@ jobs:
       # The full verify additionally resolves the private codex-agent-baseline
       # runtime. Public CI runs the portable contract gate; maintainers run the
       # full baseline integration check locally before merge/release.
+      # ACX-24 binds all six live receipts/results by digest without treating
+      # hosted-runner Docker availability as live provider evidence.
       - run: ./scripts/verify_portable.sh
         shell: bash

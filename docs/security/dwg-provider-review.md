@@ -26,3 +26,5 @@ The official upstream issue [#1037](https://github.com/LibreDWG/libredwg/issues/
 - The project fixture reproducibly produces explicit duplicate-handle conflicts (`1F`, `B`). Objects remain distinct and ambiguous references are not resolved.
 
 Residual risk is accepted only for the experimental partial claim. A decoder upgrade, broader DWG version, image distribution, native execution or removal of sandbox axes requires a new governed review.
+
+ACX-24 adds no DWG semantics. The project R2000 fixture produces identical canonical response, source JSON and converted DXF bytes on the reviewed `linux/arm64` and `linux/amd64` images. Exact source/archive, image and resolved-package evidence is bound in `conformance/v0.3/provider-multiarch-corpus.json`; native and unlisted platforms remain unsupported.

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import socket
+import subprocess
 import time
 from pathlib import Path
 from typing import Any
@@ -70,6 +71,9 @@ def main() -> int:
     request = json.loads((workspace / "request.json").read_text(encoding="utf-8"))
     descriptor = _descriptor()
     configuration = request.get("configuration", {})
+    if configuration.get("malformed_response"):
+        response_path.write_text("{", encoding="utf-8")
+        return 0
     ok = True
     error: dict[str, str] | None = None
     diagnostics: list[dict[str, Any]] = []
@@ -86,10 +90,13 @@ def main() -> int:
             socket.create_connection(("127.0.0.1", 9), timeout=0.1)
         if configuration.get("outside_write"):
             Path("/aecctx-provider-escape").write_text("escape", encoding="utf-8")
+        if configuration.get("spawn_process"):
+            child = subprocess.Popen(["sleep", "5"], stdin=subprocess.DEVNULL)
+            child.wait(timeout=1)
         allocated = None
         if configuration.get("allocate_bytes"):
             allocated = bytearray(int(configuration["allocate_bytes"]))
-        artifact_data = data
+        artifact_data = b"x" * int(configuration.get("output_bytes", len(data)))
         artifact_path = output_root / "artifacts" / "echo.bin"
         artifact_path.write_bytes(artifact_data)
         artifact_hash = hashlib.sha256(artifact_data).hexdigest()
@@ -113,7 +120,13 @@ def main() -> int:
             events.append(dict(events[0]))
     except (PermissionError, OSError) as caught:
         ok = False
-        code = "AECCTX_PROVIDER_NETWORK_DENIED" if configuration.get("network_attempt") else "AECCTX_PROVIDER_FILESYSTEM_DENIED"
+        code = (
+            "AECCTX_PROVIDER_NETWORK_DENIED"
+            if configuration.get("network_attempt")
+            else "AECCTX_PROVIDER_PROCESS_DENIED"
+            if configuration.get("spawn_process")
+            else "AECCTX_PROVIDER_FILESYSTEM_DENIED"
+        )
         error = {"code": code, "message": f"{type(caught).__name__}: operation denied by sandbox"}
         diagnostics.append({"code": code, "severity": "error"})
     except Exception as caught:

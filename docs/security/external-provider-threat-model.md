@@ -29,6 +29,7 @@ No provider output reaches package construction before validation. Markdown rema
 | Traversal, absolute path, symlink or forged artifact | relative `artifacts/` paths only; resolved workspace containment; symlink prohibition; byte count and SHA-256 validation | hostile-output tests |
 | Reordered/duplicate/fabricated events | JSON Schema, strict sequence and bounded count | protocol and live hostile-output tests |
 | Runtime or descriptor substitution | provider descriptor digest plus digest-pinned runtime image recorded in attestation; image must already exist locally and is never implicitly pulled | preflight, attestation and replay tests |
+| Wrong-architecture or substituted local image | exact `OCIRuntimeTarget`; Docker image ID, OS and architecture inspection; no implicit pull/build | ACX-24 selector tests and six-target live corpus |
 | Host path or environment disclosure | private workspace, normalized client environment, no host environment passed to container, output host-path rejection | host-path tests |
 | Partial/fatal extraction disguised as full | every response carries structured capability/loss; non-full entries require reasons and fallback; error response stays explicit | protocol tests and reference replay |
 
@@ -47,3 +48,4 @@ Native Linux/macOS and Windows profiles are governed by ACXB-001 and remain unsu
 - CPU allocation is bounded by Docker quota and wall timeout; the response's self-reported resource usage remains untrusted metadata.
 - Decompression behavior is decoder-specific. A future decoder must prove its configured ratio/entity limits in its own corpus before a claim is public.
 - Commercial entitlement, privacy, telemetry, retention and jurisdiction are provider-specific and must pass the review template below.
+- Native macOS/Windows execution, unreviewed architectures and remote runtimes remain unsupported after ACX-24; emulation is evidence only for the inspected Linux image architecture.

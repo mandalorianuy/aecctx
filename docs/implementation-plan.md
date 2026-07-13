@@ -183,7 +183,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-21 | completed | Bounded deterministic policy/IDS quality gate is public partial under the exact accepted profile |
 | ACX-22 | completed | Optional `aecctx-inspector-v1` plugin is public partial with parity/adversarial/install evidence |
 | ACX-23 | completed | Expansion conformance corpus, packaging, documentation and `0.2.0` release |
-| ACX-24 | pending-next | Live OCI providers on Linux arm64 and amd64 with cross-architecture equivalence |
+| ACX-24 | in_progress | Live OCI providers on Linux arm64 and amd64 with cross-architecture equivalence |
 | ACX-25 | pending | Additional reviewed local enforcement profiles |
 | ACX-26 | pending | Optional remote/customer-managed provider protocol |
 | ACX-27 | pending | Expanded IFC 2D and georeferencing profiles |
@@ -927,7 +927,7 @@ Detailed implementation authority: [`docs/plans/post-v02-functional-debt-impleme
 
 Program rules:
 
-- ACX-24 alone is `pending-next`; no later ACX may execute or borrow scope.
+- ACX-24 alone is `in_progress`; no later ACX may execute or borrow scope.
 - Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
 - Replay cannot satisfy a live platform/provider acceptance item.
 - A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.

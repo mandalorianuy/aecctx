@@ -1,0 +1,244 @@
+{
+  "entries": [
+    {
+      "architecture": "arm64",
+      "artifacts": [],
+      "descriptor": {
+        "path": "fixtures/v0.2/inference/ocr-descriptor.json",
+        "sha256": "aec2e711b518f99e37f67ecc9a14d25bad82bd36ac470e5d810852138549aedb"
+      },
+      "execution": {
+        "path": "fixtures/v0.3/provider-multiarch/live/executions/tesseract-linux-arm64.json",
+        "sha256": "28ae2aa3b7138079c5c684df04b91ebcc66b5de4bda81683659891978432aaa0"
+      },
+      "id": "tesseract-linux-arm64",
+      "image": "aecctx-tesseract-ocr:0.3.0-linux-arm64",
+      "image_id": "sha256:dea431488eee5a4e6c9e532319a27d96c420f502ead87b7d99d6881f46e0fdb2",
+      "platform": "linux",
+      "provider_id": "org.aecctx.ocr.tesseract-tsv",
+      "receipt": {
+        "path": "fixtures/v0.3/provider-multiarch/receipts/tesseract-linux-arm64.json",
+        "sha256": "4f835927abad8e07f3a4f94818033124a82962ea61dd18dd2abf717b0ff16c00"
+      },
+      "request": {
+        "path": "fixtures/v0.2/inference/ocr-request.json",
+        "sha256": "e5ac4db8253df590de88124bcfde76b6c8473efca03869409e62d9a1fd8049f5"
+      },
+      "response": {
+        "path": "fixtures/v0.2/inference/ocr-output/response.json",
+        "sha256": "5a8a6247082d11c51d856824385cfc2aef6438170cc8732a5a1a14c4dd267414"
+      },
+      "source": {
+        "path": "fixtures/v0.2/inference/ocr-aecctx-15.pgm",
+        "sha256": "02458e002754496b7682855acb99c758db9a5f1185ae609fc2624ed8b1502f60"
+      }
+    },
+    {
+      "architecture": "amd64",
+      "artifacts": [],
+      "descriptor": {
+        "path": "fixtures/v0.2/inference/ocr-descriptor.json",
+        "sha256": "aec2e711b518f99e37f67ecc9a14d25bad82bd36ac470e5d810852138549aedb"
+      },
+      "execution": {
+        "path": "fixtures/v0.3/provider-multiarch/live/executions/tesseract-linux-amd64.json",
+        "sha256": "82415f5cf1c2382c80fa308c2ed4d2f23c6225f8a0146c7cc84e21d2c8904d7a"
+      },
+      "id": "tesseract-linux-amd64",
+      "image": "aecctx-tesseract-ocr:0.3.0-linux-amd64",
+      "image_id": "sha256:97f8f4ffea37f1fc597506ffdad230988e541e3785a9a6f88cc062c1ded01a83",
+      "platform": "linux",
+      "provider_id": "org.aecctx.ocr.tesseract-tsv",
+      "receipt": {
+        "path": "fixtures/v0.3/provider-multiarch/receipts/tesseract-linux-amd64.json",
+        "sha256": "78cd0bfa98bd16c4e92df10a80b710cb42e4f1e6037f861db881f41687ae8994"
+      },
+      "request": {
+        "path": "fixtures/v0.2/inference/ocr-request.json",
+        "sha256": "e5ac4db8253df590de88124bcfde76b6c8473efca03869409e62d9a1fd8049f5"
+      },
+      "response": {
+        "path": "fixtures/v0.2/inference/ocr-output/response.json",
+        "sha256": "5a8a6247082d11c51d856824385cfc2aef6438170cc8732a5a1a14c4dd267414"
+      },
+      "source": {
+        "path": "fixtures/v0.2/inference/ocr-aecctx-15.pgm",
+        "sha256": "02458e002754496b7682855acb99c758db9a5f1185ae609fc2624ed8b1502f60"
+      }
+    },
+    {
+      "architecture": "arm64",
+      "artifacts": [
+        {
+          "path": "fixtures/v0.2/step-iges/outputs/ap214-assembly/artifacts/root-1.brep",
+          "sha256": "b1da80d4246a8ba3fcc9b8c7db5db9ed32c7d3137869e703d5971c5fd21adf26"
+        },
+        {
+          "path": "fixtures/v0.2/step-iges/outputs/ap214-assembly/artifacts/scene-mesh.json",
+          "sha256": "b5bf506aabc276f75ffe274e83139445bc4bbcbfe9f43e12d629d90da24c6052"
+        }
+      ],
+      "descriptor": {
+        "path": "fixtures/v0.2/step-iges/descriptor.json",
+        "sha256": "5938b1af95e0ff8d548b116ec4b7822bd8cd848d1b186de9683f45a092c09ae2"
+      },
+      "execution": {
+        "path": "fixtures/v0.3/provider-multiarch/live/executions/step-iges-linux-arm64.json",
+        "sha256": "5031dbcd58c66e65e22e8912822515b1471a464d452d52ce4e19bb7f77a0fd93"
+      },
+      "id": "step-iges-linux-arm64",
+      "image": "aecctx-step-iges-ocp:0.3.0-linux-arm64",
+      "image_id": "sha256:e26425b9d34c838087654e1bb1560a811c660b50deb70e70ea2e97ccd93c0f36",
+      "platform": "linux",
+      "provider_id": "org.aecctx.step-iges.ocp",
+      "receipt": {
+        "path": "fixtures/v0.3/provider-multiarch/receipts/step-iges-linux-arm64.json",
+        "sha256": "b46023a2055ef4bf513b9c0fb63e0ea73507be7d9ccd12b6a3bc42238f212757"
+      },
+      "request": {
+        "path": "fixtures/v0.2/step-iges/requests/ap214-assembly.json",
+        "sha256": "9211d43e146c5685ba0d33164f1dd684cf0c9257529edb8c03538cfd52565a20"
+      },
+      "response": {
+        "path": "fixtures/v0.2/step-iges/outputs/ap214-assembly/response.json",
+        "sha256": "fac3a14f225538158cf3b18dfba20baf6f2e5f56a9d26f86bf31e043089ff25b"
+      },
+      "source": {
+        "path": "fixtures/v0.2/step-iges/ap214-assembly.step",
+        "sha256": "ee5dabdca280453e5afcb57d89952e5cc04d904f2d6bc0683258641745c42375"
+      }
+    },
+    {
+      "architecture": "amd64",
+      "artifacts": [
+        {
+          "path": "fixtures/v0.2/step-iges/outputs/ap214-assembly/artifacts/root-1.brep",
+          "sha256": "b1da80d4246a8ba3fcc9b8c7db5db9ed32c7d3137869e703d5971c5fd21adf26"
+        },
+        {
+          "path": "fixtures/v0.2/step-iges/outputs/ap214-assembly/artifacts/scene-mesh.json",
+          "sha256": "b5bf506aabc276f75ffe274e83139445bc4bbcbfe9f43e12d629d90da24c6052"
+        }
+      ],
+      "descriptor": {
+        "path": "fixtures/v0.2/step-iges/descriptor.json",
+        "sha256": "5938b1af95e0ff8d548b116ec4b7822bd8cd848d1b186de9683f45a092c09ae2"
+      },
+      "execution": {
+        "path": "fixtures/v0.3/provider-multiarch/live/executions/step-iges-linux-amd64.json",
+        "sha256": "8b2ae4d9a1f64366a08fd21c9c7bec007f484e55620ef6cec27bbd9ea84aed4f"
+      },
+      "id": "step-iges-linux-amd64",
+      "image": "aecctx-step-iges-ocp:0.3.0-linux-amd64",
+      "image_id": "sha256:b3923c7c07608f9e60068d0784a228cd56eaa96b7b6e4d9b4ea5764097884dca",
+      "platform": "linux",
+      "provider_id": "org.aecctx.step-iges.ocp",
+      "receipt": {
+        "path": "fixtures/v0.3/provider-multiarch/receipts/step-iges-linux-amd64.json",
+        "sha256": "fcea76eccb784a5d300c6058319cc1c85fc0c22ef185a24eb2d57edf030ca35d"
+      },
+      "request": {
+        "path": "fixtures/v0.2/step-iges/requests/ap214-assembly.json",
+        "sha256": "9211d43e146c5685ba0d33164f1dd684cf0c9257529edb8c03538cfd52565a20"
+      },
+      "response": {
+        "path": "fixtures/v0.2/step-iges/outputs/ap214-assembly/response.json",
+        "sha256": "fac3a14f225538158cf3b18dfba20baf6f2e5f56a9d26f86bf31e043089ff25b"
+      },
+      "source": {
+        "path": "fixtures/v0.2/step-iges/ap214-assembly.step",
+        "sha256": "ee5dabdca280453e5afcb57d89952e5cc04d904f2d6bc0683258641745c42375"
+      }
+    },
+    {
+      "architecture": "arm64",
+      "artifacts": [
+        {
+          "path": "fixtures/v0.2/dwg/outputs/r2000-profile/artifacts/converted-r2000.dxf",
+          "sha256": "9f86d16181606a3deb2e8ae1f5a1cb95c68885e2ee3e83d180940732d9a92ffc"
+        },
+        {
+          "path": "fixtures/v0.2/dwg/outputs/r2000-profile/artifacts/source.json",
+          "sha256": "190545218aed4766e0d477720362098f56c41f9279c200cd2750a5674bd32183"
+        }
+      ],
+      "descriptor": {
+        "path": "fixtures/v0.2/dwg/descriptor.json",
+        "sha256": "4acef0c67f9fc1e73baaa328a8bf9335f7e4eb558eb20631d8234b97ec737ddc"
+      },
+      "execution": {
+        "path": "fixtures/v0.3/provider-multiarch/live/executions/dwg-linux-arm64.json",
+        "sha256": "94bb050be459530c7ae1e5b8d8004154ee2155a831694618db2d832b6c1e0ce9"
+      },
+      "id": "dwg-linux-arm64",
+      "image": "aecctx-dwg-libredwg:0.3.0-linux-arm64",
+      "image_id": "sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1",
+      "platform": "linux",
+      "provider_id": "org.aecctx.dwg.libredwg",
+      "receipt": {
+        "path": "fixtures/v0.3/provider-multiarch/receipts/dwg-linux-arm64.json",
+        "sha256": "f853762d7925b0fd7e63abe183f52e4b27685b3f0830919d5a973141ec7c15f7"
+      },
+      "request": {
+        "path": "fixtures/v0.2/dwg/requests/r2000-profile.json",
+        "sha256": "69dd335a7a449996d246ea59e71922883786d7a8e68266d7b02dbaf15337eb5e"
+      },
+      "response": {
+        "path": "fixtures/v0.2/dwg/outputs/r2000-profile/response.json",
+        "sha256": "8baffc85f64d95d634c4781fa9ea79082ba7e27c204a667f6e1b87ae61a3def4"
+      },
+      "source": {
+        "path": "fixtures/v0.2/dwg/r2000-profile.dwg",
+        "sha256": "fe9e07cabc83eb99c3c2334d5503fbcc9ebe0f94d349581ee559d57d6a30c494"
+      }
+    },
+    {
+      "architecture": "amd64",
+      "artifacts": [
+        {
+          "path": "fixtures/v0.2/dwg/outputs/r2000-profile/artifacts/converted-r2000.dxf",
+          "sha256": "9f86d16181606a3deb2e8ae1f5a1cb95c68885e2ee3e83d180940732d9a92ffc"
+        },
+        {
+          "path": "fixtures/v0.2/dwg/outputs/r2000-profile/artifacts/source.json",
+          "sha256": "190545218aed4766e0d477720362098f56c41f9279c200cd2750a5674bd32183"
+        }
+      ],
+      "descriptor": {
+        "path": "fixtures/v0.2/dwg/descriptor.json",
+        "sha256": "4acef0c67f9fc1e73baaa328a8bf9335f7e4eb558eb20631d8234b97ec737ddc"
+      },
+      "execution": {
+        "path": "fixtures/v0.3/provider-multiarch/live/executions/dwg-linux-amd64.json",
+        "sha256": "dbe4c16d4c1cd5b01ffce12931b7f61fe08146a141ed41cdbe9ea6673f09ed00"
+      },
+      "id": "dwg-linux-amd64",
+      "image": "aecctx-dwg-libredwg:0.3.0-linux-amd64",
+      "image_id": "sha256:bcff6c67080688cb2d4f2cecef36ad5c687e1b895ef2adf23a3e3fb7a9248713",
+      "platform": "linux",
+      "provider_id": "org.aecctx.dwg.libredwg",
+      "receipt": {
+        "path": "fixtures/v0.3/provider-multiarch/receipts/dwg-linux-amd64.json",
+        "sha256": "91b9bc6757605a6967b7909ade55423e2c4ca7bc40880a4e998c114e87f442b7"
+      },
+      "request": {
+        "path": "fixtures/v0.2/dwg/requests/r2000-profile.json",
+        "sha256": "69dd335a7a449996d246ea59e71922883786d7a8e68266d7b02dbaf15337eb5e"
+      },
+      "response": {
+        "path": "fixtures/v0.2/dwg/outputs/r2000-profile/response.json",
+        "sha256": "8baffc85f64d95d634c4781fa9ea79082ba7e27c204a667f6e1b87ae61a3def4"
+      },
+      "source": {
+        "path": "fixtures/v0.2/dwg/r2000-profile.dwg",
+        "sha256": "fe9e07cabc83eb99c3c2334d5503fbcc9ebe0f94d349581ee559d57d6a30c494"
+      }
+    }
+  ],
+  "profile": "https://aecctx.dev/provider-oci-multiarch/v0.3",
+  "security_summary": {
+    "path": "fixtures/v0.3/provider-multiarch/live/verification-summary.json",
+    "sha256": "3cddefeb6b44402c4fca0be24d1701d43955fccbc5b0303bb2aa31bcc59ddfd1"
+  },
+  "version": "0.3.0"
+}

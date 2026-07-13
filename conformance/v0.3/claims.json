@@ -1,0 +1,31 @@
+{
+  "claims": [
+    {
+      "evidence": "docs/evidence/ACX-24.md",
+      "fixture_ids": [
+        "v03-provider-multiarch"
+      ],
+      "id": "sandbox.oci-multiarch",
+      "platform_scope": [
+        "linux/arm64",
+        "linux/amd64"
+      ],
+      "profile": "provider-oci-multiarch-v03",
+      "provider_scope": "org.aecctx.ocr.tesseract-tsv@0.2.0,org.aecctx.step-iges.ocp@0.2.0,org.aecctx.dwg.libredwg@0.2.0",
+      "status": "experimental",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_provider_multiarch.py::test_runtime_target_selection_is_exact_and_order_independent",
+        "tests/test_provider_multiarch.py::test_reviewed_provider_registrations_publish_both_linux_targets",
+        "tests/test_provider_multiarch_live.py::test_live_provider_matrix_is_equivalent_and_adversarially_bounded"
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "v03-provider-multiarch",
+      "path": "fixtures/v0.3/provider-multiarch"
+    }
+  ],
+  "version": "0.3.0"
+}

@@ -2,13 +2,27 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .models import ProviderDescriptor, ProviderRegistration, REQUIRED_ENFORCEMENT_AXES
+from .models import OCIRuntimeTarget, ProviderDescriptor, ProviderRegistration, REQUIRED_ENFORCEMENT_AXES
 from .registry import ProviderRegistry
 
 
 STEP_IGES_PROVIDER_ID = "org.aecctx.step-iges.ocp"
 STEP_IGES_IMAGE = "aecctx-step-iges-ocp:0.2.0"
 STEP_IGES_IMAGE_ID = "sha256:875cbbbc5198ae44e8957e3a90c9a8afd0dc541f01029fb5186a296e3d2a0d47"
+STEP_IGES_OCI_TARGETS = (
+    OCIRuntimeTarget(
+        "linux",
+        "arm64",
+        "aecctx-step-iges-ocp:0.3.0-linux-arm64",
+        "sha256:e26425b9d34c838087654e1bb1560a811c660b50deb70e70ea2e97ccd93c0f36",
+    ),
+    OCIRuntimeTarget(
+        "linux",
+        "amd64",
+        "aecctx-step-iges-ocp:0.3.0-linux-amd64",
+        "sha256:b3923c7c07608f9e60068d0784a228cd56eaa96b7b6e4d9b4ea5764097884dca",
+    ),
+)
 STEP_IGES_WORKER_MODULE = "aecctx.external.step_iges_ocp_worker"
 STEP_IGES_CONFIGURATION = {
     "angular_deflection": 0.5,
@@ -52,6 +66,7 @@ def step_iges_registry(*, repository_root: str | Path | None = None) -> Provider
             container_image_id=STEP_IGES_IMAGE_ID,
             container_command=("python3", "/provider/worker.py"),
             worker_path=root / "providers" / "step-iges-ocp" / "worker.py",
+            oci_targets=STEP_IGES_OCI_TARGETS,
         )
     )
     return registry
