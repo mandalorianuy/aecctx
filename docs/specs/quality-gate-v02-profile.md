@@ -1,6 +1,6 @@
 # AECCTX v0.2 Delivery Quality Gate Profile
 
-Version: `1.0.0-draft.2`
+Version: `1.0.0-draft.3`
 Date: 2026-07-13
 Status: ACX-21 normative design; implementation and public quality-gate claims remain pending conformance
 Decision authority: ACXD-021 and ACXD-023
@@ -76,6 +76,8 @@ Stable severities are `info`, `warning`, `error` and `blocking` in that order. S
 
 Every check result is one of `pass`, `fail`, `requires_review`, `waived` or `error`. A check that emits multiple findings takes the highest outcome in the order `error`, `fail`, `requires_review`, `waived`, `pass`.
 
+Every finding carries an authoritative `disposition` of `error`, `fail`, `requires_review` or `waived`. A `waived` finding MUST name its `waiver_id`; every other disposition MUST keep `waiver_id` null. Finding fingerprints MUST be unique within one check so a waiver identifies exactly one finding. A check with findings MUST have the highest disposition of those findings, except that an explicit active-waiver mismatch diagnostic floors the final check status at `requires_review`; a finding-free check retains its explicit check status subject to the same floor. Check status is recomputed from all per-finding dispositions after every waiver has been classified, then the lifecycle review floor is applied once. `severity` remains presentation/triage metadata and does not substitute for disposition.
+
 ## 6. Built-in check contracts
 
 ### 6.1 Capability minimum
@@ -145,7 +147,9 @@ Each waiver contains exactly:
 - non-empty `reason` and `approved_by` strings;
 - `issued_at` inclusive and `expires_at` exclusive UTC instants.
 
-The policy's explicit `evaluation_time` decides lifecycle. Invalid intervals make policy evaluation `error`. Expired or not-yet-valid waivers do not suppress the finding and emit a waiver diagnostic. An active waiver changes the exact finding/check state to `waived`, preserves the original evidence and forces aggregate outcome at least `requires_review`. A waiver can never create `pass`, target a system check, target an undeclared policy check, use a wildcard or authorize consumer/engineering acceptance. The waiver schema therefore accepts only the full `aecctx.policy.` result-ID form; a short check ID or `aecctx.system.*` value is invalid control input.
+The policy's explicit `evaluation_time` decides lifecycle. Invalid intervals make policy evaluation `error`. Expired or not-yet-valid waivers do not suppress the finding, do not change check status and emit `AECCTX_GATE_WAIVER_EXPIRED` or `AECCTX_GATE_WAIVER_NOT_YET_VALID`. An active exact match changes only a `fail` or `requires_review` finding disposition to `waived`, preserves identity/evidence/message and records `waiver_id`; the check is then recomputed from all finding dispositions. `error` and already-`waived` findings are not waivable. An active waiver with no matching fingerprint emits `AECCTX_GATE_WAIVER_FINDING_MISMATCH` and forces its target check to at least `requires_review`, preventing silent success. Classification and mutation MUST use the original check/finding set, and the mismatch floor MUST be applied after all exact matches, so waiver-array order cannot change results.
+
+Waiver application returns separately ordered checks and diagnostics so later result assembly cannot hide lifecycle evidence. Duplicate `(check_id, finding_fingerprint)` targets, missing target checks, invalid clocks/intervals, wildcards, system checks and non-waivable dispositions are invalid control state reported as `GateError`; they are never silently ignored. A waiver can never create `pass`, target a system check, target an undeclared policy check, use a wildcard or authorize consumer/engineering acceptance. The waiver schema therefore accepts only the full `aecctx.policy.` result-ID form; a short check ID or `aecctx.system.*` value is invalid control input.
 
 ## 10. Aggregate outcome and exit codes
 
@@ -239,6 +243,8 @@ The implementation provides stable diagnostics for at least:
 Diagnostics MUST NOT embed source text, policy contents, host paths or dependency tracebacks by default.
 
 Task 2 policy loading uses these stable `GateError.code` values: `AECCTX_GATE_INPUT_TYPE_INVALID`, `AECCTX_GATE_INPUT_LIMIT_EXCEEDED`, `AECCTX_GATE_INPUT_UNREADABLE`, `AECCTX_GATE_JSON_INVALID`, `AECCTX_GATE_JSON_DUPLICATE_KEY`, `AECCTX_GATE_JSON_NORMALIZATION_COLLISION`, `AECCTX_GATE_JSON_NONFINITE`, `AECCTX_GATE_JSON_DEPTH_EXCEEDED`, `AECCTX_GATE_SCHEMA_UNSUPPORTED`, `AECCTX_GATE_SCHEMA_INVALID`, `AECCTX_GATE_LIMIT_INVALID`, `AECCTX_GATE_PROFILE_UNSUPPORTED`, `AECCTX_GATE_POLICY_VERSION_INVALID`, `AECCTX_GATE_EVALUATION_TIME_INVALID`, `AECCTX_GATE_CHECK_ID_DUPLICATE`, `AECCTX_GATE_WAIVER_ID_DUPLICATE`, `AECCTX_GATE_CHECK_ID_RESERVED`, `AECCTX_GATE_WAIVER_TARGET_INVALID`, `AECCTX_GATE_WAIVER_INTERVAL_INVALID`, `AECCTX_GATE_CHECK_LIMIT_EXCEEDED`, `AECCTX_GATE_WAIVER_LIMIT_EXCEEDED` and `AECCTX_GATE_POLICY_INVALID`. Messages are bounded control diagnostics and MUST NOT copy source contents or host paths.
+
+Task 3 adds `AECCTX_GATE_FINDING_IDENTITY_INVALID`, `AECCTX_GATE_WAIVER_DUPLICATE_TARGET`, `AECCTX_GATE_WAIVER_CHECK_INVALID`, `AECCTX_GATE_WAIVER_CHECK_MISSING` and `AECCTX_GATE_WAIVER_DISPOSITION_INVALID` as stable control-error codes. Lifecycle diagnostics are `AECCTX_GATE_WAIVER_EXPIRED`, `AECCTX_GATE_WAIVER_NOT_YET_VALID` and `AECCTX_GATE_WAIVER_FINDING_MISMATCH`, all with diagnostic severity `warning`. The mismatch diagnostic additionally floors its target check at `requires_review`; the first two do not change the original check disposition.
 
 ## 15. Conformance and claim promotion
 

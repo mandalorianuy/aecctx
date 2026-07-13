@@ -17,6 +17,7 @@ CHECK_KINDS = frozenset(
     }
 )
 CHECK_STATUSES = frozenset({"pass", "fail", "requires_review", "waived", "error"})
+FINDING_DISPOSITIONS = frozenset({"fail", "requires_review", "waived", "error"})
 OUTCOMES = frozenset({"pass", "fail", "requires_review", "error"})
 SEVERITIES = ("info", "warning", "error", "blocking")
 VALUE_ACTIONS = frozenset({"allow", "requires_review", "fail"})
@@ -24,6 +25,7 @@ FAILURE_MODES = frozenset({"fail", "requires_review"})
 
 _IDENTIFIER = re.compile(r"[a-z][a-z0-9._-]{0,63}")
 _LOWER_SHA256 = re.compile(r"[0-9a-f]{64}")
+_CHECK_STATUS_PRIORITY = {"pass": 0, "waived": 1, "requires_review": 2, "fail": 3, "error": 4}
 
 
 class GateError(ValueError):
@@ -183,6 +185,7 @@ class GateFinding:
     code: str
     check_id: str
     severity: str
+    disposition: str
     subject_id: str
     observed_state: str
     evidence_refs: tuple[str, ...]
@@ -194,7 +197,12 @@ class GateFinding:
         for field in ("code", "check_id", "subject_id", "observed_state", "message"):
             _require_string(field, getattr(self, field))
         _require_state("severity", self.severity, SEVERITIES)
+        _require_state("disposition", self.disposition, FINDING_DISPOSITIONS)
         _require_digest("fingerprint", self.fingerprint)
+        if self.disposition == "waived" and self.waiver_id is None:
+            raise ValueError("waived disposition requires waiver_id")
+        if self.disposition != "waived" and self.waiver_id is not None:
+            raise ValueError("non-waived disposition requires null waiver_id")
         if self.waiver_id is not None:
             _require_identifier("waiver_id", self.waiver_id)
         object.__setattr__(self, "evidence_refs", _sorted_unique_strings("evidence_refs", self.evidence_refs))
@@ -204,6 +212,7 @@ class GateFinding:
             "code": self.code,
             "check_id": self.check_id,
             "severity": self.severity,
+            "disposition": self.disposition,
             "subject_id": self.subject_id,
             "observed_state": self.observed_state,
             "evidence_refs": list(self.evidence_refs),
@@ -235,6 +244,19 @@ class GateCheckResult:
             raise TypeError("findings must contain GateFinding values")
         if any(item.check_id != self.check_id for item in self.findings):
             raise ValueError("finding check_id must match its check result")
+        fingerprints = tuple(item.fingerprint for item in self.findings)
+        if len(fingerprints) != len(set(fingerprints)):
+            raise ValueError("finding fingerprints must be unique within a check")
+        if self.findings:
+            expected_status = max(
+                (item.disposition for item in self.findings),
+                key=_CHECK_STATUS_PRIORITY.__getitem__,
+            )
+            lifecycle_review_floor = expected_status == "waived" and self.status == "requires_review"
+            if self.status != expected_status and not lifecycle_review_floor:
+                raise ValueError(
+                    "check status must equal its highest finding disposition or its governed lifecycle review floor"
+                )
         object.__setattr__(
             self,
             "findings",

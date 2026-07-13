@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.2.0-ACX-21-TASK-02`
+Handoff status: `0.2.0-ACX-21-TASK-03`
 
 ## Outcome
 
-AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Tasks 1-2 provide closed policy/check/waiver/result schemas, immutable public models, strict bounded policy parsing, NFC canonical bytes, a fixed offline schema registry, semantic validation and deterministic policy digests. No evaluator, finding aggregation, CLI, corpus or quality-gate claim exists. WoodFraming integration remains intentionally deferred.
+AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include the shared/provider foundation and bounded IFC/DXF/OCR/mesh/STEP/IGES/DWG profiles. ACX-19 is documented `blocked`. ACX-20 is completed with optional detached Ed25519 signing and explicit caller-owned offline registry/policy evaluation; its public claim is bounded `partial`. ACX-21 is `in_progress`: Tasks 1-3 provide closed policy/check/waiver/result schemas, immutable public models, strict bounded policy parsing, deterministic policy/finding digests, explicit finding dispositions, aggregate outcomes/exits and exact-finding waiver lifecycle with ordered diagnostics. No candidate package evaluator, authoritative package check dispatch, CLI, corpus or quality-gate claim exists. WoodFraming integration remains intentionally deferred.
 
 ## Start here
 
@@ -73,11 +73,20 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - `./scripts/verify.sh` passes with 466 tests, 9 intentional skips, wheel/sdist build, portable/release verification and baseline integration healthy.
 - No new dependency, fixture, CLI command, evaluator, finding aggregation or capability claim was added.
 
+## ACX-21 Task 3 evidence
+
+- Governance first: profile draft.3 and ACXD-023 define finding dispositions, waiver-ID invariants, per-check fingerprint uniqueness, separately ordered lifecycle diagnostics and order-independent batch application of exact waivers plus active-mismatch review floors before the final implementation.
+- RED: the initial Task 3 tests failed during collection because the evaluator facade did not exist; focused follow-up regressions then failed for duplicate waiver IDs, schema/model disposition binding and exact-plus-mismatch order dependence before their production corrections.
+- GREEN: `tests/test_gate_checks.py tests/test_gate_contract.py tests/test_package_data.py` pass with 60 tests covering canonical NFC fingerprints, all aggregate outcome/exit levels, exact/expired/not-yet-valid/mismatched waivers, mixed findings, unsafe control state, public/packaged schema mirrors and deterministic ordering.
+- Determinism: reversing check and waiver order yields identical ordered checks/diagnostics; exact mutation and mismatch review floors are computed against the original finding set and applied once.
+- `./scripts/verify.sh` passes with 497 tests, 9 intentional skips, wheel/sdist build, portable/release verification and baseline integration healthy.
+- No dependency, fixture, candidate package evaluator, package-check dispatch, CLI command, result projection, corpus or capability claim was added.
+
 ## Next implementation task
 
-ACX-21 Task 3: implement canonical finding identity, aggregate outcome precedence and exact-finding waiver application exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin with failing aggregation/fingerprint tests and stop at that task's checkpoint.
+ACX-21 Task 4: implement candidate validation/integrity preflight and authoritative capability/loss/value-state/diagnostic package checks exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). Begin with failing preflight/core-check tests and stop at that task's checkpoint.
 
-The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Tasks 1-2 added no optional dependency, fixture, evaluator, CLI or capability claim. Do not execute ACX-21 Task 3 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
+The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Tasks 1-3 added no optional dependency, fixture, candidate evaluator, authoritative package checks, CLI or capability claim. Do not execute ACX-21 Task 4 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
 
 ## Consumer integration planning entry point
 
