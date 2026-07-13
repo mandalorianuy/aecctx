@@ -466,7 +466,7 @@ def _generate(temp_root: Path) -> None:
     corpus = {
         "version": "1",
         "claim_id": CLAIM_ID,
-        "claim_status": "target",
+        "claim_status": "public",
         "maximum_support": "partial",
         "profile": PROFILE,
         "entries": sorted(entries, key=lambda entry: entry["case_id"]),

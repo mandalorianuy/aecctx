@@ -71,7 +71,7 @@ def test_gate_corpus_contract_is_complete_hash_bound_and_valid() -> None:
     assert isinstance(entries, list)
     assert {entry["case_id"] for entry in entries} == REQUIRED_CASES
     assert corpus["claim_id"] == "quality-gate.policy-ids"
-    assert corpus["claim_status"] == "target"
+    assert corpus["claim_status"] == "public"
     assert corpus["maximum_support"] == "partial"
     assert corpus["profile"] == "aecctx-gate-v1-ids-1.0-simple-v1"
     for entry in entries:
@@ -115,9 +115,9 @@ def test_gate_corpus_rejects_duplicate_missing_unmapped_stale_and_claim_drift(tm
     unknown_claim["entries"][0]["claim_id"] = "quality-gate.unknown"
     mutations.append((unknown_claim, "claim_id mismatch"))
 
-    public_drift = copy.deepcopy(base)
-    public_drift["claim_status"] = "public"
-    mutations.append((public_drift, "claim status mismatch"))
+    target_drift = copy.deepcopy(base)
+    target_drift["claim_status"] = "target"
+    mutations.append((target_drift, "claim status mismatch"))
 
     unsafe = copy.deepcopy(base)
     unsafe["entries"][0]["candidate"] = "../outside"
@@ -179,17 +179,17 @@ def test_official_gate_cases_are_unchanged_attributed_and_separate() -> None:
     assert all("fixtures/v0.2/gate" not in path for path in selected_paths)
 
 
-def test_gate_claim_is_selected_but_remains_target_until_task_9() -> None:
+def test_gate_claim_is_public_partial_after_task_9_acceptance() -> None:
     registry = json.loads(CLAIMS.read_text(encoding="utf-8"))
     fixtures = {entry["id"]: entry for entry in registry["fixtures"]}
     claims = {entry["id"]: entry for entry in registry["claims"]}
 
     assert fixtures["v02-gate-acx21"] == {"id": "v02-gate-acx21", "path": "fixtures/v0.2/gate"}
     claim = claims["quality-gate.policy-ids"]
-    assert claim["status"] == "target"
-    assert claim["support_level"] is None
+    assert claim["status"] == "public"
+    assert claim["support_level"] == "partial"
     assert claim["profile"] == "aecctx-gate-v1-ids-1.0-simple-v1"
-    assert claim["platform_scope"] == ["python-3.12-linux-macos-windows-candidate"]
+    assert claim["platform_scope"] == ["python-3.12-linux-macos-windows"]
     assert claim["fixture_ids"] == ["v02-gate-acx21"]
     assert claim["test_ids"] == [
         "tests/test_gate_conformance.py::test_gate_corpus_executes_offline_twice_and_matches_exact_results",

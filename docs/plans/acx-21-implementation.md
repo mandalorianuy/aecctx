@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12+, JSON Schema 2020-12, existing AECCTX v0.1/v0.2 validation/records/diff APIs, optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`, pytest, hatchling, buildingSMART IDS 1.0 unchanged conformance fixtures.
 
-**Execution status:** Tasks 1-8 completed on 2026-07-13. Task 9 is `pending-next`. The public quality-gate capability remains `unsupported`.
+**Execution status:** Tasks 1-8 and Task 9 Steps 1-5 completed on 2026-07-13. ACX-21 is accepted and public `partial` for the exact governed profile; Task 9 publication Steps 6-7 remain `in_progress`.
 
 ## Global Constraints
 
@@ -592,6 +592,10 @@ git commit -m "test: publish ACX-21 gate conformance candidate"
 - Modify: `docs/evidence/ACX-21.md`
 - Modify: `docs/capability-matrix.md`
 - Modify: `conformance/v0.2/claims.json`
+- Modify: `conformance/v0.2/gate-corpus.json`
+- Modify: `fixtures/v0.2/gate/generate_fixtures.py`
+- Modify: `scripts/check_gate_conformance.py`
+- Modify: `tests/test_gate_conformance.py`
 - Modify: `docs/implementation-plan.md`
 - Modify: `docs/HANDOFF.md`
 - Modify: `docs/plans/acx-21-implementation.md` checkpoints only
@@ -600,16 +604,17 @@ git commit -m "test: publish ACX-21 gate conformance candidate"
 **Interfaces:**
 - No new runtime interface; this task verifies and truthfully publishes only the proven subset.
 - ACX-22 is promoted only after candidate, closure and merged-main gates pass.
+- Claim promotion is one atomic contract transition across the registry, corpus, deterministic generator, checker and conformance tests; mixed `target`/`public` state is invalid.
 
-- [ ] **Step 1: Run the full local acceptance matrix.** Run task tests, spec/claim/corpus checkers, `./scripts/verify_portable.sh`, clean core/IDS-extra wheel installs and `./scripts/verify.sh`. Record exact counts, skips, artifact hashes and dependency versions/licenses in evidence.
+- [x] **Step 1: Run the full local acceptance matrix.** Run task tests, spec/claim/corpus checkers, `./scripts/verify_portable.sh`, clean core/IDS-extra wheel installs and `./scripts/verify.sh`. Record exact counts, skips, artifact hashes and dependency versions/licenses in evidence.
 
-- [ ] **Step 2: Audit every claim against evidence.** Promote `quality-gate.policy-ids` from `target` to public `partial` only if each advertised policy/IDS combination has unique fixture/test/evidence mapping. Remove any unproven combination from the profile and retain it as unsupported; no scaffolding counts.
+- [x] **Step 2: Audit every claim against evidence.** Promote `quality-gate.policy-ids` from `target` to public `partial` only if each advertised policy/IDS combination has unique fixture/test/evidence mapping. Remove any unproven combination from the profile and retain it as unsupported; no scaffolding counts.
 
-- [ ] **Step 3: Prove the non-claims.** Scan source/docs/artifacts for WoodFraming, `WFDomain`, `WFImport`, approval/certification language, network/LLM requirements and third-party dependency leakage. Record that Markdown/CI projections are not authority and `requires_review`/waived cannot become pass.
+- [x] **Step 3: Prove the non-claims.** Scan source/docs/artifacts for WoodFraming, `WFDomain`, `WFImport`, approval/certification language, network/LLM requirements and third-party dependency leakage. Record that Markdown/CI projections are not authority and `requires_review`/waived cannot become pass.
 
-- [ ] **Step 4: Publish and verify the implementation candidate.** Push the feature branch, require exact-SHA green Ubuntu/macOS/Windows CI, and record run/job URLs/status. Do not change task status or promote ACX-22 before green CI.
+- [x] **Step 4: Publish and verify the implementation candidate.** Push the feature branch, require exact-SHA green Ubuntu/macOS/Windows CI, and record run/job URLs/status. Do not change task status or promote ACX-22 before green CI.
 
-- [ ] **Step 5: Close ACX-21.** Set ACX-21 `completed`, promote only ACX-22 to `pending-next`, finalize claim/evidence/capability/HANDOFF and check all plan tasks. Run `python3 scripts/check_spec_contract.py` and `./scripts/verify.sh`; commit `docs: close ACX-21 quality gate milestone`.
+- [x] **Step 5: Close ACX-21.** Set ACX-21 `completed`, promote only ACX-22 to `pending-next`, finalize claim/evidence/capability/HANDOFF and check all plan tasks. Run `python3 scripts/check_spec_contract.py` and `./scripts/verify.sh`; commit `docs: close ACX-21 quality gate milestone`.
 
 - [ ] **Step 6: Publish and validate closure.** Push closure commit, require exact-SHA green Ubuntu/macOS/Windows CI, merge with `--no-ff` to `main`, rerun `./scripts/verify.sh`, push `main` and require green merged-main CI.
 
@@ -621,4 +626,4 @@ Tasks 1 through 9 are sequential. Each task begins only after the preceding task
 
 ## Planning checkpoint
 
-Tasks 1-8 now materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks, semantic baseline regression checks, bounded IDS 1.0 evaluation, deterministic CLI/projections and a 27-case hash-bound offline corpus with clean-install packaging boundaries. Task 8 began with seven expected conformance failures; its 205-test focused gate/claim/package suite and corpus checker are green. The claim remains `target` and no public support is promoted. ACX-21 remains `in_progress` at 8/9 detailed tasks (88.9%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 9 acceptance/publication is the sole `pending-next` action after a new user continuation request.
+Tasks 1-8 materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks, semantic baseline regression checks, bounded IDS 1.0 evaluation, deterministic CLI/projections and a 27-case hash-bound offline corpus with clean-install packaging boundaries. Task 9 acceptance began with three expected claim-state failures; the minimal registry/corpus/generator/checker/test transition then passed 14 focused tests, the 205-test gate/claim/package suite and the 604-test repository gate with 9 intentional skips. ACX-21 is completed at 9/9 detailed tasks (100%) and `quality-gate.policy-ids` is public `partial` only for `aecctx-gate-v1-ids-1.0-simple-v1` on Python 3.12 Linux/macOS/Windows. ACX-22 is `pending-next` but MUST NOT execute until a new continuation request; Task 9 continues only with closure/merge/publication evidence.
