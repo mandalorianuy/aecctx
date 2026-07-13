@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "aecctx": {
+      "command": "aecctx-mcp",
+      "args": []
+    }
+  }
+}

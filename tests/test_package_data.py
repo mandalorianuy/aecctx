@@ -107,6 +107,16 @@ def test_sdist_includes_normative_v02_schemas_and_conformance_material() -> None
     assert '"/docs"' in project
 
 
+def test_sdist_includes_inspector_plugin_while_wheel_remains_core_only() -> None:
+    project = (Path(__file__).parents[1] / "pyproject.toml").read_text(encoding="utf-8")
+
+    assert '"/plugins/aecctx-inspector"' in project
+    assert 'packages = ["src/aecctx"]' in project
+    dependencies = project.split("dependencies = [", 1)[1].split("]", 1)[0]
+    assert "mcp" not in dependencies
+    assert "codex" not in dependencies.lower()
+
+
 def test_external_provider_protocol_schemas_are_public_and_bundled() -> None:
     bundled_root = files("aecctx.schemas.v0_2")
     repository = Path(__file__).parents[1] / "schemas" / "v0.2"

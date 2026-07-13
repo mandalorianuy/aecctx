@@ -29,6 +29,8 @@ Normative authority remains expansion-spec section 14 and ACXD-022. This plan re
 
 ## Task 2: Manifest, compatibility and deterministic validator
 
+Status: completed.
+
 Files:
 
 - Create `plugins/aecctx-inspector/.codex-plugin/plugin.json`.
@@ -47,6 +49,8 @@ Steps:
 
 ## Task 3: Read-only gate MCP parity
 
+Status: completed.
+
 Files:
 
 - Modify `src/aecctx/mcp_server.py`.
@@ -60,6 +64,8 @@ Steps:
 4. Prove invalid package/policy and missing IDS extra preserve the same stable errors as direct library evaluation.
 
 ## Task 4: Focused skills and adversarial behavior contract
+
+Status: completed.
 
 Files:
 
@@ -77,6 +83,8 @@ Steps:
 
 ## Task 5: Functional install/uninstall and dependency isolation
 
+Status: completed.
+
 Files:
 
 - Create `plugins/aecctx-inspector/scripts/manage.py`.
@@ -91,6 +99,8 @@ Steps:
 4. Prove core-only install/import/CLI and the wheel remain independent of Codex and MCP; the sdist contains the validated plugin and no marketplace/user configuration.
 
 ## Task 6: Conformance, evidence and acceptance candidate
+
+Status: in progress; local conformance and clean-install gates pass, exact-SHA remote acceptance remains pending.
 
 Files:
 
@@ -131,4 +141,4 @@ Steps:
 
 ## Progress checkpoint
 
-ACX-22 is `in_progress` at 0/7 implementation tasks completed. ACX-23 remains `pending` and is not executable.
+ACX-22 is `in_progress` at 5/7 implementation tasks completed. The claim remains `target` until the candidate passes the complete local and exact-SHA cross-platform gates. ACX-23 remains `pending` and is not executable.
