@@ -33,8 +33,6 @@ class OCIDockerProfile:
         self._pids_limit(registration)
         multiarch_selected = self.platform is not None and self.architecture is not None
         descriptor = registration.descriptor
-        if not self.docker_executable.is_file() or not os.access(self.docker_executable, os.X_OK):
-            raise ProviderExecutionError("AECCTX_PROVIDER_PROFILE_UNAVAILABLE", "Reviewed Docker runtime is unavailable")
         if descriptor.enforcement_profile != self.profile_id or "linux-container" not in descriptor.platforms:
             raise ProviderExecutionError("AECCTX_PROVIDER_PROFILE_MISMATCH", "Provider descriptor does not admit the OCI profile")
         if descriptor.network_mode != "disabled":
@@ -63,6 +61,8 @@ class OCIDockerProfile:
                 raise ProviderExecutionError("AECCTX_PROVIDER_IMAGE_UNPINNED", "Local image ID must be a sha256 digest")
         if registration.worker_path is None or not registration.worker_path.is_file() or not registration.container_command:
             raise ProviderExecutionError("AECCTX_PROVIDER_LAUNCH_TARGET_UNREVIEWED", "Provider container launch target is incomplete")
+        if not self.docker_executable.is_file() or not os.access(self.docker_executable, os.X_OK):
+            raise ProviderExecutionError("AECCTX_PROVIDER_PROFILE_UNAVAILABLE", "Reviewed Docker runtime is unavailable")
         try:
             version = subprocess.run(
                 [str(self.docker_executable), "version", "--format", "{{.Server.Os}}"],

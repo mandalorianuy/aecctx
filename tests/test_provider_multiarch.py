@@ -180,7 +180,7 @@ def test_oci_preflight_rejects_digest_or_platform_drift(
 
 
 def test_multiarch_registration_requires_explicit_profile_target(tmp_path: Path) -> None:
-    profile = providers.OCIDockerProfile(image="aecctx-test:amd64")
+    profile = providers.OCIDockerProfile(docker_executable=tmp_path / "missing-docker", image="aecctx-test:amd64")
 
     with pytest.raises(providers.ProviderExecutionError) as captured:
         profile.preflight(_registration(tmp_path))
