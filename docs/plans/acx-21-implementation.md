@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12+, JSON Schema 2020-12, existing AECCTX v0.1/v0.2 validation/records/diff APIs, optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`, pytest, hatchling, buildingSMART IDS 1.0 unchanged conformance fixtures.
 
-**Execution status:** Tasks 1-8 completed on 2026-07-13. Task 9 is `pending-next`. The public quality-gate capability remains `unsupported`.
+**Execution status:** Tasks 1-8 completed on 2026-07-13. Task 9 is `in_progress`. The public quality-gate capability remains `unsupported` pending acceptance.
 
 ## Global Constraints
 
@@ -601,11 +601,11 @@ git commit -m "test: publish ACX-21 gate conformance candidate"
 - No new runtime interface; this task verifies and truthfully publishes only the proven subset.
 - ACX-22 is promoted only after candidate, closure and merged-main gates pass.
 
-- [ ] **Step 1: Run the full local acceptance matrix.** Run task tests, spec/claim/corpus checkers, `./scripts/verify_portable.sh`, clean core/IDS-extra wheel installs and `./scripts/verify.sh`. Record exact counts, skips, artifact hashes and dependency versions/licenses in evidence.
+- [x] **Step 1: Run the full local acceptance matrix.** Run task tests, spec/claim/corpus checkers, `./scripts/verify_portable.sh`, clean core/IDS-extra wheel installs and `./scripts/verify.sh`. Record exact counts, skips, artifact hashes and dependency versions/licenses in evidence.
 
-- [ ] **Step 2: Audit every claim against evidence.** Promote `quality-gate.policy-ids` from `target` to public `partial` only if each advertised policy/IDS combination has unique fixture/test/evidence mapping. Remove any unproven combination from the profile and retain it as unsupported; no scaffolding counts.
+- [x] **Step 2: Audit every claim against evidence.** Promote `quality-gate.policy-ids` from `target` to public `partial` only if each advertised policy/IDS combination has unique fixture/test/evidence mapping. Remove any unproven combination from the profile and retain it as unsupported; no scaffolding counts.
 
-- [ ] **Step 3: Prove the non-claims.** Scan source/docs/artifacts for WoodFraming, `WFDomain`, `WFImport`, approval/certification language, network/LLM requirements and third-party dependency leakage. Record that Markdown/CI projections are not authority and `requires_review`/waived cannot become pass.
+- [x] **Step 3: Prove the non-claims.** Scan source/docs/artifacts for WoodFraming, `WFDomain`, `WFImport`, approval/certification language, network/LLM requirements and third-party dependency leakage. Record that Markdown/CI projections are not authority and `requires_review`/waived cannot become pass.
 
 - [ ] **Step 4: Publish and verify the implementation candidate.** Push the feature branch, require exact-SHA green Ubuntu/macOS/Windows CI, and record run/job URLs/status. Do not change task status or promote ACX-22 before green CI.
 
@@ -621,4 +621,4 @@ Tasks 1 through 9 are sequential. Each task begins only after the preceding task
 
 ## Planning checkpoint
 
-Tasks 1-8 now materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks, semantic baseline regression checks, bounded IDS 1.0 evaluation, deterministic CLI/projections and a 27-case hash-bound offline corpus with clean-install packaging boundaries. Task 8 began with seven expected conformance failures; its 205-test focused gate/claim/package suite and corpus checker are green. The claim remains `target` and no public support is promoted. ACX-21 remains `in_progress` at 8/9 detailed tasks (88.9%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 9 acceptance/publication is the sole `pending-next` action after a new user continuation request.
+Tasks 1-8 materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks, semantic baseline regression checks, bounded IDS 1.0 evaluation, deterministic CLI/projections and a 27-case hash-bound offline corpus with clean-install packaging boundaries. Task 8 began with seven expected conformance failures; its 205-test focused gate/claim/package suite and corpus checker are green. The claim remains `target` and no public support is promoted while Task 9 acceptance/publication is `in_progress`. ACX-21 remains `in_progress` at 8/9 detailed tasks (88.9%), the quality-gate capability remains public `unsupported`, and ACX-22 remains `pending`.

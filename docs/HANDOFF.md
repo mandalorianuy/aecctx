@@ -130,7 +130,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 
 ## Next implementation task
 
-ACX-21 Task 9: run acceptance, audit and publication exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). It is the sole `pending-next` task because Task 8 now supplies the candidate corpus and packaging evidence required by its gates.
+ACX-21 Task 9 is `in_progress`: run acceptance, audit and publication exactly as specified in [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). It is the only active task because Task 8 supplies the candidate corpus and packaging evidence required by its gates.
 
 The normative behavior remains fixed in [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md) and ACXD-023. Task 8 added no public capability claim. Do not execute ACX-21 Task 9 until a new continuation request. Do not execute ACX-22 until ACX-21 fully closes and promotes it.
 

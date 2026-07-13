@@ -1,8 +1,8 @@
-# ACX-21 Acceptance Evidence — Implementation Candidate
+# ACX-21 Acceptance Evidence — Acceptance Candidate
 
 ## 1. Task status, commits and date
 
-- Status: `in_progress`; Tasks 1-8 form an implementation candidate. Task 9 acceptance and public claim promotion remain pending.
+- Status: `in_progress`; Task 9 local acceptance, claim audit and non-claim proof pass. Remote candidate/closure/merged-main gates and public claim promotion remain pending.
 - Date: 2026-07-13.
 - Task 8 implementation commit/merge identify the candidate only; Task 9 owns acceptance, exact-SHA publication evidence and any claim promotion.
 
@@ -22,7 +22,9 @@ The candidate contains closed schemas/models, strict bounded policy parsing, det
 |---|---|---|---|
 | `quality-gate.policy-ids` | `aecctx-gate-v1-ids-1.0-simple-v1` | bounded `partial` only after Task 9 acceptance | `target` / public `unsupported` |
 
-The candidate ceiling covers core policy checks and only the selected IDS v1.0 simple-value cases. It is not a support promotion.
+The audited ceiling covers the core validation/integrity, capability, loss, explicit value-state, diagnostic, baseline-diff and waiver checks plus only the selected IDS v1.0 entity/attribute/classification/property/material simple-value cases. It is not a support promotion until the remaining exact-SHA gates pass.
+
+All 27 case IDs are unique and map to this claim, fixture directory, executable conformance tests and this evidence file: 10 core evaluations, one directory/ZIP equivalence, two control errors, 13 IDS evaluations and one missing-extra IDS control. Outcomes cover eight pass, eleven fail, three requires-review, three evaluator errors and two control errors. Ten unchanged buildingSMART cases remain separately attributed; the other 17 are Apache-2.0 project-authored cases.
 
 ## 5. Fixtures, origin, license and hashes
 
@@ -42,6 +44,17 @@ Task 8 local evidence:
 - portable repository gate: 604 tests passed, 9 intentional skips; wheel/sdist and release checks passed;
 - full repository gate: 604 tests passed, 9 intentional skips; portable/release verification and baseline integration were healthy;
 - spec contract: `aecctx spec contract: ok`.
+
+Task 9 fresh local acceptance evidence:
+
+- focused gate/claim/package suite: 205 tests passed;
+- corpus checker: 27/27 unique cases matched exact expected results and deterministic bytes;
+- portable and full repository gates: 604 tests passed with 9 intentional skips in each run;
+- `aecctx spec contract`, claim-registry, RVT blocked, signing, release and baseline integration checks passed;
+- clean core wheel install: `aecctx==0.1.0`, with IfcTester, IfcOpenShell, Flask and BCF absent;
+- clean `gate-ids` install: `ifctester==0.8.5` and `ifcopenshell==0.8.5`, both declaring the LGPLv3-or-later classifier;
+- fresh wheel SHA-256: `4f0be83dcfdf3aeef736f45ec99503d1633852f861a3f040abef9f3e262a4b72`;
+- fresh sdist SHA-256: `90087a54dba6f4b5e3c292334fae1a9af24c8b7e043c5c437dbab20ce2bc5f67`.
 
 Commands:
 
@@ -67,6 +80,9 @@ The corpus covers pass/fail/review/error, equivalent directory/ZIP candidates, a
 - IDS remains optional at exactly `ifctester==0.8.5` plus `ifcopenshell==0.8.5`; selected upstream fixtures retain their original license.
 - Inputs are hash-bound, path-safe and offline; hostile JSON/XML is inert and no source text, host path or traceback enters stable diagnostics.
 - Portable CI is required on Python 3.12 Linux, macOS and Windows before Task 9 promotion.
+- Runtime modules and wheel payload contain no WoodFraming, `WFDomain`, `WFImport`, consumer mapping or unconditional optional dependency. Wheel METADATA contains one README-derived WoodFraming mention, solely as an explicit exclusion; this is documentation, not executable semantics or a dependency.
+- The fixed IDS worker replaces socket connection/name-resolution functions with deny-network handlers; no caller URL, shell command or network transport is accepted.
+- A passing result and active waiver remain bounded to caller-supplied policy conformance. Generated Markdown states that it does not mean engineering approval, and projection mutation cannot change canonical reevaluation.
 
 ## 10. Residual risks and unsupported cases
 
@@ -74,8 +90,8 @@ Unlisted IDS versions, schemas, facets, restrictions and cardinality combination
 
 ## 11. WoodFraming boundary proof
 
-Task 8 paths are confined to AECCTX fixtures, corpus, checker, tests, packaging documentation and governance. The executable/distribution boundary contains no `woodframing`, `WFDomain`, `WFImport`, consumer ontology or mapping. `/Users/facundo/desarrollo/woodframing` is not modified.
+ACX-21 paths are confined to AECCTX runtime, fixtures, corpus, checker, tests, packaging documentation and governance. Executable modules and packaged runtime payload contain no WoodFraming code, `WFDomain`, `WFImport`, consumer ontology or mapping. The README-derived wheel metadata records only the explicit exclusion. `/Users/facundo/desarrollo/woodframing` is not modified.
 
 ## 12. Promotion and publication conditions
 
-Task 9 must run the complete local/clean-install matrix, audit every mapped profile combination, prove non-claims, require exact-SHA Ubuntu/macOS/Windows CI, and only then may change the claim from `target` to public `partial`. Until then the capability matrix remains `unsupported`; fixtures, docs, a green happy path or Task 8 merge alone do not count as public support.
+The complete local/clean-install matrix, claim audit and non-claim proof pass. Task 8 candidate `8f0db26ef4551308ab3e21a6229da7857d616afd` passed [CI run 29262094375](https://github.com/mandalorianuy/aecctx/actions/runs/29262094375); merged candidate `8befac453df9445ae48e54ca2b9b795f35c2d709` passed [CI run 29262864165](https://github.com/mandalorianuy/aecctx/actions/runs/29262864165). Task 9 still requires exact-SHA acceptance-candidate, closure and merged-main CI before promotion. Until then the claim remains `target` and the capability matrix remains `unsupported`; fixtures, docs, a green happy path or an earlier merge alone do not count as public support.

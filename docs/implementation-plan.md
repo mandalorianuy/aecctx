@@ -166,7 +166,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-18 | completed | Experimental bounded R2000/AC1015 DWG source-object and converted-DXF evidence profile |
 | ACX-19 | blocked | No admissible RVT provider; public unsupported boundary with deterministic opaque anti-claim evidence |
 | ACX-20 | completed | Optional detached JWS/Ed25519 signing and caller-owned offline trust-policy evaluation |
-| ACX-21 | in_progress | Tasks 1-8 complete; Task 9 acceptance/publication remains pending-next and the public claim remains unsupported |
+| ACX-21 | in_progress | Tasks 1-8 complete; Task 9 acceptance/publication is in progress and the public claim remains unsupported pending its gates |
 | ACX-22 | pending | Optional `aecctx-inspector` plugin for Codex |
 | ACX-23 | pending | Expansion conformance corpus, packaging, documentation and release |
 
@@ -766,7 +766,7 @@ Work breakdown:
 7. Emit `pass`, `fail`, `requires_review` or `error` with policy/package digests, evaluator versions and exact evidence IDs.
 8. Generate Markdown/CI annotations from the JSON result and prove projection parity.
 
-Governed execution rule: Tasks 1-8 completed the closed schemas/models, strict deterministic policy parser, canonical finding identity, aggregate outcome/exit precedence, exact-finding waiver lifecycle, authoritative package checks, all governed semantic baseline-diff categories, bounded IDS v1.0 simple-value evaluation, deterministic CLI/projections and the hash-bound offline conformance/packaging candidate. Task 8 does not promote the claim. Task 9 in the subordinate plan is the sole `pending-next` task. ACX-21 remains `in_progress`, ACX-22 remains `pending` and the capability remains public `unsupported`.
+Governed execution rule: Tasks 1-8 completed the closed schemas/models, strict deterministic policy parser, canonical finding identity, aggregate outcome/exit precedence, exact-finding waiver lifecycle, authoritative package checks, all governed semantic baseline-diff categories, bounded IDS v1.0 simple-value evaluation, deterministic CLI/projections and the hash-bound offline conformance/packaging candidate. Task 8 does not promote the claim. Task 9 in the subordinate plan is `in_progress`. ACX-21 remains `in_progress`, ACX-22 remains `pending` and the capability remains public `unsupported` until every acceptance gate passes.
 
 Test matrix:
 
