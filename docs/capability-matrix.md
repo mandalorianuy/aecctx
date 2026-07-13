@@ -1,6 +1,6 @@
 # AECCTX Capability Matrix
 
-Date: 2026-07-12
+Date: 2026-07-13
 Status: v0.1.0 release claim registry plus non-claim expansion targets
 
 ## Support levels
@@ -63,5 +63,5 @@ This table is a roadmap, not a support claim. Current claims in the release regi
 | RVT | public `unsupported`; deterministic v0.1 opaque fallback is anti-claim evidence only | No provider selected under ACXD-030; future extraction requires a separately reviewed reopening profile | ACX-19 blocked |
 | Package authenticity/signing | public `partial`: optional detached JWS General JSON with `Ed25519` over valid v0.1/v0.2 packages; caller-owned offline registry/policy; distinct integrity, validity, lifecycle, trust and authorization states | X.509, remote discovery/revocation, timestamps, countersignatures, implicit trust and universal authorization remain unsupported | ACX-20 completed |
 | Restricted decoder isolation | `partial`: `oci-docker-v1` is public only for the digest-pinned Linux-container/reference-provider profile; native Linux/macOS and Windows remain `unsupported` | Additional reviewed profiles with the complete enforcement-axis corpus | ACX-12 completed; ACXB-001 residual |
-| AEC delivery quality gate | `unsupported` | Deterministic policy, baseline-diff and bounded IFC IDS evaluation with explicit outcomes and evidence citations | ACX-21 pending-next |
+| AEC delivery quality gate | `unsupported` | Accepted `aecctx-gate-v1` design targets deterministic policy, baseline-diff and bounded IDS 1.0 evaluation; no implementation or public claim exists yet | ACX-21 in progress; Task 1 pending |
 | Codex plugin | standalone read-only MCP only | Optional `aecctx-inspector` package with inspection, revision, loss-triage and quality-gate skills; no unique semantics | ACX-22 |

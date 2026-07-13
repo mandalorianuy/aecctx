@@ -1,6 +1,6 @@
 # AECCTX Implementation Plan
 
-Date: 2026-07-12
+Date: 2026-07-13
 Status: Active implementation authority
 Specification readiness: `0.2.0-EXPANSION-SPEC-READY`
 
@@ -166,7 +166,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-18 | completed | Experimental bounded R2000/AC1015 DWG source-object and converted-DXF evidence profile |
 | ACX-19 | blocked | No admissible RVT provider; public unsupported boundary with deterministic opaque anti-claim evidence |
 | ACX-20 | completed | Optional detached JWS/Ed25519 signing and caller-owned offline trust-policy evaluation |
-| ACX-21 | pending-next | Deterministic AEC Delivery Quality Gate with policy, diff and IDS checks |
+| ACX-21 | in_progress | Design/ACXD-023/subordinate plan complete; deterministic policy, diff and bounded IDS implementation not started |
 | ACX-22 | pending | Optional `aecctx-inspector` plugin for Codex |
 | ACX-23 | pending | Expansion conformance corpus, packaging, documentation and release |
 
@@ -741,7 +741,11 @@ Completion resolution: ACX-20 publishes the bounded `detached-jws-ed25519-offlin
 
 Objective: implement a deterministic policy-conformance evaluator over validated package evidence, optional baseline diff and bounded IFC IDS requirements.
 
-Decision gate: resolve ACXD-023 for policy schema, stable check IDs/severities, waiver model, aggregation, exit codes, IDS versions/facets, reviewed IDS implementation and official conformance scope.
+Normative profile: [`docs/specs/quality-gate-v02-profile.md`](specs/quality-gate-v02-profile.md), accepted under ACXD-021 and ACXD-023. Acceptance authorizes detailed implementation but does not create a quality-gate claim.
+
+Execution cut: [`docs/plans/acx-21-implementation.md`](plans/acx-21-implementation.md). It is subordinate to the normative profile and this plan; it adds no ACX-22 scope.
+
+Decision gate: resolved. ACXD-023 selects the closed canonical `https://aecctx.dev/gate/v1` policy/result/waiver model, stable checks/outcomes/exits, exact-finding waivers, optional baseline diff and bounded buildingSMART IDS v1.0 simple-value evaluation through optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`. IDS requires caller-supplied bytes bound to an authoritative candidate source hash; unproved facets/versions remain unsupported.
 
 Deliverables:
 
@@ -761,6 +765,8 @@ Work breakdown:
 6. Integrate only the selected IDS versions/facets and label IDS results separately from other AECCTX checks.
 7. Emit `pass`, `fail`, `requires_review` or `error` with policy/package digests, evaluator versions and exact evidence IDs.
 8. Generate Markdown/CI annotations from the JSON result and prove projection parity.
+
+Governed execution rule: the planning checkpoint resolves ACXD-023 and defines the complete TDD cut without implementing it. No schema, module, dependency, fixture or claim change begins until a new continuation request authorizes Task 1 in the subordinate plan. ACX-21 remains `in_progress`, ACX-22 remains `pending` and the capability remains public `unsupported` during this checkpoint.
 
 Test matrix:
 

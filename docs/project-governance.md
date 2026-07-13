@@ -1,6 +1,6 @@
 # Project Governance
 
-Date: 2026-07-11
+Date: 2026-07-13
 Status: Active
 
 ## Authorities
@@ -12,9 +12,10 @@ Authority is ordered as follows:
 3. `docs/specs/aec-context-plugin-contract.md` for adapter behavior.
 4. `docs/specs/aecctx-capability-expansion-spec.md` for post-v0.1 capability targets and their acceptance boundaries.
 5. `docs/specs/signing-v1-profile.md` for the optional ACX-20 signing and offline trust contract.
-6. `docs/decisions/decision-log.md` for accepted and open decisions.
-7. `docs/capability-matrix.md` for support claims.
-8. `docs/implementation-plan.md` for task sequencing.
+6. `docs/specs/quality-gate-v02-profile.md` for the ACX-21 policy/result/waiver contract and bounded IDS profile.
+7. `docs/decisions/decision-log.md` for accepted and open decisions.
+8. `docs/capability-matrix.md` for support claims.
+9. `docs/implementation-plan.md` for task sequencing.
 
 Research notes and README examples are informative and cannot override normative specifications.
 
