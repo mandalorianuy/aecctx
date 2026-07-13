@@ -42,10 +42,12 @@ fi
 "$python_runtime" -m json.tool conformance/v0.2/plugin-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/claims.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/provider-multiarch-corpus.json >/dev/null
+"$python_runtime" -m json.tool conformance/v0.3/local-enforcement-corpus.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/.codex-plugin/plugin.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/.mcp.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/assets/compatibility.json >/dev/null
 "$python_runtime" -m json.tool fixtures/v0.2/plugin/prompt-injection-cases.json >/dev/null
+"$python_runtime" -m json.tool fixtures/v0.3/local-providers/adversarial-cases.json >/dev/null
 "$python_runtime" -m json.tool fixtures/minimal-aecctx/manifest.json >/dev/null
 "$python_runtime" -m json.tool fixtures/v0.2/shared/minimal-v02/manifest.json >/dev/null
 "$python_runtime" scripts/check_rvt_blocked_conformance.py
@@ -56,6 +58,7 @@ fi
 "$python_runtime" scripts/check_codex_plugin.py
 "$python_runtime" scripts/check_codex_plugin_conformance.py
 "$python_runtime" scripts/check_provider_multiarch_conformance.py
+"$python_runtime" scripts/check_local_enforcement_conformance.py
 "$python_runtime" -c 'from aecctx.release_conformance import validate_release_corpus; result = validate_release_corpus("conformance/v0.2/corpus.json", repository_root="."); raise SystemExit(0 if result["ok"] else "v0.2 release corpus failed")'
 "$python_runtime" -c 'from aecctx.conformance import validate_claim_registry_file; result = validate_claim_registry_file("conformance/v0.2/claims.json"); raise SystemExit(0 if result.valid else "; ".join(result.errors))'
 "$python_runtime" -c 'from aecctx.conformance import validate_claim_registry_file; result = validate_claim_registry_file("conformance/v0.3/claims.json"); raise SystemExit(0 if result.valid else "; ".join(result.errors))'
@@ -63,10 +66,11 @@ fi
 "$python_runtime" -c 'from aecctx.providers import validate_provider_replay_corpus; result = validate_provider_replay_corpus("conformance/v0.2/inference-corpus.json"); raise SystemExit(0 if result["ok"] else "inference replay corpus failed")'
 "$python_runtime" -c 'from aecctx.providers import validate_provider_replay_corpus; result = validate_provider_replay_corpus("conformance/v0.2/step-iges-corpus.json"); raise SystemExit(0 if result["ok"] else "STEP/IGES replay corpus failed")'
 "$python_runtime" -c 'from aecctx.providers import validate_provider_replay_corpus; result = validate_provider_replay_corpus("conformance/v0.2/dwg-corpus.json"); raise SystemExit(0 if result["ok"] else "DWG replay corpus failed")'
-"$python_runtime" -m pytest tests/test_gate_*.py tests/test_claim_registry.py tests/test_v03_claim_registry.py tests/test_provider_multiarch.py tests/test_package_data.py
+"$python_runtime" -m pytest tests/test_gate_*.py tests/test_claim_registry.py tests/test_v03_claim_registry.py tests/test_provider_multiarch.py tests/test_local_provider_profiles.py tests/test_package_data.py
 "$python_runtime" -m pytest
 "$python_runtime" -m build --wheel --sdist --outdir dist
 "$python_runtime" scripts/check_rvt_blocked_conformance.py --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
+"$python_runtime" scripts/check_local_enforcement_conformance.py --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
 
 # Baseline-owned offer snapshots include upstream EOF formatting and are checked
 # byte-for-byte by the full baseline integration checker when its private runtime

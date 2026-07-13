@@ -1,0 +1,32 @@
+{
+  "claim_id": "sandbox.local-enforcement",
+  "fixture": {
+    "path": "fixtures/v0.3/local-providers/adversarial-cases.json",
+    "sha256": "47356b2c244fc2d710bc073fde2f9795497d7888abd5f00b85500cbbf029f713"
+  },
+  "profiles": [
+    {
+      "diagnostics": [
+        "AECCTX_LOCAL_LINUX_SUPERVISOR_UNAVAILABLE"
+      ],
+      "platform": "linux",
+      "profile_id": "linux-native-v1"
+    },
+    {
+      "diagnostics": [
+        "AECCTX_LOCAL_MACOS_RESOURCE_SUPERVISOR_UNAVAILABLE",
+        "AECCTX_LOCAL_MACOS_SIGNED_HOST_REQUIRED"
+      ],
+      "platform": "macos",
+      "profile_id": "macos-app-sandbox-v1"
+    },
+    {
+      "diagnostics": [
+        "AECCTX_LOCAL_WINDOWS_BROKER_UNAVAILABLE"
+      ],
+      "platform": "windows",
+      "profile_id": "windows-appcontainer-job-v1"
+    }
+  ],
+  "version": "0.3.0"
+}

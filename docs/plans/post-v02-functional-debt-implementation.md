@@ -188,10 +188,10 @@ class LocalEnforcementReport:
 ```
 
 - [x] Govern ACXD-033 with official OS/runtime APIs, CI availability and per-axis proof. Do not combine Linux, macOS and Windows into one claim.
-- [ ] Write RED tests for complete isolation plus deterministic rejection of every missing axis.
-- [ ] Implement only profiles whose full axis suite is enforceable; keep `MacOSSeatbeltProfile` fail-closed unless the memory and host-read gaps are solved.
+- [x] Write RED tests for complete isolation plus deterministic rejection of every missing axis.
+- [x] Implement only profiles whose full axis suite is enforceable; keep `MacOSSeatbeltProfile` fail-closed unless the memory and host-read gaps are solved.
 - [ ] Execute the reference provider success and adversarial process/filesystem/network/resource corpus on each claimed platform.
-- [ ] Scan wheel/sdist to prove no native or restricted provider binary is bundled.
+- [x] Scan wheel/sdist to prove no native or restricted provider binary is bundled.
 - [ ] Run `pytest tests/test_local_provider_profiles.py tests/test_external_providers.py -q`, checker, portable/full gates and exact-platform CI.
 - [ ] Record accepted and rejected platforms in `docs/evidence/ACX-25.md`; promote only ACX-26; commit `feat: add reviewed local provider enforcement profiles`.
 
