@@ -13,6 +13,7 @@ This execution cut adds no capability. It packages only the claims already accep
 3. **Artifact and supply-chain gate.** Build wheel, sdist, and plugin archive; generate deterministic checksums and SPDX SBOM; scan artifact contents, dependencies, licenses, restricted provider binaries, credentials, and consumer-specific terms.
 4. **Compatibility and release documentation.** Publish v0.2 migration notes, release notes, capability/evidence index, provider/security/privacy boundaries, README/changelog/version updates, and exact residuals.
 5. **Local and remote release proof.** Run focused checks and `./scripts/verify.sh`, push the candidate branch, require Linux/macOS/Windows CI green on the exact SHA, merge without rewriting history, re-run gates on `main`, then tag `v0.2.0` and verify the published release assets/checksums.
+6. **Immutable-tag incident recovery.** If the tag workflow exposes a release-gate portability defect after the tag is public, preserve the tag, add a failing regression test and root-cause fix on `main`, then use a governed recovery workflow that rebuilds from that exact tag and executes the corrected verifier from reviewed `main`. Never move or delete the published tag.
 
 ## Boundaries
 

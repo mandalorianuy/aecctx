@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+repo_root="${AECCTX_RELEASE_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 cd "$repo_root"
 
 if [[ -x .venv/bin/python ]]; then
@@ -18,6 +18,8 @@ artifacts=(dist/aecctx-0.2.0-py3-none-any.whl dist/aecctx-0.2.0.tar.gz)
 for artifact in "${artifacts[@]}"; do
   [[ -f "$artifact" ]] || { echo "aecctx release verify: missing $artifact" >&2; exit 1; }
 done
+sdist_members="$(mktemp "${TMPDIR:-/tmp}/aecctx-sdist-members.XXXXXX")"
+tar -tf "${artifacts[1]}" >"$sdist_members"
 for required in \
   "aecctx-0.2.0/conformance/v0.2/corpus.json" \
   "aecctx-0.2.0/conformance/v0.2/provider-corpus.json" \
@@ -29,11 +31,12 @@ for required in \
   "aecctx-0.2.0/docs/specs/dxf-v02-profile.md" \
   "aecctx-0.2.0/fixtures/v0.2/dxf/r2018-semantics-3d-binary.dxf" \
   "aecctx-0.2.0/fixtures/v0.2/ifc/ifc4-native-2d-georef.ifc"; do
-  tar -tf "${artifacts[1]}" | grep -Fxq "$required" || {
+  grep -Fxq "$required" "$sdist_members" || {
     echo "aecctx release verify: sdist missing $required" >&2
     exit 1
   }
 done
+rm -f "$sdist_members"
 "$python_runtime" - <<'PY'
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
@@ -49,7 +52,7 @@ artifacts+=(dist/aecctx-inspector-0.2.0.zip)
 "$python_runtime" -m aecctx.release "${artifacts[@]}" --output-directory dist >/dev/null
 
 clean_root="$(mktemp -d "${TMPDIR:-/tmp}/aecctx-clean-install.XXXXXX")"
-trap 'rm -rf "$clean_root"' EXIT
+trap 'rm -rf "$clean_root"; rm -f "${sdist_members:-}"' EXIT
 "$python_runtime" -m venv "$clean_root/venv"
 if [[ -x "$clean_root/venv/bin/python" ]]; then
   clean_python="$clean_root/venv/bin/python"

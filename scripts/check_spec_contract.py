@@ -58,6 +58,7 @@ def check_required_files() -> None:
         ROOT / "schemas/v0.2/rvt-provider-decision.schema.json",
         ROOT / "scripts/verify_portable.sh",
         ROOT / "scripts/verify_release.sh",
+        ROOT / ".github/workflows/release-recovery.yml",
         ROOT / "conformance/v0.1/corpus.json",
         ROOT / "conformance/v0.2/claims.json",
         ROOT / "conformance/v0.2/corpus.json",

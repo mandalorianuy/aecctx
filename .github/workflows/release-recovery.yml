@@ -1,0 +1,52 @@
+name: Release recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing immutable release tag to rebuild
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHON: python
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          path: governance
+          fetch-depth: 0
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag }}
+          path: source
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: git -C source merge-base --is-ancestor "$(git -C source rev-list -n 1 '${{ inputs.tag }}')" origin/main
+      - run: python -m pip install --disable-pip-version-check './source[test]'
+      - run: ./scripts/verify_portable.sh
+        working-directory: source
+      - run: ../governance/scripts/verify_release.sh
+        working-directory: source
+        env:
+          AECCTX_RELEASE_ROOT: ${{ github.workspace }}/source
+      - run: >-
+          gh release create "${{ inputs.tag }}"
+          source/dist/aecctx-0.2.0-py3-none-any.whl
+          source/dist/aecctx-0.2.0.tar.gz
+          source/dist/aecctx-inspector-0.2.0.zip
+          source/dist/SHA256SUMS
+          source/dist/aecctx-0.2.0.spdx.json
+          --repo "$GITHUB_REPOSITORY"
+          --title "AECCTX 0.2.0"
+          --notes-file source/docs/releases/v0.2.0.md
+          --verify-tag

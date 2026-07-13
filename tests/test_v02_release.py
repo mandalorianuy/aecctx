@@ -78,3 +78,10 @@ def test_v02_release_documents_and_workflow_are_version_consistent() -> None:
     ):
         assert workflow.count(asset) == 1
     assert "docs/releases/v0.2.0.md" in workflow
+
+
+def test_release_member_check_does_not_sigpipe_tar_under_pipefail() -> None:
+    script = (ROOT / "scripts/verify_release.sh").read_text(encoding="utf-8")
+
+    assert 'tar -tf "${artifacts[1]}" | grep' not in script
+    assert 'grep -Fxq "$required" "$sdist_members"' in script

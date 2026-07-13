@@ -30,6 +30,10 @@ Local artifact digests before publication:
 
 Candidate implementation commit `2a04d1cec49f72ff1dfd24e81ab6604795c1319d` passed [CI run 29273482180](https://github.com/mandalorianuy/aecctx/actions/runs/29273482180) on Ubuntu, macOS and Windows. ACX-23 remains `in_progress` until this evidence-bearing release commit, merged `main`, tag workflow and published assets all pass their exact gates.
 
+## Tag workflow incident
+
+Tag workflow `29275244351` rebuilt the exact immutable `v0.2.0` tag and passed portable verification, then exposed a GNU-tar portability defect in the release member check: `tar -tf ... | grep -q` runs under `pipefail`, so an early successful match closes the pipe and GNU tar exits on SIGPIPE. The required member was present; the gate reported it missing. The tag will not be moved or deleted. The governed recovery path is a RED regression test, a single root-cause fix on `main`, and a dispatch workflow that checks out the same tag as release source while using the reviewed corrected verifier from `main`.
+
 ## Boundaries
 
 No WoodFraming path, `WFDomain`, `WFImport`, proprietary runtime, credential, mandatory network or LLM dependency is authorized or distributed. Markdown remains a generated projection rather than evidence authority.
