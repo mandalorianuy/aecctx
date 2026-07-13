@@ -1,8 +1,8 @@
-# ACX-21 Acceptance Evidence — Acceptance Candidate
+# ACX-21 Acceptance Evidence — Completed
 
 ## 1. Task status, commits and date
 
-- Status: `completed` acceptance decision; local acceptance, claim audit, non-claim proof and acceptance-candidate CI pass. Closure/merged-main publication validation remains in progress.
+- Status: `completed`; local acceptance, claim audit, non-claim proof, closure publication and merged-main validation pass.
 - Date: 2026-07-13.
 - Task 8 implementation commit/merge identify the candidate only; Task 9 owns acceptance, exact-SHA publication evidence and any claim promotion.
 
@@ -22,7 +22,7 @@ The candidate contains closed schemas/models, strict bounded policy parsing, det
 |---|---|---|---|
 | `quality-gate.policy-ids` | `aecctx-gate-v1-ids-1.0-simple-v1` | bounded `partial` | `public partial` |
 
-The audited ceiling covers the core validation/integrity, capability, loss, explicit value-state, diagnostic, baseline-diff and waiver checks plus only the selected IDS v1.0 entity/attribute/classification/property/material simple-value cases. It is not a support promotion until the remaining exact-SHA gates pass.
+The audited ceiling covers the core validation/integrity, capability, loss, explicit value-state, diagnostic, baseline-diff and waiver checks plus only the selected IDS v1.0 entity/attribute/classification/property/material simple-value cases. All governed exact-SHA gates passed before publication.
 
 All 27 case IDs are unique and map to this claim, fixture directory, executable conformance tests and this evidence file: 10 core evaluations, one directory/ZIP equivalence, two control errors, 13 IDS evaluations and one missing-extra IDS control. Outcomes cover eight pass, eleven fail, three requires-review, three evaluator errors and two control errors. Ten unchanged buildingSMART cases remain separately attributed; the other 17 are Apache-2.0 project-authored cases.
 
@@ -96,4 +96,4 @@ ACX-21 paths are confined to AECCTX runtime, fixtures, corpus, checker, tests, p
 
 ## 12. Promotion and publication conditions
 
-The complete local/clean-install matrix, claim audit and non-claim proof pass. Task 8 candidate `8f0db26ef4551308ab3e21a6229da7857d616afd` passed [CI run 29262094375](https://github.com/mandalorianuy/aecctx/actions/runs/29262094375); merged candidate `8befac453df9445ae48e54ca2b9b795f35c2d709` passed [CI run 29262864165](https://github.com/mandalorianuy/aecctx/actions/runs/29262864165). Task 9 acceptance candidate `97d8c0b01f343cbd3fee5d0fd6d3be61dc40c48b` passed [CI run 29264614149](https://github.com/mandalorianuy/aecctx/actions/runs/29264614149) on Ubuntu, macOS and Windows. The audited exact subset is promoted to public `partial`; closure and merged-main exact-SHA evidence are recorded after publication. Fixtures, docs, a green happy path or an earlier merge alone do not count as support.
+The complete local/clean-install matrix, claim audit and non-claim proof pass. Task 8 candidate `8f0db26ef4551308ab3e21a6229da7857d616afd` passed [CI run 29262094375](https://github.com/mandalorianuy/aecctx/actions/runs/29262094375); merged candidate `8befac453df9445ae48e54ca2b9b795f35c2d709` passed [CI run 29262864165](https://github.com/mandalorianuy/aecctx/actions/runs/29262864165). Task 9 acceptance candidate `97d8c0b01f343cbd3fee5d0fd6d3be61dc40c48b` passed [CI run 29264614149](https://github.com/mandalorianuy/aecctx/actions/runs/29264614149) on Ubuntu, macOS and Windows. Closure commit `0c78566b832973190358e5fcde44e15506d47666` passed [CI run 29265890899](https://github.com/mandalorianuy/aecctx/actions/runs/29265890899) on Ubuntu, macOS and Windows. Merge commit `8515a9675055ed7dcd851a989a2cde9a78fe5744` passed [CI run 29266798432](https://github.com/mandalorianuy/aecctx/actions/runs/29266798432) on Ubuntu, macOS and Windows after a local post-merge `./scripts/verify.sh` pass. The audited exact subset is public `partial`. Fixtures, docs, a green happy path or an earlier merge alone do not count as support.

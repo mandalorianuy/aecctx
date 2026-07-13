@@ -135,7 +135,7 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - Acceptance matrix: all 27 hash-bound corpus cases are unique, exact and byte-deterministic; clean core and `gate-ids` installs preserve dependency isolation with exact `ifctester==0.8.5` and `ifcopenshell==0.8.5` pins.
 - Repository gate: `./scripts/verify.sh` passes with 604 tests, 9 intentional skips, deterministic fixtures, wheel/sdist build, release verification and healthy baseline integration.
 - Publication boundary: only `aecctx-gate-v1-ids-1.0-simple-v1` is public `partial` on Python 3.12 Linux/macOS/Windows. Unlisted IDS combinations, approval/certification and consumer mappings remain unsupported.
-- The Task 9 acceptance candidate passed Ubuntu, macOS and Windows in [CI run 29264614149](https://github.com/mandalorianuy/aecctx/actions/runs/29264614149). Closure, merge and final documentation SHAs are recorded in `docs/evidence/ACX-21.md` after publication.
+- The Task 9 acceptance candidate passed [CI run 29264614149](https://github.com/mandalorianuy/aecctx/actions/runs/29264614149); closure `0c78566b832973190358e5fcde44e15506d47666` passed [CI run 29265890899](https://github.com/mandalorianuy/aecctx/actions/runs/29265890899); merge `8515a9675055ed7dcd851a989a2cde9a78fe5744` passed [CI run 29266798432](https://github.com/mandalorianuy/aecctx/actions/runs/29266798432), each on Ubuntu, macOS and Windows.
 - `/Users/facundo/desarrollo/woodframing` was not modified.
 
 ## Next implementation task

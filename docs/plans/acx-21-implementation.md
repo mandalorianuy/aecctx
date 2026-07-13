@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12+, JSON Schema 2020-12, existing AECCTX v0.1/v0.2 validation/records/diff APIs, optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`, pytest, hatchling, buildingSMART IDS 1.0 unchanged conformance fixtures.
 
-**Execution status:** Tasks 1-8 and Task 9 Steps 1-5 completed on 2026-07-13. ACX-21 is accepted and public `partial` for the exact governed profile; Task 9 publication Steps 6-7 remain `in_progress`.
+**Execution status:** Tasks 1-9 completed on 2026-07-13. ACX-21 is accepted, published and public `partial` for the exact governed profile. ACX-22 is `pending-next` but has not executed.
 
 ## Global Constraints
 
@@ -616,9 +616,9 @@ git commit -m "test: publish ACX-21 gate conformance candidate"
 
 - [x] **Step 5: Close ACX-21.** Set ACX-21 `completed`, promote only ACX-22 to `pending-next`, finalize claim/evidence/capability/HANDOFF and check all plan tasks. Run `python3 scripts/check_spec_contract.py` and `./scripts/verify.sh`; commit `docs: close ACX-21 quality gate milestone`.
 
-- [ ] **Step 6: Publish and validate closure.** Push closure commit, require exact-SHA green Ubuntu/macOS/Windows CI, merge with `--no-ff` to `main`, rerun `./scripts/verify.sh`, push `main` and require green merged-main CI.
+- [x] **Step 6: Publish and validate closure.** Push closure commit, require exact-SHA green Ubuntu/macOS/Windows CI, merge with `--no-ff` to `main`, rerun `./scripts/verify.sh`, push `main` and require green merged-main CI.
 
-- [ ] **Step 7: Record publication evidence only.** Add exact candidate/closure/merge SHAs and CI URLs/status in evidence, commit/push the documentation-only update, require green CI and stop. Do not execute ACX-22 and do not create a release/tag; ACX-23 owns release authority.
+- [x] **Step 7: Record publication evidence only.** Add exact candidate/closure/merge SHAs and CI URLs/status in evidence, commit/push the documentation-only update, require green CI and stop. Do not execute ACX-22 and do not create a release/tag; ACX-23 owns release authority.
 
 ## Required execution order
 
@@ -626,4 +626,4 @@ Tasks 1 through 9 are sequential. Each task begins only after the preceding task
 
 ## Planning checkpoint
 
-Tasks 1-8 materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks, semantic baseline regression checks, bounded IDS 1.0 evaluation, deterministic CLI/projections and a 27-case hash-bound offline corpus with clean-install packaging boundaries. Task 9 acceptance began with three expected claim-state failures; the minimal registry/corpus/generator/checker/test transition then passed 14 focused tests, the 205-test gate/claim/package suite and the 604-test repository gate with 9 intentional skips. ACX-21 is completed at 9/9 detailed tasks (100%) and `quality-gate.policy-ids` is public `partial` only for `aecctx-gate-v1-ids-1.0-simple-v1` on Python 3.12 Linux/macOS/Windows. ACX-22 is `pending-next` but MUST NOT execute until a new continuation request; Task 9 continues only with closure/merge/publication evidence.
+Tasks 1-8 materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks, semantic baseline regression checks, bounded IDS 1.0 evaluation, deterministic CLI/projections and a 27-case hash-bound offline corpus with clean-install packaging boundaries. Task 9 acceptance began with three expected claim-state failures; the minimal registry/corpus/generator/checker/test transition then passed 14 focused tests, the 205-test gate/claim/package suite and the 604-test repository gate with 9 intentional skips. Closure and merged-main SHAs passed Ubuntu/macOS/Windows CI. ACX-21 is completed at 9/9 detailed tasks (100%) and `quality-gate.policy-ids` is public `partial` only for `aecctx-gate-v1-ids-1.0-simple-v1` on Python 3.12 Linux/macOS/Windows. ACX-22 is `pending-next` but MUST NOT execute until a new continuation request.
