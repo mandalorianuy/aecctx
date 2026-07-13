@@ -37,9 +37,13 @@ No provider output reaches package construction before validation. Markdown rema
 
 `oci-docker-v1` is available only when the Docker executable reaches a Linux server and the exact registered image digest already exists. The runner never pulls or builds an image. The image is mounted with reviewed provider code read-only, private input/request mounts read-only, a private writable output mount and bounded `tmpfs`.
 
-`macos-seatbelt-v1` is rejected with `AECCTX_PROVIDER_PROFILE_UNAVAILABLE`. The attempted profile could not both execute the Python runtime without broad host reads and prove a hard memory limit. A native subprocess with partial limits is not an acceptable fallback.
+ACXD-033 evaluates three native profiles against the same complete 16-axis contract. None is admissible in ACX-25 draft 1:
 
-Native Linux/macOS and Windows profiles are governed by ACXB-001 and remain unsupported. The current public claim is therefore `partial` across the expansion target and `full` only for the exact `oci-docker-v1` Linux-container/reference-provider combination.
+- `linux-native-v1` lacks a reviewed pinned unprivileged supervisor/delegation contract spanning Landlock/cgroup controls and the remaining process, resource and cleanup axes;
+- `macos-app-sandbox-v1` requires a signed entitlement-bearing host/helper and still lacks the aggregate resource supervisor; the legacy `macos-seatbelt-v1` path remains fail-closed;
+- `windows-appcontainer-job-v1` lacks a reviewed broker for AppContainer profile/DACL creation, pre-execution Job Object assignment, monitoring and cleanup.
+
+Each profile emits a deterministic `LocalEnforcementReport` with every axis and rejects with `AECCTX_PROVIDER_PROFILE_UNAVAILABLE` before workspace creation or provider launch. The wheel/sdist contain no native broker or restricted decoder. This executable rejection is public `unsupported` evidence after ACX-25 acceptance; it is not successful sandbox execution and does not change the positive `oci-docker-v1` claims.
 
 ## Residual trust and operational risk
 
@@ -48,4 +52,4 @@ Native Linux/macOS and Windows profiles are governed by ACXB-001 and remain unsu
 - CPU allocation is bounded by Docker quota and wall timeout; the response's self-reported resource usage remains untrusted metadata.
 - Decompression behavior is decoder-specific. A future decoder must prove its configured ratio/entity limits in its own corpus before a claim is public.
 - Commercial entitlement, privacy, telemetry, retention and jurisdiction are provider-specific and must pass the review template below.
-- Native macOS/Windows execution, unreviewed architectures and remote runtimes remain unsupported after ACX-24; emulation is evidence only for the inspected Linux image architecture.
+- Native Linux/macOS/Windows execution remains unsupported after ACX-25; unreviewed architectures and remote runtimes also remain unsupported. Emulation is evidence only for the inspected Linux image architecture.

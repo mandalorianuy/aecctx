@@ -1,9 +1,11 @@
 """Reviewed external provider protocol and execution profiles."""
 
 from .macos import MacOSSeatbeltProfile
+from .local import LocalEnforcementReport, LocalProviderProfile, local_enforcement_report
 from .oci import OCIDockerProfile
 from .models import (
     OCIRuntimeTarget,
+    REQUIRED_ENFORCEMENT_AXES,
     ProviderDescriptor,
     ProviderExecutionError,
     ProviderLimits,
@@ -43,6 +45,8 @@ from .dwg import (
 
 __all__ = [
     "MacOSSeatbeltProfile",
+    "LocalEnforcementReport",
+    "LocalProviderProfile",
     "OCIDockerProfile",
     "OCIRuntimeTarget",
     "ProviderDescriptor",
@@ -52,6 +56,8 @@ __all__ = [
     "ProviderReplay",
     "ProviderRegistry",
     "ProviderRunner",
+    "REQUIRED_ENFORCEMENT_AXES",
+    "local_enforcement_report",
     "resolve_oci_target",
     "build_provider_request",
     "provider_descriptor_digest",

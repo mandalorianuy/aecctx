@@ -1,0 +1,56 @@
+{
+  "cases": [
+    {
+      "axis": "filesystem",
+      "id": "filesystem-escape",
+      "payload": "../../host-secret"
+    },
+    {
+      "axis": "environment",
+      "id": "environment-leak",
+      "payload": "AECCTX_TEST_SECRET"
+    },
+    {
+      "axis": "network",
+      "id": "network-connect",
+      "payload": "tcp://127.0.0.1:9"
+    },
+    {
+      "axis": "process_tree",
+      "id": "child-process-tree",
+      "payload": "fixed-child-grandchild"
+    },
+    {
+      "axis": "memory",
+      "id": "memory-exhaustion",
+      "payload": "allocate-over-limit"
+    },
+    {
+      "axis": "cpu",
+      "id": "cpu-exhaustion",
+      "payload": "bounded-busy-loop"
+    },
+    {
+      "axis": "wall_time",
+      "id": "wall-timeout",
+      "payload": "wait-over-limit"
+    },
+    {
+      "axis": "output_bytes",
+      "id": "output-overflow",
+      "payload": "write-over-limit"
+    },
+    {
+      "axis": "temporary_storage",
+      "id": "temporary-cleanup",
+      "payload": "leave-private-temp-marker"
+    },
+    {
+      "axis": "user_permissions",
+      "id": "privilege-probe",
+      "payload": "request-elevated-access"
+    }
+  ],
+  "license": "Apache-2.0",
+  "version": "1"
+}

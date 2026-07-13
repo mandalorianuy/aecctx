@@ -3,7 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from .models import ProviderExecutionError, ProviderRegistration
+from .models import ProviderRegistration
+from .local import LocalProviderProfile
 
 
 @dataclass(frozen=True, slots=True)
@@ -12,7 +13,4 @@ class MacOSSeatbeltProfile:
     profile_id: str = "macos-seatbelt-v1"
 
     def preflight(self, registration: ProviderRegistration) -> None:
-        raise ProviderExecutionError(
-            "AECCTX_PROVIDER_PROFILE_UNAVAILABLE",
-            "macos-seatbelt-v1 cannot prove restricted host reads and the required memory axis",
-        )
+        LocalProviderProfile(platform="macos").preflight(registration)
