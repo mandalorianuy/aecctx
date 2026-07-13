@@ -1,6 +1,6 @@
 # ACX-24 acceptance evidence
 
-Status: implementation candidate; local acceptance complete, remote exact-SHA acceptance pending.
+Status: accepted and completed.
 
 ACX-24 is governed by `docs/specs/provider-oci-multiarch-v03-profile.md` and ACXD-032. This evidence record becomes final only after the complete local and remote gate bundle passes and the implementation ledger is promoted.
 
@@ -25,5 +25,7 @@ The candidate claim is `sandbox.oci-multiarch`, public partial only for the six 
 - Portable gate: 221 focused tests and 640 full tests passed with 10 explicit skips; deterministic corpora, wheel and sdist built successfully.
 - Full maintainer gate: `PYTHONPATH=src PYTHON=/Users/facundo/desarrollo/aecctx/.venv/bin/python AECCTX_VERIFY_PROVIDER_MATRIX=1 ./scripts/verify.sh` passed, including six live executions, portable corpus, baseline integration and release verification.
 - Runtime: Docker Desktop 4.79.0, Engine 29.5.3, buildx 0.34.1; Docker reported each loaded image as its requested Linux architecture.
+- Remote diagnosis evidence: candidate `65c32f29a38a17573725b104deb6ee6cbdaf0d25` failed run `29286358415` because environmental Docker availability incorrectly preceded missing-target contract validation. A new local RED test reproduced it with an absent Docker executable; the minimal precedence fix passed 46 focused tests.
+- Remote acceptance: corrected implementation `3cbf3378dffe52bed270eee7e338bb4fbfd552a5` passed [CI run 29286654324](https://github.com/mandalorianuy/aecctx/actions/runs/29286654324) on Ubuntu, macOS and Windows.
 
-Candidate commit SHA and remote CI URL are added only after publication succeeds. The claim remains `experimental partial` until that gate and governed closure complete.
+The accepted claim is public `partial` only under the exact profile and residuals above.

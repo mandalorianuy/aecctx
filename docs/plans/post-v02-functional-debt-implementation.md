@@ -116,31 +116,31 @@ No adapter may create or select a provider implicitly.
 - Consumes: `ProviderRegistration`, `OCIDockerProfile`, `ProviderRunner`, existing replay corpora and worker protocols.
 - Produces: `OCIRuntimeTarget`, `resolve_oci_target(...)`, architecture-bound attestations and claim `sandbox.oci-multiarch`.
 
-- [ ] **Step 1: Lock the normative profile and decision before runtime changes**
+- [x] **Step 1: Lock the normative profile and decision before runtime changes**
 
   Add ACXD-032 with exact platforms (`linux/arm64`, `linux/amd64`), provider/version matrix, normalized attestation fields, semantic-equivalence rules, build provenance and explicit macOS/Windows non-claims. Run `python3 scripts/check_spec_contract.py`; expected: PASS. Stop for human review if any worker dependency has no legally reproducible amd64 build.
 
-- [ ] **Step 2: Write failing runtime-selection tests**
+- [x] **Step 2: Write failing runtime-selection tests**
 
   Tests must instantiate registrations with two targets and assert exact architecture selection, unknown architecture rejection, digest drift rejection and no implicit pull/build. Run `python -m pytest tests/test_provider_multiarch.py -q`; expected: FAIL because `OCIRuntimeTarget` and `resolve_oci_target` do not exist.
 
-- [ ] **Step 3: Implement the minimal architecture-bound registration contract**
+- [x] **Step 3: Implement the minimal architecture-bound registration contract**
 
   Add `OCIRuntimeTarget` and an immutable `oci_targets: tuple[OCIRuntimeTarget, ...]` to `ProviderRegistration`. Keep legacy single-image registration readable only for the existing v0.2 profiles. `OCIDockerProfile.preflight()` must inspect both `.Os` and `.Architecture`, select one exact target and reject mismatch with `AECCTX_PROVIDER_ARCHITECTURE_UNSUPPORTED` or `AECCTX_PROVIDER_IMAGE_DIGEST_MISMATCH`.
 
-- [ ] **Step 4: Build reproducible provider targets and bind fixtures**
+- [x] **Step 4: Build reproducible provider targets and bind fixtures**
 
   `scripts/build_provider_matrix.sh --provider NAME --platform linux --architecture ARCH` builds only reviewed Dockerfiles, records package locks and emits a machine-readable build receipt. It must never push. Generate arm64/amd64 output for the existing OCR, STEP/IGES and DWG positive fixtures; compare canonical response/events/artifacts after removing only governed attestation architecture fields.
 
-- [ ] **Step 5: Add adversarial live gates**
+- [x] **Step 5: Add adversarial live gates**
 
   Run timeout, PID tree, memory, filesystem, network, output, malformed-response and wrong-architecture cases against both architectures. `scripts/verify_provider_matrix.sh` must fail if Docker/emulation/runtime/image is unavailable; a skip cannot promote the claim.
 
-- [ ] **Step 6: Create claim and corpus mapping**
+- [x] **Step 6: Create claim and corpus mapping**
 
   `conformance/v0.3/provider-multiarch-corpus.json` binds source, request, response, artifact, descriptor, image and build-receipt digests. `sandbox.oci-multiarch` stays `experimental partial` until exact live evidence exists for all six provider/architecture combinations.
 
-- [ ] **Step 7: Run acceptance gates**
+- [x] **Step 7: Run acceptance gates**
 
   Run:
 
@@ -154,7 +154,7 @@ No adapter may create or select a provider implicitly.
 
   Expected: all pass; live matrix receipts exist for arm64 and amd64; portable mode validates replay without claiming live availability.
 
-- [ ] **Step 8: Close and promote**
+- [x] **Step 8: Close and promote**
 
   Write `docs/evidence/ACX-24.md`, update claims/capability matrix/HANDOFF, set ACX-24 `completed`, promote only ACX-25, and commit `feat: add multi-architecture OCI provider execution`.
 

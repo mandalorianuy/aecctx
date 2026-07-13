@@ -12,7 +12,7 @@
       ],
       "profile": "provider-oci-multiarch-v03",
       "provider_scope": "org.aecctx.ocr.tesseract-tsv@0.2.0,org.aecctx.step-iges.ocp@0.2.0,org.aecctx.dwg.libredwg@0.2.0",
-      "status": "experimental",
+      "status": "public",
       "support_level": "partial",
       "test_ids": [
         "tests/test_provider_multiarch.py::test_runtime_target_selection_is_exact_and_order_independent",
