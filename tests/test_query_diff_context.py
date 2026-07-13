@@ -89,6 +89,51 @@ def test_diff_reports_record_and_capability_changes(tmp_path: Path) -> None:
     assert result.capability_changes == {"properties": {"before": "partial", "after": "full"}}
 
 
+def test_diff_exposes_exact_manifest_changes_and_ignores_projection_bytes(tmp_path: Path) -> None:
+    changed = tmp_path / "changed-manifest"
+    shutil.copytree(FIXTURE, changed)
+    (changed / "context" / "index.md").write_text("different generated markdown\n", encoding="utf-8")
+    manifest_path = changed / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["package_id"] = "pkg_changed"
+    manifest["producer"]["version"] = "0.2.0"
+    manifest["loss_summary"] = ["changed-loss"]
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    _rehash(changed)
+
+    result = diff_packages(FIXTURE, changed)
+
+    assert "context/index.md" in result.artifact_changes
+    assert result.authoritative_artifact_changes == {}
+    assert result.identity_field_changes == {
+        "package_id": {"before": "pkg_minimal_fixture", "after": "pkg_changed"}
+    }
+    assert result.producer_field_changes == {
+        "version": {"before": "0.1.0", "after": "0.2.0"}
+    }
+    assert result.loss_change == {
+        "before": ["no-3d-geometry"],
+        "after": ["changed-loss"],
+    }
+
+
+def test_diff_record_semantics_ignore_json_object_key_order(tmp_path: Path) -> None:
+    changed = tmp_path / "changed-order"
+    shutil.copytree(FIXTURE, changed)
+    entity_path = changed / "model" / "entities.jsonl"
+    entity = json.loads(entity_path.read_text(encoding="utf-8"))
+    reordered = dict(reversed(tuple(entity.items())))
+    entity_path.write_text(json.dumps(reordered, separators=(",", ":")) + "\n", encoding="utf-8")
+    _rehash(changed)
+
+    result = diff_packages(FIXTURE, changed)
+
+    assert "model/entities.jsonl" in result.artifact_changes
+    assert result.authoritative_artifact_changes == {}
+    assert result.changed_records == ()
+    assert result.semantic_change is False
+
+
 def test_context_projection_has_citations_chunks_and_budget_report() -> None:
     projection = render_context(FIXTURE, profile="agent", token_budget=600, chunk_token_budget=220)
 

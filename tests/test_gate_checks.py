@@ -475,7 +475,7 @@ def test_finding_and_result_limits_fail_closed(minimal_package: Path) -> None:
     assert bytes_error.value.code == "AECCTX_GATE_RESULT_LIMIT_EXCEEDED"
 
 
-def test_later_task_check_kind_fails_closed(minimal_package: Path) -> None:
+def test_diff_check_without_baseline_is_explicit_system_error(minimal_package: Path) -> None:
     policy = _loaded_policy(
         [
             _policy_item(
@@ -499,9 +499,9 @@ def test_later_task_check_kind_fails_closed(minimal_package: Path) -> None:
             )
         ]
     )
-    with pytest.raises(GateError) as caught:
-        evaluate_gate(minimal_package, policy)
-    assert caught.value.code == "AECCTX_GATE_CHECK_NOT_IMPLEMENTED"
+    result = evaluate_gate(minimal_package, policy)
+    assert result.outcome == "error"
+    assert result.diagnostics[0].code == "AECCTX_GATE_BASELINE_MISSING"
 
 
 def test_directory_and_zip_gate_results_are_canonical_equivalents(tmp_path: Path) -> None:

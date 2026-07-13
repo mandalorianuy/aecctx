@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12+, JSON Schema 2020-12, existing AECCTX v0.1/v0.2 validation/records/diff APIs, optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5`, pytest, hatchling, buildingSMART IDS 1.0 unchanged conformance fixtures.
 
-**Execution status:** Tasks 1-4 completed on 2026-07-13. Task 5 is `pending-next`; Tasks 6-9 remain `pending`. The public quality-gate capability remains `unsupported`.
+**Execution status:** Tasks 1-5 completed on 2026-07-13. Task 6 is `pending-next`; Tasks 7-9 remain `pending`. The public quality-gate capability remains `unsupported`.
 
 ## Global Constraints
 
@@ -367,13 +367,21 @@ git commit -m "feat: evaluate authoritative package gate checks"
 - Create: `src/aecctx/gate/diff_checks.py`
 - Create: `tests/test_gate_diff.py`
 - Modify: `src/aecctx/gate/evaluator.py`
+- Modify: `src/aecctx/diff.py` additively to expose authoritative artifacts and exact identity/producer/loss field changes
+- Modify: `tests/test_query_diff_context.py` to preserve existing diff compatibility and prove Markdown non-authority
+- Modify: `tests/test_gate_checks.py` to replace Task 4's diff fail-closed checkpoint while retaining IDS fail-closed coverage
+- Modify: normative profile, ACXD-023, implementation plan and HANDOFF when Task 5 changes behavior/status
 
 **Interfaces:**
 - Produce `evaluate_diff_policy(check: GateCheckPolicy, diff: PackageDiff) -> GateCheckResult`.
 - Consume only `diff_packages(before_path, after_path) -> PackageDiff`.
 - Each diff category has exact policy action `allow`, `requires_review` or `fail`; missing categories make the diff-check policy invalid.
+- `aecctx.system.baseline` validates every supplied/required baseline through a revalidated private snapshot; a supplied unused baseline records identity without inventing a policy check.
+- Gate artifact regressions consume only additive `PackageDiff.authoritative_artifact_changes` for authoritative non-record artifacts; normalized JSONL streams are governed by record IDs/dictionaries, existing all-artifact observations remain compatibility data and generated Markdown is never gate authority.
+- Exact identity/producer/loss field-change maps provide the evidence paths required by the normative profile. Capability upgrades/additions are visible non-regressions; downgrades/disappearance follow `capability_regressions` without synthesizing a missing support level.
+- Every diff observation cites role-qualified `baseline-package:<digest>` and `candidate-package:<digest>` refs so equal artifact-derived logical digests cannot collapse the two package roles.
 
-- [ ] **Step 1: Write failing tests for every `PackageDiff` category.** Cover added/removed/changed records, artifacts, capability downgrade/upgrade, loss, identity, producer and version; prove archive metadata/reordering is not a regression.
+- [x] **Step 1: Write failing tests for every `PackageDiff` category.** Cover added/removed/changed records, artifacts, capability downgrade/upgrade, loss, identity, producer and version; prove archive metadata/reordering is not a regression.
 
 ```python
 def test_capability_downgrade_cites_both_package_digests(tmp_path: Path) -> None:
@@ -382,26 +390,29 @@ def test_capability_downgrade_cites_both_package_digests(tmp_path: Path) -> None
     finding = next(item for item in result.findings if item.code == "AECCTX_GATE_CAPABILITY_REGRESSION")
     assert result.outcome == "fail"
     assert finding.evidence_refs == (
-        f"package:{result.baseline_logical_digest}",
-        f"package:{result.candidate_logical_digest}",
+        f"baseline-package:{result.baseline_logical_digest}",
+        f"candidate-package:{result.candidate_logical_digest}",
         "manifest.json#/capabilities/identity",
     )
 ```
 
-- [ ] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_diff.py -q`; expect missing diff-check module/dispatch.
+- [x] **Step 2: Verify RED.** Run `.venv/bin/python -m pytest tests/test_gate_diff.py -q`; expect missing diff-check module/dispatch.
 
-- [ ] **Step 3: Validate the baseline independently.** Missing/invalid baseline with enabled diff check is system `error`; a supplied unused baseline is recorded but does not invent a check.
+- [x] **Step 3: Validate the baseline independently.** Missing/invalid baseline with enabled diff check is `aecctx.system.baseline` error; every supplied baseline is copied to a private snapshot, revalidated and recorded, while a supplied unused baseline does not invent a policy check.
 
-- [ ] **Step 4: Map every stable diff field.** Use exact IDs/paths from `PackageDiff`; compare capability support levels to distinguish regression from improvement; never compare Markdown or `created_at`.
+- [x] **Step 4: Map every stable diff field.** Extend `PackageDiff` additively where boolean/all-artifact data cannot support exact citations, preserving existing fields. Use exact IDs/JSON pointers; compare capability support levels to distinguish regression/disappearance from improvement/addition; never compare Markdown, non-authoritative projections or `created_at`.
 
-- [ ] **Step 5: Apply exact category actions.** `allow` stays visible in check details, review/fail emit findings, and an unhandled semantic category is `AECCTX_GATE_DIFF_CATEGORY_UNHANDLED` error.
+- [x] **Step 5: Apply exact category actions.** `allow` stays visible in check details, review/fail emit findings, and an unhandled semantic category is `AECCTX_GATE_DIFF_CATEGORY_UNHANDLED` error.
 
-- [ ] **Step 6: Verify GREEN and compatibility.** Run `.venv/bin/python -m pytest tests/test_gate_diff.py tests/test_query_diff_context.py tests/test_v02_compatibility.py -q`.
+- [x] **Step 6: Verify GREEN and compatibility.** Run `.venv/bin/python -m pytest tests/test_gate_diff.py tests/test_query_diff_context.py tests/test_v02_compatibility.py -q`.
 
-- [ ] **Step 7: Commit.**
+- [x] **Step 7: Commit.**
 
 ```bash
-git add src/aecctx/gate/diff_checks.py src/aecctx/gate/evaluator.py tests/test_gate_diff.py
+git add docs/specs/quality-gate-v02-profile.md docs/decisions/decision-log.md \
+  docs/implementation-plan.md docs/plans/acx-21-implementation.md docs/HANDOFF.md \
+  src/aecctx/diff.py src/aecctx/gate/diff_checks.py src/aecctx/gate/evaluator.py \
+  tests/test_gate_checks.py tests/test_gate_diff.py tests/test_query_diff_context.py
 git commit -m "feat: gate semantic baseline regressions"
 ```
 
@@ -599,4 +610,4 @@ Tasks 1 through 9 are sequential. Each task begins only after the preceding task
 
 ## Planning checkpoint
 
-Tasks 1-4 now materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation and the public candidate evaluator for validation/integrity plus authoritative capability, loss, value-state and diagnostic checks. Task 4 proves invalid-candidate error identity, revalidated private snapshots, exact evidence/count semantics, explicit five-state actions, bounded findings/results and directory/ZIP canonical parity. It adds no dependency, fixture, baseline diff, IDS worker, CLI, projection, corpus or capability claim. ACX-21 remains `in_progress` at 4/9 detailed tasks (44.4%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 5 baseline semantic regression checks are the next governed action only after a new user continuation request.
+Tasks 1-5 now materialize the closed public schemas/models, strict bounded policy input, deterministic finding/waiver aggregation, authoritative package checks and semantic baseline regression checks. Task 5 independently validates and snapshots every supplied baseline, maps all nine governed `PackageDiff` categories with exact actions and role-qualified evidence, preserves capability improvements/additions as visible non-regressions, and excludes generated Markdown plus non-authoritative artifacts from gate authority. It adds no dependency, fixture, IDS worker, CLI, projection, corpus or capability claim. ACX-21 remains `in_progress` at 5/9 detailed tasks (55.6%), the quality-gate capability remains public `unsupported`, ACX-22 remains `pending`, and Task 6 bounded IDS 1.0 evaluation is the next governed action only after a new user continuation request.
