@@ -44,6 +44,35 @@ def mcp_context(package_path: str, profile: str = "agent", token_budget: int = 4
     ).to_dict()
 
 
+def mcp_gate(
+    package_path: str,
+    policy_path: str,
+    baseline_path: str | None = None,
+    ids_path: str | None = None,
+    ifc_source_path: str | None = None,
+) -> dict[str, Any]:
+    """Evaluate the stable gate contract without creating projections or files."""
+    from .gate import GateLimits, evaluate_gate, load_gate_policy, read_gate_document
+
+    limits = GateLimits()
+    policy = load_gate_policy(
+        read_gate_document(
+            policy_path,
+            maximum_bytes=limits.max_policy_bytes,
+            label="gate policy",
+        ),
+        limits=limits,
+    )
+    return evaluate_gate(
+        package_path,
+        policy,
+        baseline_package=baseline_path,
+        ids_document=ids_path,
+        ifc_source=ifc_source_path,
+        limits=limits,
+    ).to_dict()
+
+
 def create_server() -> Any:
     try:
         from mcp.server.fastmcp import FastMCP
@@ -55,9 +84,9 @@ def create_server() -> Any:
     server.tool(name="aecctx_query")(mcp_query)
     server.tool(name="aecctx_diff")(mcp_diff)
     server.tool(name="aecctx_context")(mcp_context)
+    server.tool(name="aecctx_gate")(mcp_gate)
     return server
 
 
 def main() -> None:
     create_server().run(transport="stdio")
-

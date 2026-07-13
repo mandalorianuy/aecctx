@@ -1,0 +1,37 @@
+{
+  "name": "aecctx-inspector",
+  "version": "0.2.0",
+  "description": "Read-only inspection and quality-gate orchestration for validated AECCTX packages.",
+  "author": {
+    "name": "AECCTX contributors",
+    "url": "https://github.com/mandalorianuy/aecctx"
+  },
+  "homepage": "https://github.com/mandalorianuy/aecctx",
+  "repository": "https://github.com/mandalorianuy/aecctx",
+  "license": "Apache-2.0",
+  "keywords": [
+    "aec",
+    "bim",
+    "context",
+    "inspection"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "AECCTX Inspector",
+    "shortDescription": "Inspect validated AECCTX evidence safely.",
+    "longDescription": "Validate, inspect, compare and explain AECCTX package evidence through read-only parity with the AECCTX library and CLI.",
+    "developerName": "AECCTX contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read-only",
+      "Local-first",
+      "Evidence citations"
+    ],
+    "defaultPrompt": [
+      "Validate and inspect this AECCTX package.",
+      "Compare these two AECCTX package revisions.",
+      "Explain this AECCTX quality-gate result."
+    ]
+  }
+}

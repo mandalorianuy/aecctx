@@ -1,0 +1,29 @@
+{
+  "version": "1",
+  "claim_id": "codex.aecctx-inspector",
+  "claim_status": "public",
+  "maximum_support": "partial",
+  "profile": "aecctx-inspector-v1",
+  "file_sha256": {
+    "fixtures/v0.2/plugin/prompt-injection-cases.json": "a9a3bf4ad4225b15862035337a8a602460b1a20f93580ce7453971487db6118c",
+    "plugins/aecctx-inspector/.codex-plugin/plugin.json": "6b47e789c91a4ac88e903b1f098ac5a45d066137748414fa98b5e8cc0a2b9513",
+    "plugins/aecctx-inspector/.mcp.json": "45f30583e0d0579e8ba396d4564b7dff8fd319f1c8bb3a4a710b9e4a5bc1493b",
+    "plugins/aecctx-inspector/assets/compatibility.json": "74f793f5acf20ded6fe6a2370058632d6863d803da11bc49c53dcb08855bff89",
+    "plugins/aecctx-inspector/scripts/manage.py": "60dceff97f6c93e0078396715c7e1c7f6a8fd93f497a89afd26a8aa4250c24b1",
+    "plugins/aecctx-inspector/skills/compare-revisions/SKILL.md": "cce08c2d8721c2a7be51b3827d12149efab65d2d6c2f067de88a6814461b6091",
+    "plugins/aecctx-inspector/skills/explain-quality-gate/SKILL.md": "638694b68f37273be4a4270e2ba0988d46c737df1434c09e5d0fbda96ea2d3ab",
+    "plugins/aecctx-inspector/skills/inspect-package/SKILL.md": "ffd27678a78507d2323b32d15398b53a698f78470da9562515f24c2716010550",
+    "plugins/aecctx-inspector/skills/render-agent-context/SKILL.md": "d8200210c4cd54b47662065e4ee3888bc92cf909e00059dc5b914e83e195d5da",
+    "plugins/aecctx-inspector/skills/triage-capability-loss/SKILL.md": "7c7d43fe6419c5303d9b271062aca9fed60462ce97b96042822a08d4875cc9b2"
+  },
+  "operations": [
+    {"mcp_tool": "aecctx_validate", "library_function": "aecctx.validation.validate_package", "skill": "inspect-package"},
+    {"mcp_tool": "aecctx_info", "library_function": "aecctx.package.load_package", "skill": "inspect-package"},
+    {"mcp_tool": "aecctx_query", "library_function": "aecctx.query.query_package", "skill": "triage-capability-loss"},
+    {"mcp_tool": "aecctx_diff", "library_function": "aecctx.diff.diff_packages", "skill": "compare-revisions"},
+    {"mcp_tool": "aecctx_context", "library_function": "aecctx.context.render_context", "skill": "render-agent-context"},
+    {"mcp_tool": "aecctx_gate", "library_function": "aecctx.gate.evaluate_gate", "skill": "explain-quality-gate"}
+  ],
+  "prompt_injection_surfaces": ["filename", "pdf_text", "ifc_dxf_metadata", "ocr_provider_output", "generated_context"],
+  "license": "Apache-2.0"
+}

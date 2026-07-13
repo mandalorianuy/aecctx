@@ -12,7 +12,8 @@
     {"id": "v02-dwg-acx18", "path": "fixtures/v0.2/dwg"},
     {"id": "v02-rvt-acx19-anti-claim", "path": "fixtures/v0.2/rvt/not-a-real-rvt.rvt"},
     {"id": "v02-signing-acx20", "path": "fixtures/v0.2/signing"},
-    {"id": "v02-gate-acx21", "path": "fixtures/v0.2/gate"}
+    {"id": "v02-gate-acx21", "path": "fixtures/v0.2/gate"},
+    {"id": "v02-plugin-acx22", "path": "fixtures/v0.2/plugin"}
   ],
   "claims": [
     {
@@ -323,6 +324,21 @@
       ],
       "evidence": "docs/evidence/ACX-21.md"
     },
-    {"id": "codex.aecctx-inspector", "status": "target", "support_level": null, "profile": "unselected", "platform_scope": [], "provider_scope": "none", "fixture_ids": [], "test_ids": [], "evidence": null}
+    {
+      "id": "codex.aecctx-inspector",
+      "status": "public",
+      "support_level": "partial",
+      "profile": "aecctx-inspector-v1",
+      "platform_scope": ["python-3.12-linux-macos-windows"],
+      "provider_scope": "optional local Codex plugin over aecctx>=0.1.0,<0.3.0 and mcp>=1.20,<2",
+      "fixture_ids": ["v02-plugin-acx22"],
+      "test_ids": [
+        "tests/test_codex_plugin.py::test_plugin_skills_are_validate_first_read_only_and_citation_bound",
+        "tests/test_codex_plugin.py::test_plugin_manager_installs_create_only_and_uninstalls_exact_inventory",
+        "tests/test_codex_plugin_conformance.py::test_plugin_corpus_is_hash_bound_and_checker_is_green",
+        "tests/test_mcp_server.py::test_mcp_gate_returns_the_same_read_only_library_result"
+      ],
+      "evidence": "docs/evidence/ACX-22.md"
+    }
   ]
 }

@@ -40,7 +40,7 @@ Opaque fallback ingest is implemented in the core. Format-specific adapter value
 | Markdown context projection | Implemented | source locations, chunks, profiles and token budget report |
 | Query | Implemented | read-only deterministic record selection with package digest |
 | Diff | Implemented | identity, record, artifact, capability, loss and producer changes |
-| MCP server | Optional, implemented | five read-only wrappers match stable library/CLI semantics |
+| MCP server | Optional, implemented | six read-only wrappers match stable library/CLI/gate semantics |
 | Source mutation/write-back | Not in v0.1 | future reviewed contract |
 | v0.2 shared schema substrate | Implemented by ACX-11 | dual-version validation, typed shared evidence, required-extension and query/diff/context conformance |
 
@@ -64,4 +64,4 @@ This table is a roadmap, not a support claim. Current claims in the release regi
 | Package authenticity/signing | public `partial`: optional detached JWS General JSON with `Ed25519` over valid v0.1/v0.2 packages; caller-owned offline registry/policy; distinct integrity, validity, lifecycle, trust and authorization states | X.509, remote discovery/revocation, timestamps, countersignatures, implicit trust and universal authorization remain unsupported | ACX-20 completed |
 | Restricted decoder isolation | `partial`: `oci-docker-v1` is public only for the digest-pinned Linux-container/reference-provider profile; native Linux/macOS and Windows remain `unsupported` | Additional reviewed profiles with the complete enforcement-axis corpus | ACX-12 completed; ACXB-001 residual |
 | AEC delivery quality gate | public `partial`: deterministic core policy gate plus optional bounded IDS 1.0 simple-value evaluation under `aecctx-gate-v1-ids-1.0-simple-v1` on Python 3.12 Linux/macOS/Windows | Unlisted IDS versions/facets/restrictions/cardinalities, `partOf`, URI/bSDD lookup, geometry/quantity interpretation, remote validation and all approval/certification semantics remain unsupported | ACX-21 completed |
-| Codex plugin | standalone read-only MCP only | Optional `aecctx-inspector` package with inspection, revision, loss-triage and quality-gate skills; no unique semantics | ACX-22 |
+| Codex plugin | public `partial`: optional local `aecctx-inspector-v1` distribution with six MCP parity operations, five bounded skills, hash-bound adversarial corpus and safe local install/uninstall on Python 3.12 Linux/macOS/Windows | Marketplace publication, universal model behavior, third-party hosts and any unique semantics remain unclaimed | ACX-22 completed |
