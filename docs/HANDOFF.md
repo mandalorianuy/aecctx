@@ -138,6 +138,15 @@ AECCTX `0.1.0` remains implemented and released. ACX-11 through ACX-18 include t
 - The Task 9 acceptance candidate passed [CI run 29264614149](https://github.com/mandalorianuy/aecctx/actions/runs/29264614149); closure `0c78566b832973190358e5fcde44e15506d47666` passed [CI run 29265890899](https://github.com/mandalorianuy/aecctx/actions/runs/29265890899); merge `8515a9675055ed7dcd851a989a2cde9a78fe5744` passed [CI run 29266798432](https://github.com/mandalorianuy/aecctx/actions/runs/29266798432), each on Ubuntu, macOS and Windows.
 - `/Users/facundo/desarrollo/woodframing` was not modified.
 
+## ACX-22 acceptance evidence
+
+- RED/GREEN: absent distribution, gate wrapper, skills, install manager, corpus, claim transition and portable hooks were observed failing before their bounded implementations.
+- Local: focused closure suite passed 22 tests; full repository gate passed 619 tests with 9 intentional skips, deterministic corpora, wheel/sdist, release and baseline checks.
+- Packaging: clean core wheel install and CLI passed without plugin payload; sdist contained the optional distribution; create-only install and exact-inventory uninstall passed in a fresh environment.
+- Remote: candidate `dec94a158f120285f802aa7c0b5f87cf9334eef5` passed CI 29269632838, closure `dbaa2957bb75d819f8aef654689d03ee95fbd8ac` passed CI 29270583453 and merge `32959fb72a87d014ab4d45c55dd58225c5281d25` passed CI 29271291135, each on Ubuntu, macOS and Windows.
+- Claim: only `aecctx-inspector-v1` is public `partial`; marketplace, universal/third-party host behavior, unique semantics and native/GPL/commercial sandbox approval remain unclaimed.
+- `/Users/facundo/desarrollo/woodframing` was not modified.
+
 ## Next implementation task
 
 ACX-23 is the sole `pending-next` task: audit and publish the expansion conformance release exactly as governed by [`docs/implementation-plan.md`](implementation-plan.md). It has not started.
