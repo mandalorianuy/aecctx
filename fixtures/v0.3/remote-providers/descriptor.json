@@ -1,0 +1,39 @@
+{
+  "actions": [
+    "extract"
+  ],
+  "deterministic": true,
+  "distribution": "source-reference-only",
+  "enforced_axes": {
+    "cpu": true,
+    "decompression": true,
+    "environment": true,
+    "filesystem": true,
+    "input_bytes": true,
+    "memory": true,
+    "network": true,
+    "open_files": true,
+    "output_bytes": true,
+    "process": true,
+    "process_tree": true,
+    "records": true,
+    "recursion": true,
+    "temporary_storage": true,
+    "user_permissions": true,
+    "wall_time": true
+  },
+  "enforcement_profile": "remote-https-spki-v1",
+  "formats": [
+    "application/x-aecctx-provider-fixture"
+  ],
+  "license_spdx": "Apache-2.0",
+  "network_mode": "allowlisted",
+  "platforms": [
+    "remote"
+  ],
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.reference-remote",
+  "provider_version": "0.3.0",
+  "runtime_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "runtime_version": "python-3.12"
+}

@@ -43,14 +43,14 @@
       ]
     },
     {
-      "evidence": "docs/evidence/ACX-26.md",
+      "evidence": null,
       "fixture_ids": ["v03-remote-provider"],
       "id": "sandbox.remote-provider",
       "platform_scope": ["python-3.12-linux", "python-3.12-macos", "python-3.12-windows"],
       "profile": "remote-https-spki-v1",
       "provider_scope": "repository-owned loopback TLS reference protocol only",
       "status": "target",
-      "support_level": "partial",
+      "support_level": null,
       "test_ids": [
         "tests/test_remote_providers.py::test_loopback_tls_round_trip_is_content_addressed",
         "tests/test_remote_providers.py::test_remote_policy_rejects_before_network",

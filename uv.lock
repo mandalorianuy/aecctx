@@ -50,6 +50,9 @@ pdf = [
     { name = "pillow" },
     { name = "pypdf" },
 ]
+remote = [
+    { name = "cryptography" },
+]
 signing = [
     { name = "cryptography" },
 ]
@@ -70,6 +73,7 @@ test = [
 requires-dist = [
     { name = "build", marker = "extra == 'test'", specifier = ">=1.2,<2" },
     { name = "cryptography", marker = "extra == 'all'", specifier = ">=45,<50" },
+    { name = "cryptography", marker = "extra == 'remote'", specifier = ">=45,<50" },
     { name = "cryptography", marker = "extra == 'signing'", specifier = ">=45,<50" },
     { name = "cryptography", marker = "extra == 'test'", specifier = ">=45,<50" },
     { name = "ezdxf", marker = "extra == 'all'", specifier = "==1.4.4" },
@@ -98,7 +102,7 @@ requires-dist = [
     { name = "trimesh", marker = "extra == 'geometry'", specifier = ">=4.12,<5" },
     { name = "trimesh", marker = "extra == 'test'", specifier = ">=4.12,<5" },
 ]
-provides-extras = ["all", "dxf", "geometry", "image", "ifc", "gate-ids", "mcp", "pdf", "signing", "test"]
+provides-extras = ["all", "dxf", "geometry", "image", "ifc", "gate-ids", "mcp", "pdf", "remote", "signing", "test"]
 
 [[package]]
 name = "annotated-types"

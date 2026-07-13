@@ -156,6 +156,8 @@ class ProviderRegistration:
     container_pids_limit: int = 1
     worker_path: Path | None = None
     oci_targets: tuple[OCIRuntimeTarget, ...] = field(default_factory=tuple)
+    remote_origin: str | None = None
+    remote_spki_sha256: str | None = None
 
 
 def resolve_oci_target(

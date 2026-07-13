@@ -40,6 +40,9 @@ class ProviderRunner:
             raise ProviderExecutionError("AECCTX_PROVIDER_ACTION_UNSUPPORTED", f"Provider does not declare action: {action}")
         self.profile.preflight(registration)
         request = build_provider_request(provider_id, action, input_bytes, limits=self.limits, configuration=configuration)
+        remote_run = getattr(self.profile, "run_remote", None)
+        if callable(remote_run):
+            return remote_run(registration, request, input_bytes, self.limits)
         parent = str(self.workspace_parent) if self.workspace_parent is not None else None
         with tempfile.TemporaryDirectory(prefix="aecctx-provider-", dir=parent) as temporary:
             workspace = Path(temporary).resolve()

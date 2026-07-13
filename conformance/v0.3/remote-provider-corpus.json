@@ -1,0 +1,24 @@
+{
+  "cases": [
+    {"id": "live-loopback-tls-success", "test": "tests/test_remote_providers.py::test_loopback_tls_round_trip_is_content_addressed"},
+    {"id": "pre-network-policy-denial", "test": "tests/test_remote_providers.py::test_remote_policy_rejects_before_network"},
+    {"id": "retry-terminal-matrix", "test": "tests/test_remote_providers.py::test_retry_and_terminal_error_semantics"},
+    {"id": "adversarial-response-and-redaction", "test": "tests/test_remote_providers.py::test_remote_transport_adversarial_matrix"},
+    {"id": "deterministic-replay", "test": "tests/test_remote_providers.py::test_remote_replay_is_deterministic_and_drift_bound"},
+    {"id": "core-network-free", "test": "tests/test_remote_providers.py::test_core_operations_remain_network_free"}
+  ],
+  "claim_id": "sandbox.remote-provider",
+  "files": [
+    {"path": "docs/specs/provider-remote-v03-profile.md", "sha256": "cc87ac75e13e6d64db10929bdbc5db188e01db2b6b54dc7f5244329c7e898e8f"},
+    {"path": "schemas/v0.2/remote-provider-policy.schema.json", "sha256": "091d4a7289bd4145a10af5e7263a1903dad28bfed346e4710cda19161c38e5cc"},
+    {"path": "providers/reference-remote/worker.py", "sha256": "ab5a6e7f8afcc0412ba01709b8acc0efdc7349363dc95cc69303731685810e3d"},
+    {"path": "fixtures/v0.3/remote-providers/adversarial-cases.json", "sha256": "44a3118c9d499f7a3e1a037d97b53ea8824c1d232db7a8dfc2340e44a3e15fd5"},
+    {"path": "fixtures/v0.3/remote-providers/descriptor.json", "sha256": "0ee889c11ec30c452ff3580fd119753e4e3df703e8418f3a8c10ce00ce97413f"},
+    {"path": "fixtures/v0.3/remote-providers/policy.json", "sha256": "3d8a8df8d406c67579f10f95d937db5788e4c64233078864ada819870ef99e8c"},
+    {"path": "fixtures/v0.3/remote-providers/request-envelope.json", "sha256": "375d999cc6656541f46f3c881809208aba5b85a60bb34262af5d3b00f7d35bc9"},
+    {"path": "fixtures/v0.3/remote-providers/response-envelope.json", "sha256": "87b51e1085e2173594c0508c127379bf171ea466de549ffcf6990e235da81ed8"},
+    {"path": "fixtures/v0.3/remote-providers/source.bin", "sha256": "c19a11609f28673a32322e452262e981ec4d8bd311a0c82a0c39b4db94ebc3b9"}
+  ],
+  "profile": "remote-https-spki-v1",
+  "version": "0.3.0"
+}
