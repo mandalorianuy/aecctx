@@ -189,7 +189,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 ACX-26 is the sole `in_progress` task in the active post-v0.2 plan because the accepted dependency line places the optional remote/customer-managed provider protocol after local enforcement decisions. ACXD-034 governs its closed HTTPS/SPKI, consent, credential, retry and replay contract. ACX-27 and later remain `pending`.
 
-ACX-26 delivery is currently blocked after the safe implementation/validation lane because this checkout has only the GitHub `origin` remote and no OneDev URL, project, credential, delivery contract or callable integration. Do not promote the target claim or ACX-27. Resume ACX-26 by supplying/configuring that OneDev authority, then complete canonical/exact-SHA evidence, review and squash merge.
+ACX-26 delivery is currently blocked after green local canonical gates and exact-SHA GitHub CI on Linux/macOS/Windows because this checkout has only the GitHub `origin` remote and no OneDev URL, project, credential, delivery contract or callable integration. Do not promote the target claim or ACX-27. Resume ACX-26 by supplying/configuring that OneDev authority, then complete review and squash merge.
 
 ## Consumer integration planning entry point
 

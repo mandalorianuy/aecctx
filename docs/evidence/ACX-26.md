@@ -24,7 +24,9 @@ Profile: `remote-https-spki-v1`
 - `./scripts/verify_portable.sh`: passed; portable cut 249 passed, complete suite 668 passed/10 skipped, artifacts rebuilt and rescanned.
 - `./scripts/verify.sh`: passed; portable gate, healthy `baseline-shared-v1` integration with zero issues, v0.1/v0.2 release verification and clean artifact verification all green.
 
-Exact branch CI is run after the implementation commit. It must be green before acceptance.
+- GitHub Actions CI for implementation SHA `81509ace68d3af6f887f73669ab0b0665560e6c7`: passed on Ubuntu, macOS and Windows ([run 29293128932](https://github.com/mandalorianuy/aecctx/actions/runs/29293128932)).
+
+All technical and repository acceptance gates are green. The claim remains unaccepted solely because required OneDev PR/review/squash delivery cannot be executed from the available authority.
 
 ## Delivery blocker
 
