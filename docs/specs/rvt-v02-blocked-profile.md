@@ -1,6 +1,6 @@
 # AECCTX RVT v0.2 Blocked Provider Profile
 
-Version: `0.2.0-draft.1`
+Version: `0.2.0-draft.1` with ACX-34 v0.3 renewal
 Date: 2026-07-12
 Status: Normative ACX-19 design approved 2026-07-12; no RVT extraction capability is implemented or claimed
 
@@ -105,3 +105,11 @@ Documentation, an empty adapter, a provider descriptor without runtime access, a
 - Open Design Alliance, BimRv FAQ and licensing: <https://www.opendesign.com/faq/bimrv>
 - Open Design Alliance, BimRv product scope: <https://www.opendesign.com/products/bimrv>
 - Autodesk, Revit IFC open-source exporter repository: <https://github.com/Autodesk/revit-ifc>
+
+## 10. ACX-34 v0.3 renewal
+
+ACX-34 re-evaluates the two reopening routes without mutating the published v0.2 record or claim. Its decision is recorded at `conformance/v0.3/rvt-provider-decision.json` and validated by `schemas/v0.2/rvt-provider-decision-v03.schema.json` plus the existing anti-claim checker.
+
+The renewed record MUST bind the immutable v0.2 decision hash and explicitly cover human route selection, entitlement, exact runtime/RVT versions, automation rights, sandbox or network profile, CI, public fixture rights, privacy, telemetry, billing, retention, jurisdiction and lifecycle. Missing authorization or evidence remains explicit; it MUST NOT be inferred from product availability, trial access, a local installation, a public API description or replay.
+
+When no route passes every gate, the v0.3 claim registry MAY repeat `rvt.external-provider` only as public `unsupported` under `rvt-no-provider-blocked-v03`, citing the unchanged invalid v0.2 sentinel and ACX-34 evidence. No v0.3 RVT fixture directory is permitted in that cut because the task requires real legally publishable RVT files for positive conformance.

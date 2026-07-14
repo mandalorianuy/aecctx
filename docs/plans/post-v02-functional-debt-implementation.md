@@ -452,14 +452,14 @@ def apply_datum_operation(
 
 The published `conformance/v0.2/rvt-provider-decision.json`, ACX-19 evidence and `v0.2.0` claim remain immutable inputs. ACX-34 records its new decision only under `conformance/v0.3/`.
 
-- [ ] Obtain explicit human selection of licensed local runtime or approved remote route. Without it, do not create adapter/provider scaffolding.
-- [ ] Record entitlement, exact runtime/RVT versions, automation rights, CI, fixtures, telemetry, billing, retention, jurisdiction and lifecycle in ACXD-043.
-- [ ] If accepted, write the subordinate RVT profile/plan and obtain separate review before decoder code.
-- [ ] RED-test real positive/degraded/corrupt/linked/resource cases plus provider unavailable, consent/entitlement failure and opaque fallback.
-- [ ] Implement neutral evidence mapping only; converter-derived IFC remains visibly converted.
-- [ ] Run provider, distribution, anti-claim, consumer-boundary and full gates.
-- [ ] If blocked, update the decision checker and anti-claim evidence instead; document the exact missing human/external decision.
-- [ ] Promote only ACX-35 and commit either `feat: add bounded RVT provider profile` or `docs: renew RVT provider blocker`.
+- [x] Confirm no explicit selection of licensed local runtime or approved remote route was supplied; create no adapter/provider scaffolding.
+- [x] Record entitlement, exact runtime/RVT versions, automation rights, CI, fixtures, telemetry, billing, retention, jurisdiction and lifecycle in ACXD-043.
+- [x] Do not enter the accepted-provider branch or create its subordinate profile/plan without route authorization.
+- [x] RED-test the renewed decision, route-promotion rejection, v0.3 unsupported claim and unchanged opaque fallback; positive RVT cases remain prohibited without a real publishable fixture/provider.
+- [x] Add no neutral RVT mapping or converter-derived evidence because no route was accepted.
+- [x] Run decision, distribution, anti-claim, consumer-boundary and full gates.
+- [x] Update the decision checker and anti-claim evidence; document the exact missing human/external decision.
+- [x] Promote only ACX-35 and commit `docs: renew RVT provider blocker`.
 
 ---
 
