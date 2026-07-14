@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ids xmlns="http://standards.buildingsmart.org/IDS" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <info><title>partof-nests-fail</title></info>
+  <specifications><specification name="partof-nests-fail" ifcVersion="IFC4">
+    <applicability maxOccurs="unbounded"><attribute><name><simpleValue>Name</simpleValue></name><value><xs:restriction base="xs:string"><xs:enumeration value="Nested Part" /></xs:restriction></value></attribute></applicability><requirements><partOf relation="IFCRELNESTS"><entity><name><simpleValue>IFCSITE</simpleValue></name></entity></partOf></requirements>
+  </specification></specifications>
+</ids>

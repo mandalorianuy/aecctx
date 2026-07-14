@@ -14,9 +14,10 @@ Authority is ordered as follows:
 5. `docs/specs/aecctx-post-v02-functional-debt-spec.md` for post-v0.2 residual outcomes, priorities and claim ceilings.
 6. `docs/specs/signing-v1-profile.md` for the optional ACX-20 signing and offline trust contract.
 7. `docs/specs/quality-gate-v02-profile.md` for the ACX-21 policy/result/waiver contract and bounded IDS profile.
-8. `docs/decisions/decision-log.md` for accepted and open decisions.
-9. `docs/capability-matrix.md` for support claims.
-10. `docs/implementation-plan.md` for task sequencing.
+8. `docs/specs/quality-gate-v03-profile.md` for the ACX-36 expanded bounded IDS profile without changing v0.2 gate semantics.
+9. `docs/decisions/decision-log.md` for accepted and open decisions.
+10. `docs/capability-matrix.md` for support claims.
+11. `docs/implementation-plan.md` for task sequencing.
 
 Research notes and README examples are informative and cannot override normative specifications.
 

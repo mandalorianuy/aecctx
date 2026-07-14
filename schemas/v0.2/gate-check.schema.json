@@ -58,6 +58,7 @@
     "ids_configuration": {
       "additionalProperties": false,
       "properties": {
+        "ids_profile": {"enum": ["aecctx-gate-v1-ids-1.0-simple-v1", "aecctx-gate-v1-ids-1.0-expanded-v1"]},
         "ids_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
         "source_id": {"maxLength": 128, "minLength": 1, "type": "string"}
       },

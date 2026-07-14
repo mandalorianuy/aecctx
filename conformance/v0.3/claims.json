@@ -256,6 +256,22 @@
         "tests/test_signing_v03.py::test_v03_publishable_corpus_replays_and_fixtures_are_deterministic",
         "tests/test_signing_v03.py::test_cli_advanced_trust_is_offline_and_matches_sdk"
       ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-36.md",
+      "fixture_ids": ["v03-gate-acx36"],
+      "id": "quality-gate.ids-expanded",
+      "platform_scope": ["python-3.12-linux", "python-3.12-macos", "python-3.12-windows"],
+      "profile": "aecctx-gate-v1-ids-1.0-expanded-v1",
+      "provider_scope": "ifctester==0.8.5 plus ifcopenshell==0.8.5; IDS v1.0.0 selected partOf, restriction and specification-cardinality cases only",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_gate_v03.py::test_selected_official_expanded_case_matches_filename_expectation",
+        "tests/test_gate_v03.py::test_project_authored_expanded_cases_match_expected_outcomes",
+        "tests/test_gate_v03.py::test_expanded_result_projections_preserve_canonical_identity",
+        "tests/test_gate_v03.py::test_unlisted_expanded_constructs_fail_as_policy_findings"
+      ]
     }
   ],
   "fixtures": [
@@ -306,6 +322,10 @@
     {
       "id": "v03-signing-acx35",
       "path": "fixtures/v0.3/signing"
+    },
+    {
+      "id": "v03-gate-acx36",
+      "path": "fixtures/v0.3/gate"
     }
   ],
   "version": "0.3.0"

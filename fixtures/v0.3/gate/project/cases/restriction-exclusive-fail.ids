@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ids xmlns="http://standards.buildingsmart.org/IDS" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <info><title>restriction-exclusive-fail</title></info>
+  <specifications><specification name="restriction-exclusive-fail" ifcVersion="IFC4">
+    <applicability maxOccurs="unbounded"><entity><name><simpleValue>IFCSURFACESTYLEREFRACTION</simpleValue></name></entity></applicability><requirements><attribute><name><simpleValue>RefractionIndex</simpleValue></name><value><xs:restriction base="xs:double"><xs:maxExclusive value="5" /></xs:restriction></value></attribute></requirements>
+  </specification></specifications>
+</ids>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ids xmlns="http://standards.buildingsmart.org/IDS" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <info><title>cardinality-prohibited-pass</title></info>
+  <specifications><specification name="cardinality-prohibited-pass" ifcVersion="IFC4">
+    <applicability minOccurs="0" maxOccurs="0"><entity><name><simpleValue>IFCWINDOW</simpleValue></name></entity></applicability>
+  </specification></specifications>
+</ids>

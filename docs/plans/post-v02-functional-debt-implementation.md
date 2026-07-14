@@ -504,13 +504,13 @@ The published `conformance/v0.2/rvt-provider-decision.json`, ACX-19 evidence and
 - Consumes: `evaluate_gate(...)`, pinned IfcTester/IfcOpenShell worker.
 - Produces: selected additional IDS check observations and claim `quality-gate.ids-expanded`.
 
-- [ ] Govern ACXD-045 with exact official IDS cases, facets, restrictions, cardinalities and dependency versions.
-- [ ] RED-test each selected combination plus unsupported `partOf`, URI/bSDD, geometry/quantity and malicious XML cases.
-- [ ] Vendor only unchanged official fixtures with hashes/license; generate separate Apache-2.0 project cases.
-- [ ] Extend preflight and deterministic mapping; unsupported facets fail closed or require review.
-- [ ] Prove JSON authority, exit/outcome stability and Markdown/CI parity.
-- [ ] Run gate v0.2/v0.3, missing-extra, worker limits, clean install and repository gates.
-- [ ] Write evidence, promote only ACX-37 and commit `feat: expand bounded IDS quality gates`.
+- [x] Govern ACXD-045 with exact official IDS cases, facets, restrictions, cardinalities and dependency versions.
+- [x] RED-test each selected combination plus unsupported `partOf`, URI/bSDD, geometry/quantity and malicious XML cases.
+- [x] Vendor only unchanged official fixtures with hashes/license; generate separate Apache-2.0 project cases.
+- [x] Extend preflight and deterministic mapping; unsupported facets fail closed or require review.
+- [x] Prove JSON authority, exit/outcome stability and Markdown/CI parity.
+- [x] Run gate v0.2/v0.3, missing-extra, worker limits, clean install and repository gates.
+- [x] Write evidence, promote only ACX-37 and commit `feat: expand bounded IDS quality gates`.
 
 ---
 
