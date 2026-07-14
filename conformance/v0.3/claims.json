@@ -70,6 +70,7 @@
       "test_ids": [
         "tests/test_ifc_v03.py::test_ifc4x3_v03_preserves_selected_curve_annotation_and_style_evidence",
         "tests/test_ifc_v03.py::test_ifc_v03_degraded_states_and_limits_are_explicit",
+        "tests/test_ifc_v03.py::test_ifc_v03_structural_limits_and_cycles_fail_closed",
         "tests/test_ifc_v03.py::test_ifc_v03_preview_is_derived_and_deterministic"
       ]
     },

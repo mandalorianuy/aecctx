@@ -7,7 +7,7 @@ from pathlib import Path
 import ifcopenshell
 import numpy
 
-from aecctx.adapters.ifc import IFCPlugin, ingest_ifc
+from aecctx.adapters.ifc import IFCPlugin, _geometry_2d, ingest_ifc
 from aecctx.package import PackageReader
 from aecctx.records import RecordStore
 from aecctx.validation import validate_package
@@ -44,11 +44,13 @@ def test_ifc_v03_corpus_hashes_schema_and_generator_are_exact() -> None:
     for entry in corpus["entries"]:
         source = ROOT / entry["path"]
         assert hashlib.sha256(source.read_bytes()).hexdigest() == entry["sha256"]
-        assert ifcopenshell.open(source).schema == entry["schema"]
+        model = ifcopenshell.open(source)
+        assert model.schema == entry["schema"]
+        assert model.schema_identifier == entry["schema_identifier"] == "IFC4X3_ADD2"
 
 
 def test_ifc_plugin_describes_bounded_v03_profiles_separately() -> None:
-    assert IFCPlugin().describe()["v03_target_profiles"] == {
+    assert IFCPlugin().describe()["v03_public_profiles"] == {
         "georeferencing": "ifc4x3-add2-mapconversion-scaled-v03:partial",
         "native_2d": "ifc4x3-add2-native-2d-v03:partial",
     }
@@ -145,6 +147,55 @@ def test_ifc_v03_degraded_states_and_limits_are_explicit(tmp_path: Path) -> None
     }
 
 
+def test_ifc_v03_structural_limits_and_cycles_fail_closed() -> None:
+    model = ifcopenshell.file(schema="IFC4X3_ADD2")
+    origin = model.create_entity("IfcCartesianPoint", Coordinates=(0.0, 0.0))
+    placement = model.create_entity("IfcAxis2Placement2D", Location=origin)
+    circle = model.create_entity("IfcCircle", Position=placement, Radius=1.0)
+
+    points = model.create_entity(
+        "IfcCartesianPointList2D",
+        CoordList=[(float(index), 0.0) for index in range(4_097)],
+    )
+    indexed = model.create_entity(
+        "IfcIndexedPolyCurve",
+        Points=points,
+        Segments=[model.create_entity("IfcLineIndex", (1, 2))],
+        SelfIntersect=False,
+    )
+    assert _geometry_2d(indexed, v03=True)[0] == {
+        "reason_code": "AECCTX_IFC_V03_2D_EXTRACTION_FAILED",
+        "state": "unsupported",
+    }
+
+    segments = [
+        model.create_entity(
+            "IfcCompositeCurveSegment",
+            Transition="CONTINUOUS",
+            SameSense=True,
+            ParentCurve=circle,
+        )
+        for _ in range(257)
+    ]
+    composite = model.create_entity("IfcCompositeCurve", Segments=segments, SelfIntersect=False)
+    assert _geometry_2d(composite, v03=True)[0]["reason_code"] == "AECCTX_IFC_V03_2D_EXTRACTION_FAILED"
+
+    nested = circle
+    for _ in range(34):
+        segment = model.create_entity(
+            "IfcCompositeCurveSegment",
+            Transition="CONTINUOUS",
+            SameSense=True,
+            ParentCurve=nested,
+        )
+        nested = model.create_entity("IfcCompositeCurve", Segments=[segment], SelfIntersect=False)
+    assert _geometry_2d(nested, v03=True)[0]["reason_code"] == "AECCTX_IFC_V03_2D_EXTRACTION_FAILED"
+
+    members = [model.create_entity("IfcCircle", Position=placement, Radius=float(index + 1)) for index in range(4_097)]
+    curve_set = model.create_entity("IfcGeometricCurveSet", Elements=members)
+    assert _geometry_2d(curve_set, v03=True)[0]["reason_code"] == "AECCTX_IFC_V03_2D_EXTRACTION_FAILED"
+
+
 def test_ifc_v03_georeferencing_conflicts_never_guess(tmp_path: Path) -> None:
     output = tmp_path / "conflicted"
 
@@ -170,7 +221,7 @@ def test_ifc_v03_preview_is_derived_and_deterministic(tmp_path: Path) -> None:
     assert first.read_bytes() == second.read_bytes()
     package = PackageReader(first)
     preview = next(
-        record for record in package.iter_jsonl("evidence/primitives.jsonl")
+        record for record in _records(first, "primitive")
         if record.get("original_class") == "AECCTXDerivedIFC2DPreview"
     )
     svg = package.read_bytes(preview["artifact_refs"][0]["artifact_path"]).decode("utf-8")

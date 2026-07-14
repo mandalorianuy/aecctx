@@ -12,6 +12,13 @@ from ..package import PackageArtifact, PackageWriter, canonical_json, hash_file
 
 PLUGIN_ID = "aecctx.adapter.ifc.ifcopenshell"
 PLUGIN_VERSION = "0.1.0"
+IFC_V03_SCHEMA = "IFC4X3_ADD2"
+IFC_V03_TEXT_LIMIT = 1_024
+IFC_V03_COMPOSITE_LIMIT = 256
+IFC_V03_POINT_LIMIT = 4_096
+IFC_V03_MEMBER_LIMIT = 4_096
+IFC_V03_REFERENCE_DEPTH = 32
+IFC_V03_PREVIEW_SEGMENTS = 32
 
 
 class IFCDependencyError(RuntimeError):
@@ -176,7 +183,7 @@ def _coordinate_qualification(model: Any) -> dict[str, Any]:
 
     operation = operations[0]
     crs = crs_entities[0]
-    values = (
+    values: tuple[Any, ...] = (
         operation.Eastings,
         operation.Northings,
         operation.OrthogonalHeight,
@@ -184,6 +191,45 @@ def _coordinate_qualification(model: Any) -> dict[str, Any]:
         operation.XAxisOrdinate,
         operation.Scale,
     )
+    factors = (1.0, 1.0, 1.0)
+    if operation.is_a("IfcMapConversionScaled"):
+        if model.schema_identifier != IFC_V03_SCHEMA:
+            base["global_location"] = {
+                "reason_code": "AECCTX_IFC_GEOREFERENCING_INCOMPLETE",
+                "state": "unsupported",
+            }
+            chain.append(
+                {
+                    "from_frame": "ifc-project",
+                    "reason_code": "AECCTX_IFC_GEOREFERENCING_INCOMPLETE",
+                    "state": "unsupported",
+                    "to_frame": f"ifc-crs:{getattr(crs, 'Name', None) or 'unknown'}",
+                }
+            )
+            return base
+        factor_values = (
+            getattr(operation, "FactorX", None),
+            getattr(operation, "FactorY", None),
+            getattr(operation, "FactorZ", None),
+        )
+        if any(
+            value is None or not math.isfinite(float(value)) or float(value) <= 0.0
+            for value in factor_values
+        ):
+            base["global_location"] = {
+                "reason_code": "AECCTX_IFC_GEOREFERENCING_INCOMPLETE",
+                "state": "unsupported",
+            }
+            chain.append(
+                {
+                    "from_frame": "ifc-project",
+                    "reason_code": "AECCTX_IFC_GEOREFERENCING_INCOMPLETE",
+                    "state": "unsupported",
+                    "to_frame": f"ifc-crs:{getattr(crs, 'Name', None) or 'unknown'}",
+                }
+            )
+            return base
+        factors = tuple(float(value) for value in factor_values)
     crs_name = getattr(crs, "Name", None)
     map_unit = getattr(crs, "MapUnit", None)
     if (
@@ -227,9 +273,9 @@ def _coordinate_qualification(model: Any) -> dict[str, Any]:
     y /= magnitude
     matrix = numpy.array(
         [
-            [scale * x, -scale * y, 0.0, float(operation.Eastings)],
-            [scale * y, scale * x, 0.0, float(operation.Northings)],
-            [0.0, 0.0, scale, float(operation.OrthogonalHeight)],
+            [scale * factors[0] * x, -scale * factors[1] * y, 0.0, float(operation.Eastings)],
+            [scale * factors[0] * y, scale * factors[1] * x, 0.0, float(operation.Northings)],
+            [0.0, 0.0, scale * factors[2], float(operation.OrthogonalHeight)],
             [0.0, 0.0, 0.0, 1.0],
         ]
     )
@@ -316,7 +362,147 @@ def _mapping_2d(item: Any) -> tuple[list[float], list[Any]] | None:
     return _matrix_values(target_matrix), resolved
 
 
-def _geometry_2d(item: Any) -> tuple[dict[str, Any] | None, list[list[list[float]]]]:
+def _axis2placement_2d(position: Any) -> list[float] | None:
+    import ifcopenshell.util.placement as ifc_placement
+
+    try:
+        matrix = _matrix_values(ifc_placement.get_axis2placement(position))
+    except Exception:
+        return None
+    return matrix if len(matrix) == 16 and all(math.isfinite(value) for value in matrix) else None
+
+
+def _transform_2d(matrix: list[float], x: float, y: float) -> list[float]:
+    return [
+        round(matrix[0] * x + matrix[1] * y + matrix[3], 12),
+        round(matrix[4] * x + matrix[5] * y + matrix[7], 12),
+    ]
+
+
+def _sample_conic(item: Any, start: float = 0.0, end: float = math.tau) -> list[list[float]] | None:
+    matrix = _axis2placement_2d(getattr(item, "Position", None))
+    if matrix is None or not math.isfinite(start) or not math.isfinite(end):
+        return None
+    if item.is_a("IfcCircle"):
+        radius = getattr(item, "Radius", None)
+        if radius is None or not math.isfinite(float(radius)) or float(radius) <= 0.0:
+            return None
+        semi_axis_1 = semi_axis_2 = float(radius)
+    elif item.is_a("IfcEllipse"):
+        values = (getattr(item, "SemiAxis1", None), getattr(item, "SemiAxis2", None))
+        if any(value is None or not math.isfinite(float(value)) or float(value) <= 0.0 for value in values):
+            return None
+        semi_axis_1, semi_axis_2 = (float(value) for value in values)
+    else:
+        return None
+    fraction = min(abs(end - start) / math.tau, 1.0)
+    count = max(2, int(math.ceil(IFC_V03_PREVIEW_SEGMENTS * fraction)))
+    return [
+        _transform_2d(
+            matrix,
+            semi_axis_1 * math.cos(start + (end - start) * index / count),
+            semi_axis_2 * math.sin(start + (end - start) * index / count),
+        )
+        for index in range(count + 1)
+    ]
+
+
+def _arc_through_points(points: list[list[float]]) -> list[list[float]] | None:
+    if len(points) != 3:
+        return None
+    (x1, y1), (x2, y2), (x3, y3) = points
+    determinant = 2.0 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
+    if not math.isfinite(determinant) or abs(determinant) < 1e-15:
+        return None
+    ux = (
+        (x1 * x1 + y1 * y1) * (y2 - y3)
+        + (x2 * x2 + y2 * y2) * (y3 - y1)
+        + (x3 * x3 + y3 * y3) * (y1 - y2)
+    ) / determinant
+    uy = (
+        (x1 * x1 + y1 * y1) * (x3 - x2)
+        + (x2 * x2 + y2 * y2) * (x1 - x3)
+        + (x3 * x3 + y3 * y3) * (x2 - x1)
+    ) / determinant
+    angles = [math.atan2(y - uy, x - ux) for x, y in points]
+
+    def normalized(value: float) -> float:
+        return value % math.tau
+
+    counterclockwise = normalized(angles[1] - angles[0]) <= normalized(angles[2] - angles[0])
+    sweep = normalized(angles[2] - angles[0]) if counterclockwise else -normalized(angles[0] - angles[2])
+    count = max(2, int(math.ceil(IFC_V03_PREVIEW_SEGMENTS * abs(sweep) / math.tau)))
+    radius = math.hypot(x1 - ux, y1 - uy)
+    return [
+        [
+            round(ux + radius * math.cos(angles[0] + sweep * index / count), 12),
+            round(uy + radius * math.sin(angles[0] + sweep * index / count), 12),
+        ]
+        for index in range(count + 1)
+    ]
+
+
+def _style_attributes(style: Any) -> dict[str, Any]:
+    attributes: dict[str, Any] = {}
+    for name, value in sorted(style.get_info(include_identifier=False, recursive=False).items()):
+        if name != "type":
+            attributes[name] = _value_state(value)
+    return attributes
+
+
+def _direct_style_evidence(item: Any) -> list[dict[str, Any]]:
+    supported = {"IfcTextStyle", "IfcCurveStyle", "IfcFillAreaStyle", "IfcFillAreaStyleHatching"}
+    evidence: list[dict[str, Any]] = []
+    for styled_item in sorted(getattr(item, "StyledByItem", ()) or (), key=lambda value: value.id()):
+        for style in sorted(getattr(styled_item, "Styles", ()) or (), key=lambda value: value.id()):
+            if style.is_a() not in supported:
+                continue
+            entry: dict[str, Any] = {
+                "attributes": _style_attributes(style),
+                "style_class": style.is_a(),
+                "style_step_id": style.id(),
+                "styled_item_step_id": styled_item.id(),
+            }
+            if style.is_a("IfcFillAreaStyle"):
+                entry["hatching"] = [
+                    {
+                        "attributes": _style_attributes(fill_style),
+                        "style_class": fill_style.is_a(),
+                        "style_step_id": fill_style.id(),
+                    }
+                    for fill_style in sorted(getattr(style, "FillStyles", ()) or (), key=lambda value: value.id())
+                    if fill_style.is_a("IfcFillAreaStyleHatching")
+                ]
+            evidence.append(entry)
+    return evidence
+
+
+def _parameter_trim(value: Any) -> float | None:
+    values = list(value or ())
+    if len(values) != 1:
+        return None
+    wrapped = getattr(values[0], "wrappedValue", None)
+    try:
+        result = float(wrapped)
+    except (TypeError, ValueError):
+        return None
+    return result if math.isfinite(result) else None
+
+
+def _v03_source(item: Any, geometry: dict[str, Any]) -> dict[str, Any]:
+    return {**geometry, "source_step_id": item.id(), "styles": _direct_style_evidence(item)}
+
+
+def _geometry_2d(
+    item: Any,
+    *,
+    v03: bool = False,
+    depth: int = 0,
+    seen: frozenset[int] = frozenset(),
+) -> tuple[dict[str, Any] | None, list[list[list[float]]]]:
+    if depth > IFC_V03_REFERENCE_DEPTH or item.id() in seen:
+        return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED"), []
+    nested_seen = seen | {item.id()}
     if item.is_a("IfcPolyline"):
         points = [_coordinates(point.Coordinates) for point in item.Points]
         if any(point is None for point in points):
@@ -325,20 +511,152 @@ def _geometry_2d(item: Any) -> tuple[dict[str, Any] | None, list[list[list[float
         return {"coordinates": coordinates, "kind": "polyline"}, [coordinates]
     if item.is_a("IfcIndexedPolyCurve"):
         coordinates = [_coordinates(point) for point in item.Points.CoordList]
-        if any(point is None or len(point) != 2 for point in coordinates):
-            return None, []
+        if len(coordinates) > IFC_V03_POINT_LIMIT or any(point is None or len(point) != 2 for point in coordinates):
+            return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED") if v03 else None, []
         segments: list[list[int]] = []
-        for segment in item.Segments or ():
-            if not segment.is_a("IfcLineIndex"):
-                return None, []
-            segments.append([int(index) for index in list(segment)[0]])
+        typed_segments: list[dict[str, Any]] = []
+        paths: list[list[list[float]]] = []
         clean = [point for point in coordinates if point is not None]
+        for segment in item.Segments or ():
+            indices = [int(index) for index in list(segment)[0]]
+            if any(index < 1 or index > len(clean) for index in indices):
+                return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED") if v03 else None, []
+            selected = [clean[index - 1] for index in indices]
+            if segment.is_a("IfcLineIndex"):
+                if len(indices) < 2:
+                    return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED") if v03 else None, []
+                segments.append(indices)
+                typed_segments.append({"indices": indices, "kind": "line"})
+                paths.append(selected)
+            elif v03 and segment.is_a("IfcArcIndex") and len(indices) == 3:
+                arc = _arc_through_points(selected)
+                if arc is None:
+                    return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED"), []
+                typed_segments.append({"indices": indices, "kind": "arc"})
+                paths.append(arc)
+            else:
+                return None, []
+        if v03:
+            return _v03_source(
+                item,
+                {"coordinates": clean, "kind": "indexed_polycurve", "segments": typed_segments},
+            ), paths
         return {"coordinates": clean, "kind": "indexed_polycurve", "line_indices": segments}, [clean]
+    if v03 and (item.is_a("IfcCircle") or item.is_a("IfcEllipse")):
+        path = _sample_conic(item)
+        if path is None:
+            return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED"), []
+        matrix = _axis2placement_2d(item.Position)
+        if item.is_a("IfcCircle"):
+            geometry = {"kind": "circle", "placement_matrix": matrix, "radius": float(item.Radius)}
+        else:
+            geometry = {
+                "kind": "ellipse",
+                "placement_matrix": matrix,
+                "semi_axis_1": float(item.SemiAxis1),
+                "semi_axis_2": float(item.SemiAxis2),
+            }
+        return _v03_source(item, geometry), [path]
+    if v03 and item.is_a("IfcTrimmedCurve"):
+        basis = getattr(item, "BasisCurve", None)
+        start = _parameter_trim(getattr(item, "Trim1", None))
+        end = _parameter_trim(getattr(item, "Trim2", None))
+        if (
+            basis is None
+            or not (basis.is_a("IfcCircle") or basis.is_a("IfcEllipse"))
+            or getattr(item, "MasterRepresentation", None) != "PARAMETER"
+            or start is None
+            or end is None
+        ):
+            return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED"), []
+        sense = bool(getattr(item, "SenseAgreement", False))
+        path = _sample_conic(basis, start, end) if sense else _sample_conic(basis, end, start)
+        if path is None:
+            return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED"), []
+        return _v03_source(
+            item,
+            {
+                "basis_curve_step_id": basis.id(),
+                "kind": "trimmed_curve",
+                "master_representation": "PARAMETER",
+                "sense_agreement": sense,
+                "trim_parameters": [start, end],
+            },
+        ), [path]
+    if v03 and item.is_a("IfcCompositeCurve"):
+        source_segments = list(getattr(item, "Segments", ()) or ())
+        if not source_segments or len(source_segments) > IFC_V03_COMPOSITE_LIMIT:
+            return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED"), []
+        segment_evidence: list[dict[str, Any]] = []
+        paths: list[list[list[float]]] = []
+        for index, segment in enumerate(source_segments):
+            parent = getattr(segment, "ParentCurve", None)
+            if parent is None:
+                return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED"), []
+            parent_geometry, parent_paths = _geometry_2d(
+                parent, v03=True, depth=depth + 1, seen=nested_seen
+            )
+            if parent_geometry is None or parent_geometry.get("state") == "unsupported":
+                return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED"), []
+            same_sense = bool(getattr(segment, "SameSense", False))
+            segment_evidence.append(
+                {
+                    "index": index,
+                    "parent_curve_step_id": parent.id(),
+                    "same_sense": same_sense,
+                    "segment_step_id": segment.id(),
+                    "transition": getattr(segment, "Transition", None),
+                }
+            )
+            paths.extend(parent_paths if same_sense else [list(reversed(path)) for path in parent_paths])
+        return _v03_source(
+            item,
+            {
+                "kind": "composite_curve",
+                "segments": segment_evidence,
+                "self_intersect": _value_state(getattr(item, "SelfIntersect", None)),
+            },
+        ), paths
+    if v03 and item.is_a("IfcTextLiteral"):
+        literal = getattr(item, "Literal", None)
+        matrix = _axis2placement_2d(getattr(item, "Placement", None))
+        path = getattr(item, "Path", None)
+        if not isinstance(literal, str) or len(literal) > IFC_V03_TEXT_LIMIT:
+            return _unsupported("AECCTX_IFC_V03_TEXT_LIMIT_EXCEEDED"), []
+        if matrix is None or path not in {"LEFT", "RIGHT", "UP", "DOWN"}:
+            return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED"), []
+        return _v03_source(
+            item,
+            {"kind": "text_literal", "literal": literal, "path": path, "placement_matrix": matrix},
+        ), []
+    if v03 and item.is_a("IfcAnnotationFillArea"):
+        outer = getattr(item, "OuterBoundary", None)
+        inners = list(getattr(item, "InnerBoundaries", ()) or ())
+        if outer is None or len(inners) > IFC_V03_MEMBER_LIMIT:
+            return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED"), []
+        boundaries: list[dict[str, Any]] = []
+        paths: list[list[list[float]]] = []
+        for role, boundary in [("outer", outer), *(("inner", value) for value in inners)]:
+            geometry, boundary_paths = _geometry_2d(
+                boundary, v03=True, depth=depth + 1, seen=nested_seen
+            )
+            if geometry is None or geometry.get("state") == "unsupported":
+                return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED"), []
+            boundaries.append(
+                {"curve_step_id": boundary.id(), "kind": geometry["kind"], "role": role}
+            )
+            paths.extend(boundary_paths)
+        return _v03_source(item, {"boundaries": boundaries, "kind": "annotation_fill_area"}), paths
     if item.is_a("IfcGeometricCurveSet"):
         member_ids: list[int] = []
         paths: list[list[list[float]]] = []
-        for member in sorted(item.Elements, key=lambda value: value.id()):
-            geometry, member_paths = _geometry_2d(member)
+        members = sorted(item.Elements, key=lambda value: value.id())
+        if len(members) > IFC_V03_MEMBER_LIMIT:
+            return _unsupported("AECCTX_IFC_V03_2D_EXTRACTION_FAILED") if v03 else None, []
+        for member in members:
+            geometry, member_paths = _geometry_2d(
+                member, v03=v03, depth=depth + 1, seen=nested_seen
+            )
             if geometry is None:
                 return None, []
             member_ids.append(member.id())
@@ -351,7 +669,9 @@ def _geometry_2d(item: Any) -> tuple[dict[str, Any] | None, list[list[list[float
         matrix, resolved = mapped
         transformed_paths: list[list[list[float]]] = []
         for resolved_item in resolved:
-            geometry, paths = _geometry_2d(resolved_item)
+            geometry, paths = _geometry_2d(
+                resolved_item, v03=v03, depth=depth + 1, seen=nested_seen
+            )
             if geometry is None:
                 return None, []
             for path in paths:
@@ -402,6 +722,7 @@ def _augment_ifc_v02_2d(
     instant: str,
     runtime_version: str,
 ) -> tuple[list[PackageArtifact], list[tuple[str, int]]]:
+    v03 = model.schema_identifier == IFC_V03_SCHEMA
     by_record_id = {record["record_id"]: record for record in primitives}
     by_step_id = {step_id: by_record_id[record_id] for step_id, record_id in primitive_ids.items()}
     representations: dict[int, Any] = {}
@@ -429,8 +750,13 @@ def _augment_ifc_v02_2d(
         representation_ids.append(record_id)
         item_ids = [primitive_ids[item.id()] for item in sorted(representation.Items, key=lambda value: value.id())]
         item_states: list[str] = []
+        if len(item_ids) > IFC_V03_MEMBER_LIMIT:
+            item_states.append("extraction_failed")
         for item in sorted(representation.Items, key=lambda value: value.id()):
-            geometry, paths = _geometry_2d(item)
+            if len(item_ids) > IFC_V03_MEMBER_LIMIT:
+                break
+            geometry, paths = _geometry_2d(item, v03=v03)
+            item_record = by_step_id[item.id()]
             if geometry is None:
                 state = (
                     "extraction_failed"
@@ -439,8 +765,15 @@ def _augment_ifc_v02_2d(
                 )
                 item_states.append(state)
                 continue
+            if geometry.get("state") == "unsupported":
+                item_record.setdefault("ifc_v03", {})["source_2d"] = geometry
+                item_states.append(
+                    "extraction_failed"
+                    if geometry.get("reason_code") == "AECCTX_IFC_V03_2D_EXTRACTION_FAILED"
+                    else "unsupported"
+                )
+                continue
             item_states.append("supported")
-            item_record = by_step_id[item.id()]
             item_record.setdefault("ifc_2d_parent_representation_ids", []).append(record_id)
             if item.is_a("IfcMappedItem"):
                 mapping_source = item.MappingSource
@@ -456,19 +789,28 @@ def _augment_ifc_v02_2d(
                         ],
                     }
                 )
-            item_record["geometry_2d"] = geometry
+            if v03 and "source_step_id" in geometry:
+                item_record.setdefault("ifc_v03", {})["source_2d"] = geometry
+            else:
+                item_record["geometry_2d"] = geometry
             preview_paths.extend(paths)
             if item.is_a("IfcGeometricCurveSet"):
                 for member in item.Elements:
-                    member_geometry, _ = _geometry_2d(member)
+                    member_geometry, _ = _geometry_2d(member, v03=v03)
                     if member_geometry is not None:
-                        by_step_id[member.id()]["geometry_2d"] = member_geometry
+                        if v03 and "source_step_id" in member_geometry:
+                            by_step_id[member.id()].setdefault("ifc_v03", {})["source_2d"] = member_geometry
+                        else:
+                            by_step_id[member.id()]["geometry_2d"] = member_geometry
             if item.is_a("IfcMappedItem"):
                 for resolved_id in geometry["resolved_item_ids"]:
                     resolved = model.by_id(resolved_id)
-                    resolved_geometry, _ = _geometry_2d(resolved)
+                    resolved_geometry, _ = _geometry_2d(resolved, v03=v03)
                     if resolved_geometry is not None:
-                        by_step_id[resolved_id]["geometry_2d"] = resolved_geometry
+                        if v03 and "source_step_id" in resolved_geometry:
+                            by_step_id[resolved_id].setdefault("ifc_v03", {})["source_2d"] = resolved_geometry
+                        else:
+                            by_step_id[resolved_id]["geometry_2d"] = resolved_geometry
         profile_state = (
             "empty"
             if not item_ids
@@ -487,10 +829,20 @@ def _augment_ifc_v02_2d(
         }
         if profile_state == "empty":
             issues.append(("AECCTX_IFC_2D_REPRESENTATION_EMPTY", representation.id()))
-        elif profile_state == "unsupported":
-            issues.append(("AECCTX_IFC_2D_ITEM_UNSUPPORTED", representation.id()))
-        elif profile_state == "extraction_failed":
-            issues.append(("AECCTX_IFC_2D_EXTRACTION_FAILED", representation.id()))
+        if "unsupported" in item_states:
+            issues.append(
+                (
+                    "AECCTX_IFC_V03_2D_ITEM_UNSUPPORTED" if v03 else "AECCTX_IFC_2D_ITEM_UNSUPPORTED",
+                    representation.id(),
+                )
+            )
+        if "extraction_failed" in item_states:
+            issues.append(
+                (
+                    "AECCTX_IFC_V03_2D_EXTRACTION_FAILED" if v03 else "AECCTX_IFC_2D_EXTRACTION_FAILED",
+                    representation.id(),
+                )
+            )
         record["representation_fidelity"] = {
             "class": "source_exact",
             "derived": False,
@@ -502,8 +854,7 @@ def _augment_ifc_v02_2d(
     svg_path = "previews/ifc/source-native-2d.svg"
     svg_digest = hashlib.sha256(svg_bytes).hexdigest()
     preview_id = _stable_id("prim_ifc_preview", source_digest, "source-native-2d")
-    primitives.append(
-        {
+    preview_record: dict[str, Any] = {
             "artifact_refs": [{"artifact_path": svg_path, "media_type": "image/svg+xml", "sha256": svg_digest}],
             "container": _known("ifc-derived-preview"),
             "evidence_class": "derived",
@@ -517,7 +868,14 @@ def _augment_ifc_v02_2d(
             "representation_fidelity": {"class": "preview", "derived": True, "source_representation_ids": representation_ids},
             "source_refs": [{"locator": "ifc-derived-preview:source-native-2d", "source_id": source_id}],
         }
-    )
+    if v03:
+        preview_record["ifc_v03"] = {
+            "approximation": {
+                "authority": "derived-preview-only",
+                "segments_per_full_curve": IFC_V03_PREVIEW_SEGMENTS,
+            }
+        }
+    primitives.append(preview_record)
     return [PackageArtifact(svg_path, svg_bytes, "image/svg+xml", "ifc-source-native-2d-preview", False)], issues
 
 
@@ -565,16 +923,23 @@ def _augment_ifc_v02_coordinate_evidence(
         target_crs = getattr(operation, "TargetCRS", None)
         source_id = source_crs.id() if source_crs is not None else None
         target_id = target_crs.id() if target_crs is not None else None
+        parameters = {
+            "eastings": operation.Eastings,
+            "northings": operation.Northings,
+            "orthogonal_height": operation.OrthogonalHeight,
+            "scale": operation.Scale,
+            "x_axis_abscissa": operation.XAxisAbscissa,
+            "x_axis_ordinate": operation.XAxisOrdinate,
+        }
+        if operation.is_a("IfcMapConversionScaled"):
+            parameters["factors"] = {
+                "x": getattr(operation, "FactorX", None),
+                "y": getattr(operation, "FactorY", None),
+                "z": getattr(operation, "FactorZ", None),
+            }
         by_step_id[operation.id()]["coordinate_operation"] = {
             "operation_class": operation.is_a(),
-            "parameters": {
-                "eastings": operation.Eastings,
-                "northings": operation.Northings,
-                "orthogonal_height": operation.OrthogonalHeight,
-                "scale": operation.Scale,
-                "x_axis_abscissa": operation.XAxisAbscissa,
-                "x_axis_ordinate": operation.XAxisOrdinate,
-            },
+            "parameters": parameters,
             "relationship_path": [
                 f"{source_crs.is_a()}#{source_id}" if source_crs is not None else "unknown-source-crs",
                 f"{operation.is_a()}#{operation.id()}",
@@ -628,6 +993,10 @@ class IFCPlugin:
             "v02_public_profiles": {
                 "georeferencing": "ifc4-add2tc1-explicit-mapconversion-projectedcrs-v1:partial",
                 "native_2d": "ifc2x3-tc1-ifc4-add2tc1-native-2d-v1:partial",
+            },
+            "v03_public_profiles": {
+                "georeferencing": "ifc4x3-add2-mapconversion-scaled-v03:partial",
+                "native_2d": "ifc4x3-add2-native-2d-v03:partial",
             },
         }
 
