@@ -26,13 +26,13 @@ Profile: `remote-https-spki-v1`
 
 - GitHub Actions CI for implementation SHA `81509ace68d3af6f887f73669ab0b0665560e6c7`: passed on Ubuntu, macOS and Windows ([run 29293128932](https://github.com/mandalorianuy/aecctx/actions/runs/29293128932)).
 
-All technical and repository acceptance gates are green. The claim remains unaccepted solely because required OneDev PR/review/squash delivery cannot be executed from the available authority.
+All technical and repository acceptance gates are green. The claim remains unaccepted until the corrected GitHub PR/review/check/squash delivery completes.
 
-## Delivery blocker
+## Delivery authority correction
 
-The checkout exposes only the GitHub `origin` remote and contains no OneDev URL, project identifier, delivery contract, credential source or callable OneDev integration. Therefore a OneDev PR, required review and squash merge cannot be created or verified without inventing a bypass. The exact missing human input is the repository's OneDev base URL/project path plus an authorized credential or configured remote/tool and the applicable review rule.
+The repository owner confirmed GitHub, not OneDev, is the delivery authority for AECCTX. The configured `origin` and authenticated `gh` account are therefore the accepted publication path. GitHub reports that `main` has no branch protection and the repository has no rulesets, so zero external approvals are required; a non-draft PR, explicit diff/check review, successful CI and squash merge remain mandatory evidence.
 
-Until that input exists, ACX-26 remains `in_progress`, `sandbox.remote-provider` remains `target`, ACX-27 remains `pending`, and the accepted-plan count does not advance.
+Until that delivery completes, ACX-26 remains `in_progress`, `sandbox.remote-provider` remains `target`, ACX-27 remains `pending`, and the accepted-plan count does not advance.
 
 ## Residual non-claims
 
