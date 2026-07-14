@@ -307,3 +307,12 @@ None.
 - Claim decision: `pdf-image.ocr-layout` may become public `partial` only after every profile passes live Linux arm64/amd64, replay equivalence, negative/security, package and repository gates.
 - Evidence owner: `docs/specs/ocr-v03-profile.md`, `conformance/v0.3/ocr-corpus.json`, `scripts/check_ocr_v03_conformance.py` and `docs/evidence/ACX-29.md`.
 - Completion result: all six profiles passed live Linux arm64/amd64 execution and byte-equivalent replay, inferred-layout/schema/fixture/package/security gates. Only `pdf-image.ocr-layout` is public `partial`; every stated non-claim remains unchanged.
+
+### ACXD-038: Canonical DXF fixture serialization in cross-platform gates
+
+- Date: 2026-07-14.
+- Status: Accepted and completed as a systemic ACX-29 delivery prerequisite after exact-head Windows CI reproduced ACX-28 fixture drift; it changes no DXF capability or claim.
+- Root cause: `ezdxf.Drawing.saveas()` opens ASCII output in host text mode, so Windows newline translation can make repeated fixture checks disagree with the LF-bound corpus. The same exact SHA passed the DXF check in another Windows job and once earlier in the failing job, proving the gate path was not byte-deterministic.
+- Correction: project-owned generation MUST serialize ASCII DXF through an in-memory text stream and encode the resulting LF bytes explicitly; binary DXF remains an in-memory binary stream. A regression test MUST emulate Windows text translation and prove committed fixture bytes and hashes remain unchanged.
+- Scope ceiling: no entity, release, xref, geometry, semantic, fixture, corpus-hash or public-claim change is admissible. ACX-29 cannot close and ACX-30 cannot be promoted until local canonical verification and the full exact-head GitHub check set pass.
+- Completion result: the emulated Windows-newline test changed RED to GREEN, all six committed DXF fixtures and entry hashes stayed identical, both pre-build and post-build conformance checks passed, and the generator digest alone was rebound.

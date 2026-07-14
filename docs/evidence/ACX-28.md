@@ -1,5 +1,7 @@
 # ACX-28 acceptance evidence
 
+Post-acceptance delivery-gate correction (ACXD-038, 2026-07-14): Windows exact-head CI exposed host text-mode newline translation in repeated ASCII fixture regeneration. The project-owned generator now serializes ASCII and binary DXF through canonical in-memory streams before writing bytes. The regression changes no fixture, corpus-entry hash, extraction behavior or DXF claim; only the generator digest is rebound.
+
 Date: 2026-07-14
 Status: acceptance candidate; authoritative after the governed GitHub squash merge
 Decision/profile: ACXD-036 and `docs/specs/dxf-v03-profile.md`

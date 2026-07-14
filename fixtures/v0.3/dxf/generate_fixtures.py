@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import math
 import os
@@ -21,10 +22,16 @@ ezdxf.options.write_fixed_meta_data_for_testing = True
 
 def _write(doc: object, path: Path, *, binary: bool = False) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    doc.filename = str(path)
     if binary:
-        doc.saveas(path, fmt="bin")
+        stream = io.BytesIO()
+        doc.write(stream, fmt="bin")
+        payload = stream.getvalue()
     else:
-        doc.saveas(path, fmt="asc")
+        stream = io.StringIO(newline="\n")
+        doc.write(stream, fmt="asc")
+        payload = doc.encode(stream.getvalue())
+    path.write_bytes(payload)
 
 
 def _curves(version: str) -> object:
