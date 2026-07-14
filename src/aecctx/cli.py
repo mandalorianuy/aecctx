@@ -135,6 +135,7 @@ def build_parser() -> argparse.ArgumentParser:
     ingest.add_argument("--provider-replay", help="validated STEP/IGES or DWG provider replay corpus (v0.2 only)")
     ingest.add_argument("--provider-entry", help="entry ID inside --provider-replay")
     ingest.add_argument("--mesh-coordinate-profile", help="manual mesh coordinate profile JSON (v0.2 geometry only)")
+    ingest.add_argument("--mesh-crs-profile", help="governed offline CRS registry JSON (v0.2 geometry only)")
     ingest.add_argument("--created-at")
     ingest.add_argument("--json", action="store_true", dest="as_json")
     query = subparsers.add_parser("query")
@@ -175,6 +176,11 @@ def build_parser() -> argparse.ArgumentParser:
     gate.add_argument("--markdown")
     gate.add_argument("--ci-annotations")
     gate.add_argument("--json", action="store_true", dest="as_json")
+    crs_validate = subparsers.add_parser("crs-validate")
+    crs_validate.add_argument("registry")
+    crs_validate.add_argument("identifier")
+    crs_validate.add_argument("--require-current", action="store_true")
+    crs_validate.add_argument("--json", action="store_true", dest="as_json")
     return parser
 
 
@@ -186,6 +192,39 @@ def main(argv: Sequence[str] | None = None) -> int:
         else:
             print(__version__)
         return 0
+    if arguments.command == "crs-validate":
+        from .crs import CRSProfileError, load_crs_registry, validate_crs_identifier
+
+        try:
+            registry_path = Path(arguments.registry)
+            if not registry_path.is_file() or registry_path.is_symlink():
+                raise CRSProfileError("AECCTX_CRS_REGISTRY_INVALID", "CRS registry must be a regular file")
+            if registry_path.stat().st_size > 1024 * 1024:
+                raise CRSProfileError("AECCTX_CRS_REGISTRY_INVALID", "CRS registry exceeds 1 MiB")
+            document = json.loads(registry_path.read_text(encoding="utf-8"))
+            if not isinstance(document, dict):
+                raise CRSProfileError("AECCTX_CRS_REGISTRY_INVALID", "CRS registry must contain a JSON object")
+            registry = load_crs_registry(document)
+            record = validate_crs_identifier(registry, arguments.identifier, require_current=arguments.require_current)
+            data = {
+                **record.to_dict(),
+                "database_sha256": registry.database_sha256,
+                "profile_id": registry.profile_id,
+                "registry_digest": registry.registry_digest,
+            }
+            if arguments.as_json:
+                print(json.dumps(_envelope(True, data, []), sort_keys=True, separators=(",", ":")))
+            else:
+                print(f"AECCTX CRS valid: {record.identifier} ({record.crs_type})")
+            return 0
+        except (CRSProfileError, OSError, UnicodeError, json.JSONDecodeError) as error:
+            code = getattr(error, "code", "AECCTX_CRS_REGISTRY_INVALID")
+            diagnostic = {"code": code, "message": str(error), "severity": "error"}
+            if arguments.as_json:
+                print(json.dumps(_envelope(False, None, [diagnostic]), sort_keys=True, separators=(",", ":")))
+            else:
+                print(f"{code}: {error}", file=sys.stderr)
+            return 2
     if arguments.command == "gate":
         from ._atomic import AtomicCreateError, atomic_create_many
         from .gate import (
@@ -417,6 +456,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                 coordinate_profile = json.loads(profile_path.read_text(encoding="utf-8"))
                 if not isinstance(coordinate_profile, dict):
                     raise ValueError("mesh coordinate profile must contain a JSON object")
+            crs_profile = None
+            if arguments.mesh_crs_profile:
+                if arguments.aecctx_version != "0.2.0" or adapter != "geometry":
+                    raise ValueError("--mesh-crs-profile is limited to the governed v0.2 geometry profile")
+                if coordinate_profile is not None:
+                    raise ValueError("--mesh-coordinate-profile and --mesh-crs-profile are mutually exclusive")
+                profile_path = Path(arguments.mesh_crs_profile)
+                if not profile_path.is_file() or profile_path.is_symlink():
+                    raise ValueError("mesh CRS profile must be a regular file")
+                if profile_path.stat().st_size > 1024 * 1024:
+                    raise ValueError("mesh CRS profile exceeds the 1 MiB safety limit")
+                crs_profile = json.loads(profile_path.read_text(encoding="utf-8"))
+                if not isinstance(crs_profile, dict):
+                    raise ValueError("mesh CRS profile must contain a JSON object")
             if bool(arguments.inference_replay) != bool(arguments.inference_entry):
                 raise ValueError("--inference-replay and --inference-entry must be provided together")
             inference_result = None
@@ -520,6 +573,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     package_form=arguments.form,
                     aecctx_version=arguments.aecctx_version,
                     coordinate_profile=coordinate_profile,
+                    crs_profile=crs_profile,
                 )
             elif adapter == "step-iges":
                 from .adapters.step_iges import ingest_step_iges

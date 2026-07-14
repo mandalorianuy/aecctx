@@ -1,0 +1,5 @@
+# Project-authored NAD83 axis-order conformance mesh
+v 40 -75 12
+v 40.0001 -75.0001 15
+v 40.0002 -75 9
+f 1 2 3

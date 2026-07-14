@@ -1,0 +1,231 @@
+{
+  "author": {
+    "id": "aecctx-conformance",
+    "type": "project"
+  },
+  "operations": [
+    {
+      "accuracy": 4.0,
+      "accuracy_unit": "m",
+      "definition_sha256": "df85e173e81414ed5a3cbf5eaee0c5ac34857ba242c486e2345c51b0ded19b8b",
+      "description": "NAD83 to WGS 84 (3)",
+      "horizontal_tolerance": 1e-09,
+      "input_axes": [
+        "Lat",
+        "Lon",
+        "h"
+      ],
+      "maximum_points": 100000,
+      "operation_id": "EPSG:1252",
+      "output_axes": [
+        "Lat",
+        "Lon",
+        "h"
+      ],
+      "required_grids": [],
+      "source_crs": "EPSG:4269",
+      "target_crs": "EPSG:4326",
+      "vertical_tolerance": 1e-06
+    }
+  ],
+  "profile_id": "pyproj-epsg-v11.022-offline-v1",
+  "records": [
+    {
+      "axes": [
+        {
+          "abbreviation": "X",
+          "direction": "east",
+          "unit_conversion_factor": 1.0,
+          "unit_name": "metre"
+        },
+        {
+          "abbreviation": "Y",
+          "direction": "north",
+          "unit_conversion_factor": 1.0,
+          "unit_name": "metre"
+        }
+      ],
+      "deprecated": false,
+      "identifier": "EPSG:3857",
+      "name": "WGS 84 / Pseudo-Mercator",
+      "type": "projected",
+      "wkt_sha256": "528457bb7f6bfa0b3f3f1947696379a3cefaa450ccdbdac084c93108c918350f"
+    },
+    {
+      "axes": [
+        {
+          "abbreviation": "Lat",
+          "direction": "north",
+          "unit_conversion_factor": 0.0174532925199433,
+          "unit_name": "degree"
+        },
+        {
+          "abbreviation": "Lon",
+          "direction": "east",
+          "unit_conversion_factor": 0.0174532925199433,
+          "unit_name": "degree"
+        }
+      ],
+      "deprecated": false,
+      "identifier": "EPSG:4269",
+      "name": "NAD83",
+      "type": "geographic_2d",
+      "wkt_sha256": "2719ee8c27570fa018d3e80f7481901fb4b8a65c43163f43f32865a7d4ada15c"
+    },
+    {
+      "axes": [
+        {
+          "abbreviation": "Lat",
+          "direction": "north",
+          "unit_conversion_factor": 0.0174532925199433,
+          "unit_name": "degree"
+        },
+        {
+          "abbreviation": "Lon",
+          "direction": "east",
+          "unit_conversion_factor": 0.0174532925199433,
+          "unit_name": "degree"
+        }
+      ],
+      "deprecated": false,
+      "identifier": "EPSG:4326",
+      "name": "WGS 84",
+      "type": "geographic_2d",
+      "wkt_sha256": "9285b9beb25e5ec582c29063c0cb0f3f77e9c2c3acf897c9edbefdeae61eb71d"
+    },
+    {
+      "axes": [
+        {
+          "abbreviation": "X",
+          "direction": "geocentricX",
+          "unit_conversion_factor": 1.0,
+          "unit_name": "metre"
+        },
+        {
+          "abbreviation": "Y",
+          "direction": "geocentricY",
+          "unit_conversion_factor": 1.0,
+          "unit_name": "metre"
+        },
+        {
+          "abbreviation": "Z",
+          "direction": "geocentricZ",
+          "unit_conversion_factor": 1.0,
+          "unit_name": "metre"
+        }
+      ],
+      "deprecated": true,
+      "identifier": "EPSG:4328",
+      "name": "WGS 84 (geocentric)",
+      "type": "geocentric",
+      "wkt_sha256": "c6e547175e0d0d8604ed9b4afcd03eefa79ac1dbc1cb32edb4cb4e7554ff4733"
+    },
+    {
+      "axes": [
+        {
+          "abbreviation": "X",
+          "direction": "geocentricX",
+          "unit_conversion_factor": 1.0,
+          "unit_name": "metre"
+        },
+        {
+          "abbreviation": "Y",
+          "direction": "geocentricY",
+          "unit_conversion_factor": 1.0,
+          "unit_name": "metre"
+        },
+        {
+          "abbreviation": "Z",
+          "direction": "geocentricZ",
+          "unit_conversion_factor": 1.0,
+          "unit_name": "metre"
+        }
+      ],
+      "deprecated": false,
+      "identifier": "EPSG:4978",
+      "name": "WGS 84",
+      "type": "geocentric",
+      "wkt_sha256": "31456bd467402c1ef83c939860baba6ce551371602532354e772af974e9bd10b"
+    },
+    {
+      "axes": [
+        {
+          "abbreviation": "Lat",
+          "direction": "north",
+          "unit_conversion_factor": 0.0174532925199433,
+          "unit_name": "degree"
+        },
+        {
+          "abbreviation": "Lon",
+          "direction": "east",
+          "unit_conversion_factor": 0.0174532925199433,
+          "unit_name": "degree"
+        },
+        {
+          "abbreviation": "h",
+          "direction": "up",
+          "unit_conversion_factor": 1.0,
+          "unit_name": "metre"
+        }
+      ],
+      "deprecated": false,
+      "identifier": "EPSG:4979",
+      "name": "WGS 84",
+      "type": "geographic_3d",
+      "wkt_sha256": "7616f37f0e501628ebca9fdb7b70231f0cf101f96488dcca81c2c1b2858076ce"
+    },
+    {
+      "axes": [
+        {
+          "abbreviation": "H",
+          "direction": "up",
+          "unit_conversion_factor": 1.0,
+          "unit_name": "metre"
+        }
+      ],
+      "deprecated": false,
+      "identifier": "EPSG:5703",
+      "name": "NAVD88 height",
+      "type": "vertical",
+      "wkt_sha256": "0bfd5d3278fdef9f9087882866acbea4d9df3006655726856348760492355c25"
+    },
+    {
+      "axes": [
+        {
+          "abbreviation": "Lat",
+          "direction": "north",
+          "unit_conversion_factor": 0.0174532925199433,
+          "unit_name": "degree"
+        },
+        {
+          "abbreviation": "Lon",
+          "direction": "east",
+          "unit_conversion_factor": 0.0174532925199433,
+          "unit_name": "degree"
+        },
+        {
+          "abbreviation": "H",
+          "direction": "up",
+          "unit_conversion_factor": 1.0,
+          "unit_name": "metre"
+        }
+      ],
+      "deprecated": false,
+      "identifier": "EPSG:6349",
+      "name": "NAD83(2011) + NAVD88 height",
+      "type": "compound",
+      "wkt_sha256": "7fb17ecacc0861ff7dc2742d19eaa2fdacce0760589c9334668f3675294d88af"
+    }
+  ],
+  "registry_digest": "6be549e386157538d6dbb75c6352d648c58c1d69ed8ebc5aa0b6452cfc2bb64f",
+  "runtime": {
+    "database_layout": "1.4",
+    "epsg_date": "2024-11-05",
+    "epsg_version": "v11.022",
+    "library": "pyproj",
+    "library_version": "3.7.2",
+    "proj_data_version": "1.20",
+    "proj_version": "9.5.1"
+  },
+  "schema_version": "aecctx.crs-registry.v1"
+}

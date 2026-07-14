@@ -355,8 +355,8 @@ def run_remote_provider(
 - Create: `schemas/v0.2/crs-registry.schema.json` and packaged mirror
 - Create: `src/aecctx/crs.py`
 - Create: `fixtures/v0.3/mesh/`
-- Create: `conformance/v0.3/mesh-corpus.json`
-- Create: `scripts/check_mesh_v03_conformance.py`
+- Create: `conformance/v0.3/mesh-crs-corpus.json`
+- Create: `scripts/check_mesh_crs_v03_conformance.py`
 - Create: `tests/test_mesh_v03.py`
 - Modify: `src/aecctx/adapters/geometry.py`, `src/aecctx/coordinates.py`, `src/aecctx/cli.py`
 - Modify: `pyproject.toml`, `docs/licenses/trimesh.md`
@@ -373,13 +373,13 @@ def apply_datum_operation(
 ) -> CoordinateSolution: ...
 ```
 
-- [ ] Govern ACXD-039 with the exact offline registry/library/grid versions, licenses and authority/non-authority language.
-- [ ] RED-test valid/unknown/deprecated/compound/conflicting CRS, axes, vertical CRS, large coordinates, grids, singular/reflected/tolerance failures.
-- [ ] Add an optional extra only if the selected official library is permissively distributable; keep core import clean and network disabled.
-- [ ] Preserve source vertices and emit manual/derived records with registry digest, operation, residual and accuracy.
-- [ ] Prove that a valid CRS identifier does not establish survey truth and unit guessing remains impossible.
-- [ ] Run mesh v0.1/v0.2/v0.3, clean-core/extra installs, determinism and repository gates.
-- [ ] Write evidence, promote only ACX-32 and commit `feat: add offline mesh CRS qualification`.
+- [x] Govern ACXD-040 with the exact offline registry/library/grid versions, licenses and authority/non-authority language. ACXD-039 remains immutable ACX-30 authority.
+- [x] RED-test valid/unknown/deprecated/compound/conflicting CRS, axes, vertical CRS, large coordinates, grids, singular/reflected/tolerance failures.
+- [x] Add an optional extra only if the selected official library is permissively distributable; keep core import clean and network disabled.
+- [x] Preserve source vertices and emit manual/derived records with registry digest, operation, residual and accuracy.
+- [x] Prove that a valid CRS identifier does not establish survey truth and unit guessing remains impossible.
+- [x] Run mesh v0.1/v0.2/v0.3, clean-core/extra installs, determinism and repository gates.
+- [x] Write evidence, promote only ACX-32 and commit `feat: add offline mesh CRS qualification`.
 
 ---
 
@@ -399,7 +399,7 @@ def apply_datum_operation(
 - Consumes: ACX-24 multiarch OCP provider and existing lexical/BREP evidence.
 - Produces: XDE event payloads, distinct raw/translated/healed artifacts, claims `step-iges.xde-structure` and `step-iges.partial-recovery`.
 
-- [ ] Govern ACXD-040 with exact OCP/OCCT version, XDE API calls, schemas and healing policy.
+- [ ] Govern ACXD-041 with exact OCP/OCCT version, XDE API calls, schemas and healing policy.
 - [ ] RED-test names/colors/layers/materials/units/placements, multi-root partial success, invalid topology, tolerance and healing pairs.
 - [ ] Extend provider schema and worker with closed actions/configuration; healing is opt-in and creates a new artifact.
 - [ ] Map XDE/source correlation and per-root results without replacing lexical source evidence or claiming source-exact BREP.
@@ -425,7 +425,7 @@ def apply_datum_operation(
 - Consumes: ACX-24 multiarch and ACX-28 source-bundle contract.
 - Produces: exact version profiles and claim `dwg.external-provider.v03`.
 
-- [ ] Govern ACXD-041 with exact LibreDWG/alternative provider version, supported DWG releases, xref and geometry ceiling, GPL/commercial posture and known upstream failures.
+- [ ] Govern ACXD-042 with exact LibreDWG/alternative provider version, supported DWG releases, xref and geometry ceiling, GPL/commercial posture and known upstream failures.
 - [ ] RED-test every selected version, units, 3D, xref, duplicate handle, conversion loss, encrypted/protected, ACIS/proxy/custom and writer denial.
 - [ ] Generate project-authored DWG inputs through a documented legal toolchain; bind generator and output hashes.
 - [ ] Extend worker actions without exposing writer operations or caller commands.
@@ -453,7 +453,7 @@ def apply_datum_operation(
 The published `conformance/v0.2/rvt-provider-decision.json`, ACX-19 evidence and `v0.2.0` claim remain immutable inputs. ACX-34 records its new decision only under `conformance/v0.3/`.
 
 - [ ] Obtain explicit human selection of licensed local runtime or approved remote route. Without it, do not create adapter/provider scaffolding.
-- [ ] Record entitlement, exact runtime/RVT versions, automation rights, CI, fixtures, telemetry, billing, retention, jurisdiction and lifecycle in ACXD-042.
+- [ ] Record entitlement, exact runtime/RVT versions, automation rights, CI, fixtures, telemetry, billing, retention, jurisdiction and lifecycle in ACXD-043.
 - [ ] If accepted, write the subordinate RVT profile/plan and obtain separate review before decoder code.
 - [ ] RED-test real positive/degraded/corrupt/linked/resource cases plus provider unavailable, consent/entitlement failure and opaque fallback.
 - [ ] Implement neutral evidence mapping only; converter-derived IFC remains visibly converted.
@@ -479,7 +479,7 @@ The published `conformance/v0.2/rvt-provider-decision.json`, ACX-19 evidence and
 - Consumes: existing canonical `SigningStatement` and detached-bundle model; ACX-26 only for explicitly selected online status.
 - Produces: separate X.509, status, timestamp and countersignature result types; claims are separate, never one aggregate authenticity claim.
 
-- [ ] Govern ACXD-043 with exact algorithms, libraries, chain rules, offline status/timestamp inputs and countersignature semantics.
+- [ ] Govern ACXD-044 with exact algorithms, libraries, chain rules, offline status/timestamp inputs and countersignature semantics.
 - [ ] RED-test project test PKI: valid/expired/revoked/unknown/rotated chains, stale CRL/OCSP, timestamps, multisignatures, mutations and algorithm confusion.
 - [ ] Implement each trust layer as optional pure evaluation over explicit bytes and verification time; no host trust store, clock or discovery.
 - [ ] Preserve existing Ed25519 profile compatibility and clean install without advanced extras.
@@ -504,7 +504,7 @@ The published `conformance/v0.2/rvt-provider-decision.json`, ACX-19 evidence and
 - Consumes: `evaluate_gate(...)`, pinned IfcTester/IfcOpenShell worker.
 - Produces: selected additional IDS check observations and claim `quality-gate.ids-expanded`.
 
-- [ ] Govern ACXD-044 with exact official IDS cases, facets, restrictions, cardinalities and dependency versions.
+- [ ] Govern ACXD-045 with exact official IDS cases, facets, restrictions, cardinalities and dependency versions.
 - [ ] RED-test each selected combination plus unsupported `partOf`, URI/bSDD, geometry/quantity and malicious XML cases.
 - [ ] Vendor only unchanged official fixtures with hashes/license; generate separate Apache-2.0 project cases.
 - [ ] Extend preflight and deterministic mapping; unsupported facets fail closed or require review.
@@ -532,7 +532,7 @@ The published `conformance/v0.2/rvt-provider-decision.json`, ACX-19 evidence and
 - Consumes: stable library/CLI/MCP/gate/signing results through ACX-36.
 - Produces: deterministic inventory/checksum/signature metadata and claim `codex.aecctx-inspector-distribution`.
 
-- [ ] Govern ACXD-045 with exact host/core/MCP version matrix, package format, integrity/signature rules and marketplace non-claim.
+- [ ] Govern ACXD-046 with exact host/core/MCP version matrix, package format, integrity/signature rules and marketplace non-claim.
 - [ ] RED-test compatible/incompatible versions, mutation, downgrade, install/upgrade/rollback/uninstall and adversarial parity.
 - [ ] Build reproducible create-only artifacts; installation cannot overwrite unknown files and uninstall removes only exact inventory.
 - [ ] Run parity for validate/info/query/diff/context/gate across every claimed host profile.

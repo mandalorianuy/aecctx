@@ -139,3 +139,13 @@ def test_dxf_source_bundle_schema_is_public_and_bundled() -> None:
     normative = Path(__file__).parents[1] / "schemas/v0.2/source-bundle.schema.json"
 
     assert json.loads(bundled.read_text(encoding="utf-8")) == json.loads(normative.read_text(encoding="utf-8"))
+
+
+def test_mesh_crs_registry_schema_is_public_bundled_and_portably_gated() -> None:
+    bundled = files("aecctx.schemas.v0_2").joinpath("crs-registry.schema.json")
+    normative = Path(__file__).parents[1] / "schemas/v0.2/crs-registry.schema.json"
+    verify = (Path(__file__).parents[1] / "scripts/verify_portable.sh").read_text(encoding="utf-8")
+
+    assert json.loads(bundled.read_text(encoding="utf-8")) == json.loads(normative.read_text(encoding="utf-8"))
+    assert verify.count("scripts/check_mesh_crs_v03_conformance.py") == 2
+    assert "conformance/v0.3/mesh-crs-corpus.json" in verify

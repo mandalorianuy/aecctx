@@ -190,8 +190,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-28 | completed | Expanded DXF semantics, geometry and bounded xrefs |
 | ACX-29 | completed | Multilingual and layout-aware OCR profiles |
 | ACX-30 | completed | Bounded vision inference and reconstruction hypotheses |
-| ACX-31 | pending-next | Mesh CRS registry and datum-operation qualification |
-| ACX-32 | pending | STEP/IGES XDE and fidelity expansion |
+| ACX-31 | completed | Mesh CRS registry and datum-operation qualification |
+| ACX-32 | pending-next | STEP/IGES XDE and fidelity expansion |
 | ACX-33 | pending | DWG version, xref, units and geometry expansion |
 | ACX-34 | pending | RVT provider reopening or renewed executable blocker |
 | ACX-35 | pending | Advanced optional signing and trust profiles |
@@ -927,7 +927,7 @@ Detailed implementation authority: [`docs/plans/post-v02-functional-debt-impleme
 
 Program rules:
 
-- ACX-24 through ACX-30 are complete and ACX-31 alone is `pending-next`; no later ACX may execute or borrow scope.
+- ACX-24 through ACX-31 are complete and ACX-32 alone is `pending-next`; no later ACX may execute or borrow scope.
 - Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
 - Replay cannot satisfy a live platform/provider acceptance item.
 - A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.
@@ -958,3 +958,7 @@ ACX-29 completion resolution: `pdf-image.ocr-layout` is public `partial` only fo
 ACX-30 execution cut: ACXD-039 supersedes the draft's reused ACXD-038 identifier and selects only the project-owned `visible-raster-rules-v1` provider under the existing OCI Linux arm64/amd64 boundary. The mapper lives in `src/aecctx/vision.py` because `src/aecctx/inference.py` is already a public module. ACX-30 is `in_progress`; ACX-31 remains `pending` until live provider, mapping, adapter/CLI, corpus, security, packaging and full gates close both bounded claims or document an exact blocker.
 
 ACX-30 completion resolution: `pdf-image.vision-inference` and `pdf-image.reconstruction-hypothesis` are public `partial` only for ACXD-039's exact project-owned visible rectangle/grid/cross/linear-dimension/containment and planar-boundary rules on Linux arm64/amd64. Eight focused tests, nine fixtures, two live byte-equivalent executions, replay, schema, adapter/CLI, privacy/security and packaging gates passed; exact-head GitHub CI and squash merge remain mandatory delivery evidence. All outputs are inferred pixel evidence and cannot establish semantic identity, measurement, units, CRS, validation completeness or source/full/hidden geometry. ACX-31 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+ACX-31 execution cut: ACXD-040 corrects the draft's reused ACXD-039 identifier and selects only `pyproj==3.7.2`, PROJ 9.5.1, EPSG v11.022/2024-11-05, PROJ_DATA 1.20, database layout 1.4 and exact grid-free operation EPSG:1252. Registry identity is normalized semantic content rather than platform-specific SQLite bytes. Source vertices and source CRS/units remain immutable/unknown; only manual and derived evidence may become partial. ACX-31 is `in_progress`; ACX-32 remains `pending` until the complete profile gates pass or an exact blocker is documented.
+
+ACX-31 completion resolution: `mesh.crs-registry` and `mesh.datum-transform` are public `partial` only for ACXD-040's exact normalized eight-record offline registry and grid-free EPSG:1252 path. Source mesh evidence remains immutable; caller CRS, transformed vertices, accuracy and residuals are manual/derived evidence and never establish source declaration, survey truth or engineering approval. Focused tests, deterministic regeneration, clean Python 3.12 core/CRS-extra installs, wheel/sdist inspection, complete local gates and exact-head GitHub CI are the acceptance boundary. Network lookup, grids, external/vendor extensions, unlisted CRS/operations, coordinate epochs and survey authority remain unsupported or unknown. ACX-32 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
