@@ -191,8 +191,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-29 | completed | Multilingual and layout-aware OCR profiles |
 | ACX-30 | completed | Bounded vision inference and reconstruction hypotheses |
 | ACX-31 | completed | Mesh CRS registry and datum-operation qualification |
-| ACX-32 | pending-next | STEP/IGES XDE and fidelity expansion |
-| ACX-33 | pending | DWG version, xref, units and geometry expansion |
+| ACX-32 | completed | STEP/IGES XDE and fidelity expansion |
+| ACX-33 | pending-next | DWG version, xref, units and geometry expansion |
 | ACX-34 | pending | RVT provider reopening or renewed executable blocker |
 | ACX-35 | pending | Advanced optional signing and trust profiles |
 | ACX-36 | pending | Expanded bounded IDS and quality-gate profiles |
@@ -927,7 +927,7 @@ Detailed implementation authority: [`docs/plans/post-v02-functional-debt-impleme
 
 Program rules:
 
-- ACX-24 through ACX-31 are complete and ACX-32 alone is `pending-next`; no later ACX may execute or borrow scope.
+- ACX-24 through ACX-32 are complete and ACX-33 alone is `pending-next`; no later ACX may execute or borrow scope.
 - Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
 - Replay cannot satisfy a live platform/provider acceptance item.
 - A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.
@@ -962,3 +962,7 @@ ACX-30 completion resolution: `pdf-image.vision-inference` and `pdf-image.recons
 ACX-31 execution cut: ACXD-040 corrects the draft's reused ACXD-039 identifier and selects only `pyproj==3.7.2`, PROJ 9.5.1, EPSG v11.022/2024-11-05, PROJ_DATA 1.20, database layout 1.4 and exact grid-free operation EPSG:1252. Registry identity is normalized semantic content rather than platform-specific SQLite bytes. Source vertices and source CRS/units remain immutable/unknown; only manual and derived evidence may become partial. ACX-31 is `in_progress`; ACX-32 remains `pending` until the complete profile gates pass or an exact blocker is documented.
 
 ACX-31 completion resolution: `mesh.crs-registry` and `mesh.datum-transform` are public `partial` only for ACXD-040's exact normalized eight-record offline registry and grid-free EPSG:1252 path. Source mesh evidence remains immutable; caller CRS, transformed vertices, accuracy and residuals are manual/derived evidence and never establish source declaration, survey truth or engineering approval. Focused tests, deterministic regeneration, clean Python 3.12 core/CRS-extra installs, wheel/sdist inspection, complete local gates and exact-head GitHub CI are the acceptance boundary. Network lookup, grids, external/vendor extensions, unlisted CRS/operations, coordinate epochs and survey authority remain unsupported or unknown. ACX-32 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+ACX-32 execution cut: ACXD-041 and `docs/specs/step-iges-v03-profile.md` keep the exact `cadquery-ocp==7.9.3.1.1` / OCCT 7.9.3 runtime and select only the documented STEPCAF/IGESCAF XDE label, color, layer, material, unit, placement and per-root APIs. XDE metadata augments the immutable lexical graph; raw translator BREP, optional healed BREP and tessellation remain separate. Healing is disabled by default and the sole admitted profile uses fixed tolerances with a new derived artifact. ACX-32 is `in_progress`; ACX-33 remains `pending` until live arm64/amd64, replay, mapping, corpus, security, licensing and full repository gates close both bounded claims or document an exact blocker.
+
+ACX-32 completion resolution: `step-iges.xde-structure` and `step-iges.partial-recovery` are public `partial` only for ACXD-041's exact OCP/OCCT XDE and per-root profile on Linux arm64/amd64 plus portable replay. The lexical graph remains observed authority; XDE label evidence, raw translated BREP, optional fixed-profile healed BREP and combined GLB remain distinct and content-addressed. Five selected source inputs are byte-equivalent across both live architectures; the six-entry replay corpus, two-root disabled/enabled healing pair, focused suites, package checks and complete local gates pass. Complete source/XDE correlation, source-exact BREP, implicit/correct repair, unlisted schemas/runtimes/platforms, external content and consumer semantics remain non-claims. ACX-33 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.

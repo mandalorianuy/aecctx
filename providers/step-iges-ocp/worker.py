@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,15 @@ CONFIGURATION = {
     "read_shape_healing": "translator-default-observed",
     "schema_profile": "acx17-v1",
     "tessellation_units": "source",
+}
+XDE_CONFIGURATION = {
+    "angular_deflection": 0.5,
+    "brep_format": "occt-ascii-brep-7.9.3",
+    "healing": {"enabled": False, "maximum_tolerance": 0.001, "minimum_tolerance": 1e-7, "precision": 1e-7},
+    "linear_deflection": 0.1,
+    "schema_profile": "acx32-xde-v1",
+    "tessellation_units": "source",
+    "xde": {"colors": True, "layers": True, "materials": True, "names": True, "placements": True, "units": True},
 }
 REQUIRED_AXES = (
     "cpu", "decompression", "environment", "filesystem", "input_bytes", "memory", "network", "open_files",
@@ -33,9 +43,10 @@ STEP_SCHEMAS = {
 
 def _configuration(request: dict[str, Any]) -> dict[str, Any]:
     configured = request.get("configuration")
-    if configured != CONFIGURATION:
+    enabled = {**XDE_CONFIGURATION, "healing": {**XDE_CONFIGURATION["healing"], "enabled": True}}
+    if configured not in (CONFIGURATION, XDE_CONFIGURATION, enabled):
         raise ValueError("AECCTX_STEP_IGES_CONFIGURATION_INVALID")
-    return dict(CONFIGURATION)
+    return json.loads(json.dumps(configured))
 
 
 def _probe(data: bytes) -> str:
@@ -338,6 +349,226 @@ def _bounds(shape: Any) -> dict[str, list[float]]:
     }
 
 
+def _label_entry(label: Any) -> str:
+    from OCP.TCollection import TCollection_AsciiString
+    from OCP.TDF import TDF_Tool
+
+    value = TCollection_AsciiString()
+    TDF_Tool.Entry_s(label, value)
+    return str(value.ToCString())
+
+
+def _label_name(label: Any) -> dict[str, Any]:
+    from OCP.TDataStd import TDataStd_Name
+
+    attribute = TDataStd_Name()
+    if label.FindAttribute(TDataStd_Name.GetID_s(), attribute):
+        return {"state": "known", "value": str(attribute.Get().ToExtString())}
+    return {"reason_code": "AECCTX_STEP_IGES_XDE_CORRELATION_UNKNOWN", "state": "unknown"}
+
+
+def _placement(label: Any) -> dict[str, Any]:
+    from OCP.XCAFDoc import XCAFDoc_ShapeTool
+
+    transform = XCAFDoc_ShapeTool.GetLocation_s(label).Transformation()
+    values = [round(float(transform.Value(row, column)), 12) for row in range(1, 4) for column in range(1, 5)]
+    if all(math.isfinite(value) for value in values):
+        return {"matrix_3x4": values, "state": "known"}
+    return {"reason_code": "AECCTX_STEP_IGES_PLACEMENT_UNRESOLVED", "state": "unknown"}
+
+
+def _source_unit(scanned: dict[str, Any]) -> dict[str, str]:
+    if scanned["format"] == "step":
+        raw = "\n".join(str(item.get("raw", "")) for item in scanned["entities"] if item.get("original_class") in {"SI_UNIT", "CONVERSION_BASED_UNIT", "COMPLEX_INSTANCE"})
+        candidates: set[str] = set()
+        if re.search(r"SI_UNIT\s*\(\s*\.MILLI\.\s*,\s*\.METRE\.\s*\)", raw):
+            candidates.add("millimetre")
+        if re.search(r"SI_UNIT\s*\(\s*\$\s*,\s*\.METRE\.\s*\)", raw):
+            candidates.add("metre")
+        if len(candidates) == 1:
+            return {"state": "known", "value": candidates.pop()}
+        if len(candidates) > 1:
+            return {"reason_code": "AECCTX_STEP_IGES_UNIT_CONFLICT", "state": "unknown"}
+    elif scanned.get("version") == "5.3" and re.search(r"(?:^|,)2HMM(?:,|;)", str(scanned.get("global_raw", ""))):
+        return {"state": "known", "value": "millimetre"}
+    return {"reason_code": "AECCTX_STEP_IGES_UNIT_UNKNOWN", "state": "unknown"}
+
+
+def _product_names(scanned: dict[str, Any]) -> dict[str, list[int]]:
+    names: dict[str, list[int]] = {}
+    if scanned["format"] != "step":
+        return names
+    pattern = re.compile(r"PRODUCT\s*\(\s*'(?:[^']|'')*'\s*,\s*'((?:[^']|'')*)'", re.DOTALL)
+    for item in scanned["entities"]:
+        if item.get("original_class") != "PRODUCT":
+            continue
+        match = pattern.search(str(item.get("raw", "")))
+        if match:
+            names.setdefault(match.group(1).replace("''", "'"), []).append(int(item["id"]))
+    return names
+
+
+def _correlation(name: dict[str, Any], source_names: dict[str, list[int]]) -> dict[str, Any]:
+    if name.get("state") != "known" or name.get("value") not in source_names:
+        return {"reason_code": "AECCTX_STEP_IGES_XDE_CORRELATION_UNKNOWN", "state": "unknown"}
+    identifiers = source_names[str(name["value"])]
+    if len(identifiers) != 1:
+        return {"reason_code": "AECCTX_STEP_IGES_XDE_CORRELATION_CONFLICT", "state": "conflicted"}
+    return {"method": "exact-unique-name", "source_entity_ids": identifiers, "state": "known"}
+
+
+def _label_colors(color_tool: Any, shape: Any) -> list[dict[str, Any]]:
+    from OCP.Quantity import Quantity_ColorRGBA
+    from OCP.XCAFDoc import XCAFDoc_ColorCurv, XCAFDoc_ColorGen, XCAFDoc_ColorSurf
+
+    result: list[dict[str, Any]] = []
+    for name, kind in (("generic", XCAFDoc_ColorGen), ("surface", XCAFDoc_ColorSurf), ("curve", XCAFDoc_ColorCurv)):
+        color = Quantity_ColorRGBA()
+        if color_tool.GetColor(shape, kind, color):
+            rgb = color.GetRGB()
+            result.append({"kind": name, "rgba": [round(float(rgb.Red()), 12), round(float(rgb.Green()), 12), round(float(rgb.Blue()), 12), round(float(color.Alpha()), 12)]})
+    return result
+
+
+def _label_layers(layer_tool: Any, label: Any) -> list[str]:
+    sequence = layer_tool.GetLayers(label)
+    return sorted({str(sequence.Value(index).ToExtString()) for index in range(1, sequence.Length() + 1)})
+
+
+def _label_materials(vis_material_tool: Any, label: Any, shape: Any) -> list[dict[str, str]]:
+    from OCP.TDataStd import TDataStd_Name, TDataStd_TreeNode
+    from OCP.TDF import TDF_Label
+    from OCP.XCAFDoc import XCAFDoc
+
+    result: list[dict[str, str]] = []
+    physical = TDataStd_TreeNode()
+    if label.IsAttribute(XCAFDoc.MaterialRefGUID_s()) and label.FindAttribute(XCAFDoc.MaterialRefGUID_s(), physical) and physical.HasFather():
+        material_label = physical.Father().Label()
+        attribute = TDataStd_Name()
+        if material_label.FindAttribute(TDataStd_Name.GetID_s(), attribute):
+            result.append({"kind": "physical", "name": str(attribute.Get().ToExtString())})
+    material_label = TDF_Label()
+    if not label.IsAttribute(XCAFDoc.VisMaterialRefGUID_s()) or not vis_material_tool.GetShapeMaterial(shape, material_label):
+        return result
+    attribute = TDataStd_Name()
+    if not material_label.FindAttribute(TDataStd_Name.GetID_s(), attribute):
+        return result
+    result.append({"kind": "visual", "name": str(attribute.Get().ToExtString())})
+    return result
+
+
+def _tolerances(shape: Any) -> dict[str, float]:
+    from OCP.ShapeAnalysis import ShapeAnalysis_ShapeTolerance
+
+    analyzer = ShapeAnalysis_ShapeTolerance()
+    return {
+        "average": round(float(analyzer.Tolerance(shape, 0)), 12),
+        "maximum": round(float(analyzer.Tolerance(shape, 1)), 12),
+        "minimum": round(float(analyzer.Tolerance(shape, -1)), 12),
+    }
+
+
+def _write_brep(shape: Any, path: Path) -> bytes:
+    from OCP.BRepTools import BRepTools
+
+    if not BRepTools.Write_s(shape, str(path)):
+        raise ValueError("AECCTX_STEP_IGES_BREP_INVALID")
+    return path.read_bytes()
+
+
+def _heal(shape: Any, configuration: dict[str, Any]) -> tuple[Any, dict[str, Any]]:
+    profile = configuration["healing"]
+    if not profile["enabled"]:
+        return shape, {"after_valid": None, "applied": False, "artifact_path": None, "maximum_tolerance": profile["maximum_tolerance"], "minimum_tolerance": profile["minimum_tolerance"], "precision": profile["precision"]}
+    from OCP.BRepCheck import BRepCheck_Analyzer
+    from OCP.ShapeFix import ShapeFix_Shape
+
+    fixer = ShapeFix_Shape(shape)
+    fixer.SetPrecision(profile["precision"])
+    fixer.SetMinTolerance(profile["minimum_tolerance"])
+    fixer.SetMaxTolerance(profile["maximum_tolerance"])
+    fixer.Perform()
+    healed = fixer.Shape()
+    return healed, {"after_valid": bool(BRepCheck_Analyzer(healed).IsValid()), "applied": True, "artifact_path": None, "maximum_tolerance": profile["maximum_tolerance"], "minimum_tolerance": profile["minimum_tolerance"], "precision": profile["precision"]}
+
+
+def _transfer_xde(source_path: Path, format_name: str) -> tuple[Any, Any, list[Any]]:
+    from OCP.IFSelect import IFSelect_RetDone
+    from OCP.TCollection import TCollection_ExtendedString
+    from OCP.TDF import TDF_LabelSequence
+    from OCP.TDocStd import TDocStd_Document
+    from OCP.XCAFDoc import XCAFDoc_DocumentTool
+
+    if format_name == "step":
+        from OCP.STEPCAFControl import STEPCAFControl_Reader
+
+        reader = STEPCAFControl_Reader()
+        reader.SetMatMode(True)
+    else:
+        from OCP.IGESCAFControl import IGESCAFControl_Reader
+
+        reader = IGESCAFControl_Reader()
+    reader.SetColorMode(True)
+    reader.SetLayerMode(True)
+    reader.SetNameMode(True)
+    if reader.ReadFile(str(source_path)) != IFSelect_RetDone:
+        raise ValueError("AECCTX_STEP_IGES_TRANSFER_FAILED")
+    document = TDocStd_Document(TCollection_ExtendedString("XCAF"))
+    if not reader.Transfer(document):
+        raise ValueError("AECCTX_STEP_IGES_TRANSFER_FAILED")
+    shape_tool = XCAFDoc_DocumentTool.ShapeTool_s(document.Main())
+    roots = TDF_LabelSequence()
+    shape_tool.GetFreeShapes(roots)
+    labels = [roots.Value(index) for index in range(1, roots.Length() + 1)]
+    if not labels:
+        raise ValueError("AECCTX_STEP_IGES_TRANSFER_FAILED")
+    return document, shape_tool, labels
+
+
+def _xde_labels(document: Any, shape_tool: Any, roots: list[Any], scanned: dict[str, Any]) -> list[dict[str, Any]]:
+    from OCP.TDF import TDF_LabelSequence
+    from OCP.XCAFDoc import XCAFDoc_DocumentTool, XCAFDoc_ShapeTool
+
+    color_tool = XCAFDoc_DocumentTool.ColorTool_s(document.Main())
+    layer_tool = XCAFDoc_DocumentTool.LayerTool_s(document.Main())
+    vis_material_tool = XCAFDoc_DocumentTool.VisMaterialTool_s(document.Main())
+    source_names = _product_names(scanned)
+    unit = _source_unit(scanned)
+    pending = [(label, []) for label in roots]
+    observed: dict[str, dict[str, Any]] = {}
+    while pending:
+        label, parents = pending.pop(0)
+        entry = _label_entry(label)
+        if entry in observed:
+            continue
+        shape = XCAFDoc_ShapeTool.GetShape_s(label)
+        name = _label_name(label)
+        if XCAFDoc_ShapeTool.IsAssembly_s(label):
+            kind = "assembly"
+        elif XCAFDoc_ShapeTool.IsComponent_s(label):
+            kind = "component"
+        elif XCAFDoc_ShapeTool.IsReference_s(label):
+            kind = "reference"
+        else:
+            kind = "simple-shape"
+        observed[entry] = {
+            "colors": _label_colors(color_tool, shape),
+            "entry": entry,
+            "kind": kind,
+            "layers": _label_layers(layer_tool, label),
+            "materials": _label_materials(vis_material_tool, label, shape),
+            "name": name,
+            "parent_entries": sorted(parents),
+            "placement": _placement(label),
+            "source_correlation": _correlation(name, source_names),
+            "unit": dict(unit),
+        }
+        components = TDF_LabelSequence()
+        if shape_tool.GetComponents_s(label, components, False):
+            pending.extend((components.Value(index), [entry]) for index in range(1, components.Length() + 1))
+    return [observed[key] for key in sorted(observed)]
+
+
 def _triangle_mesh(shape: Any) -> dict[str, Any]:
     from OCP.BRep import BRep_Tool
     from OCP.BRepMesh import BRepMesh_IncrementalMesh
@@ -407,7 +638,7 @@ def _response(request: dict[str, Any], source_path: Path, output_root: Path) -> 
     input_bytes = source_path.read_bytes()
     if hashlib.sha256(input_bytes).hexdigest() != request["input"]["sha256"]:
         raise ValueError("AECCTX_STEP_IGES_INPUT_HASH_MISMATCH")
-    _configuration(request)
+    configuration = _configuration(request)
     format_name = _probe(input_bytes)
     limits = request["limits"]
     scanned = (
@@ -423,6 +654,8 @@ def _response(request: dict[str, Any], source_path: Path, output_root: Path) -> 
         raise ValueError("AECCTX_IGES_VERSION_UNCLAIMED")
     if scanned["external_references"]:
         raise ValueError("AECCTX_STEP_IGES_EXTERNAL_REFERENCE_UNRESOLVED")
+    if configuration.get("schema_profile") == "acx32-xde-v1":
+        return _response_xde(request, source_path, output_root, scanned, format_name, configuration)
     shape = _transfer(source_path, format_name)
     (output_root / "artifacts").mkdir(parents=True, exist_ok=True)
     artifact_path = output_root / "artifacts" / "root-1.brep"
@@ -479,6 +712,96 @@ def _response(request: dict[str, Any], source_path: Path, output_root: Path) -> 
         "ok": True,
         "resource_usage": {"artifacts": 2, "events": len(events), "source_entities": len(scanned.get("entities", scanned.get("directory", [])))},
     }
+
+
+def _response_xde(
+    request: dict[str, Any],
+    source_path: Path,
+    output_root: Path,
+    scanned: dict[str, Any],
+    format_name: str,
+    configuration: dict[str, Any],
+) -> dict[str, Any]:
+    from OCP.BRepCheck import BRepCheck_Analyzer
+    from OCP.XCAFDoc import XCAFDoc_ShapeTool
+
+    document, shape_tool, root_labels = _transfer_xde(source_path, format_name)
+    labels = _xde_labels(document, shape_tool, root_labels, scanned)
+    (output_root / "artifacts").mkdir(parents=True, exist_ok=True)
+    artifacts: list[dict[str, Any]] = []
+    artifact_bytes: list[tuple[Path, bytes, str]] = []
+    root_events: list[dict[str, Any]] = []
+    diagnostics: list[dict[str, str]] = []
+    for index, label in enumerate(root_labels, 1):
+        root_id = f"root:{index}"
+        entry = _label_entry(label)
+        shape = XCAFDoc_ShapeTool.GetShape_s(label)
+        if shape.IsNull():
+            root_events.append({"diagnostic": "AECCTX_STEP_IGES_ROOT_TRANSFER_FAILED", "format": format_name, "root_id": root_id, "schema": "aecctx.step-iges.root.v1", "status": "failed", "xde_entry": entry})
+            diagnostics.append({"code": "AECCTX_STEP_IGES_ROOT_TRANSFER_FAILED", "severity": "warning"})
+            continue
+        try:
+            raw_path = output_root / "artifacts" / f"root-{index}.translated.brep"
+            raw_bytes = _write_brep(shape, raw_path)
+            mesh_path = output_root / "artifacts" / f"root-{index}.mesh.json"
+            mesh_path.write_bytes(_canonical(_triangle_mesh(shape)))
+            mesh_bytes = mesh_path.read_bytes()
+            healed_shape, healing = _heal(shape, configuration)
+            if healing["applied"]:
+                healed_path = output_root / "artifacts" / f"root-{index}.healed.brep"
+                healed_bytes = _write_brep(healed_shape, healed_path)
+                healing["artifact_path"] = f"artifacts/root-{index}.healed.brep"
+                artifact_bytes.append((healed_path, healed_bytes, "model/vnd.opencascade.brep"))
+                diagnostics.append({"code": "AECCTX_STEP_IGES_HEALING_APPLIED", "severity": "info"})
+            valid = bool(BRepCheck_Analyzer(shape).IsValid())
+            if not valid:
+                diagnostics.append({"code": "AECCTX_STEP_IGES_ROOT_INVALID", "severity": "warning"})
+            artifact_bytes.extend(((raw_path, raw_bytes, "model/vnd.opencascade.brep"), (mesh_path, mesh_bytes, "application/vnd.aecctx.triangle-mesh+json")))
+            root_events.append(
+                {
+                    "artifact_path": f"artifacts/root-{index}.translated.brep",
+                    "bounds": _bounds(shape),
+                    "format": format_name,
+                    "healing": healing,
+                    "mesh_artifact_path": f"artifacts/root-{index}.mesh.json",
+                    "representation_fidelity": "brep-translator-derived",
+                    "root_id": root_id,
+                    "schema": "aecctx.step-iges.root.v1",
+                    "status": "success",
+                    "tolerances": _tolerances(shape),
+                    "topology": _topology(shape),
+                    "valid": valid,
+                    "xde_entry": entry,
+                }
+            )
+        except ValueError as error:
+            code = str(error) if str(error).startswith("AECCTX_") else "AECCTX_STEP_IGES_ROOT_TRANSFER_FAILED"
+            for candidate in (output_root / "artifacts").glob(f"root-{index}.*"):
+                candidate.unlink(missing_ok=True)
+            root_events.append({"diagnostic": "AECCTX_STEP_IGES_ROOT_TRANSFER_FAILED", "format": format_name, "root_id": root_id, "schema": "aecctx.step-iges.root.v1", "status": "failed", "xde_entry": entry})
+            diagnostics.append({"code": code, "severity": "warning"})
+    successful = [item for item in root_events if item["status"] == "success"]
+    if not successful:
+        raise ValueError("AECCTX_STEP_IGES_TRANSFER_FAILED")
+    partial = len(successful) != len(root_events)
+    if partial:
+        diagnostics.append({"code": "AECCTX_STEP_IGES_TRANSFER_PARTIAL", "severity": "warning"})
+    if any(item["source_correlation"]["state"] != "known" for item in labels):
+        diagnostics.append({"code": "AECCTX_STEP_IGES_XDE_PARTIAL", "severity": "warning"})
+    source_locator = f"sha256:{request['input']['sha256']}"
+    events = [
+        {"event_type": "primitive", "payload": {**scanned, "schema": "aecctx.step-iges.source.v1"}, "sequence": 0, "source_locator": source_locator},
+        {"event_type": "container", "payload": {"format": format_name, "labels": labels, "schema": "aecctx.step-iges.xde.v1", "session_completeness": "partial" if partial else "complete"}, "sequence": 1, "source_locator": "xde:document"},
+    ]
+    for item in root_events:
+        events.append({"event_type": "primitive" if item["status"] == "success" else "diagnostic", "payload": item, "sequence": len(events), "source_locator": item["root_id"]})
+    for path, content, media_type in sorted(artifact_bytes, key=lambda item: item[0].name):
+        artifacts.append({"bytes": len(content), "media_type": media_type, "path": f"artifacts/{path.name}", "sha256": hashlib.sha256(content).hexdigest()})
+    report = _capability_report(True)
+    for name in ("hierarchy", "properties", "relationships", "materials_styles", "validation"):
+        report[name] = {"affected": [item["root_id"] for item in root_events], "fallback": "retain lexical and independently successful root evidence", "reason_codes": ["AECCTX_STEP_IGES_TRANSFER_PARTIAL" if partial else "AECCTX_STEP_IGES_XDE_PARTIAL"], "support_level": "partial"}
+    report["3d_geometry"] = {"affected": [item["root_id"] for item in root_events], "fallback": "retain raw translator BREP and failed-root diagnostics", "reason_codes": ["AECCTX_STEP_IGES_TRANSFER_PARTIAL" if partial else "AECCTX_STEP_IGES_TRANSLATOR_PROCESSING_APPLIED"], "support_level": "partial"}
+    return {"artifacts": artifacts, "capability_report": report, "diagnostics": diagnostics, "events": events, "ok": True, "resource_usage": {"artifacts": len(artifacts), "events": len(events), "roots": len(root_events), "source_entities": len(scanned.get("entities", scanned.get("directory", [])))}}
 
 
 def main() -> int:

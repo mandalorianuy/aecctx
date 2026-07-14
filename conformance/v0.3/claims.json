@@ -179,6 +179,36 @@
         "tests/test_mesh_v03.py::test_geometry_adapter_preserves_source_and_emits_separate_manual_derived_evidence",
         "tests/test_mesh_v03.py::test_mesh_crs_ingest_is_deterministic_and_never_enables_network"
       ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-32.md",
+      "fixture_ids": ["v03-step-iges-acx32"],
+      "id": "step-iges.xde-structure",
+      "platform_scope": ["linux/arm64", "linux/amd64", "portable-replay"],
+      "profile": "step-iges-xde-recovery-v03",
+      "provider_scope": "org.aecctx.step-iges.ocp@0.2.0 with cadquery-ocp==7.9.3.1.1 / OCCT 7.9.3 exact XDE profile",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_step_iges_v03.py::test_xde_and_root_events_validate_without_replacing_lexical_evidence",
+        "tests/test_step_iges_v03.py::test_committed_xde_replay_maps_all_roots_deterministically",
+        "tests/test_step_iges_v03.py::test_live_xde_provider_is_equal_on_arm64_and_amd64"
+      ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-32.md",
+      "fixture_ids": ["v03-step-iges-acx32"],
+      "id": "step-iges.partial-recovery",
+      "platform_scope": ["linux/arm64", "linux/amd64", "portable-replay"],
+      "profile": "step-iges-xde-recovery-v03",
+      "provider_scope": "per-root raw translator BREP and fixed opt-in ShapeFix profile only",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_step_iges_v03.py::test_partial_root_recovery_retains_success_and_never_claims_full",
+        "tests/test_step_iges_v03.py::test_live_healing_is_opt_in_and_preserves_raw_translator_artifacts",
+        "tests/test_step_iges_v03.py::test_schema_rejects_source_exact_or_silent_healing"
+      ]
     }
   ],
   "fixtures": [
@@ -213,6 +243,10 @@
     {
       "id": "v03-mesh-crs-acx31",
       "path": "fixtures/v0.3/mesh"
+    },
+    {
+      "id": "v03-step-iges-acx32",
+      "path": "fixtures/v0.3/step-iges"
     }
   ],
   "version": "0.3.0"

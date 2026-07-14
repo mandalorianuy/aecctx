@@ -1,0 +1,777 @@
+{
+  "artifacts": [
+    {
+      "bytes": 283,
+      "media_type": "application/vnd.aecctx.triangle-mesh+json",
+      "path": "artifacts/root-1.mesh.json",
+      "sha256": "f1ed6ed4262ad59aea2e3414bcd1b246f1dcb5dd2e6c82fe8990a2033800a8ec"
+    },
+    {
+      "bytes": 2259,
+      "media_type": "model/vnd.opencascade.brep",
+      "path": "artifacts/root-1.translated.brep",
+      "sha256": "36dc91eb15f9fc79f94641ff14814f62644caf48cbbf06fe1786c43d35648574"
+    }
+  ],
+  "attestation": {
+    "descriptor_digest": "bdb71630a224a93dd5c951b64efe90206d1c426c1ebc9e14944a16efb24fb7c4",
+    "deterministic": true,
+    "enforcement_profile": "oci-docker-v1",
+    "network_mode": "disabled",
+    "provider_id": "org.aecctx.step-iges.ocp",
+    "provider_version": "0.2.0",
+    "request_digest": "5b82b13624fe852387a676d6e3067d33a5c5cf222b3319f124f948cbd1a77721",
+    "response_payload_digest": "e740b55724187abcc9fca4cc85c9d5b5c3ac3593258493d9b8535b3b4587415b",
+    "runtime_digest": "sha256:875cbbbc5198ae44e8957e3a90c9a8afd0dc541f01029fb5186a296e3d2a0d47",
+    "runtime_version": "python-3.12+cadquery-ocp-7.9.3.1.1+occt-7.9.3"
+  },
+  "capability_report": {
+    "2d_geometry": {
+      "affected": [
+        "step-iges-source"
+      ],
+      "fallback": "retain opaque source evidence",
+      "reason_codes": [
+        "AECCTX_STEP_IGES_CAPABILITY_UNSUPPORTED"
+      ],
+      "support_level": "unsupported"
+    },
+    "3d_geometry": {
+      "affected": [
+        "root:1"
+      ],
+      "fallback": "retain raw translator BREP and failed-root diagnostics",
+      "reason_codes": [
+        "AECCTX_STEP_IGES_TRANSLATOR_PROCESSING_APPLIED"
+      ],
+      "support_level": "partial"
+    },
+    "georeferencing": {
+      "affected": [
+        "step-iges-source"
+      ],
+      "fallback": "retain opaque source evidence",
+      "reason_codes": [
+        "AECCTX_STEP_IGES_CAPABILITY_UNSUPPORTED"
+      ],
+      "support_level": "unsupported"
+    },
+    "hierarchy": {
+      "affected": [
+        "root:1"
+      ],
+      "fallback": "retain lexical and independently successful root evidence",
+      "reason_codes": [
+        "AECCTX_STEP_IGES_XDE_PARTIAL"
+      ],
+      "support_level": "partial"
+    },
+    "identity": {
+      "affected": [],
+      "fallback": "none",
+      "reason_codes": [],
+      "support_level": "full"
+    },
+    "materials_styles": {
+      "affected": [
+        "root:1"
+      ],
+      "fallback": "retain lexical and independently successful root evidence",
+      "reason_codes": [
+        "AECCTX_STEP_IGES_XDE_PARTIAL"
+      ],
+      "support_level": "partial"
+    },
+    "properties": {
+      "affected": [
+        "root:1"
+      ],
+      "fallback": "retain lexical and independently successful root evidence",
+      "reason_codes": [
+        "AECCTX_STEP_IGES_XDE_PARTIAL"
+      ],
+      "support_level": "partial"
+    },
+    "relationships": {
+      "affected": [
+        "root:1"
+      ],
+      "fallback": "retain lexical and independently successful root evidence",
+      "reason_codes": [
+        "AECCTX_STEP_IGES_XDE_PARTIAL"
+      ],
+      "support_level": "partial"
+    },
+    "text": {
+      "affected": [
+        "step-iges-source"
+      ],
+      "fallback": "retain opaque source evidence",
+      "reason_codes": [
+        "AECCTX_STEP_IGES_CAPABILITY_UNSUPPORTED"
+      ],
+      "support_level": "unsupported"
+    },
+    "validation": {
+      "affected": [
+        "root:1"
+      ],
+      "fallback": "retain lexical and independently successful root evidence",
+      "reason_codes": [
+        "AECCTX_STEP_IGES_XDE_PARTIAL"
+      ],
+      "support_level": "partial"
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "AECCTX_STEP_IGES_XDE_PARTIAL",
+      "severity": "warning"
+    }
+  ],
+  "events": [
+    {
+      "event_type": "primitive",
+      "payload": {
+        "directory": [
+          {
+            "entity_type": 186,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 1,
+            "sequence": 1,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 514,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 2,
+            "sequence": 3,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 510,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 3,
+            "sequence": 5,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 190,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 4,
+            "sequence": 7,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 116,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 5,
+            "sequence": 9,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 6,
+            "sequence": 11,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 7,
+            "sequence": 13,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 508,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 8,
+            "sequence": 15,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 504,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 9,
+            "sequence": 17,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 12,
+            "sequence": 19,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 502,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 13,
+            "sequence": 21,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 15,
+            "sequence": 23,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 16,
+            "sequence": 25,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 17,
+            "sequence": 27,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 18,
+            "sequence": 29,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 19,
+            "sequence": 31,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 20,
+            "sequence": 33,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 21,
+            "sequence": 35,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 22,
+            "sequence": 37,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 23,
+            "sequence": 39,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 24,
+            "sequence": 41,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 110,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 25,
+            "sequence": 43,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 510,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 26,
+            "sequence": 45,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 190,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 27,
+            "sequence": 47,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 116,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 28,
+            "sequence": 49,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 29,
+            "sequence": 51,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 30,
+            "sequence": 53,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 508,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 31,
+            "sequence": 55,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 510,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 32,
+            "sequence": 57,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 190,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 33,
+            "sequence": 59,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 116,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 34,
+            "sequence": 61,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 35,
+            "sequence": 63,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 36,
+            "sequence": 65,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 508,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 37,
+            "sequence": 67,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 510,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 38,
+            "sequence": 69,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 190,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 39,
+            "sequence": 71,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 116,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 40,
+            "sequence": 73,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 41,
+            "sequence": 75,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 42,
+            "sequence": 77,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 508,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 43,
+            "sequence": 79,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 510,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 44,
+            "sequence": 81,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 190,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 45,
+            "sequence": 83,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 116,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 46,
+            "sequence": 85,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 47,
+            "sequence": 87,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 48,
+            "sequence": 89,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 508,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 49,
+            "sequence": 91,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 510,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 50,
+            "sequence": 93,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 190,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 51,
+            "sequence": 95,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 116,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 52,
+            "sequence": 97,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 53,
+            "sequence": 99,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 123,
+            "form": 0,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 54,
+            "sequence": 101,
+            "subscript": 0,
+            "transform_pointer": 0
+          },
+          {
+            "entity_type": 508,
+            "form": 1,
+            "label": "",
+            "level": 0,
+            "parameter_pointer": 55,
+            "sequence": 103,
+            "subscript": 0,
+            "transform_pointer": 0
+          }
+        ],
+        "external_references": false,
+        "format": "iges",
+        "global_raw": ",,31HOpen CASCADE IGES processor 7.9,13HFilename.iges,                  16HOpen CASCADE 7.9,31HOpen CASCADE IGES processor 7.9,32,308,15,308,15,,1.,2,2HMM,1,0.01,15H20260712.000000,1E-07,30.,,,11,0,                  15H20260712.000000,;",
+        "schema": "aecctx.step-iges.source.v1",
+        "version": "5.3",
+        "version_flag": 11
+      },
+      "sequence": 0,
+      "source_locator": "sha256:b64f87ee6b4fea34d9d268154550a17593e587f8227670c1a78fc84b51c09321"
+    },
+    {
+      "event_type": "container",
+      "payload": {
+        "format": "iges",
+        "labels": [
+          {
+            "colors": [],
+            "entry": "0:1:1:1",
+            "kind": "simple-shape",
+            "layers": [],
+            "materials": [],
+            "name": {
+              "state": "known",
+              "value": "SOLID"
+            },
+            "parent_entries": [],
+            "placement": {
+              "matrix_3x4": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "state": "known"
+            },
+            "source_correlation": {
+              "reason_code": "AECCTX_STEP_IGES_XDE_CORRELATION_UNKNOWN",
+              "state": "unknown"
+            },
+            "unit": {
+              "state": "known",
+              "value": "millimetre"
+            }
+          }
+        ],
+        "schema": "aecctx.step-iges.xde.v1",
+        "session_completeness": "complete"
+      },
+      "sequence": 1,
+      "source_locator": "xde:document"
+    },
+    {
+      "event_type": "primitive",
+      "payload": {
+        "artifact_path": "artifacts/root-1.translated.brep",
+        "bounds": {
+          "max": [
+            10.0000001,
+            20.0000001,
+            30.0000001
+          ],
+          "min": [
+            -1e-07,
+            -1e-07,
+            -1e-07
+          ]
+        },
+        "format": "iges",
+        "healing": {
+          "after_valid": null,
+          "applied": false,
+          "artifact_path": null,
+          "maximum_tolerance": 0.001,
+          "minimum_tolerance": 1e-07,
+          "precision": 1e-07
+        },
+        "mesh_artifact_path": "artifacts/root-1.mesh.json",
+        "representation_fidelity": "brep-translator-derived",
+        "root_id": "root:1",
+        "schema": "aecctx.step-iges.root.v1",
+        "status": "success",
+        "tolerances": {
+          "average": 1e-07,
+          "maximum": 1e-07,
+          "minimum": 1e-07
+        },
+        "topology": {
+          "edges": 24,
+          "faces": 6,
+          "shells": 1,
+          "solids": 1,
+          "vertices": 48,
+          "wires": 6
+        },
+        "valid": true,
+        "xde_entry": "0:1:1:1"
+      },
+      "sequence": 2,
+      "source_locator": "root:1"
+    }
+  ],
+  "ok": true,
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.step-iges.ocp",
+  "request_id": "9be28fc483d8fb89278842b818b53281c4cf0ced1f988665a6b5049e3f559659",
+  "resource_usage": {
+    "artifacts": 2,
+    "events": 3,
+    "roots": 1,
+    "source_entities": 52
+  }
+}

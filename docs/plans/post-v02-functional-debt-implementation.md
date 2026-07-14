@@ -399,13 +399,13 @@ def apply_datum_operation(
 - Consumes: ACX-24 multiarch OCP provider and existing lexical/BREP evidence.
 - Produces: XDE event payloads, distinct raw/translated/healed artifacts, claims `step-iges.xde-structure` and `step-iges.partial-recovery`.
 
-- [ ] Govern ACXD-041 with exact OCP/OCCT version, XDE API calls, schemas and healing policy.
-- [ ] RED-test names/colors/layers/materials/units/placements, multi-root partial success, invalid topology, tolerance and healing pairs.
-- [ ] Extend provider schema and worker with closed actions/configuration; healing is opt-in and creates a new artifact.
-- [ ] Map XDE/source correlation and per-root results without replacing lexical source evidence or claiming source-exact BREP.
-- [ ] Prove arm64/amd64/replay equality and structured partial completion.
-- [ ] Run existing plus v0.3 provider/adapter suites and all gates.
-- [ ] Write evidence, promote only ACX-33 and commit `feat: expand STEP IGES XDE evidence`.
+- [x] Govern ACXD-041 with exact OCP/OCCT version, XDE API calls, schemas and healing policy.
+- [x] RED-test names/colors/layers/materials/units/placements, multi-root partial success, invalid topology, tolerance and healing pairs.
+- [x] Extend provider schema and worker with closed actions/configuration; healing is opt-in and creates a new artifact.
+- [x] Map XDE/source correlation and per-root results without replacing lexical source evidence or claiming source-exact BREP.
+- [x] Prove arm64/amd64/replay equality and structured partial completion.
+- [x] Run existing plus v0.3 provider/adapter suites and all gates.
+- [x] Write evidence, promote only ACX-33 and commit `feat: expand STEP IGES XDE evidence`.
 
 ---
 

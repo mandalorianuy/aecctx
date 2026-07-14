@@ -165,13 +165,36 @@ def ingest_step_iges(
                 }
             )
 
+    xde_record_ids: dict[str, str] = {}
+    for label in evidence.xde.get("labels", []):
+        entry = str(label["entry"])
+        xde_id = _stable_id("prim_step_iges_xde", source_digest, entry)
+        xde_record_ids[entry] = xde_id
+        correlated = [primitive_by_source_id[item] for item in label["source_correlation"].get("source_entity_ids", []) if item in primitive_by_source_id]
+        primitives.append(
+            {
+                **dict(label),
+                "evidence_class": "observed",
+                "original_class": "XDE_LABEL",
+                "parent_evidence_ids": sorted(correlated) or [source_id],
+                "provenance": _provenance(instant, sorted(correlated) or [source_id], runtime_digest, "occt-xde-observed-label"),
+                "record_id": xde_id,
+                "record_type": "primitive",
+                "record_version": "0.2",
+                "source_refs": [{"locator": f"xde:{entry}", "source_id": source_id}],
+            }
+        )
+
+    expanded = bool(evidence.xde)
     import trimesh
 
-    mesh = trimesh.Trimesh(vertices=evidence.mesh["vertices"], faces=evidence.mesh["triangles"], process=False)
-    glb = export_deterministic_glb([mesh])
-    brep_path = "geometry/root-1.brep"
+    mesh_items = sorted(evidence.meshes.items()) if expanded else [("root:1", evidence.mesh)]
+    meshes = [trimesh.Trimesh(vertices=item["vertices"], faces=item["triangles"], process=False) for _, item in mesh_items]
+    glb = export_deterministic_glb(meshes)
+    brep_path = "geometry/root-1.translated.brep" if expanded else "geometry/root-1.brep"
     glb_path = "geometry/scene.glb"
     derived_id = _stable_id("prim_step_iges_brep", source_digest, "shape:1")
+    derived_ids = {"root:1": derived_id}
     source_representation_ids = sorted(primitive_by_source_id.values())
     primitives.append(
         {
@@ -187,9 +210,62 @@ def ingest_step_iges(
             "representation_fidelity": {"class": "brep", "derived": True, "source_representation_ids": source_representation_ids},
             "source_refs": [{"locator": "shape:1", "source_id": source_id}],
             "topology": evidence.shape["topology"],
-            "translator_processing": evidence.shape["translator_processing"],
+            "translator_processing": evidence.shape.get("translator_processing", "translator-default-observed"),
+            **({"root_id": evidence.shape["root_id"], "tolerances": evidence.shape["tolerances"], "valid": evidence.shape["valid"], "xde_entry": evidence.shape["xde_entry"]} if expanded else {}),
         }
     )
+    if expanded:
+        for root in sorted((item for item in evidence.roots if item.get("status") == "success" and item.get("root_id") != "root:1"), key=lambda item: str(item["root_id"])):
+            root_id = str(root["root_id"])
+            root_number = int(root_id.split(":", 1)[1])
+            root_path = f"geometry/root-{root_number}.translated.brep"
+            root_derived_id = _stable_id("prim_step_iges_brep", source_digest, root_id)
+            derived_ids[root_id] = root_derived_id
+            root_parent = xde_record_ids.get(str(root["xde_entry"]))
+            parents = [root_parent] if root_parent else source_representation_ids
+            primitives.append(
+                {
+                    "artifact_ref": root_path,
+                    "bounds": root["bounds"],
+                    "evidence_class": "derived",
+                    "mesh_artifact_ref": glb_path,
+                    "original_class": "OCCT_TRANSLATED_BREP",
+                    "provenance": _provenance(instant, parents, runtime_digest, "occt-translator-derived-brep"),
+                    "record_id": root_derived_id,
+                    "record_type": "primitive",
+                    "record_version": "0.2",
+                    "representation_fidelity": {"class": "brep", "derived": True, "source_representation_ids": parents},
+                    "root_id": root_id,
+                    "source_refs": [{"locator": root_id, "source_id": source_id}],
+                    "tolerances": root["tolerances"],
+                    "topology": root["topology"],
+                    "translator_processing": "translator-default-observed",
+                    "valid": root["valid"],
+                    "xde_entry": root["xde_entry"],
+                }
+            )
+    healed_artifacts: list[PackageArtifact] = []
+    if expanded:
+        for root_id, healed_bytes in sorted(evidence.healed_breps.items()):
+            root_number = int(root_id.split(":", 1)[1])
+            healed_path = f"geometry/root-{root_number}.healed.brep"
+            healed_id = _stable_id("prim_step_iges_healed", source_digest, root_id)
+            primitives.append(
+                {
+                    "artifact_ref": healed_path,
+                    "evidence_class": "derived",
+                    "healing": dict(next(root for root in evidence.roots if root.get("root_id") == root_id)["healing"]),
+                    "original_class": "OCCT_HEALED_BREP",
+                    "parent_evidence_ids": [derived_ids[root_id]],
+                    "provenance": _provenance(instant, [derived_ids[root_id]], runtime_digest, "occt-opt-in-healed-brep"),
+                    "record_id": healed_id,
+                    "record_type": "primitive",
+                    "record_version": "0.2",
+                    "representation_fidelity": {"class": "brep", "derived": True, "source_representation_ids": [derived_ids[root_id]]},
+                    "source_refs": [{"locator": root_id, "source_id": source_id}],
+                }
+            )
+            healed_artifacts.append(PackageArtifact(healed_path, healed_bytes, "model/vnd.opencascade.brep", "healed-derived-brep", False))
     capabilities = {name: str(provider_result.capability_report[name]["support_level"]) for name in CAPABILITIES}
     loss_summary = sorted({str(code) for report in provider_result.capability_report.values() for code in report.get("reason_codes", [])})
     diagnostics = []
@@ -219,9 +295,13 @@ def ingest_step_iges(
         PackageArtifact(path, b"".join(canonical_json(item) for item in sorted(items, key=lambda value: value["record_id"])), "application/x-ndjson", path.split("/")[-1].removesuffix(".jsonl"), True)
         for path, items in record_sets.items()
     ]
+    raw_brep_artifacts = (
+        [PackageArtifact(f"geometry/root-{int(root_id.split(':', 1)[1])}.translated.brep", content, "model/vnd.opencascade.brep", "translator-derived-brep", False) for root_id, content in sorted(evidence.breps.items())]
+        if expanded
+        else [PackageArtifact(brep_path, evidence.brep, "model/vnd.opencascade.brep", "translator-derived-brep", False)]
+    )
     artifacts.extend(
         [
-            PackageArtifact(brep_path, evidence.brep, "model/vnd.opencascade.brep", "translator-derived-brep", False),
             PackageArtifact(glb_path, glb, "model/gltf-binary", "tessellated-3d-geometry", False),
             PackageArtifact(
                 "context/index.md",
@@ -232,6 +312,8 @@ def ingest_step_iges(
             ),
         ]
     )
+    artifacts.extend(raw_brep_artifacts)
+    artifacts.extend(healed_artifacts)
     if storage_ref:
         artifacts.append(PackageArtifact(storage_ref, source, media_type, "embedded-source", True))
     manifest = PackageWriter(output, package_form=package_form).write(

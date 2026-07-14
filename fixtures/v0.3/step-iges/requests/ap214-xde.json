@@ -1,0 +1,45 @@
+{
+  "action": "extract",
+  "configuration": {
+    "angular_deflection": 0.5,
+    "brep_format": "occt-ascii-brep-7.9.3",
+    "healing": {
+      "enabled": false,
+      "maximum_tolerance": 0.001,
+      "minimum_tolerance": 1e-07,
+      "precision": 1e-07
+    },
+    "linear_deflection": 0.1,
+    "schema_profile": "acx32-xde-v1",
+    "tessellation_units": "source",
+    "xde": {
+      "colors": true,
+      "layers": true,
+      "materials": true,
+      "names": true,
+      "placements": true,
+      "units": true
+    }
+  },
+  "configuration_digest": "b35d968bfcf1c6efb6c025600417fb35e55a501abe6364a3d01dbc28d14a519e",
+  "input": {
+    "bytes": 17538,
+    "path": "input/ee5dabdca280453e5afcb57d89952e5cc04d904f2d6bc0683258641745c42375",
+    "sha256": "ee5dabdca280453e5afcb57d89952e5cc04d904f2d6bc0683258641745c42375"
+  },
+  "limits": {
+    "cpu_seconds": 60,
+    "max_decompression_ratio": 20.0,
+    "max_files": 20,
+    "max_input_bytes": 10000000,
+    "max_memory_bytes": 1073741824,
+    "max_open_files": 32,
+    "max_output_bytes": 20000000,
+    "max_records": 100000,
+    "max_recursion_depth": 64,
+    "wall_time_seconds": 60.0
+  },
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.step-iges.ocp",
+  "request_id": "a3d89205a9d067e865d97c4f6a0211ff18428bd9c827c6efcde4d77071b57663"
+}
