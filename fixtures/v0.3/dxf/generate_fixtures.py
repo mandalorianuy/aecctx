@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import math
 import os
@@ -21,10 +22,16 @@ ezdxf.options.write_fixed_meta_data_for_testing = True
 
 def _write(doc: object, path: Path, *, binary: bool = False) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    doc.filename = str(path)
     if binary:
-        doc.saveas(path, fmt="bin")
+        stream = io.BytesIO()
+        doc.write(stream, fmt="bin")
+        payload = stream.getvalue()
     else:
-        doc.saveas(path, fmt="asc")
+        stream = io.StringIO(newline="\n")
+        doc.write(stream, fmt="asc")
+        payload = doc.encode(stream.getvalue())
+    path.write_bytes(payload)
 
 
 def _curves(version: str) -> object:
@@ -73,7 +80,12 @@ def _bundle(root: Path) -> None:
     for logical, role in (("root.dxf", "root"), ("refs/child.dxf", "xref"), ("refs/nested/nested.dxf", "xref")):
         data = (root / logical).read_bytes()
         entries.append({"bytes": len(data), "media_type": "application/dxf", "path": logical, "role": role, "sha256": hashlib.sha256(data).hexdigest()})
-    (root / "source-bundle.json").write_text(json.dumps({"entries": entries, "root": "root.dxf", "version": "0.2"}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    manifest = json.dumps(
+        {"entries": entries, "root": "root.dxf", "version": "0.2"},
+        indent=2,
+        sort_keys=True,
+    )
+    (root / "source-bundle.json").write_bytes((manifest + "\n").encode("utf-8"))
 
 
 def generate(root: Path) -> None:

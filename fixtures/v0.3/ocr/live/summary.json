@@ -1,0 +1,1 @@
+{"architectures":["linux/arm64","linux/amd64"],"equivalent":true,"executions":12,"ok":true,"profiles":["eng-auto-v1","eng-block-v1","eng-column-v1","eng-table-v1","por-block-v1","spa-block-v1"]}

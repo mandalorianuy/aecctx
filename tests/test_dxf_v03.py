@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
+import io
 import json
 from pathlib import Path
 
@@ -17,6 +19,15 @@ FIXTURES = ROOT / "fixtures/v0.3/dxf"
 FIXED_TIME = "2026-07-14T00:00:00Z"
 
 
+def _fixture_generator() -> object:
+    path = FIXTURES / "generate_fixtures.py"
+    spec = importlib.util.spec_from_file_location("aecctx_dxf_v03_fixture_generator", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def _records(package: Path, record_type: str) -> list[dict[str, object]]:
     store = RecordStore.open(package)
     return [record.raw for record in store.records.values() if record.record_type == record_type]
@@ -29,6 +40,28 @@ def test_v03_fixture_corpus_is_exact_and_reproducible() -> None:
     for entry in corpus["entries"]:
         path = ROOT / entry["path"]
         assert hashlib.sha256(path.read_bytes()).hexdigest() == entry["sha256"]
+
+
+def test_v03_fixture_writer_ignores_host_newline_translation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    generator = _fixture_generator()
+    original_open = io.open
+
+    def windows_text_open(*args: object, **kwargs: object) -> object:
+        positional = list(args)
+        mode = str(args[1]) if len(args) > 1 else str(kwargs.get("mode", "r"))
+        if "b" not in mode:
+            if len(positional) > 5:
+                positional[5] = "\r\n"
+            else:
+                kwargs["newline"] = "\r\n"
+        return original_open(*positional, **kwargs)
+
+    monkeypatch.setattr("ezdxf.document.io.open", windows_text_open)
+    output = tmp_path / "canonical.dxf"
+    generator._write(generator._curves("R12"), output)
+    assert b"\r\n" not in output.read_bytes()
+    generator._bundle(tmp_path / "bundle")
+    assert b"\r\n" not in (tmp_path / "bundle/source-bundle.json").read_bytes()
 
 
 def test_source_bundle_validates_all_members_before_use() -> None:

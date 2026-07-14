@@ -1,0 +1,29 @@
+{
+  "version": "0.3.0",
+  "origin": "project-authored Apache-2.0 fixture corpus",
+  "runtime": {"engine": "tesseract-ocr=5.3.4-1build5", "data": ["eng=1:4.1.0-2", "spa=1:4.1.0-2", "por=1:4.1.0-2"], "dockerfile": "providers/tesseract-ocr/Dockerfile.v03", "sha256": "73de5713dfa61b9da97576d05bdf2180fa32a0d9edc8293eb92ae9f568521cff"},
+  "worker": {"path": "providers/tesseract-ocr/worker.py", "sha256": "be34399adb328a75ca45c38891fab15d12ee56f561319fdbf34caa83df6fdbd9"},
+  "live_runner": {"path": "scripts/ocr_v03_live.py", "sha256": "9044cf339942cea533ceefe43996f200e1b3dd6ea9b70a326ca88c303c42f99d"},
+  "profile": {"path": "docs/specs/ocr-v03-profile.md", "sha256": "c203af437a13fe29d23b32d18800660c9a29bf2e7666b998355fab471e84cbbf"},
+  "generator": {"path": "fixtures/v0.3/ocr/generate_fixtures.py", "runtime": "Python stdlib deterministic encoding + Pillow==12.3.0 raster API", "sha256": "0ee32c9f6a320b17db8f5b0df0fbdfc8fdb9d30cdd2dca8be162259f2a5ef6a2"},
+  "replay": {"path": "conformance/v0.3/ocr-replay-corpus.json", "sha256": "6ae7731a23c9641181c060d44e5e4ed652f81b19d22dc4363256db56566842d2"},
+  "fixtures": [
+    {"id": "blank", "path": "fixtures/v0.3/ocr/blank.png", "sha256": "81251778cd33ffcb5d093c2f41a2643841beb376ad9eaf42db8efb3330687eaa"},
+    {"id": "corrupt", "path": "fixtures/v0.3/ocr/corrupt.png", "sha256": "c74a848d0547d5f77ef7d303dd4c2d60e4e54e90cf0f687156933dc6169f66c1"},
+    {"id": "eng-block", "path": "fixtures/v0.3/ocr/eng-block.png", "sha256": "fc09597d9bd9a4310c09b57d15e0aa3d9f37747cb0b485c66c2661a6f42c340c"},
+    {"id": "low-confidence", "path": "fixtures/v0.3/ocr/low-confidence.png", "sha256": "67f5366b5d009c249415d0ef7116cc5274d29a6417c666b6cb444e529c06ffbe"},
+    {"id": "mixed-script", "path": "fixtures/v0.3/ocr/mixed-script.png", "sha256": "7de0d40f5f37b6dde05afbb9a8809b96f26feb6603a798f2739bbbab9243e08b"},
+    {"id": "multi-column", "path": "fixtures/v0.3/ocr/multi-column.png", "sha256": "2152b6b315aafa6f09842edbc0ad757ebce8c42bd655486bed9aaf8a1321435a"},
+    {"id": "por-block", "path": "fixtures/v0.3/ocr/por-block.png", "sha256": "0a6cd1a085f0bbb050cc817b2cfe7b765be1953b82bb650ca6ceceae9dcdaee1"},
+    {"id": "rotated-90", "path": "fixtures/v0.3/ocr/rotated-90.png", "sha256": "ff95afb74905ecbd3f82b74e9136dfe8d9782bcf85ee8ef4f16e7f34dbf377e3"},
+    {"id": "spa-block", "path": "fixtures/v0.3/ocr/spa-block.png", "sha256": "0f9dae1bf0bd49c4e0d00605be79eabfaeefb7b6e790b160815f4a06ba2f6dd3"},
+    {"id": "spa-raster-pdf", "path": "fixtures/v0.3/ocr/spa-raster.pdf", "sha256": "981bf565120adaa15284a9263760454c12f3ee88627f2c6bc24ac023fe60e961"},
+    {"id": "table", "path": "fixtures/v0.3/ocr/table.png", "sha256": "c45c6e1359f181eafeb8b0e0d8e3e7c23f463d832e6a022fc1fc4ef9c4aaeab7"}
+  ],
+  "live": {
+    "path": "fixtures/v0.3/ocr/live",
+    "architectures": {"linux/arm64": "sha256:05ef1bf0a0c9a999440bc5bcc1c5cf88a2c7020de98ee31b4ab0f7c1c81b0fa7", "linux/amd64": "sha256:b0c17c7b3e4d4ed621b78c261a641ce452de2199cb8cccc2a494c54cde8928b6"},
+    "responses": {"eng-auto-v1": "07f7124cd91ecb6e3381d0ebb918fef0e8a55242c6a46a16152e5ad7f657dd65", "eng-block-v1": "5098eab3a658648953d28ff904442591b3611efe3c59c477a64a82b1937548b9", "eng-column-v1": "2151e068a95ccc72c2174522f4d76ac4e3e744f984f6e10aff86b9207c6eb03c", "eng-table-v1": "1256d60ca0d30d7fb93743051d5b83691a9a459297688ddfeb4723c91c5490bb", "por-block-v1": "7f217a65ff13a2e3b1fbd65e4b8831dddc508aad87b4b096b6c72c72b3f1545d", "spa-block-v1": "ca0c475f49e18dd7da5d823223c76cc9021ff29e17f502c69a5fde71bb3a1b1c"},
+    "summary_sha256": "f3288bd6db208ff487869d4fb60b653fa83145cbc184d260401cec814bbf9619"
+  }
+}

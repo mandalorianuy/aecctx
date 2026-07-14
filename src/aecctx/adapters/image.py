@@ -206,7 +206,8 @@ def ingest_image(
         except InferenceMappingError as error:
             ocr_error = error
         else:
-            primitive["ocr"] = _known("inferred-word-evidence")
+            layout = any(event.get("payload", {}).get("schema") == "aecctx.ocr.layout.v1" for event in ocr_result.events)
+            primitive["ocr"] = _known("inferred-layout-evidence" if layout else "inferred-word-evidence")
             capabilities["text"] = "partial"
             primitives.extend(mapping.primitives)
             assertions.extend(mapping.assertions)

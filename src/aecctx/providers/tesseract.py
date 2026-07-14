@@ -9,6 +9,12 @@ from .registry import ProviderRegistry
 PROVIDER_ID = "org.aecctx.ocr.tesseract-tsv"
 IMAGE = "aecctx-tesseract-ocr:0.2.0"
 IMAGE_ID = "sha256:6d52ebcafef0ccdf59f58beccc7483c16a6e160fc94e3c3ea59f3f10c991f492"
+V03_IMAGE = "aecctx-tesseract-ocr-layout:0.3.0"
+V03_IMAGE_ID = "sha256:73de5713dfa61b9da97576d05bdf2180fa32a0d9edc8293eb92ae9f568521cff"
+V03_OCI_TARGETS = (
+    OCIRuntimeTarget("linux", "arm64", "aecctx-tesseract-ocr-layout:0.3.0-linux-arm64", "sha256:05ef1bf0a0c9a999440bc5bcc1c5cf88a2c7020de98ee31b4ab0f7c1c81b0fa7"),
+    OCIRuntimeTarget("linux", "amd64", "aecctx-tesseract-ocr-layout:0.3.0-linux-amd64", "sha256:b0c17c7b3e4d4ed621b78c261a641ce452de2199cb8cccc2a494c54cde8928b6"),
+)
 OCI_TARGETS = (
     OCIRuntimeTarget(
         "linux",
@@ -61,4 +67,23 @@ def tesseract_ocr_registry(*, repository_root: str | Path | None = None) -> Prov
             oci_targets=OCI_TARGETS,
         )
     )
+    return registry
+
+
+def tesseract_ocr_v03_descriptor() -> ProviderDescriptor:
+    return ProviderDescriptor.from_dict(
+        {
+            "actions": ["extract"], "deterministic": True, "distribution": "operator-built-oci-image",
+            "enforced_axes": {axis: True for axis in sorted(REQUIRED_ENFORCEMENT_AXES)}, "enforcement_profile": "oci-docker-v1",
+            "formats": ["image/x-portable-graymap"], "license_spdx": "Apache-2.0 AND HPND", "network_mode": "disabled",
+            "platforms": ["linux-container"], "protocol_version": "0.2", "provider_id": PROVIDER_ID, "provider_version": "0.3.0",
+            "runtime_digest": V03_IMAGE_ID, "runtime_version": "tesseract-5.3.4+capi+eng+spa+por",
+        }
+    )
+
+
+def tesseract_ocr_v03_registry(*, repository_root: str | Path | None = None) -> ProviderRegistry:
+    root = Path(repository_root) if repository_root is not None else Path(__file__).resolve().parents[3]
+    registry = ProviderRegistry(allowed_worker_modules={WORKER_MODULE})
+    registry.register(ProviderRegistration(descriptor=tesseract_ocr_v03_descriptor(), worker_module=WORKER_MODULE, container_image=V03_IMAGE, container_image_id=V03_IMAGE_ID, container_command=("python3", "/provider/worker.py"), worker_path=root / "providers" / "tesseract-ocr" / "worker.py", oci_targets=V03_OCI_TARGETS))
     return registry

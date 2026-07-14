@@ -200,7 +200,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 ## Next implementation task
 
-ACX-28 is complete under ACXD-036. Only the exact `dxf-selected-releases-source-semantics-v03`, `dxf-selected-releases-geometry-v03` and `dxf-content-addressed-xref-bundle-v1` cuts are public `partial`, backed by project-authored digest-bound fixtures, deterministic replay, bundle-safety tests and Python 3.12 CI on Linux/macOS/Windows. ACIS/proxy/custom/protected content and ambient/network/DWG xrefs remain non-claims. GitHub is the delivery authority. ACX-29 alone is `pending-next` and has not started.
+ACX-29 is complete under ACXD-037. Only the exact Tesseract 5.3.4 `eng`/`spa`/`por`, PSM 3/4/6, orthogonal-correction and bounded rectangular-table cuts are public `partial`, backed by project-authored digest-bound fixtures plus live/equivalent Linux arm64/amd64 evidence. Other languages/scripts, handwriting, arbitrary models/PSM, semantic tables, vision and hidden geometry remain non-claims. GitHub is the delivery authority. ACX-30 alone is `pending-next` and has not started.
 
 ## Consumer integration planning entry point
 

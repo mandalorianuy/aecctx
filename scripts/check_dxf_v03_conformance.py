@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import tarfile
@@ -76,9 +77,19 @@ def check_conformance(*, artifacts: Iterable[Path] = (), require_public: bool = 
         raise ConformanceError("AECCTX_DXF_V03_CORPUS_INVALID: generator/profile contract")
     _digest(ROOT / str(generator.get("path")), generator.get("sha256"), "AECCTX_DXF_V03_GENERATOR_DIGEST_MISMATCH")
     _digest(ROOT / str(profile.get("path")), profile.get("sha256"), "AECCTX_DXF_V03_PROFILE_DIGEST_MISMATCH")
-    regenerated = subprocess.run([sys.executable, str(ROOT / str(generator["path"])), "--check"], cwd=ROOT, capture_output=True, text=True, check=False)
+    environment = dict(os.environ)
+    environment["PYTHONHASHSEED"] = "0"
+    regenerated = subprocess.run(
+        [sys.executable, str(ROOT / str(generator["path"])), "--check"],
+        cwd=ROOT,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
     if regenerated.returncode != 0:
-        raise ConformanceError("AECCTX_DXF_V03_FIXTURE_DRIFT: " + regenerated.stderr.strip())
+        detail = "\n".join(part.strip() for part in (regenerated.stdout, regenerated.stderr) if part.strip())
+        raise ConformanceError("AECCTX_DXF_V03_FIXTURE_DRIFT: " + detail)
     expected = {
         "r12-curves-ascii": ("AC1009", "ascii"),
         "r2004-curves-binary": ("AC1018", "binary"),

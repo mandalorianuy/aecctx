@@ -121,6 +121,22 @@
         "tests/test_dxf_v03.py::test_v03_bundle_cycles_and_acis_remain_explicit",
         "tests/test_dxf_v02.py::test_dxf_v02_keeps_acis_xref_and_cyclic_insert_loss_explicit"
       ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-29.md",
+      "fixture_ids": ["v03-ocr-acx29"],
+      "id": "pdf-image.ocr-layout",
+      "platform_scope": ["linux/arm64", "linux/amd64"],
+      "profile": "ocr-layout-v03",
+      "provider_scope": "org.aecctx.ocr.tesseract-tsv@0.3.0 with eng/spa/por exact profiles",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_ocr_v03.py::test_worker_v03_configuration_is_closed_and_path_free",
+        "tests/test_ocr_v03.py::test_tsv_layout_retains_hierarchy_and_only_proves_closed_table",
+        "tests/test_ocr_v03.py::test_layout_mapping_emits_inferred_word_line_block_and_table_evidence",
+        "tests/test_ocr_v03.py::test_layout_mapping_rejects_mixed_script_profile_and_preserves_native_conflict"
+      ]
     }
   ],
   "fixtures": [
@@ -143,6 +159,10 @@
     {
       "id": "v03-dxf-acx28",
       "path": "fixtures/v0.3/dxf"
+    },
+    {
+      "id": "v03-ocr-acx29",
+      "path": "fixtures/v0.3/ocr"
     }
   ],
   "version": "0.3.0"

@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.resources
+import json
 import math
 import unicodedata
 from dataclasses import dataclass
 from typing import Any, Iterable, Mapping
 
 from .providers.protocol import ProviderResult
+from jsonschema import Draft202012Validator
 
 
 class InferenceMappingError(ValueError):
@@ -68,10 +71,17 @@ def _provider_attestation(attestation: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _word_events(result: ProviderResult) -> tuple[Mapping[str, Any], list[Mapping[str, Any]]]:
-    matching = [event for event in result.events if event.get("event_type") == "primitive" and event.get("payload", {}).get("schema") == "aecctx.ocr.words.v1"]
+    matching = [event for event in result.events if event.get("event_type") == "primitive" and event.get("payload", {}).get("schema") in {"aecctx.ocr.words.v1", "aecctx.ocr.layout.v1"}]
     if len(matching) != 1:
-        raise InferenceMappingError("AECCTX_OCR_EVENT_PROFILE_INVALID", "OCR response requires exactly one aecctx.ocr.words.v1 event")
+        raise InferenceMappingError("AECCTX_OCR_EVENT_PROFILE_INVALID", "OCR response requires exactly one governed OCR event")
     payload = matching[0]["payload"]
+    if payload.get("schema") == "aecctx.ocr.layout.v1":
+        schema_path = importlib.resources.files("aecctx.schemas.v0_2").joinpath("ocr-layout.schema.json")
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        errors = sorted(Draft202012Validator(schema).iter_errors(payload), key=lambda error: list(error.absolute_path))
+        if errors:
+            location = "/".join(str(item) for item in errors[0].absolute_path) or "<root>"
+            raise InferenceMappingError("AECCTX_OCR_LAYOUT_INVALID", f"OCR layout schema invalid at {location}: {errors[0].message}")
     words = payload.get("words")
     if not isinstance(words, list) or any(not isinstance(word, Mapping) for word in words):
         raise InferenceMappingError("AECCTX_OCR_EVENT_PROFILE_INVALID", "OCR words must be an array of objects")
@@ -98,14 +108,22 @@ def map_ocr_result(
     attestation = _provider_attestation(result.attestation)
     payload, words = _word_events(result)
     language = payload.get("language")
-    if language != "eng" or payload.get("page_segmentation_mode") != 6:
-        raise InferenceMappingError("AECCTX_OCR_EVENT_PROFILE_INVALID", "OCR response is outside the governed language/PSM profile")
+    schema = payload.get("schema")
+    allowed_v03 = {
+        "eng-auto-v1": ("eng", 3), "eng-column-v1": ("eng", 4), "eng-block-v1": ("eng", 6),
+        "spa-block-v1": ("spa", 6), "por-block-v1": ("por", 6), "eng-table-v1": ("eng", 6),
+    }
+    if schema == "aecctx.ocr.words.v1":
+        if language != "eng" or payload.get("page_segmentation_mode") != 6:
+            raise InferenceMappingError("AECCTX_OCR_EVENT_PROFILE_INVALID", "OCR response is outside the governed language/PSM profile")
+    elif allowed_v03.get(str(payload.get("profile"))) != (language, payload.get("page_segmentation_mode")) or payload.get("orientation_degrees") not in {0, 90, 180, 270}:
+        raise InferenceMappingError("AECCTX_OCR_EVENT_PROFILE_INVALID", "OCR layout response is outside the governed profile")
     orders = [word.get("reading_order") for word in words]
     if orders != list(range(len(words))):
         raise InferenceMappingError("AECCTX_OCR_READING_ORDER_INVALID", "OCR reading order must be unique, contiguous and zero-based")
 
     input_digest = hashlib.sha256(input_bytes).hexdigest()
-    event_locator = next(event["source_locator"] for event in result.events if event.get("event_type") == "primitive" and event.get("payload", {}).get("schema") == "aecctx.ocr.words.v1")
+    event_locator = next(event["source_locator"] for event in result.events if event.get("event_type") == "primitive" and event.get("payload", {}).get("schema") in {"aecctx.ocr.words.v1", "aecctx.ocr.layout.v1"})
     if event_locator != f"sha256:{input_digest}":
         raise InferenceMappingError("AECCTX_OCR_INPUT_HASH_MISMATCH", "OCR response does not attest the supplied input bytes")
     region_digest = input_region_sha256 or input_digest
@@ -146,7 +164,7 @@ def map_ocr_result(
                     "verification_state": "unverified",
                 },
                 "interpretation_confidence": {"band": "estimated", "method": "provider-word-confidence", "value": interpretation_confidence},
-                "language": "eng",
+                "language": language,
                 "original_class": "OCR_WORD",
                 "pixel_geometry": {"bbox": bbox, "origin": "top-left", "unit": "px"},
                 "provenance": {
@@ -166,6 +184,49 @@ def map_ocr_result(
             }
         )
 
+    word_primitives = list(primitives)
+    if schema == "aecctx.ocr.layout.v1":
+        identifiers = {word.get("id") for word in words}
+        if len(identifiers) != len(words) or any(not isinstance(value, str) for value in identifiers):
+            raise InferenceMappingError("AECCTX_OCR_LAYOUT_INVALID", "OCR layout word IDs must be unique strings")
+        word_records = {str(word["id"]): record["record_id"] for word, record in zip(words, word_primitives, strict=True)}
+        created: dict[str, str] = dict(word_records)
+        for collection, original_class, prefix, reference_key in ((payload.get("lines"), "OCR_LINE", "prim_ocr_line", "word_ids"), (payload.get("blocks"), "OCR_BLOCK", "prim_ocr_block", "line_ids")):
+            if not isinstance(collection, list):
+                raise InferenceMappingError("AECCTX_OCR_LAYOUT_INVALID", "OCR layout collections must be arrays")
+            for item in collection:
+                if not isinstance(item, Mapping) or not isinstance(item.get("id"), str) or not isinstance(item.get("bbox"), list):
+                    raise InferenceMappingError("AECCTX_OCR_LAYOUT_INVALID", "OCR layout region is malformed")
+                refs = item.get(reference_key)
+                if not isinstance(refs, list) or any(ref not in created for ref in refs):
+                    raise InferenceMappingError("AECCTX_OCR_LAYOUT_INVALID", "OCR layout references are invalid")
+                parent_records = [record for record in primitives if record["record_id"] in {created[ref] for ref in refs}]
+                confidences = [float(record["interpretation_confidence"]["value"]) for record in parent_records if "value" in record.get("interpretation_confidence", {})]
+                confidence = round(sum(confidences) / len(confidences), 6) if confidences else 0.0
+                record_id = _stable_id(prefix, source_id, f"{source_locator}:{item['id']}:{attestation['response_digest']}")
+                primitives.append({
+                    "container": _known(source_locator), "evidence_class": "inferred",
+                    "extraction_confidence": {"band": "full", "method": "validated-provider-response"},
+                    "inference": {"execution_mode": "local", "extraction_confidence": 1.0, "input_artifact_sha256": input_digest, "input_region_sha256": region_digest, "interpretation_confidence": confidence, "model_version": attestation["runtime_version"], "provider_id": attestation["provider_id"], "provider_version": attestation["provider_version"], "reproducibility": "deterministic" if attestation["deterministic"] else "non_deterministic", "request_digest": attestation["request_digest"], "response_digest": attestation["response_digest"], "verification_state": "unverified"},
+                    "interpretation_confidence": {"band": "estimated", "method": "mean-child-confidence", "value": confidence}, "language": language,
+                    "original_class": original_class, "pixel_geometry": {"bbox": item["bbox"], "origin": "top-left", "unit": "px"},
+                    "provenance": {"method": "validated-ocr-provider-mapping", "parent_record_ids": [created[ref] for ref in refs], "producer_id": attestation["provider_id"], "producer_version": attestation["provider_version"], "recorded_at": recorded_at},
+                    "provider_attestation": attestation, "record_id": record_id, "record_type": "primitive", "record_version": "0.2",
+                    "source_refs": [{"locator": f"{source_locator}/{original_class.lower()}:{item['id']}", "source_id": source_id}],
+                })
+                created[str(item["id"])] = record_id
+        tables = payload.get("tables")
+        if not isinstance(tables, list):
+            raise InferenceMappingError("AECCTX_OCR_LAYOUT_INVALID", "OCR layout tables must be an array")
+        for item in tables:
+            if not isinstance(item, Mapping) or not isinstance(item.get("id"), str) or not isinstance(item.get("topology"), Mapping):
+                raise InferenceMappingError("AECCTX_OCR_LAYOUT_INVALID", "OCR table is malformed")
+            topology = dict(item["topology"])
+            record_id = _stable_id("prim_ocr_table", source_id, f"{source_locator}:{item['id']}:{attestation['response_digest']}")
+            table_confidences = [float(record["interpretation_confidence"]["value"]) for record in word_primitives]
+            table_confidence = round(sum(table_confidences) / len(table_confidences), 6) if table_confidences else 0.0
+            primitives.append({"container": _known(source_locator), "evidence_class": "inferred", "extraction_confidence": {"band": "full", "method": "validated-provider-response"}, "inference": {"execution_mode": "local", "extraction_confidence": 1.0, "input_artifact_sha256": input_digest, "input_region_sha256": region_digest, "interpretation_confidence": table_confidence, "model_version": attestation["runtime_version"], "provider_id": attestation["provider_id"], "provider_version": attestation["provider_version"], "reproducibility": "deterministic" if attestation["deterministic"] else "non_deterministic", "request_digest": attestation["request_digest"], "response_digest": attestation["response_digest"], "verification_state": "unverified"}, "interpretation_confidence": {"band": "estimated", "method": "mean-word-confidence", "value": table_confidence}, "language": language, "original_class": "OCR_TABLE", "provenance": {"method": "validated-ocr-provider-mapping", "parent_record_ids": [record["record_id"] for record in word_primitives], "producer_id": attestation["provider_id"], "producer_version": attestation["provider_version"], "recorded_at": recorded_at}, "provider_attestation": attestation, "record_id": record_id, "record_type": "primitive", "record_version": "0.2", "source_refs": [{"locator": f"{source_locator}/ocr-table:{item['id']}", "source_id": source_id}], "topology": topology})
+
     diagnostics: list[dict[str, Any]] = []
     assertions: list[dict[str, Any]] = []
     if not primitives:
@@ -181,7 +242,7 @@ def map_ocr_result(
             )
         )
 
-    ocr_text = _normalized_text(" ".join(record["value"]["value"] for record in primitives))
+    ocr_text = _normalized_text(" ".join(record["value"]["value"] for record in word_primitives))
     for index, native in enumerate(native_text_records):
         native_id = native.get("record_id")
         native_state = native.get("value")

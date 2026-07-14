@@ -312,13 +312,13 @@ def run_remote_provider(
 - Consumes: ACX-24 live matrix, existing `ProviderResult` inference mapping.
 - Produces: closed `aecctx.ocr.layout.v1` event payload and claim `pdf-image.ocr-layout`.
 
-- [ ] Govern ACXD-037 with exact languages, data packages, orientations, PSM/layout profiles and licensing.
-- [ ] RED-test multilingual, rotated, multi-column/table, blank, mixed-script, corrupt, low-confidence and native-text conflict fixtures.
-- [ ] Extend the fixed worker configuration allowlist; no caller-selected executable/model path.
-- [ ] Map words/lines/blocks/tables as inferred evidence with exact region/request/response/runtime hashes; unknown order/topology stays unknown.
-- [ ] Prove live arm64/amd64 and replay equivalence for every claimed language/layout profile.
-- [ ] Run provider, PDF/image, CLI, conformance and full repository gates.
-- [ ] Write evidence, promote only ACX-30 and commit `feat: add bounded multilingual OCR profiles`.
+- [x] Govern ACXD-037 with exact languages, data packages, orientations, PSM/layout profiles and licensing.
+- [x] RED-test multilingual, rotated, multi-column/table, blank, mixed-script, corrupt, low-confidence and native-text conflict fixtures.
+- [x] Extend the fixed worker configuration allowlist; no caller-selected executable/model path.
+- [x] Map words/lines/blocks/tables as inferred evidence with exact region/request/response/runtime hashes; unknown order/topology stays unknown.
+- [x] Prove live arm64/amd64 and replay equivalence for every claimed language/layout profile.
+- [x] Run provider, PDF/image, CLI, conformance and full repository gates.
+- [x] Write evidence, promote only ACX-30 and commit `feat: add bounded multilingual OCR profiles`.
 
 ---
 
