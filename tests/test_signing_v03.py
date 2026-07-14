@@ -4,6 +4,7 @@ import base64
 import hashlib
 import json
 import subprocess
+import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -246,13 +247,13 @@ def test_cli_advanced_trust_is_offline_and_matches_sdk(tmp_path: Path, monkeypat
 
 def test_v03_publishable_corpus_replays_and_fixtures_are_deterministic() -> None:
     fixture_check = subprocess.run(
-        [str(ROOT / ".venv/bin/python"), "fixtures/v0.3/signing/generate_fixtures.py", "--check"],
+        [sys.executable, "fixtures/v0.3/signing/generate_fixtures.py", "--check"],
         cwd=ROOT, text=True, capture_output=True, check=False,
     )
     assert fixture_check.returncode == 0, fixture_check.stdout + fixture_check.stderr
     assert fixture_check.stdout == "aecctx v0.3 signing fixtures: deterministic\n"
     conformance = subprocess.run(
-        [str(ROOT / ".venv/bin/python"), "scripts/check_signing_v03_conformance.py"],
+        [sys.executable, "scripts/check_signing_v03_conformance.py"],
         cwd=ROOT, text=True, capture_output=True, check=False,
     )
     assert conformance.returncode == 0, conformance.stdout + conformance.stderr
