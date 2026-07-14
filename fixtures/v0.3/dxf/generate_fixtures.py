@@ -34,14 +34,21 @@ def _curves(version: str) -> object:
     msp = doc.modelspace()
     msp.add_line((0, 0, 0), (3, 2, 1), dxfattribs={"layer": "NEUTRAL_EVIDENCE"})
     if version != "R12":
-        msp.add_ray((1, 1, 0), (1, 2, 0))
-        msp.add_xline((2, 1, 0), (0, 1, 1))
+        # Keep generated fixture coordinates byte-stable across libm
+        # implementations.  Axis-aligned directions avoid platform-specific
+        # normalization rounding while still exercising both entity types.
+        msp.add_ray((1, 1, 0), (2, 1, 0))
+        msp.add_xline((2, 1, 0), (2, 2, 0))
         msp.add_ellipse((2, 2, 1), major_axis=(3, 0, 0), ratio=0.5, start_param=0, end_param=math.pi * 1.5)
         msp.add_spline([(0, 0, 0), (1, 2, 1), (3, 3, 0), (5, 1, 2)], degree=3)
-        msp.add_mline([(0, 0), (2, 1), (4, 0)])
+        msp.add_mline([(0, 0), (2, 0), (4, 0)])
     if version == "R2007":
         helix = msp.add_helix(radius=1.5, pitch=0.75, turns=2.5)
         helix.transform(ezdxf.math.Matrix44.translate(8, 0, 0))
+        helix.control_points = [
+            tuple(round(float(component), 12) for component in point)
+            for point in helix.control_points
+        ]
         mesh = msp.add_mesh()
         with mesh.edit_data() as data:
             data.vertices = [(0, 0, 0), (2, 0, 0), (2, 2, 1), (0, 2, 0)]
