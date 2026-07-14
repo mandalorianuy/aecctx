@@ -2,7 +2,10 @@
 from __future__ import annotations
 
 import argparse
+import binascii
 import hashlib
+import struct
+import zlib
 from pathlib import Path
 
 from PIL import Image
@@ -72,6 +75,34 @@ def pdf_bytes(raster: Image.Image) -> bytes:
     return bytes(result)
 
 
+def png_bytes(raster: Image.Image) -> bytes:
+    width, height = raster.size
+    pixels = raster.tobytes()
+    scanlines = b"".join(
+        b"\x00" + pixels[row * width : (row + 1) * width] for row in range(height)
+    )
+    compressed = bytearray(b"\x78\x01")
+    for offset in range(0, len(scanlines), 65535):
+        block = scanlines[offset : offset + 65535]
+        final = offset + len(block) == len(scanlines)
+        compressed.append(1 if final else 0)
+        compressed.extend(struct.pack("<HH", len(block), 0xFFFF - len(block)))
+        compressed.extend(block)
+    compressed.extend(struct.pack(">I", zlib.adler32(scanlines) & 0xFFFFFFFF))
+
+    def chunk(kind: bytes, payload: bytes) -> bytes:
+        checksum = binascii.crc32(kind + payload) & 0xFFFFFFFF
+        return struct.pack(">I", len(payload)) + kind + payload + struct.pack(">I", checksum)
+
+    header = struct.pack(">IIBBBBB", width, height, 8, 0, 0, 0, 0)
+    return (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", header)
+        + chunk(b"IDAT", bytes(compressed))
+        + chunk(b"IEND", b"")
+    )
+
+
 def generated() -> dict[str, bytes]:
     values = {
         "eng-block.png": image([(30, 30, "AECCTX BUILDING CONTEXT")]),
@@ -85,10 +116,8 @@ def generated() -> dict[str, bytes]:
     }
     values["rotated-90.png"] = values["eng-block.png"].transpose(Image.Transpose.ROTATE_90)
     output: dict[str, bytes] = {}
-    import io
     for name, value in values.items():
-        buffer = io.BytesIO(); value.save(buffer, format="PNG", optimize=False, compress_level=9)
-        output[name] = buffer.getvalue()
+        output[name] = png_bytes(value)
     output["spa-raster.pdf"] = pdf_bytes(values["spa-block.png"])
     output["corrupt.png"] = b"\x89PNG\r\n\x1a\nAECCTX-corrupt"
     return output
