@@ -43,6 +43,16 @@ def _sha256(value: Any) -> str:
     return hashlib.sha256(_canonical(value)).hexdigest()
 
 
+def canonical_json_bytes(value: Any) -> bytes:
+    """Return the provider protocol's canonical JSON representation."""
+    return _canonical(value)
+
+
+def canonical_sha256(value: Any) -> str:
+    """Return the canonical JSON SHA-256 used by provider attestations."""
+    return _sha256(value)
+
+
 def _load_schema(name: str) -> dict[str, Any]:
     resource = files("aecctx.schemas.v0_2").joinpath(name)
     return json.loads(resource.read_text(encoding="utf-8"))

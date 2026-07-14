@@ -1,0 +1,21 @@
+{
+  "cases": [
+    {"expected": "AECCTX_REMOTE_UPLOAD_CONSENT_REQUIRED", "id": "upload-denied"},
+    {"expected": "AECCTX_REMOTE_BILLING_CONSENT_REQUIRED", "id": "billing-denied"},
+    {"expected": "AECCTX_REMOTE_ENDPOINT_MISMATCH", "id": "endpoint-mismatch"},
+    {"expected": "AECCTX_REMOTE_TLS_IDENTITY_FAILED", "id": "spki-mismatch"},
+    {"expected": "AECCTX_REMOTE_AUTH_FAILED", "id": "auth-failure"},
+    {"expected": "AECCTX_REMOTE_REDIRECT_DENIED", "id": "redirect"},
+    {"expected": "AECCTX_REMOTE_RETRY_EXHAUSTED", "id": "timeout"},
+    {"expected": "AECCTX_REMOTE_RETRY_EXHAUSTED", "id": "rate-limit"},
+    {"expected": "AECCTX_REMOTE_RESPONSE_LIMIT_EXCEEDED", "id": "oversized-response"},
+    {"expected": "AECCTX_REMOTE_RESPONSE_INVALID", "id": "malformed-response"},
+    {"expected": "AECCTX_REMOTE_REGION_DENIED", "id": "region-denied"},
+    {"expected": "AECCTX_REMOTE_RETENTION_DENIED", "id": "retention-denied"},
+    {"expected": "AECCTX_REMOTE_TELEMETRY_DENIED", "id": "telemetry-denied"},
+    {"expected": "AECCTX_REMOTE_REQUEST_DIGEST_MISMATCH", "id": "replay-drift"},
+    {"expected": "credential-absent", "id": "secret-redaction"},
+    {"expected": "network-absent", "id": "core-offline"}
+  ],
+  "profile": "remote-https-spki-v1"
+}

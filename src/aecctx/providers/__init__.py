@@ -14,9 +14,19 @@ from .models import (
 )
 from .protocol import (
     build_provider_request,
+    canonical_json_bytes,
+    canonical_sha256,
     provider_descriptor_digest,
     provider_response_payload_digest,
     validate_provider_response,
+)
+from .remote import (
+    RemoteProviderPolicy,
+    RemoteProviderProfile,
+    build_remote_request_envelope,
+    normalize_remote_origin,
+    replay_remote_provider,
+    run_remote_provider,
 )
 from .registry import ProviderRegistry
 from .reference import reference_provider_registry
@@ -56,16 +66,24 @@ __all__ = [
     "ProviderReplay",
     "ProviderRegistry",
     "ProviderRunner",
+    "RemoteProviderPolicy",
+    "RemoteProviderProfile",
     "REQUIRED_ENFORCEMENT_AXES",
     "local_enforcement_report",
     "resolve_oci_target",
     "build_provider_request",
+    "build_remote_request_envelope",
+    "canonical_json_bytes",
+    "canonical_sha256",
     "provider_descriptor_digest",
     "provider_response_payload_digest",
     "reference_provider_registry",
     "load_provider_replay_entry",
     "validate_provider_response",
     "validate_provider_replay_corpus",
+    "normalize_remote_origin",
+    "replay_remote_provider",
+    "run_remote_provider",
     "TESSERACT_OCR_IMAGE",
     "TESSERACT_OCR_IMAGE_ID",
     "TESSERACT_OCR_PROVIDER_ID",

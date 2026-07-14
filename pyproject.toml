@@ -48,6 +48,7 @@ ifc = ["ifcopenshell==0.8.5"]
 gate-ids = ["ifctester==0.8.5", "ifcopenshell==0.8.5"]
 mcp = ["mcp>=1.20,<2"]
 pdf = ["pypdf>=6.6,<7", "Pillow>=12.1,<13"]
+remote = ["cryptography>=45,<50"]
 signing = ["cryptography>=45,<50"]
 test = [
   "build>=1.2,<2",

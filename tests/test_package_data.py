@@ -125,6 +125,7 @@ def test_external_provider_protocol_schemas_are_public_and_bundled() -> None:
         "provider-descriptor.schema.json",
         "provider-request.schema.json",
         "provider-response.schema.json",
+        "remote-provider-policy.schema.json",
     ):
         assert bundled_root.joinpath(name).is_file()
         assert (repository / name).is_file()

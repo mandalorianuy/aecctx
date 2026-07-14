@@ -10,6 +10,11 @@ class ProviderRegistry:
 
     def register(self, registration: ProviderRegistration) -> None:
         provider_id = registration.descriptor.provider_id
+        if (registration.remote_origin is None) != (registration.remote_spki_sha256 is None):
+            raise ProviderExecutionError(
+                "AECCTX_REMOTE_REGISTRATION_INVALID",
+                "Remote registration must bind both origin and SPKI digest",
+            )
         if registration.worker_module not in self._allowed_worker_modules:
             raise ProviderExecutionError(
                 "AECCTX_PROVIDER_LAUNCH_TARGET_UNREVIEWED",

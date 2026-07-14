@@ -1,0 +1,17 @@
+{
+  "allowed_regions": [
+    "test-region"
+  ],
+  "billing_consent": true,
+  "endpoint_origin": "https://127.0.0.1:4433",
+  "endpoint_spki_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "expected_region": "test-region",
+  "max_attempts": 2,
+  "max_request_bytes": 16384,
+  "max_response_bytes": 32768,
+  "retention_max_seconds": 0,
+  "retry_delay_seconds": 0.0,
+  "telemetry_consent": false,
+  "timeout_seconds": 2.0,
+  "upload_consent": true
+}

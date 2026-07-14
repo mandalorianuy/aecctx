@@ -41,6 +41,22 @@
         "tests/test_local_provider_profiles.py::test_local_enforcement_corpus_is_digest_bound_and_deterministic",
         "tests/test_local_provider_profiles.py::test_local_enforcement_checker_rejects_native_binary_in_distribution"
       ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-26.md",
+      "fixture_ids": ["v03-remote-provider"],
+      "id": "sandbox.remote-provider",
+      "platform_scope": ["python-3.12-linux", "python-3.12-macos", "python-3.12-windows"],
+      "profile": "remote-https-spki-v1",
+      "provider_scope": "repository-owned loopback TLS reference protocol only",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_remote_providers.py::test_loopback_tls_round_trip_is_content_addressed",
+        "tests/test_remote_providers.py::test_remote_policy_rejects_before_network",
+        "tests/test_remote_providers.py::test_remote_transport_adversarial_matrix",
+        "tests/test_remote_providers.py::test_remote_replay_is_deterministic_and_drift_bound"
+      ]
     }
   ],
   "fixtures": [
@@ -51,6 +67,10 @@
     {
       "id": "v03-local-enforcement",
       "path": "fixtures/v0.3/local-providers"
+    },
+    {
+      "id": "v03-remote-provider",
+      "path": "fixtures/v0.3/remote-providers"
     }
   ],
   "version": "0.3.0"
