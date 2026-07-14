@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+  "required":["status","evidence_kind","diagnostic_codes"],
+  "properties":{"status":{"enum":["good","revoked","unknown_status"]},"evidence_kind":{"enum":["crl","none"]},"diagnostic_codes":{"type":"array","items":{"type":"string"}}}
+}

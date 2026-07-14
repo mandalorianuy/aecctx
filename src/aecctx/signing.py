@@ -758,3 +758,10 @@ def verify_package_signatures(
     )
     result.to_dict()
     return result
+
+
+def verify_advanced_trust(package_path: str | Path, *, bundle: bytes, policy: bytes) -> dict[str, Any]:
+    """Evaluate the optional ACX-35 trust profile without importing it into core startup."""
+    from .trust import evaluate_advanced_trust
+
+    return evaluate_advanced_trust(package_path, bundle, policy)

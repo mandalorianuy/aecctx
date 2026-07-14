@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+  "required":["kid","target_signature_sha256","cryptographic_status","counts_toward_threshold"],
+  "properties":{"kid":{"type":["string","null"]},"target_signature_sha256":{"type":["string","null"],"pattern":"^[0-9a-f]{64}$"},"cryptographic_status":{"enum":["valid","invalid","malformed"]},"counts_toward_threshold":{"const":false}}
+}

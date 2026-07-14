@@ -240,6 +240,22 @@
         "tests/test_rvt_blocked_profile.py::test_rvt_suffix_uses_deterministic_opaque_fallback",
         "tests/test_rvt_blocked_profile.py::test_cli_auto_does_not_promote_rvt_suffix"
       ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-35.md",
+      "fixture_ids": ["v03-signing-acx35"],
+      "id": "package.advanced-trust-signing",
+      "platform_scope": ["python-3.12-linux", "python-3.12-macos", "python-3.12-windows"],
+      "profile": "aecctx-x509-ed25519-crl-time-v1",
+      "provider_scope": "cryptography>=45,<50; explicit Ed25519 X.509 paths, complete offline base CRLs and AECCTX trusted-time tokens",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_signing_v03.py::test_advanced_trust_keeps_all_axes_separate_and_accepts_fresh_crl_time_and_counter_signature",
+        "tests/test_signing_v03.py::test_revoked_and_stale_status_never_authorize",
+        "tests/test_signing_v03.py::test_v03_publishable_corpus_replays_and_fixtures_are_deterministic",
+        "tests/test_signing_v03.py::test_cli_advanced_trust_is_offline_and_matches_sdk"
+      ]
     }
   ],
   "fixtures": [
@@ -286,6 +302,10 @@
     {
       "id": "v02-rvt-acx19-anti-claim",
       "path": "fixtures/v0.2/rvt/not-a-real-rvt.rvt"
+    },
+    {
+      "id": "v03-signing-acx35",
+      "path": "fixtures/v0.3/signing"
     }
   ],
   "version": "0.3.0"

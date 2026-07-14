@@ -17,6 +17,15 @@ def test_v03_claim_registry_is_complete() -> None:
     assert result.valid is True, result.errors
 
 
+def test_advanced_trust_signing_claim_is_exact_public_partial() -> None:
+    registry = json.loads((ROOT / "conformance/v0.3/claims.json").read_text(encoding="utf-8"))
+    claim = next(item for item in registry["claims"] if item["id"] == "package.advanced-trust-signing")
+    assert claim["status"] == "public"
+    assert claim["support_level"] == "partial"
+    assert claim["profile"] == "aecctx-x509-ed25519-crl-time-v1"
+    assert claim["fixture_ids"] == ["v03-signing-acx35"]
+
+
 def test_remote_provider_claim_is_public_partial() -> None:
     registry = json.loads((ROOT / "conformance/v0.3/claims.json").read_text(encoding="utf-8"))
     claim = next(item for item in registry["claims"] if item["id"] == "sandbox.remote-provider")

@@ -1,0 +1,18 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+  "required":["profile","package_integrity","statement_sha256","policy_satisfied","minimum_authorized_signatures","authorized_signature_count","signatures","timestamps","countersignatures"],
+  "properties":{
+    "profile":{"const":"aecctx-x509-ed25519-crl-time-v1"},"package_integrity":{"enum":["valid","invalid"]},
+    "statement_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"policy_satisfied":{"type":"boolean"},
+    "minimum_authorized_signatures":{"type":"integer","minimum":1,"maximum":64},"authorized_signature_count":{"type":"integer","minimum":0,"maximum":64},
+    "signatures":{"type":"array","maxItems":64,"items":{"$ref":"#/$defs/signature"}},
+    "timestamps":{"type":"array","maxItems":64,"items":{"type":"object","additionalProperties":false,"required":["kid","target_sha256"],"properties":{"kid":{"type":"string"},"target_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}}},
+    "countersignatures":{"type":"array","maxItems":64,"items":{"$ref":"#/$defs/counter"}}
+  },
+  "$defs":{"counter":{"type":"object","additionalProperties":false,"required":["kid","target_signature_sha256","cryptographic_status","counts_toward_threshold"],"properties":{"kid":{"type":["string","null"]},"target_signature_sha256":{"type":["string","null"],"pattern":"^[0-9a-f]{64}$"},"cryptographic_status":{"enum":["valid","invalid","malformed"]},"counts_toward_threshold":{"const":false}}},"signature":{"type":"object","additionalProperties":false,"required":["kid","integrity_status","cryptographic_status","identity_status","lifecycle_status","trust_status","authorization_status","archival_time_status","subject","diagnostic_codes"],"properties":{
+    "kid":{"type":"string"},"integrity_status":{"enum":["valid","invalid"]},"cryptographic_status":{"enum":["valid","invalid","malformed","unsupported_algorithm"]},
+    "identity_status":{"enum":["resolved","unresolved"]},"lifecycle_status":{"enum":["valid","not_yet_valid","expired","revoked","unknown_status","not_evaluated"]},
+    "trust_status":{"enum":["trusted","untrusted","not_evaluated"]},"authorization_status":{"enum":["authorized","unauthorized","not_evaluated"]},
+    "archival_time_status":{"enum":["valid","invalid","untrusted","outside_policy","absent","not_evaluated"]},"subject":{"type":["string","null"]},"diagnostic_codes":{"type":"array","items":{"type":"string"}}
+  }}}
+}

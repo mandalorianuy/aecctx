@@ -194,8 +194,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-32 | completed | STEP/IGES XDE and fidelity expansion |
 | ACX-33 | completed | DWG version, xref, units and geometry expansion |
 | ACX-34 | blocked | No authorized/admissible RVT route; renewed executable unsupported boundary |
-| ACX-35 | pending-next | Advanced optional signing and trust profiles |
-| ACX-36 | pending | Expanded bounded IDS and quality-gate profiles |
+| ACX-35 | completed | Advanced optional signing and trust profiles |
+| ACX-36 | pending-next | Expanded bounded IDS and quality-gate profiles |
 | ACX-37 | pending | Inspector distribution and host portability |
 | ACX-38 | pending | Aggregate conformance, packaging and `0.3.0` release |
 
@@ -927,7 +927,7 @@ Detailed implementation authority: [`docs/plans/post-v02-functional-debt-impleme
 
 Program rules:
 
-- ACX-24 through ACX-33 are complete and ACX-34 alone is `pending-next`; no later ACX may execute or borrow scope.
+- ACX-24 through ACX-33 and ACX-35 are complete, ACX-34 is documented `blocked`, and ACX-36 alone is `pending-next`; no later ACX may execute or borrow scope.
 - Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
 - Replay cannot satisfy a live platform/provider acceptance item.
 - A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.
@@ -982,3 +982,9 @@ ACX-33 completion resolution: `dwg.external-provider.v03` is public `partial` on
 ACX-34 execution cut: ACXD-043 records that neither the licensed-local nor APS-remote route has the required human authorization and executable provider evidence. The task therefore renews the blocked boundary under `conformance/v0.3/rvt-provider-decision.json`; it MUST NOT add an RVT adapter, provider descriptor, real/proprietary fixture, replay or semantic claim. ACX-35 remains `pending` until the renewed decision, anti-claim, distribution, consumer-boundary and repository gates pass.
 
 ACX-34 completion resolution: ACXD-043 renews the public `unsupported` boundary because neither governed route has explicit human selection plus the required entitlement, exact versions, automation rights, complete enforcement, live CI, real publishable fixture, privacy, billing/retention/jurisdiction and lifecycle evidence. The immutable v0.2 decision and sentinel remain unchanged; the v0.3 decision is schema-backed and hash-bound to them, and the dual-version checker rejects route promotion, positive claims, adapter/provider scaffolding, proprietary runtimes/fixtures and consumer leakage. No RVT capability was implemented. ACX-35 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+ACX-35 execution cut: ACXD-044 selects only optional `cryptography>=45,<50`, explicit Ed25519 X.509 paths, complete offline base CRLs, the closed non-RFC3161 `aecctx-trusted-time-v1` token and exact-target countersignatures. Integrity, crypto, identity, lifecycle, trust, authorization and archival time remain separate. Host trust/clock/discovery, OCSP, RFC 3161/CMS, production key custody and universal/legal trust remain non-claims. ACX-35 is `in_progress`; ACX-36 remains `pending` until every schema, fixture, compatibility, clean-install, no-network, package and repository gate passes.
+
+ACX-35 completion resolution: `package.advanced-trust-signing` is public `partial` only for ACXD-044's explicit Ed25519 X.509 paths, complete offline base CRLs, closed AECCTX trusted-time tokens and exact-target countersignatures under optional `cryptography>=45,<50`. The eight-case project PKI corpus, mutation/status/rotation/multi-signature, no-network, missing-extra, v1 compatibility, package and complete repository gates pass. Integrity, cryptographic validity, identity, lifecycle, root trust, authorization and archival time remain separate. RFC 3161/CMS, OCSP, delta/indirect CRLs, host/online discovery, production key custody, hardware keys, transparency, legal/qualified signatures and universal trust remain non-claims. ACX-36 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+ACX-35 delivery-gate amendment: exact-head Ubuntu CI proved that the new subprocess conformance test incorrectly assumed a repository-local `.venv/bin/python`; GitHub's canonical workflow executes through an externally managed `uv run` interpreter and intentionally creates no such path. Subprocess fixture/checker replay MUST use `sys.executable`, preserving the exact active test runtime on Linux, macOS, Windows and local worktrees. This changes no trust profile, fixture, schema, result or public claim. ACX-35 delivery cannot close until the corrected exact-head checks pass.

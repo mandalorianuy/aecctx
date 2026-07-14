@@ -42,6 +42,12 @@ def test_signing_contract_schemas_are_public_and_bundled() -> None:
         "signing-key-registry.schema.json",
         "signing-trust-policy.schema.json",
         "signature-verification-result.schema.json",
+        "signing-v2-policy.schema.json",
+        "x509-chain-result.schema.json",
+        "certificate-status-result.schema.json",
+        "timestamp-result.schema.json",
+        "countersignature-result.schema.json",
+        "advanced-trust-result.schema.json",
     ):
         assert bundled_root.joinpath(name).is_file()
         assert (repository / name).is_file()

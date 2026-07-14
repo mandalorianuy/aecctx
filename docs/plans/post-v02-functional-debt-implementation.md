@@ -479,13 +479,13 @@ The published `conformance/v0.2/rvt-provider-decision.json`, ACX-19 evidence and
 - Consumes: existing canonical `SigningStatement` and detached-bundle model; ACX-26 only for explicitly selected online status.
 - Produces: separate X.509, status, timestamp and countersignature result types; claims are separate, never one aggregate authenticity claim.
 
-- [ ] Govern ACXD-044 with exact algorithms, libraries, chain rules, offline status/timestamp inputs and countersignature semantics.
-- [ ] RED-test project test PKI: valid/expired/revoked/unknown/rotated chains, stale CRL/OCSP, timestamps, multisignatures, mutations and algorithm confusion.
-- [ ] Implement each trust layer as optional pure evaluation over explicit bytes and verification time; no host trust store, clock or discovery.
-- [ ] Preserve existing Ed25519 profile compatibility and clean install without advanced extras.
-- [ ] Prove machine-distinct integrity, crypto, identity, lifecycle, trust, authorization and archival-time results.
-- [ ] Run signing v1/v2, CLI, clean install, no-network and full gates.
-- [ ] Write evidence, promote only ACX-36 and commit `feat: add advanced optional trust profiles`.
+- [x] Govern ACXD-044 with exact algorithms, libraries, chain rules, offline status/timestamp inputs and countersignature semantics.
+- [x] RED-test project test PKI: valid/expired/revoked/unknown/rotated chains, stale CRL/OCSP, timestamps, multisignatures, mutations and algorithm confusion.
+- [x] Implement each trust layer as optional pure evaluation over explicit bytes and verification time; no host trust store, clock or discovery.
+- [x] Preserve existing Ed25519 profile compatibility and clean install without advanced extras.
+- [x] Prove machine-distinct integrity, crypto, identity, lifecycle, trust, authorization and archival-time results.
+- [x] Run signing v1/v2, CLI, clean install, no-network and full gates.
+- [x] Write evidence, promote only ACX-36 and commit `feat: add advanced optional trust profiles`.
 
 ---
 

@@ -1,0 +1,9 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+  "required":["subject","certificate_sha256","path_valid","lifecycle_status","trust_status","diagnostic_codes"],
+  "properties":{
+    "subject":{"type":["string","null"]},"certificate_sha256":{"type":["string","null"],"pattern":"^[0-9a-f]{64}$"},
+    "path_valid":{"type":"boolean"},"lifecycle_status":{"enum":["valid","not_yet_valid","expired","not_evaluated"]},
+    "trust_status":{"enum":["trusted","untrusted","not_evaluated"]},"diagnostic_codes":{"type":"array","items":{"type":"string"}}
+  }
+}
