@@ -6,6 +6,7 @@ from typing import Any, Iterable
 
 from ..ingest import CAPABILITIES, IngestResult, _timestamp
 from ..inference import InferenceMappingError, canonical_ocr_pgm, map_ocr_result
+from ..vision import VisionMappingError, map_vision_result
 from ..package import PackageArtifact, PackageWriter, canonical_json, hash_file
 from ..providers.protocol import ProviderResult
 
@@ -149,6 +150,7 @@ def ingest_pdf(
     package_form: str = "directory",
     aecctx_version: str = "0.1.0",
     ocr_result: ProviderResult | None = None,
+    vision_result: ProviderResult | None = None,
 ) -> IngestResult:
     pypdf, ContentStream = _pypdf()
     source = Path(source_path)
@@ -159,8 +161,8 @@ def ingest_pdf(
         raise ValueError("embedding_policy must be external, embedded, or redacted")
     if aecctx_version not in {"0.1.0", "0.2.0"}:
         raise ValueError("aecctx_version must be 0.1.0 or 0.2.0")
-    if ocr_result is not None and aecctx_version != "0.2.0":
-        raise ValueError("ocr_result requires aecctx_version of 0.2.0")
+    if (ocr_result is not None or vision_result is not None) and aecctx_version != "0.2.0":
+        raise ValueError("inference results require aecctx_version of 0.2.0")
     source_digest, source_bytes = hash_file(source)
     identity = source_digest[:24]
     source_id = f"src_{identity}"
@@ -314,6 +316,23 @@ def ingest_pdf(
             primitives.extend(mapping.primitives)
             assertions.extend(mapping.assertions)
             inference_diagnostics.extend(mapping.diagnostics)
+    vision_mapping = None
+    vision_error: VisionMappingError | None = None
+    if vision_result is not None:
+        try:
+            locators = [event.get("source_locator") for event in vision_result.events if event.get("event_type") == "primitive" and event.get("payload", {}).get("schema") == "aecctx.vision.candidates.v1"]
+            if len(locators) != 1 or not isinstance(locators[0], str) or not locators[0].startswith("sha256:"):
+                raise VisionMappingError("vision response does not identify exactly one input artifact")
+            expected_digest = locators[0].removeprefix("sha256:")
+            matching = [candidate for candidate in raster_candidates if hashlib.sha256(candidate[0]).hexdigest() == expected_digest]
+            if len(matching) != 1:
+                raise VisionMappingError("vision input must match exactly one decoded PDF raster artifact")
+            data, width, height, parent_id, locator, _ = matching[0]
+            vision_mapping = map_vision_result(vision_result, input_bytes=data, source_id=source_id, parent_record_id=parent_id, source_locator=locator, width=width, height=height, recorded_at=instant)
+        except VisionMappingError as error:
+            vision_error = error
+        else:
+            primitives.extend(vision_mapping.primitives); assertions.extend(vision_mapping.assertions); inference_diagnostics.extend(vision_mapping.diagnostics)
 
     capabilities = {name: "full" for name in CAPABILITIES}
     capabilities.update(
@@ -358,6 +377,8 @@ def ingest_pdf(
             }
         )
     diagnostics.extend(inference_diagnostics)
+    if vision_error is not None:
+        diagnostics.append({"affected_count": 1, "capability": "2d_geometry", "code": "AECCTX_VISION_PROVIDER_RESULT_REJECTED", "fallback": "Inspect exact PDF raster pixels.", "message": str(vision_error), "provenance": _provenance(instant, [source_id], runtime), "severity": "warning", "source_refs": [{"locator": "pdf-raster", "source_id": source_id}]})
     if ocr_error is not None:
         diagnostics.append(
             {
