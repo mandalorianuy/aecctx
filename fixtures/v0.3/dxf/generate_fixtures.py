@@ -96,7 +96,17 @@ def main() -> int:
             if path.is_file() and path.name != "generate_fixtures.py" and "__pycache__" not in path.parts
         }
         actual = {path.relative_to(generated): path.read_bytes() for path in generated.rglob("*") if path.is_file()}
-        return 0 if expected == actual else 1
+        if expected == actual:
+            return 0
+        for relative in sorted(set(expected) | set(actual), key=str):
+            committed = expected.get(relative)
+            regenerated = actual.get(relative)
+            if committed == regenerated:
+                continue
+            committed_hash = hashlib.sha256(committed).hexdigest() if committed is not None else "missing"
+            regenerated_hash = hashlib.sha256(regenerated).hexdigest() if regenerated is not None else "missing"
+            print(f"fixture drift: {relative} committed={committed_hash} regenerated={regenerated_hash}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":
