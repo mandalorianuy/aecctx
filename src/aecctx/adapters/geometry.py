@@ -11,6 +11,7 @@ import numpy as np
 from ..geometry import export_deterministic_glb, render_svg_preview, source_to_glb_transform
 from ..ingest import CAPABILITIES, IngestResult, _timestamp
 from ..mesh_coordinates import CoordinateProfileError, CoordinateSolution, load_coordinate_profile, solve_coordinate_profile
+from ..crs import apply_datum_operation, load_crs_registry, validate_crs_identifier
 from ..package import PackageArtifact, PackageWriter, canonical_json, hash_file
 
 
@@ -246,6 +247,7 @@ def ingest_geometry(
     max_faces: int = 5_000_000,
     aecctx_version: str = "0.1.0",
     coordinate_profile: Mapping[str, Any] | None = None,
+    crs_profile: Mapping[str, Any] | None = None,
 ) -> IngestResult:
     trimesh, runtime = _trimesh()
     source = Path(source_path)
@@ -258,6 +260,10 @@ def ingest_geometry(
         raise ValueError("aecctx_version must be 0.1.0 or 0.2.0")
     if coordinate_profile is not None and aecctx_version != "0.2.0":
         raise ValueError("coordinate_profile requires aecctx_version of 0.2.0")
+    if crs_profile is not None and aecctx_version != "0.2.0":
+        raise ValueError("crs_profile requires aecctx_version of 0.2.0")
+    if coordinate_profile is not None and crs_profile is not None:
+        raise ValueError("coordinate_profile and crs_profile are mutually exclusive")
     source_digest, source_bytes = hash_file(source)
     identity = source_digest[:24]
     source_id = f"src_{identity}"
@@ -284,6 +290,14 @@ def ingest_geometry(
     combined = scene.to_geometry()
     vertices = [[round(float(value), 12) for value in row] for row in combined.vertices.tolist()]
     faces = [[int(value) for value in row] for row in combined.faces.tolist()]
+    crs_registry = load_crs_registry(crs_profile) if crs_profile is not None else None
+    datum_solution = None
+    datum_operation = None
+    if crs_registry is not None:
+        datum_operation = crs_registry.operations["EPSG:1252"]
+        validate_crs_identifier(crs_registry, datum_operation.source_crs, require_current=True)
+        validate_crs_identifier(crs_registry, datum_operation.target_crs, require_current=True)
+        datum_solution = apply_datum_operation(vertices, datum_operation)
     bounds = {
         "max": [round(float(value), 12) for value in combined.bounds[1].tolist()],
         "min": [round(float(value), 12) for value in combined.bounds[0].tolist()],
@@ -394,6 +408,7 @@ def ingest_geometry(
 
     assertions: list[dict[str, Any]] = []
     calibrated_glb: bytes | None = None
+    datum_artifact: bytes | None = None
     if loaded_profile is not None and coordinate_solution is not None:
         assertion_id = _stable_id("assert_mesh_coordinate", source_digest, loaded_profile.configuration_digest)
         assertions.append(
@@ -459,6 +474,69 @@ def ingest_geometry(
                 }
             )
 
+    if crs_registry is not None and datum_solution is not None and datum_operation is not None:
+        assertion_id = _stable_id("assert_mesh_datum", source_digest, crs_registry.registry_digest)
+        assertion_value = {
+            "accuracy": datum_solution.stated_accuracy,
+            "accuracy_unit": datum_solution.accuracy_unit,
+            "input_digest": datum_solution.input_digest,
+            "max_horizontal_residual": datum_solution.max_horizontal_residual,
+            "max_vertical_residual": datum_solution.max_vertical_residual,
+            "operation_id": datum_solution.operation_id,
+            "output_digest": datum_solution.output_digest,
+            "registry_digest": datum_solution.registry_digest,
+            "source_crs": datum_solution.source_crs,
+            "state": "known",
+            "target_crs": datum_solution.target_crs,
+        }
+        assertions.append(
+            {
+                "author": dict(crs_registry.author),
+                "predicate": "aecctx:mesh-datum-operation",
+                "provenance": _provenance(instant, [source_id], runtime, "manual-crs-profile"),
+                "record_id": assertion_id,
+                "record_type": "assertion",
+                "record_version": record_version,
+                "source_refs": [{"locator": f"crs-registry:sha256:{crs_registry.registry_digest}", "source_id": source_id}],
+                "value": assertion_value,
+            }
+        )
+        source_mesh_ids = sorted(item["record_id"] for item in primitives if item.get("original_class", "").endswith("_MESH"))
+        transformed_vertices = [list(point) for point in datum_solution.transformed_points or ()]
+        derived_id = _stable_id("prim_mesh_datum", source_digest, crs_registry.registry_digest)
+        extension = {
+            **assertion_value,
+            "input_axes": list(datum_solution.input_axes or ()),
+            "output_axes": list(datum_solution.output_axes or ()),
+            "survey_authority": _unknown("AECCTX_MESH_SURVEY_AUTHORITY_NOT_ESTABLISHED"),
+        }
+        primitives.append(
+            {
+                "artifact_ref": "geometry/datum-transformed-mesh.json",
+                "extensions": {"aecctx.mesh_crs.v1": extension},
+                "faces": faces,
+                "original_class": "DATUM_TRANSFORMED_MESH",
+                "provenance": _provenance(instant, [assertion_id, *source_mesh_ids], runtime, "offline-datum-operation"),
+                "record_id": derived_id,
+                "record_type": "primitive",
+                "record_version": record_version,
+                "representation_fidelity": {
+                    "class": "tessellated",
+                    "derived": True,
+                    "source_representation_ids": source_mesh_ids,
+                },
+                "source_refs": [{"locator": f"crs-registry:sha256:{crs_registry.registry_digest}", "source_id": source_id}],
+                "vertices": transformed_vertices,
+            }
+        )
+        datum_artifact = canonical_json(
+            {
+                "extensions": {"aecctx.mesh_crs.v1": extension},
+                "faces": faces,
+                "source_primitive_ids": source_mesh_ids,
+                "vertices": transformed_vertices,
+            }
+        )
     capabilities = {name: "full" for name in CAPABILITIES}
     capabilities.update(
         {
@@ -473,6 +551,8 @@ def ingest_geometry(
     )
     if coordinate_solution is not None and coordinate_solution.status == "known" and loaded_profile is not None and loaded_profile.target_crs is not None:
         capabilities["georeferencing"] = "partial"
+    if datum_solution is not None:
+        capabilities["georeferencing"] = "partial"
     reasons = {
         "hierarchy": "AECCTX_MESH_HIERARCHY_PARTIAL",
         "properties": "AECCTX_MESH_PROPERTIES_PARTIAL",
@@ -481,7 +561,9 @@ def ingest_geometry(
         "2d_geometry": "AECCTX_MESH_2D_PREVIEW_ONLY",
         "materials_styles": "AECCTX_MESH_MATERIALS_PARTIAL",
         "georeferencing": (
-            "AECCTX_MESH_MANUAL_CRS_UNVERIFIED"
+            "AECCTX_MESH_CALLER_CRS_QUALIFIED_NOT_SURVEYED"
+            if datum_solution is not None
+            else "AECCTX_MESH_MANUAL_CRS_UNVERIFIED"
             if capabilities["georeferencing"] == "partial"
             else "AECCTX_MESH_GEOREFERENCING_UNSUPPORTED"
         ),
@@ -606,7 +688,7 @@ def ingest_geometry(
         for path, items in record_sets.items():
             evidence_class = "manual" if path == "evidence/assertions.jsonl" else "observed"
             for item in items:
-                item.setdefault("evidence_class", "derived" if item.get("original_class") == "CALIBRATED_MESH" else evidence_class)
+                item.setdefault("evidence_class", "derived" if item.get("original_class") in {"CALIBRATED_MESH", "DATUM_TRANSFORMED_MESH"} else evidence_class)
     artifacts = [
         PackageArtifact(path, b"".join(canonical_json(item) for item in sorted(items, key=lambda value: value["record_id"])), "application/x-ndjson", path.split("/")[-1].removesuffix(".jsonl"), True)
         for path, items in record_sets.items()
@@ -620,6 +702,8 @@ def ingest_geometry(
     )
     if calibrated_glb is not None:
         artifacts.append(PackageArtifact("geometry/calibrated-scene.glb", calibrated_glb, "model/gltf-binary", "calibrated-3d-geometry", False))
+    if datum_artifact is not None:
+        artifacts.append(PackageArtifact("geometry/datum-transformed-mesh.json", datum_artifact, "application/json", "datum-transformed-3d-geometry", True))
     unresolved = "Units and CRS are unresolved." if aecctx_version == "0.1.0" else "Coordinate authority and any manual calibration remain explicit in structured records."
     context = (
         f"# Geometry AECCTX package\n\nPackage `{package_id}` preserves {len(named_meshes)} mesh objects, {len(vertices)} vertices, and {len(faces)} triangles. "

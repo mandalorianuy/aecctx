@@ -149,6 +149,36 @@
       "platform_scope": ["linux/arm64", "linux/amd64"], "profile": "visible-raster-rules-v1",
       "provider_scope": "org.aecctx.vision.raster-rules@0.3.0 visible planar boundary only", "status": "public", "support_level": "partial",
       "test_ids": ["tests/test_vision_v03.py::test_mapper_emits_only_inferred_candidates_relationships_and_hypotheses", "tests/test_vision_v03.py::test_mapper_rejects_unknown_fields_bounds_digest_and_calibration_authority"]
+    },
+    {
+      "evidence": "docs/evidence/ACX-31.md",
+      "fixture_ids": ["v03-mesh-crs-acx31"],
+      "id": "mesh.crs-registry",
+      "platform_scope": ["python-3.12-linux", "python-3.12-macos", "python-3.12-windows"],
+      "profile": "pyproj-epsg-v11.022-offline-v1",
+      "provider_scope": "pyproj==3.7.2 with exact PROJ 9.5.1 and EPSG v11.022 offline metadata",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_mesh_v03.py::test_runtime_registry_is_exact_offline_and_normalized",
+        "tests/test_mesh_v03.py::test_registry_preserves_valid_deprecated_vertical_compound_unknown_and_conflict",
+        "tests/test_mesh_v03.py::test_cli_validates_registry_and_ingests_explicit_mesh_crs_profile"
+      ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-31.md",
+      "fixture_ids": ["v03-mesh-crs-acx31"],
+      "id": "mesh.datum-transform",
+      "platform_scope": ["python-3.12-linux", "python-3.12-macos", "python-3.12-windows"],
+      "profile": "epsg-1252-reversible-v1",
+      "provider_scope": "EPSG:1252 NAD83 to WGS 84 (3), no grids, native latitude-longitude-height axis order",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_mesh_v03.py::test_epsg_1252_transform_is_reversible_and_rejects_grids_limits_and_invalid_points",
+        "tests/test_mesh_v03.py::test_geometry_adapter_preserves_source_and_emits_separate_manual_derived_evidence",
+        "tests/test_mesh_v03.py::test_mesh_crs_ingest_is_deterministic_and_never_enables_network"
+      ]
     }
   ],
   "fixtures": [
@@ -179,6 +209,10 @@
     {
       "id": "v03-vision-acx30",
       "path": "fixtures/v0.3/vision"
+    },
+    {
+      "id": "v03-mesh-crs-acx31",
+      "path": "fixtures/v0.3/mesh"
     }
   ],
   "version": "0.3.0"

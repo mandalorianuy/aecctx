@@ -39,8 +39,10 @@ all = [
   "mcp>=1.20,<2",
   "Pillow>=12.1,<13",
   "pypdf>=6.6,<7",
+  "pyproj==3.7.2",
   "trimesh>=4.12,<5",
 ]
+crs = ["pyproj==3.7.2"]
 dxf = ["ezdxf==1.4.4"]
 geometry = ["trimesh>=4.12,<5"]
 image = ["Pillow>=12.1,<13"]
@@ -59,6 +61,7 @@ test = [
   "mcp>=1.20,<2",
   "Pillow>=12.1,<13",
   "pypdf>=6.6,<7",
+  "pyproj==3.7.2",
   "trimesh>=4.12,<5",
   "pytest>=8.3,<9",
 ]

@@ -8,8 +8,17 @@ from dataclasses import dataclass
 from importlib.resources import files
 from typing import Any, Mapping, Sequence
 
-import numpy as np
 from jsonschema import Draft202012Validator
+
+
+class _LazyNumpy:
+    def __getattr__(self, name: str) -> Any:
+        import numpy
+
+        return getattr(numpy, name)
+
+
+np = _LazyNumpy()
 
 
 class CoordinateProfileError(ValueError):
@@ -44,6 +53,19 @@ class CoordinateSolution:
     max_residual: float | None = None
     rms_residual: float | None = None
     conflicts: tuple[Mapping[str, Any], ...] = ()
+    operation_id: str | None = None
+    source_crs: str | None = None
+    target_crs: str | None = None
+    registry_digest: str | None = None
+    stated_accuracy: float | None = None
+    accuracy_unit: str | None = None
+    input_axes: tuple[str, ...] = ()
+    output_axes: tuple[str, ...] = ()
+    transformed_points: tuple[tuple[float, float, float], ...] = ()
+    max_horizontal_residual: float | None = None
+    max_vertical_residual: float | None = None
+    input_digest: str | None = None
+    output_digest: str | None = None
 
 
 def _canonical(value: Any) -> bytes:

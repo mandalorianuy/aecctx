@@ -1,0 +1,16 @@
+{
+  "fixtures": [
+    {"path": "fixtures/v0.3/mesh/README.md", "sha256": "6989fffab0ad671cb75fcdb2ea0ddb6e897797bd9386118fdd74a3a04c52c5bb"},
+    {"path": "fixtures/v0.3/mesh/crs-registry.json", "sha256": "ef393821fe403ddb516125b640793b7b8d144d9633d2beaa3bc540bdfc67fef2"},
+    {"path": "fixtures/v0.3/mesh/generate_fixtures.py", "sha256": "e0472b60ffa4a08923bb084cea8928c5755389c2437c85890a7a020185ebb640"},
+    {"path": "fixtures/v0.3/mesh/nad83-triangle.obj", "sha256": "b8b90f92673b998d3fc6ca7ed24773a81f5de89707ca6f6cac47a433888f7303"}
+  ],
+  "profile": {"path": "docs/specs/mesh-coordinate-v03-profile.md", "sha256": "ce28a1e66cf22fc1695ae09208c09a9e22fc7e199d5d360788f531db02cc59aa"},
+  "registry": {
+    "database_attestation": "platform-specific",
+    "logical_digest": "6be549e386157538d6dbb75c6352d648c58c1d69ed8ebc5aa0b6452cfc2bb64f",
+    "profile_id": "pyproj-epsg-v11.022-offline-v1"
+  },
+  "schema": {"path": "schemas/v0.2/crs-registry.schema.json", "sha256": "d02dee3f6b5a765c0aa5167c99e6b4726657c6a1fc0217c327cb7c7eecd58d22"},
+  "version": "0.3.0"
+}

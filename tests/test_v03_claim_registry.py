@@ -60,3 +60,13 @@ def test_provider_multiarch_portable_corpus_is_digest_bound() -> None:
     )
 
     assert completed.returncode == 0, completed.stderr
+
+
+def test_mesh_crs_v03_claims_are_public_partial() -> None:
+    registry = json.loads((ROOT / "conformance/v0.3/claims.json").read_text(encoding="utf-8"))
+    claims = {item["id"]: item for item in registry["claims"] if item["id"] in {"mesh.crs-registry", "mesh.datum-transform"}}
+
+    assert set(claims) == {"mesh.crs-registry", "mesh.datum-transform"}
+    assert {claim["status"] for claim in claims.values()} == {"public"}
+    assert {claim["support_level"] for claim in claims.values()} == {"partial"}
+    assert {claim["evidence"] for claim in claims.values()} == {"docs/evidence/ACX-31.md"}

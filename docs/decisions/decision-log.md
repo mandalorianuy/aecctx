@@ -330,3 +330,16 @@ None.
 - Claim decision: the two ACX-30 claims may become public `partial` only after live architecture equivalence and all mapped conformance gates pass. Replay alone is insufficient.
 - Evidence owner: `docs/specs/vision-v03-profile.md`, `fixtures/v0.3/vision/`, `conformance/v0.3/vision-corpus.json`, `scripts/check_vision_v03_conformance.py` and `docs/evidence/ACX-30.md`.
 - Completion result: both exact claims passed nine-fixture deterministic regeneration, two live byte-equivalent Linux architecture executions, replay/schema/mapping, image/PDF/CLI, privacy/security, artifact-separation and repository gates. General/learned vision and hidden source geometry remain unsupported.
+
+### ACXD-040: Closed offline mesh CRS registry and datum operation
+
+- Date: 2026-07-14.
+- Status: Accepted for ACX-31 implementation; it creates no public claim until schema, SDK/CLI, adapter, corpus, packaging and cross-platform gates pass.
+- Identifier correction: the subordinate plan's ACX-31 draft reference to ACXD-039 is invalid because ACXD-039 is immutable ACX-30 authority. ACX-31 owns ACXD-040; draft identifiers for ACX-32 through ACX-37 shift to ACXD-041 through ACXD-046 without changing their order or scope.
+- Runtime decision: select only optional `pyproj==3.7.2` under MIT with exact PROJ 9.5.1, EPSG v11.022 dated 2024-11-05, PROJ_DATA 1.20 and database layout 1.4. Runtime metadata drift fails closed and core remains independent of pyproj.
+- Registry decision: the exact selected CRS set and normalized records in `docs/specs/mesh-coordinate-v03-profile.md` form the cross-platform logical registry digest. Raw `proj.db` hashes remain platform attestations because official wheels serialize the database differently.
+- Operation decision: select only EPSG:1252 NAD83 to WGS 84 (3), native `Lat/Lon/h` axes, stated accuracy 4 m, zero grids and bounded inverse residuals. No caller pipeline, best-match search, grid, path, URL or ambient PROJ resource configuration is accepted.
+- Authority decision: source vertices and unknown source CRS/units remain unchanged. Registry validity and operation metadata are manual/derived evidence, never survey truth, source declaration, georeferencing completeness or engineering approval.
+- Claim decision: `mesh.crs-registry` and `mesh.datum-transform` may become public `partial` only for the exact profile after clean-core/extra, v0.1/v0.2 compatibility, corpus, package and exact-SHA cross-platform gates pass.
+- Evidence owner: `docs/specs/mesh-coordinate-v03-profile.md`, `fixtures/v0.3/mesh/`, `conformance/v0.3/mesh-crs-corpus.json`, `scripts/check_mesh_crs_v03_conformance.py` and `docs/evidence/ACX-31.md`. The explicit `mesh-crs` stem avoids collision with the immutable v0.2 mesh corpus and checker.
+- Completion result: both bounded claims pass exact runtime/schema/CLI/adapter evidence, deterministic source-preserving transformation, clean core/extra boundaries and package gates. No network, grid, vendor extension, survey truth or unlisted CRS/operation claim was admitted.

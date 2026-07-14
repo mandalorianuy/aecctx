@@ -1,0 +1,94 @@
+{
+  "$id": "https://aecctx.dev/schemas/v0.2/crs-registry.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "author": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {"maxLength": 128, "minLength": 1, "type": "string"},
+        "type": {"enum": ["person", "project", "organization"]}
+      },
+      "required": ["id", "type"],
+      "type": "object"
+    },
+    "operations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "accuracy": {"minimum": 0, "type": "number"},
+          "accuracy_unit": {"const": "m"},
+          "definition_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+          "description": {"maxLength": 256, "minLength": 1, "type": "string"},
+          "horizontal_tolerance": {"exclusiveMinimum": 0, "maximum": 0.000001, "type": "number"},
+          "input_axes": {"items": {"maxLength": 16, "minLength": 1, "type": "string"}, "maxItems": 3, "minItems": 3, "type": "array"},
+          "maximum_points": {"maximum": 100000, "minimum": 1, "type": "integer"},
+          "operation_id": {"pattern": "^[A-Z][A-Z0-9_]{1,15}:[1-9][0-9]{0,9}$", "type": "string"},
+          "output_axes": {"items": {"maxLength": 16, "minLength": 1, "type": "string"}, "maxItems": 3, "minItems": 3, "type": "array"},
+          "required_grids": {"items": {"pattern": "^[A-Za-z0-9_.-]{1,128}$", "type": "string"}, "maxItems": 8, "type": "array"},
+          "source_crs": {"pattern": "^[A-Z][A-Z0-9_]{1,15}:[1-9][0-9]{0,9}$", "type": "string"},
+          "target_crs": {"pattern": "^[A-Z][A-Z0-9_]{1,15}:[1-9][0-9]{0,9}$", "type": "string"},
+          "vertical_tolerance": {"exclusiveMinimum": 0, "maximum": 0.001, "type": "number"}
+        },
+        "required": ["accuracy", "accuracy_unit", "definition_sha256", "description", "horizontal_tolerance", "input_axes", "maximum_points", "operation_id", "output_axes", "required_grids", "source_crs", "target_crs", "vertical_tolerance"],
+        "type": "object"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "type": "array"
+    },
+    "profile_id": {"const": "pyproj-epsg-v11.022-offline-v1"},
+    "records": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "axes": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "abbreviation": {"maxLength": 32, "minLength": 1, "type": "string"},
+                "direction": {"maxLength": 32, "minLength": 1, "type": "string"},
+                "unit_conversion_factor": {"exclusiveMinimum": 0, "type": "number"},
+                "unit_name": {"maxLength": 64, "minLength": 1, "type": "string"}
+              },
+              "required": ["abbreviation", "direction", "unit_conversion_factor", "unit_name"],
+              "type": "object"
+            },
+            "maxItems": 8,
+            "minItems": 1,
+            "type": "array"
+          },
+          "deprecated": {"type": "boolean"},
+          "identifier": {"pattern": "^[A-Z][A-Z0-9_]{1,15}:[1-9][0-9]{0,9}$", "type": "string"},
+          "name": {"maxLength": 256, "minLength": 1, "type": "string"},
+          "type": {"enum": ["compound", "geocentric", "geographic_2d", "geographic_3d", "projected", "vertical"]},
+          "wkt_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+        },
+        "required": ["axes", "deprecated", "identifier", "name", "type", "wkt_sha256"],
+        "type": "object"
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "type": "array"
+    },
+    "registry_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "runtime": {
+      "additionalProperties": false,
+      "properties": {
+        "database_layout": {"const": "1.4"},
+        "epsg_date": {"const": "2024-11-05"},
+        "epsg_version": {"const": "v11.022"},
+        "library": {"const": "pyproj"},
+        "library_version": {"const": "3.7.2"},
+        "proj_data_version": {"const": "1.20"},
+        "proj_version": {"const": "9.5.1"}
+      },
+      "required": ["database_layout", "epsg_date", "epsg_version", "library", "library_version", "proj_data_version", "proj_version"],
+      "type": "object"
+    },
+    "schema_version": {"const": "aecctx.crs-registry.v1"}
+  },
+  "required": ["author", "operations", "profile_id", "records", "registry_digest", "runtime", "schema_version"],
+  "title": "AECCTX offline CRS registry profile",
+  "type": "object"
+}
