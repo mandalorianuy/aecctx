@@ -42,20 +42,26 @@ def test_v03_fixture_corpus_is_exact_and_reproducible() -> None:
         assert hashlib.sha256(path.read_bytes()).hexdigest() == entry["sha256"]
 
 
-def test_v03_ascii_fixture_writer_ignores_host_newline_translation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_v03_fixture_writer_ignores_host_newline_translation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     generator = _fixture_generator()
     original_open = io.open
 
     def windows_text_open(*args: object, **kwargs: object) -> object:
+        positional = list(args)
         mode = str(args[1]) if len(args) > 1 else str(kwargs.get("mode", "r"))
         if "b" not in mode:
-            kwargs["newline"] = "\r\n"
-        return original_open(*args, **kwargs)
+            if len(positional) > 5:
+                positional[5] = "\r\n"
+            else:
+                kwargs["newline"] = "\r\n"
+        return original_open(*positional, **kwargs)
 
     monkeypatch.setattr("ezdxf.document.io.open", windows_text_open)
     output = tmp_path / "canonical.dxf"
     generator._write(generator._curves("R12"), output)
     assert b"\r\n" not in output.read_bytes()
+    generator._bundle(tmp_path / "bundle")
+    assert b"\r\n" not in (tmp_path / "bundle/source-bundle.json").read_bytes()
 
 
 def test_source_bundle_validates_all_members_before_use() -> None:

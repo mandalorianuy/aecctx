@@ -80,7 +80,12 @@ def _bundle(root: Path) -> None:
     for logical, role in (("root.dxf", "root"), ("refs/child.dxf", "xref"), ("refs/nested/nested.dxf", "xref")):
         data = (root / logical).read_bytes()
         entries.append({"bytes": len(data), "media_type": "application/dxf", "path": logical, "role": role, "sha256": hashlib.sha256(data).hexdigest()})
-    (root / "source-bundle.json").write_text(json.dumps({"entries": entries, "root": "root.dxf", "version": "0.2"}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    manifest = json.dumps(
+        {"entries": entries, "root": "root.dxf", "version": "0.2"},
+        indent=2,
+        sort_keys=True,
+    )
+    (root / "source-bundle.json").write_bytes((manifest + "\n").encode("utf-8"))
 
 
 def generate(root: Path) -> None:
