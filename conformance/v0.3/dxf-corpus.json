@@ -1,0 +1,14 @@
+{
+  "version": "0.3.0",
+  "origin": "project-authored Apache-2.0 fixture corpus",
+  "entries": [
+    {"id": "r12-curves-ascii", "path": "fixtures/v0.3/dxf/r12-curves-ascii.dxf", "release": "AC1009", "container": "ascii", "sha256": "7e59a7650f358f713a252b848b77039c2a4f6a671b0b05cceffea175f63ef031"},
+    {"id": "r2004-curves-binary", "path": "fixtures/v0.3/dxf/r2004-curves-binary.dxf", "release": "AC1018", "container": "binary", "sha256": "380b663697c905793bd710ef44530a34d4815b5efc360b16ac0374e082640e95"},
+    {"id": "r2007-curves-ascii", "path": "fixtures/v0.3/dxf/r2007-curves-ascii.dxf", "release": "AC1021", "container": "ascii", "sha256": "baa5b2aeb9638806fc08566eb8b408afc5d2bdae44c82f6cf798bc0f95657f2b"},
+    {"id": "xref-root", "path": "fixtures/v0.3/dxf/xref-bundle/root.dxf", "release": "AC1032", "container": "ascii", "sha256": "9ecda7725bba4d32b6cdf6dfdcb02ef3ee3e74ced1cf6e0c6b9e0701c58529d8"},
+    {"id": "xref-child", "path": "fixtures/v0.3/dxf/xref-bundle/refs/child.dxf", "release": "AC1021", "container": "ascii", "sha256": "967efb17f9be39e72fe80563a8ddbb11ec66227e4dfefe48dce209f9bdf0b307"},
+    {"id": "xref-nested", "path": "fixtures/v0.3/dxf/xref-bundle/refs/nested/nested.dxf", "release": "AC1018", "container": "ascii", "sha256": "e9ba34d7c648a41c35b2debcc56b34ef615f2bfd2f90843e7240e74500e58efd"}
+  ],
+  "generator": {"path": "fixtures/v0.3/dxf/generate_fixtures.py", "runtime": "ezdxf==1.4.4", "license": "Apache-2.0", "sha256": "eeb6849d08cfabc842223f179cdaf6a845d3cd6554ed56435432e0e9650fc680"},
+  "profile": {"path": "docs/specs/dxf-v03-profile.md", "sha256": "9dcc693465791ce875af9466f5d74b2becfb35d9dfb11b39b33c0bdd7385eac1"}
+}

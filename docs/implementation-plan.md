@@ -1,6 +1,6 @@
 # AECCTX Implementation Plan
 
-Date: 2026-07-13
+Date: 2026-07-14
 Status: Active implementation authority
 Specification readiness: `0.3.0-FUNCTIONAL-DEBT-PLAN-READY`
 
@@ -187,8 +187,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-25 | completed | Additional reviewed local enforcement profiles |
 | ACX-26 | completed | Optional remote/customer-managed provider protocol |
 | ACX-27 | completed | Expanded IFC 2D and georeferencing profiles |
-| ACX-28 | pending-next | Expanded DXF semantics, geometry and bounded xrefs |
-| ACX-29 | pending | Multilingual and layout-aware OCR profiles |
+| ACX-28 | completed | Expanded DXF semantics, geometry and bounded xrefs |
+| ACX-29 | pending-next | Multilingual and layout-aware OCR profiles |
 | ACX-30 | pending | Bounded vision inference and reconstruction hypotheses |
 | ACX-31 | pending | Mesh CRS registry and datum-operation qualification |
 | ACX-32 | pending | STEP/IGES XDE and fidelity expansion |

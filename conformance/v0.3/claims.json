@@ -88,6 +88,39 @@
         "tests/test_ifc_v03.py::test_ifc_v03_georeferencing_conflicts_never_guess",
         "tests/test_ifc_v03.py::test_ifc_v03_default_v01_and_acx13_v02_are_unchanged"
       ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-28.md",
+      "fixture_ids": ["v03-dxf-acx28"],
+      "id": "dxf.source-semantics.v03",
+      "platform_scope": ["python-3.12-linux", "python-3.12-macos", "python-3.12-windows"],
+      "profile": "dxf-selected-releases-source-semantics-v03",
+      "provider_scope": "ezdxf==1.4.4 optional in-process parser",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_dxf_v03.py::test_v03_fixture_corpus_is_exact_and_reproducible",
+        "tests/test_dxf_v03.py::test_source_bundle_validates_all_members_before_use",
+        "tests/test_dxf_v03.py::test_source_bundle_rejects_unsafe_members_before_parser",
+        "tests/test_dxf_v03.py::test_v03_bundle_traversal_is_source_separated_and_deterministic",
+        "tests/test_dxf_v03.py::test_v03_cli_accepts_content_addressed_bundle"
+      ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-28.md",
+      "fixture_ids": ["v03-dxf-acx28"],
+      "id": "dxf.geometry.v03",
+      "platform_scope": ["python-3.12-linux", "python-3.12-macos", "python-3.12-windows"],
+      "profile": "dxf-selected-releases-geometry-v03",
+      "provider_scope": "ezdxf==1.4.4 optional in-process parser; ACIS kernel absent",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_dxf_v03.py::test_v03_curves_preserve_source_and_derived_fidelity",
+        "tests/test_dxf_v03.py::test_v03_release_ascii_binary_and_default_compatibility",
+        "tests/test_dxf_v03.py::test_v03_bundle_cycles_and_acis_remain_explicit",
+        "tests/test_dxf_v02.py::test_dxf_v02_keeps_acis_xref_and_cyclic_insert_loss_explicit"
+      ]
     }
   ],
   "fixtures": [
@@ -106,6 +139,10 @@
     {
       "id": "v03-ifc-acx27",
       "path": "fixtures/v0.3/ifc"
+    },
+    {
+      "id": "v03-dxf-acx28",
+      "path": "fixtures/v0.3/dxf"
     }
   ],
   "version": "0.3.0"

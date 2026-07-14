@@ -1,9 +1,15 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import math
+from dataclasses import dataclass
+from importlib.resources import files
 from pathlib import Path
-from typing import Any, Iterable
+from pathlib import PurePosixPath
+from typing import Any, Iterable, Mapping
+
+from jsonschema import Draft202012Validator
 
 from ..ingest import CAPABILITIES, IngestResult, _timestamp
 from ..package import PackageArtifact, PackageWriter, canonical_json, hash_file
@@ -23,6 +29,141 @@ class DXFParseError(ValueError):
 
 class DXFResourceLimitError(ValueError):
     code = "AECCTX_DXF_RESOURCE_LIMIT_EXCEEDED"
+
+
+class SourceBundleError(ValueError):
+    code = "AECCTX_DXF_BUNDLE_INVALID"
+
+    def __init__(self, code: str, message: str):
+        super().__init__(message)
+        self.code = code
+
+
+@dataclass(frozen=True, slots=True)
+class SourceBundleEntry:
+    logical_path: str
+    path: Path
+    role: str
+    media_type: str
+    byte_size: int
+    sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class SourceBundle:
+    directory: Path
+    root: SourceBundleEntry
+    entries: tuple[SourceBundleEntry, ...]
+    total_bytes: int
+
+    @property
+    def by_path(self) -> Mapping[str, SourceBundleEntry]:
+        return {entry.logical_path: entry for entry in self.entries}
+
+
+def _bundle_error(code: str, message: str) -> SourceBundleError:
+    return SourceBundleError(code, message)
+
+
+def _strict_json(data: bytes) -> object:
+    def object_pairs(pairs: list[tuple[str, object]]) -> dict[str, object]:
+        result: dict[str, object] = {}
+        for key, value in pairs:
+            if key in result:
+                raise _bundle_error("AECCTX_DXF_BUNDLE_MANIFEST_INVALID", f"Duplicate source-bundle key: {key}")
+            result[key] = value
+        return result
+
+    try:
+        return json.loads(data, object_pairs_hook=object_pairs)
+    except SourceBundleError:
+        raise
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise _bundle_error("AECCTX_DXF_BUNDLE_MANIFEST_INVALID", "source-bundle.json is not strict UTF-8 JSON") from error
+
+
+def _safe_bundle_path(value: object) -> PurePosixPath:
+    if not isinstance(value, str) or not value or "\\" in value or "://" in value or "\0" in value:
+        raise _bundle_error("AECCTX_DXF_BUNDLE_PATH_UNSAFE", f"Unsafe source-bundle path: {value!r}")
+    path = PurePosixPath(value)
+    if path.is_absolute() or any(part in {"", ".", ".."} for part in path.parts) or (path.parts and ":" in path.parts[0]):
+        raise _bundle_error("AECCTX_DXF_BUNDLE_PATH_UNSAFE", f"Unsafe source-bundle path: {value!r}")
+    return path
+
+
+def _dxf_container(path: Path) -> str:
+    with path.open("rb") as stream:
+        return "binary" if stream.read(22).startswith(b"AutoCAD Binary DXF") else "ascii"
+
+
+def load_source_bundle(
+    path: str | Path,
+    *,
+    max_files: int = 32,
+    max_member_bytes: int = 512 * 1024 * 1024,
+    max_total_bytes: int = 1024 * 1024 * 1024,
+) -> SourceBundle:
+    if not (1 <= max_files <= 32 and 1 <= max_member_bytes <= 512 * 1024 * 1024 and 1 <= max_total_bytes <= 1024 * 1024 * 1024):
+        raise ValueError("DXF source-bundle limits must be positive and no greater than profile ceilings")
+    directory = Path(path)
+    if not directory.is_dir() or directory.is_symlink():
+        raise _bundle_error("AECCTX_DXF_BUNDLE_ROOT_INVALID", "source bundle must be a regular directory")
+    manifest_path = directory / "source-bundle.json"
+    if not manifest_path.is_file() or manifest_path.is_symlink() or manifest_path.stat().st_size > 1024 * 1024:
+        raise _bundle_error("AECCTX_DXF_BUNDLE_MANIFEST_INVALID", "source-bundle.json must be a regular file no larger than 1 MiB")
+    value = _strict_json(manifest_path.read_bytes())
+    schema = json.loads(files("aecctx.schemas.v0_2").joinpath("source-bundle.schema.json").read_text(encoding="utf-8"))
+    errors = sorted(Draft202012Validator(schema).iter_errors(value), key=lambda item: list(item.absolute_path))
+    if errors:
+        path_error = errors[0]
+        if "path" in str(path_error.absolute_path) or "root" in str(path_error.absolute_path):
+            raise _bundle_error("AECCTX_DXF_BUNDLE_PATH_UNSAFE", path_error.message)
+        raise _bundle_error("AECCTX_DXF_BUNDLE_MANIFEST_INVALID", path_error.message)
+    assert isinstance(value, dict)
+    raw_entries = value["entries"]
+    assert isinstance(raw_entries, list)
+    if len(raw_entries) > max_files:
+        raise _bundle_error("AECCTX_DXF_BUNDLE_FILE_LIMIT_EXCEEDED", "source bundle exceeds file limit")
+    root_real = directory.resolve(strict=True)
+    seen: set[str] = set()
+    entries: list[SourceBundleEntry] = []
+    total_bytes = 0
+    for raw in raw_entries:
+        assert isinstance(raw, dict)
+        logical = _safe_bundle_path(raw["path"]).as_posix()
+        if logical in seen:
+            raise _bundle_error("AECCTX_DXF_BUNDLE_DUPLICATE_PATH", f"Duplicate source-bundle path: {logical}")
+        seen.add(logical)
+        member = directory.joinpath(*PurePosixPath(logical).parts)
+        cursor = member
+        while cursor != directory:
+            if cursor.is_symlink():
+                raise _bundle_error("AECCTX_DXF_BUNDLE_MEMBER_NOT_REGULAR", f"Symlink source-bundle member: {logical}")
+            cursor = cursor.parent
+        if not member.is_file() or member.is_symlink():
+            raise _bundle_error("AECCTX_DXF_BUNDLE_MEMBER_NOT_REGULAR", f"Missing or non-regular source-bundle member: {logical}")
+        try:
+            member.resolve(strict=True).relative_to(root_real)
+        except ValueError as error:
+            raise _bundle_error("AECCTX_DXF_BUNDLE_PATH_UNSAFE", f"Source-bundle member escapes root: {logical}") from error
+        actual_size = member.stat().st_size
+        if actual_size != raw["bytes"]:
+            raise _bundle_error("AECCTX_DXF_BUNDLE_SIZE_MISMATCH", f"Source-bundle size mismatch: {logical}")
+        if actual_size > max_member_bytes:
+            raise _bundle_error("AECCTX_DXF_BUNDLE_MEMBER_LIMIT_EXCEEDED", f"Source-bundle member exceeds byte limit: {logical}")
+        total_bytes += actual_size
+        if total_bytes > max_total_bytes:
+            raise _bundle_error("AECCTX_DXF_BUNDLE_TOTAL_LIMIT_EXCEEDED", "source bundle exceeds aggregate byte limit")
+        digest, _ = hash_file(member)
+        if digest != raw["sha256"]:
+            raise _bundle_error("AECCTX_DXF_BUNDLE_DIGEST_MISMATCH", f"Source-bundle digest mismatch: {logical}")
+        entries.append(SourceBundleEntry(logical, member, str(raw["role"]), str(raw["media_type"]), actual_size, digest))
+    root_logical = _safe_bundle_path(value["root"]).as_posix()
+    roots = [entry for entry in entries if entry.role == "root"]
+    if len(roots) != 1 or roots[0].logical_path != root_logical or any(entry.role == "root" and entry.logical_path != root_logical for entry in entries):
+        raise _bundle_error("AECCTX_DXF_BUNDLE_ROOT_INVALID", "source bundle requires exactly one matching root entry")
+    ordered = tuple(sorted(entries, key=lambda entry: entry.logical_path))
+    return SourceBundle(directory, roots[0], ordered, total_bytes)
 
 
 def _ezdxf() -> tuple[Any, Any, Any]:
@@ -93,7 +234,7 @@ def _unit_symbol(unit_code: int) -> str | None:
 def _kind(dxftype: str) -> str:
     if dxftype in {"TEXT", "MTEXT", "ATTRIB", "ATTDEF", "DIMENSION"}:
         return "aecctx:annotation"
-    if dxftype in {"LINE", "LWPOLYLINE", "POLYLINE", "ARC", "CIRCLE", "ELLIPSE", "SPLINE"}:
+    if dxftype in {"LINE", "LWPOLYLINE", "POLYLINE", "ARC", "CIRCLE", "ELLIPSE", "SPLINE", "HELIX", "RAY", "XLINE"}:
         return "aecctx:linear-element"
     if dxftype in {"HATCH", "SOLID", "TRACE", "3DFACE"}:
         return "aecctx:surface-element"
@@ -131,6 +272,93 @@ def _geometry(entity: Any) -> dict[str, Any]:
     if kind == "POINT":
         return _known({"location": _json_value(dxf.location), "type": "point"})
     return {"state": "unsupported", "reason_code": "AECCTX_DXF_GEOMETRY_NOT_NORMALIZED"}
+
+
+def _dxf_v03_evidence(entity: Any, *, maximum_vertices: int = 4096) -> dict[str, Any] | None:
+    kind = entity.dxftype()
+    if kind not in {"ELLIPSE", "SPLINE", "HELIX", "RAY", "XLINE", "MLINE", "MESH"}:
+        return None
+    dxf = entity.dxf
+    if kind == "ELLIPSE":
+        source = {
+            "center": _json_value(dxf.center),
+            "end_param": round(float(dxf.end_param), 12),
+            "extrusion": _json_value(dxf.extrusion),
+            "major_axis": _json_value(dxf.major_axis),
+            "ratio": round(float(dxf.ratio), 12),
+            "start_param": round(float(dxf.start_param), 12),
+            "type": "ellipse",
+        }
+    elif kind in {"SPLINE", "HELIX"}:
+        source = {
+            "control_points": [_json_value(point) for point in entity.control_points],
+            "degree": int(dxf.degree),
+            "fit_points": [_json_value(point) for point in entity.fit_points],
+            "flags": int(dxf.flags),
+            "knots": [round(float(value), 12) for value in entity.knots],
+            "type": kind.lower(),
+            "weights": [round(float(value), 12) for value in entity.weights],
+        }
+        if kind == "HELIX":
+            source["helix"] = {
+                "axis_base_point": _json_value(dxf.axis_base_point),
+                "axis_vector": _json_value(dxf.axis_vector),
+                "constraint": int(dxf.constrain),
+                "handedness": int(dxf.handedness),
+                "radius": round(float(dxf.radius), 12),
+                "start_point": _json_value(dxf.start_point),
+                "turn_height": round(float(dxf.turn_height), 12),
+                "turns": round(float(dxf.turns), 12),
+            }
+    elif kind in {"RAY", "XLINE"}:
+        source = {"start": _json_value(dxf.start), "type": kind.lower(), "unit_vector": _json_value(dxf.unit_vector)}
+    elif kind == "MLINE":
+        source = {
+            "extrusion": _json_value(dxf.get("extrusion", (0.0, 0.0, 1.0))),
+            "justification": int(dxf.get("justification", 0)),
+            "scale_factor": round(float(dxf.get("scale_factor", 1.0)), 12),
+            "style_name": str(dxf.get("style_name", "")),
+            "type": "mline",
+            "vertices": [
+                {
+                    "line_direction": _json_value(vertex.line_direction),
+                    "location": _json_value(vertex.location),
+                    "miter_direction": _json_value(vertex.miter_direction),
+                }
+                for vertex in entity.vertices
+            ],
+        }
+    else:
+        source = {
+            "edges": [list(map(int, edge)) for edge in entity.edges],
+            "faces": [list(map(int, face)) for face in entity.faces],
+            "type": "mesh",
+            "vertices": [_json_value(vertex) for vertex in entity.vertices],
+        }
+    result: dict[str, Any] = {"source_geometry": _known(source)}
+    if kind in {"ELLIPSE", "SPLINE", "HELIX"}:
+        try:
+            vertices = []
+            for point in entity.flattening(0.001, segments=8):
+                vertices.append(_json_value(point))
+                if len(vertices) > maximum_vertices:
+                    raise DXFResourceLimitError("DXF sampled curve exceeds vertex limit")
+            result["sampled_path"] = _known(
+                {
+                    "fidelity": "tessellated",
+                    "max_chord_error": 0.001,
+                    "minimum_segments": 8,
+                    "unit": "drawing-unit",
+                    "vertices": vertices,
+                }
+            )
+        except DXFResourceLimitError:
+            result["sampled_path"] = {"state": "unsupported", "reason_code": "AECCTX_DXF_CURVE_VERTEX_LIMIT_EXCEEDED"}
+        except Exception:
+            result["sampled_path"] = {"state": "unsupported", "reason_code": "AECCTX_DXF_CURVE_TESSELLATION_FAILED"}
+    else:
+        result["sampled_path"] = {"state": "not_applicable", "reason_code": "AECCTX_DXF_UNBOUNDED_OR_SEMANTIC_ENTITY"}
+    return result
 
 
 def _raw_tags(entity: Any, TagCollector: Any, dxfversion: str) -> list[dict[str, Any]]:
@@ -307,6 +535,11 @@ class DXFPlugin:
                 "bounded_3d": "dxf-r2000-r2018-bounded-3d-v1:partial",
                 "source_semantics": "dxf-r2000-r2018-source-semantics-v1:partial",
             },
+            "v03_public_profiles": {
+                "geometry": "dxf-selected-releases-geometry-v03:partial",
+                "source_semantics": "dxf-selected-releases-source-semantics-v03:partial",
+                "source_bundle": "dxf-content-addressed-xref-bundle-v1:partial",
+            },
         }
 
     def probe(self, prefix: bytes) -> dict[str, Any]:
@@ -364,9 +597,18 @@ def ingest_dxf(
     aecctx_version: str = "0.1.0",
     max_source_bytes: int = 512 * 1024 * 1024,
     max_records: int = 1_000_000,
+    max_xref_depth: int = 8,
 ) -> IngestResult:
     ezdxf, TagCollector, acad_release = _ezdxf()
-    source = Path(source_path)
+    requested_source = Path(source_path)
+    source_bundle: SourceBundle | None = None
+    if requested_source.is_dir() and not requested_source.is_symlink():
+        if aecctx_version != "0.2.0":
+            raise ValueError("DXF source bundles require aecctx_version=0.2.0")
+        source_bundle = load_source_bundle(requested_source, max_member_bytes=max_source_bytes)
+        source = source_bundle.root.path
+    else:
+        source = requested_source
     output = Path(output_path)
     if not source.is_file() or source.is_symlink():
         raise ValueError("source_path must be a regular DXF file")
@@ -374,15 +616,14 @@ def ingest_dxf(
         raise ValueError("embedding_policy must be external, embedded, or redacted")
     if aecctx_version not in {"0.1.0", "0.2.0"}:
         raise ValueError("aecctx_version must be 0.1.0 or 0.2.0")
-    if max_source_bytes < 1 or max_records < 1:
+    if max_source_bytes < 1 or max_records < 1 or not 1 <= max_xref_depth <= 8:
         raise ValueError("DXF safety limits must be positive")
     if source.stat().st_size > max_source_bytes:
         error = DXFResourceLimitError(f"DXF source exceeds {max_source_bytes} bytes")
         error.code = "AECCTX_DXF_SOURCE_SIZE_LIMIT_EXCEEDED"
         raise error
     source_digest, source_bytes = hash_file(source)
-    with source.open("rb") as source_stream:
-        dxf_container = "binary" if source_stream.read(22).startswith(b"AutoCAD Binary DXF") else "ascii"
+    dxf_container = _dxf_container(source)
     identity = source_digest[:24]
     source_id = f"src_{identity}"
     package_id = f"pkg_{identity}"
@@ -398,6 +639,48 @@ def ingest_dxf(
     runtime_version = str(ezdxf.__version__)
     audit = document.audit()
     unit = _unit_symbol(int(document.units))
+
+    bundle_documents: list[tuple[SourceBundleEntry, Any]] = []
+    if source_bundle is not None:
+        by_path = source_bundle.by_path
+        visited_documents: set[str] = set()
+
+        def declared_xrefs(native_document: Any) -> list[str]:
+            paths = {
+                str(block.block.dxf.get("xref_path", ""))
+                for block in native_document.blocks
+                if block.block_record.is_xref and block.block.dxf.get("xref_path", "")
+            }
+            return sorted(paths)
+
+        def visit(entry: SourceBundleEntry, native_document: Any, stack: tuple[str, ...]) -> None:
+            if entry.logical_path in stack:
+                raise _bundle_error("AECCTX_DXF_BUNDLE_XREF_CYCLE", f"DXF xref cycle at {entry.logical_path}")
+            if entry.logical_path in visited_documents:
+                return
+            next_stack = (*stack, entry.logical_path)
+            if len(next_stack) > max_xref_depth + 1:
+                raise _bundle_error("AECCTX_DXF_BUNDLE_XREF_DEPTH_EXCEEDED", f"DXF xref depth exceeds {max_xref_depth}")
+            bundle_documents.append((entry, native_document))
+            visited_documents.add(entry.logical_path)
+            for declared in declared_xrefs(native_document):
+                logical = _safe_bundle_path(declared).as_posix()
+                child = by_path.get(logical)
+                if child is None or child.role != "xref":
+                    raise _bundle_error("AECCTX_DXF_BUNDLE_XREF_UNDECLARED", f"DXF xref is not in source bundle: {logical}")
+                if logical in next_stack:
+                    raise _bundle_error("AECCTX_DXF_BUNDLE_XREF_CYCLE", f"DXF xref cycle at {logical}")
+                try:
+                    child_document = ezdxf.readfile(child.path)
+                except Exception as error:
+                    raise _bundle_error("AECCTX_DXF_BUNDLE_XREF_PARSE_FAILED", f"DXF xref parse failed: {logical}") from error
+                visit(child, child_document, next_stack)
+
+        visit(source_bundle.root, document, ())
+        visited = {entry.logical_path for entry, _native in bundle_documents}
+        undeclared = sorted(entry.logical_path for entry in source_bundle.entries if entry.role == "xref" and entry.logical_path not in visited)
+        if undeclared:
+            raise _bundle_error("AECCTX_DXF_BUNDLE_XREF_UNREACHABLE", f"Unreachable source-bundle xrefs: {', '.join(undeclared)}")
 
     container_by_handle: dict[str, str] = {}
     graphical: dict[str, Any] = {}
@@ -477,6 +760,10 @@ def ingest_dxf(
                     "derived": False,
                     "source_representation_ids": [primitive_id],
                 }
+            if document.dxfversion in {"AC1009", "AC1015", "AC1018", "AC1021", "AC1032"}:
+                v03 = _dxf_v03_evidence(entity)
+                if v03 is not None:
+                    primitive["dxf_v03"] = v03
         primitives.append(primitive)
         entity_records.append(
             {
@@ -862,7 +1149,8 @@ def ingest_dxf(
                 v02_3d_issues.append(("AECCTX_DXF_PROXY_GRAPHICS_UNSUPPORTED", handle))
         for block in sorted(document.blocks, key=lambda item: item.name):
             if block.block_record.is_xref:
-                v02_3d_issues.append(("AECCTX_DXF_XREF_NOT_TRAVERSED", block.name))
+                if source_bundle is None:
+                    v02_3d_issues.append(("AECCTX_DXF_XREF_NOT_TRAVERSED", block.name))
     for code, locator in sorted(set(v02_3d_issues)):
         diagnostics.append(
             {
@@ -915,12 +1203,134 @@ def ingest_dxf(
 
     if aecctx_version == "0.2.0":
         source_record["dxf_container"] = dxf_container
-        for record in [source_record, *primitives, *assertions, *entity_records, *relations, *diagnostics]:
+        source_records = [source_record]
+        if source_bundle is not None:
+            source_record["bundle_logical_path"] = source_bundle.root.logical_path
+            source_record["safety_diagnostics"] = [
+                "AECCTX_DXF_INPUT_TREATED_AS_DATA",
+                "AECCTX_DXF_CONTENT_ADDRESSED_XREFS_ONLY",
+                "AECCTX_COMMANDS_NOT_EXECUTED",
+            ]
+            for record in primitives:
+                record["bundle_logical_path"] = source_bundle.root.logical_path
+            for record in entity_records:
+                block = record.get("block")
+                if isinstance(block, dict) and block.get("is_xref"):
+                    declared = str(block.get("xref_path", ""))
+                    try:
+                        logical = _safe_bundle_path(declared).as_posix()
+                    except SourceBundleError:
+                        logical = ""
+                    if logical in source_bundle.by_path:
+                        block["resolved_bundle_path"] = logical
+                        block["resolved_sha256"] = source_bundle.by_path[logical].sha256
+
+            for entry, native_document in bundle_documents:
+                if entry.role == "root":
+                    continue
+                member_source_id = _stable_id("src_dxf_bundle", entry.sha256, entry.logical_path)
+                member_unit = _unit_symbol(int(native_document.units))
+                source_records.append(
+                    {
+                        "acquisition_origin": "content-addressed-source-bundle",
+                        "bundle_logical_path": entry.logical_path,
+                        "byte_size": entry.byte_size,
+                        "declared_format": _known("DXF"),
+                        "declared_units": _known(member_unit) if member_unit else _unknown("AECCTX_DXF_UNITS_UNITLESS"),
+                        "detected_format": _known(native_document.dxfversion),
+                        "detected_producer": _known(f"ezdxf/{runtime_version}"),
+                        "detected_units": _known(member_unit) if member_unit else _unknown("AECCTX_DXF_UNITS_UNITLESS"),
+                        "display_name": PurePosixPath(entry.logical_path).name,
+                        "dxf_container": _dxf_container(entry.path),
+                        "dxf_release": acad_release.get(native_document.dxfversion, "unknown"),
+                        "embedding_policy": embedding_policy,
+                        "evidence_class": "observed",
+                        "extractor": {"plugin_id": PLUGIN_ID, "plugin_version": PLUGIN_VERSION},
+                        "layouts": sorted(native_document.layout_names()),
+                        "media_type": entry.media_type,
+                        "prior_source_revision": _unknown("AECCTX_PRIOR_REVISION_NOT_PROVIDED"),
+                        "provenance": _provenance(instant, [], runtime_version, "content-addressed-xref-extraction"),
+                        "record_id": member_source_id,
+                        "record_type": "source",
+                        "record_version": "0.2",
+                        "safety_diagnostics": ["AECCTX_DXF_CONTENT_ADDRESSED_XREFS_ONLY", "AECCTX_COMMANDS_NOT_EXECUTED"],
+                        "sha256": entry.sha256,
+                        "source_id": member_source_id,
+                        "source_refs": [],
+                        "spatial_reference": _unknown("AECCTX_DXF_GEOREFERENCING_NOT_DECLARED"),
+                    }
+                )
+                if embedding_policy == "embedded":
+                    source_records[-1]["storage_ref"] = f"sources/bundle/{entry.logical_path}"
+                elif embedding_policy == "redacted":
+                    source_records[-1]["redaction_reason"] = "AECCTX_SOURCE_CONTENT_REDACTED_BY_POLICY"
+                member_entities: list[tuple[str, Any, str]] = []
+                for layout in native_document.layouts:
+                    for native in layout:
+                        handle = native.dxf.get("handle")
+                        if handle:
+                            member_entities.append((handle, native, f"layout:{layout.name}"))
+                for block in native_document.blocks:
+                    if block.block_record.is_any_layout:
+                        continue
+                    for native in block:
+                        handle = native.dxf.get("handle")
+                        if handle:
+                            member_entities.append((handle, native, f"block:{block.name}"))
+                for handle, native, container in sorted(member_entities, key=lambda item: (item[0], item[2])):
+                    primitive_id = _stable_id("prim_dxf_bundle", entry.sha256, f"{entry.logical_path}:{handle}:{container}")
+                    v03 = _dxf_v03_evidence(native) if native_document.dxfversion in {"AC1009", "AC1015", "AC1018", "AC1021", "AC1032"} else None
+                    primitive = {
+                        "bundle_logical_path": entry.logical_path,
+                        "container": _known(container),
+                        "evidence_class": "observed",
+                        "extraction_confidence": {"band": "full", "method": "ezdxf-bundle-entity-tags"},
+                        "geometry": _geometry(native),
+                        "handle": handle,
+                        "layer": _known(native.dxf.get("layer", "0")),
+                        "original_class": native.dxftype(),
+                        "provenance": _provenance(instant, [member_source_id], runtime_version, "content-addressed-xref-extraction"),
+                        "raw_tags": _raw_tags(native, TagCollector, native_document.dxfversion),
+                        "record_id": primitive_id,
+                        "record_type": "primitive",
+                        "record_version": "0.2",
+                        "source_refs": [{"locator": f"{container}/handle:{handle}", "source_id": member_source_id}],
+                    }
+                    if v03 is not None:
+                        primitive["dxf_v03"] = v03
+                    primitives.append(primitive)
+                    if native.dxftype() in {"3DSOLID", "BODY", "REGION", "SURFACE", "EXTRUDEDSURFACE", "LOFTEDSURFACE", "REVOLVEDSURFACE", "SWEPTSURFACE"}:
+                        diagnostics.append(
+                            {
+                                "affected_count": 1,
+                                "capability": "3d_geometry",
+                                "code": "AECCTX_DXF_ACIS_KERNEL_UNSUPPORTED",
+                                "evidence_class": "observed",
+                                "fallback": "Inspect preserved raw tags; no ACIS kernel provider is accepted.",
+                                "message": f"ACIS entity remains unsupported in {entry.logical_path}.",
+                                "provenance": _provenance(instant, [member_source_id], runtime_version, "dxf-v03-acis-boundary"),
+                                "record_id": _stable_id("diag_dxf_bundle", entry.sha256, f"acis:{handle}:{container}"),
+                                "record_type": "diagnostic",
+                                "record_version": "0.2",
+                                "severity": "info",
+                                "source_refs": [{"locator": f"{container}/handle:{handle}", "source_id": member_source_id}],
+                                "support_level": "unsupported",
+                            }
+                        )
+            if len(primitives) + len(entity_records) + len(assertions) + len(relations) + len(diagnostics) > max_records:
+                error = DXFResourceLimitError(f"DXF bundle record count exceeds {max_records}")
+                error.code = "AECCTX_DXF_RECORD_LIMIT_EXCEEDED"
+                raise error
+        else:
+            source_records = [source_record]
+        for record in [*source_records, *primitives, *assertions, *entity_records, *relations, *diagnostics]:
             record.setdefault("evidence_class", "observed")
             record["record_version"] = "0.2"
+    else:
+        source_records = [source_record]
 
     record_sets = {
-        "sources/sources.jsonl": [source_record],
+        "sources/sources.jsonl": source_records,
         "evidence/primitives.jsonl": primitives,
         "evidence/assertions.jsonl": assertions,
         "model/entities.jsonl": entity_records,
@@ -940,10 +1350,14 @@ def ingest_dxf(
     artifacts.extend(v02_geometry_artifacts)
     if storage_ref:
         artifacts.append(PackageArtifact(storage_ref, source, "application/dxf", "embedded-source", True))
+        if source_bundle is not None:
+            for entry in source_bundle.entries:
+                if entry.role != "root":
+                    artifacts.append(PackageArtifact(f"sources/bundle/{entry.logical_path}", entry.path, entry.media_type, "embedded-xref-source", True))
     manifest = PackageWriter(output, package_form=package_form).write(
         package_id=package_id,
         created_at=instant,
-        source_ids=[source_id],
+        source_ids=[record["source_id"] for record in source_records],
         capabilities=capabilities,
         loss_summary=loss_summary,
         embedding_policy=embedding_policy,

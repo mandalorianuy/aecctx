@@ -132,3 +132,10 @@ def test_external_provider_protocol_schemas_are_public_and_bundled() -> None:
         bundled = json.loads(bundled_root.joinpath(name).read_text(encoding="utf-8"))
         normative = json.loads((repository / name).read_text(encoding="utf-8"))
         assert bundled == normative
+
+
+def test_dxf_source_bundle_schema_is_public_and_bundled() -> None:
+    bundled = files("aecctx.schemas.v0_2").joinpath("source-bundle.schema.json")
+    normative = Path(__file__).parents[1] / "schemas/v0.2/source-bundle.schema.json"
+
+    assert json.loads(bundled.read_text(encoding="utf-8")) == json.loads(normative.read_text(encoding="utf-8"))
