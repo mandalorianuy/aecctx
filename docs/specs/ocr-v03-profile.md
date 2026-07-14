@@ -41,6 +41,10 @@ orthogonal transform. Provider order is known only when the complete retained
 TSV hierarchy is monotonic; otherwise `reading_order` is `unknown` and no
 order is invented.
 
+Tesseract word confidence is normalized to three decimal places before it
+enters the event. This fixed precision removes architecture-only floating-point
+noise without changing text, hierarchy, bounds, thresholds or value states.
+
 Every word/line/block is inferred evidence. Request, response, runtime, input
 artifact and input-region hashes remain attached through the provider
 attestation and inference envelope. Native PDF text and OCR remain independent;
@@ -70,4 +74,3 @@ The claim `pdf-image.ocr-layout` may be public `partial` only for the exact
 matrix above. OCR is never source identity, authoritative geometry, hidden
 geometry, measurement, validation completeness or consumer semantics. Vision,
 arbitrary scripts/languages, handwriting and table semantics remain unsupported.
-

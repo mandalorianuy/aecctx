@@ -2,28 +2,28 @@
   "version": "0.3.0",
   "origin": "project-authored Apache-2.0 fixture corpus",
   "runtime": {"engine": "tesseract-ocr=5.3.4-1build5", "data": ["eng=1:4.1.0-2", "spa=1:4.1.0-2", "por=1:4.1.0-2"], "dockerfile": "providers/tesseract-ocr/Dockerfile.v03", "sha256": "73de5713dfa61b9da97576d05bdf2180fa32a0d9edc8293eb92ae9f568521cff"},
-  "worker": {"path": "providers/tesseract-ocr/worker.py", "sha256": "6909c007377120396fdd096cb68957559dfc97a5169a708e4194e178eba08ae6"},
+  "worker": {"path": "providers/tesseract-ocr/worker.py", "sha256": "be34399adb328a75ca45c38891fab15d12ee56f561319fdbf34caa83df6fdbd9"},
   "live_runner": {"path": "scripts/ocr_v03_live.py", "sha256": "9044cf339942cea533ceefe43996f200e1b3dd6ea9b70a326ca88c303c42f99d"},
-  "profile": {"path": "docs/specs/ocr-v03-profile.md", "sha256": "72dd4b92cbb336d81b88afa6e14537819bcd173ab8946993c56b41ea691b67df"},
-  "generator": {"path": "fixtures/v0.3/ocr/generate_fixtures.py", "runtime": "Pillow==12.3.0,pypdf==6.8.0", "sha256": "be8e25158ff824fa330ee568674e2c7734a8f8ea83a36f7b157a8a908fe8784a"},
+  "profile": {"path": "docs/specs/ocr-v03-profile.md", "sha256": "c203af437a13fe29d23b32d18800660c9a29bf2e7666b998355fab471e84cbbf"},
+  "generator": {"path": "fixtures/v0.3/ocr/generate_fixtures.py", "runtime": "Python stdlib + Pillow==12.3.0 encoding only", "sha256": "cc7188e32227f21772df7878f70e274e857414d62a800e0d5133af68a149e617"},
   "replay": {"path": "conformance/v0.3/ocr-replay-corpus.json", "sha256": "6ae7731a23c9641181c060d44e5e4ed652f81b19d22dc4363256db56566842d2"},
   "fixtures": [
-    {"id": "blank", "path": "fixtures/v0.3/ocr/blank.png", "sha256": "5fae6789486e51fb61eb7767d2f8b946df75707dda09e96f05abd8f2a86c5c3d"},
+    {"id": "blank", "path": "fixtures/v0.3/ocr/blank.png", "sha256": "d43a4d70551afe25de1a47c964f021dc63de1f0d0d105193fb19e5bdc519f8d4"},
     {"id": "corrupt", "path": "fixtures/v0.3/ocr/corrupt.png", "sha256": "c74a848d0547d5f77ef7d303dd4c2d60e4e54e90cf0f687156933dc6169f66c1"},
-    {"id": "eng-block", "path": "fixtures/v0.3/ocr/eng-block.png", "sha256": "eb8370b9da1daede74e0f88d8d7ac21e35b069d79896343901643fb572500faf"},
-    {"id": "low-confidence", "path": "fixtures/v0.3/ocr/low-confidence.png", "sha256": "5fc11a1f0b9828710cec7085c3882546456b3ae294c9d3c41111ad728ca2343f"},
-    {"id": "mixed-script", "path": "fixtures/v0.3/ocr/mixed-script.png", "sha256": "06f90a49938c592c01350563593c2c9ff996db858fe9df52ca6aee83efd77282"},
-    {"id": "multi-column", "path": "fixtures/v0.3/ocr/multi-column.png", "sha256": "aba1980e3b2953050c7ffef65079aaaaaf8135a278ee15dc2192d22131bcb6ce"},
-    {"id": "por-block", "path": "fixtures/v0.3/ocr/por-block.png", "sha256": "714f9d6724efc0a1f08cabf763bac3fb323fec83868ccd1bd8ca83515e7e7376"},
-    {"id": "rotated-90", "path": "fixtures/v0.3/ocr/rotated-90.png", "sha256": "9d5b4eb7fe2a4b736013eefd799e93b34288b5418071c9baf3a911f6ca649534"},
-    {"id": "spa-block", "path": "fixtures/v0.3/ocr/spa-block.png", "sha256": "c042379c014db8dfb95d72d88e662ec668661eb2b0b56c86af4c711508017e48"},
-    {"id": "spa-raster-pdf", "path": "fixtures/v0.3/ocr/spa-raster.pdf", "sha256": "9058894614d5b8aa3e974ed3fe06442b9bf8b24649eedabad8004eb45ed7a139"},
-    {"id": "table", "path": "fixtures/v0.3/ocr/table.png", "sha256": "aa3fdac6f137f5c9e7002fba587f06747511c51c4878417271a0b6f12894e81d"}
+    {"id": "eng-block", "path": "fixtures/v0.3/ocr/eng-block.png", "sha256": "4561de5c293c60dd799b1ca03d018ffeb1de5fb8397c227ef09b3cf35a76c9e1"},
+    {"id": "low-confidence", "path": "fixtures/v0.3/ocr/low-confidence.png", "sha256": "8aae1c9bf983826407db91d31a1b6097f28876e8ccdc96fe5ed4d36e1f5317c7"},
+    {"id": "mixed-script", "path": "fixtures/v0.3/ocr/mixed-script.png", "sha256": "44bbb425f67073d860167ce6a8337f05603ab0532106d3aaec38787c3be9ac73"},
+    {"id": "multi-column", "path": "fixtures/v0.3/ocr/multi-column.png", "sha256": "a6ad4fdeb561b5d3548b576ed88070fc0023a2d4c56bfd550cea85f1d7a1ce4b"},
+    {"id": "por-block", "path": "fixtures/v0.3/ocr/por-block.png", "sha256": "5d5b7b7a0656c70a19b0c3f861fe607c2535d29b1462c4fa8bcafd8ca1456701"},
+    {"id": "rotated-90", "path": "fixtures/v0.3/ocr/rotated-90.png", "sha256": "9cfbaf3ccadba16f7366c04be18f872747b35752721cef7f0dd9ec1d9fc6534b"},
+    {"id": "spa-block", "path": "fixtures/v0.3/ocr/spa-block.png", "sha256": "842fb7e4276f046c772c8bfe1b5c096684848278b90a1a9520a9772d6b15b0d3"},
+    {"id": "spa-raster-pdf", "path": "fixtures/v0.3/ocr/spa-raster.pdf", "sha256": "981bf565120adaa15284a9263760454c12f3ee88627f2c6bc24ac023fe60e961"},
+    {"id": "table", "path": "fixtures/v0.3/ocr/table.png", "sha256": "c8ff110f878a555f29986091842f812296d0f2278211a3619b2175243ea8abb4"}
   ],
   "live": {
     "path": "fixtures/v0.3/ocr/live",
     "architectures": {"linux/arm64": "sha256:05ef1bf0a0c9a999440bc5bcc1c5cf88a2c7020de98ee31b4ab0f7c1c81b0fa7", "linux/amd64": "sha256:b0c17c7b3e4d4ed621b78c261a641ce452de2199cb8cccc2a494c54cde8928b6"},
-    "responses": {"eng-auto-v1": "1e99a0e6ee21b113a6f74006adc1e55bd61e71093cc19aa49033447da2f7c0e5", "eng-block-v1": "bdf019b9c5b3a55443317c3d7365abe95c19ab7778a682ee3f4d9e140fd6b826", "eng-column-v1": "d18d40a1aa30b6b22da7306110fb80c7bb24ec77ff923b46ef2524e9a0dbcef5", "eng-table-v1": "7baece91ad42d3740b6998b1266e0bd45f302881a876b15be93e9b0235747ce3", "por-block-v1": "f201bc476986b1bff555863710c8cdd7f9c08b93205a1c39a37d7b6ac86760f1", "spa-block-v1": "2da68c5cccfaec8ec804504dcce3627b1e7298ee480d21d0f06bb4889d4fba4a"},
+    "responses": {"eng-auto-v1": "07f7124cd91ecb6e3381d0ebb918fef0e8a55242c6a46a16152e5ad7f657dd65", "eng-block-v1": "5098eab3a658648953d28ff904442591b3611efe3c59c477a64a82b1937548b9", "eng-column-v1": "2151e068a95ccc72c2174522f4d76ac4e3e744f984f6e10aff86b9207c6eb03c", "eng-table-v1": "1256d60ca0d30d7fb93743051d5b83691a9a459297688ddfeb4723c91c5490bb", "por-block-v1": "7f217a65ff13a2e3b1fbd65e4b8831dddc508aad87b4b096b6c72c72b3f1545d", "spa-block-v1": "ca0c475f49e18dd7da5d823223c76cc9021ff29e17f502c69a5fde71bb3a1b1c"},
     "summary_sha256": "f3288bd6db208ff487869d4fb60b653fa83145cbc184d260401cec814bbf9619"
   }
 }

@@ -20,6 +20,7 @@ Decision/profile: ACXD-037 and `docs/specs/ocr-v03-profile.md`
 - SDK image/PDF mapping, CLI replay, schema mirror, replay validation, security negatives and package validation pass. `python scripts/check_ocr_v03_conformance.py --require-live-images` passes before the public transition.
 - Final public checker passed all 11 fixtures, six profiles, 12 live executions, replay/schema mirrors and wheel/sdist restricted-artifact scans.
 - `./scripts/verify.sh` passed its portable subset (253 tests), full suite (699 passed, 10 intentional skips), deterministic corpora, wheel/sdist and clean release checks, plus healthy `baseline-shared-v1` integration with zero issues. Exact-SHA GitHub CI and squash merge remain delivery acceptance evidence.
+- The first published SHA exposed cross-platform drift in Pillow's environment-selected default font. CI correctly rejected fixture regeneration. The correction replaced it with project-authored bitmap glyphs and a stdlib-built PDF, normalized architecture-only Tesseract confidence noise to the governed three-decimal precision, regenerated all bound live/replay hashes and reran the complete local gate. Replacement exact-head CI is authoritative.
 
 ## Claim ceiling, security and residuals
 

@@ -5,30 +5,71 @@ import argparse
 import hashlib
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
-from pypdf import PdfWriter
-from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject, NumberObject
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parent
-FONT = ImageFont.load_default(size=28)
+GLYPHS = {
+    "A": ("01110", "10001", "10001", "11111", "10001", "10001", "10001"),
+    "B": ("11110", "10001", "10001", "11110", "10001", "10001", "11110"),
+    "C": ("01111", "10000", "10000", "10000", "10000", "10000", "01111"),
+    "D": ("11110", "10001", "10001", "10001", "10001", "10001", "11110"),
+    "E": ("11111", "10000", "10000", "11110", "10000", "10000", "11111"),
+    "F": ("11111", "10000", "10000", "11110", "10000", "10000", "10000"),
+    "G": ("01111", "10000", "10000", "10111", "10001", "10001", "01111"),
+    "H": ("10001", "10001", "10001", "11111", "10001", "10001", "10001"),
+    "I": ("11111", "00100", "00100", "00100", "00100", "00100", "11111"),
+    "L": ("10000", "10000", "10000", "10000", "10000", "10000", "11111"),
+    "N": ("10001", "11001", "10101", "10011", "10001", "10001", "10001"),
+    "O": ("01110", "10001", "10001", "10001", "10001", "10001", "01110"),
+    "P": ("11110", "10001", "10001", "11110", "10000", "10000", "10000"),
+    "R": ("11110", "10001", "10001", "11110", "10100", "10010", "10001"),
+    "S": ("01111", "10000", "10000", "01110", "00001", "00001", "11110"),
+    "T": ("11111", "00100", "00100", "00100", "00100", "00100", "00100"),
+    "U": ("10001", "10001", "10001", "10001", "10001", "10001", "01110"),
+    "V": ("10001", "10001", "10001", "10001", "10001", "01010", "00100"),
+    "W": ("10001", "10001", "10001", "10101", "10101", "10101", "01010"),
+    "X": ("10001", "10001", "01010", "00100", "01010", "10001", "10001"),
+    "Y": ("10001", "10001", "01010", "00100", "00100", "00100", "00100"),
+}
 
 
-def image(lines: list[tuple[int, int, str]], size: tuple[int, int] = (640, 240)) -> Image.Image:
+def image(lines: list[tuple[int, int, str]], size: tuple[int, int] = (900, 240), scale: int = 4) -> Image.Image:
     value = Image.new("L", size, 255)
-    draw = ImageDraw.Draw(value)
+    pixels = value.load()
     for x, y, text in lines:
-        draw.text((x, y), text, fill=0, font=FONT)
+        cursor = x
+        for character in text.upper():
+            if character == " ":
+                cursor += 4 * scale
+                continue
+            pattern = GLYPHS[character]
+            for row, bits in enumerate(pattern):
+                for column, bit in enumerate(bits):
+                    if bit == "1":
+                        for dy in range(scale):
+                            for dx in range(scale):
+                                pixels[cursor + column * scale + dx, y + row * scale + dy] = 0
+            cursor += 7 * scale
     return value
 
 
 def pdf_bytes(raster: Image.Image) -> bytes:
-    import io
-    writer = PdfWriter(); page = writer.add_blank_page(width=640, height=240)
-    stream = DecodedStreamObject(); stream.set_data(raster.tobytes()); stream.update({NameObject("/Type"): NameObject("/XObject"), NameObject("/Subtype"): NameObject("/Image"), NameObject("/Width"): NumberObject(raster.width), NameObject("/Height"): NumberObject(raster.height), NameObject("/ColorSpace"): NameObject("/DeviceGray"), NameObject("/BitsPerComponent"): NumberObject(8)})
-    reference = writer._add_object(stream); page[NameObject("/Resources")] = DictionaryObject({NameObject("/XObject"): DictionaryObject({NameObject("/Im0"): reference})})
-    content = DecodedStreamObject(); content.set_data(f"q {raster.width} 0 0 {raster.height} 0 0 cm /Im0 Do Q\n".encode("ascii")); page[NameObject("/Contents")] = writer._add_object(content)
-    output = io.BytesIO(); writer.write(output); return output.getvalue()
+    content = f"q {raster.width} 0 0 {raster.height} 0 0 cm /Im0 Do Q\n".encode("ascii")
+    objects = [
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        f"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {raster.width} {raster.height}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>".encode("ascii"),
+        f"<< /Type /XObject /Subtype /Image /Width {raster.width} /Height {raster.height} /ColorSpace /DeviceGray /BitsPerComponent 8 /Length {len(raster.tobytes())} >>\nstream\n".encode("ascii") + raster.tobytes() + b"\nendstream",
+        f"<< /Length {len(content)} >>\nstream\n".encode("ascii") + content + b"endstream",
+    ]
+    result = bytearray(b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n"); offsets = [0]
+    for index, body in enumerate(objects, 1):
+        offsets.append(len(result)); result.extend(f"{index} 0 obj\n".encode("ascii") + body + b"\nendobj\n")
+    xref = len(result); result.extend(f"xref\n0 {len(objects) + 1}\n0000000000 65535 f \n".encode("ascii"))
+    for offset in offsets[1:]: result.extend(f"{offset:010d} 00000 n \n".encode("ascii"))
+    result.extend(f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n".encode("ascii"))
+    return bytes(result)
 
 
 def generated() -> dict[str, bytes]:

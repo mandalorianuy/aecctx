@@ -205,7 +205,7 @@ def _layout(tsv: str, minimum_confidence: float, width: int, height: int, profil
         if left < 0 or top < 0 or box_width < 1 or box_height < 1 or left + box_width > width or top + box_height > height:
             raise ValueError("AECCTX_OCR_WORD_BOUNDS_INVALID")
         index = len(words); hierarchy.append((block, paragraph, line, word))
-        words.append({"id": f"w{index}", "bbox": [left, top, box_width, box_height], "confidence": round(confidence, 6), "text": text, "block": block, "paragraph": paragraph, "line": line, "word": word, "reading_order": index})
+        words.append({"id": f"w{index}", "bbox": [left, top, box_width, box_height], "confidence": round(confidence, 3), "text": text, "block": block, "paragraph": paragraph, "line": line, "word": word, "reading_order": index})
     monotonic = hierarchy == sorted(hierarchy) and len(set(hierarchy)) == len(hierarchy)
     line_groups: dict[tuple[int, int, int], list[dict[str, Any]]] = {}
     for item in words:
