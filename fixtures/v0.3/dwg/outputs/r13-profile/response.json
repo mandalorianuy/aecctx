@@ -1,0 +1,184 @@
+{
+  "artifacts": [
+    {
+      "bytes": 12906,
+      "media_type": "application/vnd.aecctx.libredwg+json",
+      "path": "artifacts/source.json",
+      "sha256": "0b6bbf779a60b383fbe471284356814f93efdf82de46f90ad8f48d7e37f80d48"
+    },
+    {
+      "bytes": 5683,
+      "media_type": "application/dxf",
+      "path": "artifacts/converted.dxf",
+      "sha256": "004665e455d61231783d66de4d0b069de1af67988b650aa3533a5114e8c2a3be"
+    }
+  ],
+  "attestation": {
+    "descriptor_digest": "b12abfc15a54811faf9ab7dc6cb5887ac5018b261d698e68bca57e653fa0412a",
+    "deterministic": true,
+    "enforcement_profile": "oci-docker-v1",
+    "network_mode": "disabled",
+    "provider_id": "org.aecctx.dwg.libredwg",
+    "provider_version": "0.3.0",
+    "request_digest": "664d0cf426d70df805fe7374c8065ad6fe63a8f3a5a8bc77da8715bf9a30bfcd",
+    "response_payload_digest": "affa790ec357b8bc7303a5ac6cecdf785baadeedc55355019264d08484eb0426",
+    "runtime_digest": "sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1",
+    "runtime_version": "python-3.12+libredwg-0.13.4-api1"
+  },
+  "capability_report": {
+    "2d_geometry": {
+      "affected": [
+        "dwg-source"
+      ],
+      "fallback": "retain observed source objects and converted DXF evidence",
+      "reason_codes": [
+        "AECCTX_DWG_CONVERTED_DXF_EVIDENCE"
+      ],
+      "support_level": "partial"
+    },
+    "3d_geometry": {
+      "affected": [
+        "dwg-source"
+      ],
+      "fallback": "retain observed source objects and converted DXF evidence",
+      "reason_codes": [
+        "AECCTX_DWG_CONVERTED_DXF_EVIDENCE"
+      ],
+      "support_level": "partial"
+    },
+    "georeferencing": {
+      "affected": [
+        "dwg-source"
+      ],
+      "fallback": "retain opaque source evidence",
+      "reason_codes": [
+        "AECCTX_DWG_CAPABILITY_UNSUPPORTED"
+      ],
+      "support_level": "unsupported"
+    },
+    "hierarchy": {
+      "affected": [
+        "dwg-source"
+      ],
+      "fallback": "retain opaque source evidence",
+      "reason_codes": [
+        "AECCTX_DWG_CAPABILITY_UNSUPPORTED"
+      ],
+      "support_level": "unsupported"
+    },
+    "identity": {
+      "affected": [
+        "dwg-source"
+      ],
+      "fallback": "retain observed source objects and converted DXF evidence",
+      "reason_codes": [
+        "AECCTX_DWG_CONVERTED_DXF_EVIDENCE"
+      ],
+      "support_level": "partial"
+    },
+    "materials_styles": {
+      "affected": [
+        "dwg-source"
+      ],
+      "fallback": "retain observed source objects and converted DXF evidence",
+      "reason_codes": [
+        "AECCTX_DWG_CONVERTED_DXF_EVIDENCE"
+      ],
+      "support_level": "partial"
+    },
+    "properties": {
+      "affected": [
+        "dwg-source"
+      ],
+      "fallback": "retain observed source objects and converted DXF evidence",
+      "reason_codes": [
+        "AECCTX_DWG_CONVERTED_DXF_EVIDENCE"
+      ],
+      "support_level": "partial"
+    },
+    "relationships": {
+      "affected": [
+        "dwg-source"
+      ],
+      "fallback": "retain observed source objects and converted DXF evidence",
+      "reason_codes": [
+        "AECCTX_DWG_CONVERTED_DXF_EVIDENCE"
+      ],
+      "support_level": "partial"
+    },
+    "text": {
+      "affected": [
+        "dwg-source"
+      ],
+      "fallback": "retain observed source objects and converted DXF evidence",
+      "reason_codes": [
+        "AECCTX_DWG_CONVERTED_DXF_EVIDENCE"
+      ],
+      "support_level": "partial"
+    },
+    "validation": {
+      "affected": [
+        "dwg-source"
+      ],
+      "fallback": "retain observed source objects and converted DXF evidence",
+      "reason_codes": [
+        "AECCTX_DWG_CONVERTED_DXF_EVIDENCE"
+      ],
+      "support_level": "partial"
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "AECCTX_DWG_LIBREDWG_DIAGNOSTIC_RETAINED",
+      "severity": "info"
+    }
+  ],
+  "events": [
+    {
+      "event_type": "primitive",
+      "payload": {
+        "artifact_path": "artifacts/source.json",
+        "artifact_sha256": "0b6bbf779a60b383fbe471284356814f93efdf82de46f90ad8f48d7e37f80d48",
+        "dwg_version": "AC1012",
+        "handle_conflicts": [],
+        "input_sha256": "3bc7958c591e9fa26b89b5281bd144bc05e4f2f94fd36c36a5ed5cddfe96fabe",
+        "object_count": 29,
+        "profile": "acx33-r13-v1",
+        "schema": "aecctx.dwg.source.v2",
+        "units": {
+          "reason_code": "AECCTX_DWG_UNITS_NOT_QUALIFIED",
+          "state": "unknown"
+        },
+        "unsupported_classes": []
+      },
+      "sequence": 0,
+      "source_locator": "sha256:3bc7958c591e9fa26b89b5281bd144bc05e4f2f94fd36c36a5ed5cddfe96fabe"
+    },
+    {
+      "event_type": "primitive",
+      "payload": {
+        "artifact_path": "artifacts/converted.dxf",
+        "artifact_sha256": "004665e455d61231783d66de4d0b069de1af67988b650aa3533a5114e8c2a3be",
+        "conversion_losses": [],
+        "converter": "LibreDWG dwgread 0.13.4",
+        "input_sha256": "3bc7958c591e9fa26b89b5281bd144bc05e4f2f94fd36c36a5ed5cddfe96fabe",
+        "observed_dxf_version": "AC1012",
+        "profile": "acx33-r13-v1",
+        "representation_fidelity": "converted",
+        "requested_dxf_version": "AC1012",
+        "schema": "aecctx.dwg.conversion.v2"
+      },
+      "sequence": 1,
+      "source_locator": "dwg-artifact:converted-dxf:sha256:004665e455d61231783d66de4d0b069de1af67988b650aa3533a5114e8c2a3be"
+    }
+  ],
+  "ok": true,
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.dwg.libredwg",
+  "request_id": "ea1b22fcfc443dc72b2ed44d1dc28479a821c5b930063fd830ef18c0db90ef1d",
+  "resource_usage": {
+    "artifacts": 2,
+    "events": 2,
+    "source_objects": 29
+  }
+}

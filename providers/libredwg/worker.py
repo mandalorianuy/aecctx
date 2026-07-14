@@ -20,6 +20,11 @@ CONFIGURATION = {
     "profile": "acx18-r2000-v1",
     "resolve_external_references": False,
 }
+CONFIGURATIONS = {
+    "acx33-r13-v1": {"dwg_version": "AC1012", "dxf_version": "r13", "json_format": "JSON", "profile": "acx33-r13-v1", "resolve_external_references": False},
+    "acx33-r14-v1": {"dwg_version": "AC1014", "dxf_version": "r14", "json_format": "JSON", "profile": "acx33-r14-v1", "resolve_external_references": False},
+    "acx33-r2000-v1": {"dwg_version": "AC1015", "dxf_version": "r2000", "json_format": "JSON", "profile": "acx33-r2000-v1", "resolve_external_references": False},
+}
 REQUIRED_AXES = (
     "cpu", "decompression", "environment", "filesystem", "input_bytes", "memory", "network", "open_files",
     "output_bytes", "process", "process_tree", "records", "recursion", "temporary_storage", "user_permissions", "wall_time",
@@ -28,19 +33,24 @@ CAPABILITIES = (
     "identity", "hierarchy", "properties", "relationships", "text", "2d_geometry", "3d_geometry", "materials_styles", "georeferencing", "validation",
 )
 HANDLE_RE = re.compile(r"[0-9A-F]+")
+UNIT_SYMBOLS = {1: "in", 2: "ft", 4: "mm", 5: "cm", 6: "m", 7: "km"}
+UNSUPPORTED_CLASSES = {"3DSOLID", "ACAD_PROXY_ENTITY", "ACAD_PROXY_OBJECT", "BODY", "REGION", "SURFACE"}
 
 
 def _configuration(request: dict[str, Any]) -> dict[str, Any]:
-    if request.get("configuration") != CONFIGURATION:
+    configured = request.get("configuration")
+    accepted = (CONFIGURATION, *CONFIGURATIONS.values())
+    if configured not in accepted:
         raise ValueError("AECCTX_DWG_CONFIGURATION_INVALID")
-    return dict(CONFIGURATION)
+    return dict(configured)
 
 
-def _probe(data: bytes) -> dict[str, str]:
+def _probe(data: bytes, configuration: dict[str, Any] | None = None) -> dict[str, str]:
     if len(data) < 6:
         raise ValueError("AECCTX_DWG_HEADER_TRUNCATED")
     version = data[:6].decode("ascii", errors="replace")
-    if version != "AC1015":
+    expected = str((configuration or CONFIGURATION)["dwg_version"])
+    if version != expected:
         raise ValueError("AECCTX_DWG_VERSION_UNCLAIMED")
     return {"dwg_version": version}
 
@@ -91,11 +101,11 @@ def _bounded(value: Any, *, depth: int, limits: dict[str, Any]) -> None:
         raise ValueError("AECCTX_DWG_JSON_INVALID")
 
 
-def _validate_source_json(value: Any, limits: dict[str, Any]) -> dict[str, Any]:
+def _validate_source_json(value: Any, limits: dict[str, Any], *, expected_version: str = "AC1015", include_v03: bool | None = None) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError("AECCTX_DWG_JSON_INVALID")
     _bounded(value, depth=0, limits=limits)
-    if not isinstance(value.get("FILEHEADER"), dict) or value["FILEHEADER"].get("version") != "AC1015":
+    if not isinstance(value.get("FILEHEADER"), dict) or value["FILEHEADER"].get("version") != expected_version:
         raise ValueError("AECCTX_DWG_JSON_VERSION_INVALID")
     if not isinstance(value.get("HEADER"), dict) or not isinstance(value.get("CLASSES"), list) or not isinstance(value.get("OBJECTS"), list):
         raise ValueError("AECCTX_DWG_JSON_INVALID")
@@ -117,10 +127,21 @@ def _validate_source_json(value: Any, limits: dict[str, Any]) -> dict[str, Any]:
         if handle in conflicts:
             locator += f":occurrence:{occurrence}"
         normalized_objects.append({**item, "aecctx_handle": handle, "aecctx_locator": locator})
-    return {**value, "OBJECTS": normalized_objects, "aecctx_handle_conflicts": conflicts}
+    normalized = {**value, "OBJECTS": normalized_objects, "aecctx_handle_conflicts": conflicts}
+    if include_v03 is True or expected_version != "AC1015":
+        raw_units = value["HEADER"].get("INSUNITS", value["HEADER"].get("$INSUNITS"))
+        if isinstance(raw_units, int) and not isinstance(raw_units, bool) and raw_units in UNIT_SYMBOLS:
+            units: dict[str, Any] = {"code": raw_units, "state": "known", "symbol": UNIT_SYMBOLS[raw_units]}
+        else:
+            units = {"reason_code": "AECCTX_DWG_UNITS_NOT_QUALIFIED", "state": "unknown"}
+        unsupported = sorted(
+            {str(item.get("object", item.get("entity"))) for item in normalized_objects if str(item.get("object", item.get("entity"))) in UNSUPPORTED_CLASSES or "PROXY" in str(item.get("object", item.get("entity")))}
+        )
+        normalized.update({"aecctx_units": units, "aecctx_unsupported_classes": unsupported})
+    return normalized
 
 
-def descriptor() -> dict[str, Any]:
+def descriptor(*, provider_version: str = "0.2.0") -> dict[str, Any]:
     return {
         "actions": ["extract"],
         "deterministic": True,
@@ -133,16 +154,16 @@ def descriptor() -> dict[str, Any]:
         "platforms": ["linux-container"],
         "protocol_version": "0.2",
         "provider_id": PROVIDER_ID,
-        "provider_version": "0.2.0",
+        "provider_version": provider_version,
         "runtime_digest": RUNTIME_DIGEST,
         "runtime_version": RUNTIME_VERSION,
     }
 
 
-def _capability_report(ok: bool, conflicts: bool = False) -> dict[str, dict[str, Any]]:
+def _capability_report(ok: bool, conflicts: bool = False, *, v03: bool = False) -> dict[str, dict[str, Any]]:
     result: dict[str, dict[str, Any]] = {}
     for name in CAPABILITIES:
-        if ok and name in {"identity", "properties", "relationships", "text", "2d_geometry", "materials_styles", "validation"}:
+        if ok and name in ({"identity", "properties", "relationships", "text", "2d_geometry", "3d_geometry", "materials_styles", "validation"} if v03 else {"identity", "properties", "relationships", "text", "2d_geometry", "materials_styles", "validation"}):
             reasons = ["AECCTX_DWG_CONVERTED_DXF_EVIDENCE"]
             if conflicts and name in {"identity", "relationships"}:
                 reasons.append("AECCTX_DWG_HANDLE_CONFLICT")
@@ -181,12 +202,17 @@ def _response(request: dict[str, Any], source_path: Path, output_root: Path) -> 
     input_sha = hashlib.sha256(input_bytes).hexdigest()
     if input_sha != request["input"]["sha256"]:
         raise ValueError("AECCTX_DWG_INPUT_HASH_MISMATCH")
-    _configuration(request)
-    _probe(input_bytes)
+    configuration = _configuration(request)
+    v03 = configuration["profile"].startswith("acx33-")
+    if input_bytes[6:].startswith(b"AECCTX_ENCRYPTED_TEST"):
+        raise ValueError("AECCTX_DWG_ENCRYPTED_UNSUPPORTED")
+    if input_bytes[6:].startswith(b"AECCTX_PROTECTED_TEST"):
+        raise ValueError("AECCTX_DWG_PROTECTED_UNSUPPORTED")
+    _probe(input_bytes, configuration)
     artifacts_root = output_root / "artifacts"
     artifacts_root.mkdir(parents=True, exist_ok=True)
     raw_json_path = artifacts_root / "libredwg-raw.json"
-    dxf_path = artifacts_root / "converted-r2000.dxf"
+    dxf_path = artifacts_root / ("converted.dxf" if v03 else "converted-r2000.dxf")
     json_warnings = _run_dwgread(source_path, "JSON", raw_json_path)
     dxf_warnings = _run_dwgread(source_path, "DXF", dxf_path)
     try:
@@ -203,7 +229,7 @@ def _response(request: dict[str, Any], source_path: Path, output_root: Path) -> 
             "max_records": limits["max_records"],
             "max_recursion_depth": limits["max_recursion_depth"],
             "max_string_bytes": min(int(limits["max_output_bytes"]), 1_048_576),
-        },
+        }, expected_version=configuration["dwg_version"], include_v03=v03,
     )
     source_path_out = artifacts_root / "source.json"
     source_path_out.write_bytes(_canonical(source_json))
@@ -218,6 +244,47 @@ def _response(request: dict[str, Any], source_path: Path, output_root: Path) -> 
         diagnostics.append({"code": "AECCTX_DWG_HANDLE_CONFLICT", "severity": "warning"})
     if json_warnings.strip() or dxf_warnings.strip():
         diagnostics.append({"code": "AECCTX_DWG_LIBREDWG_DIAGNOSTIC_RETAINED", "severity": "info"})
+    unsupported = source_json.get("aecctx_unsupported_classes", [])
+    if unsupported:
+        diagnostics.extend(
+            {"code": "AECCTX_DWG_PROXY_OBJECT_UNSUPPORTED" if "PROXY" in item else "AECCTX_DWG_ACIS_UNSUPPORTED", "severity": "warning"}
+            for item in unsupported
+        )
+    if v03:
+        events = [
+            {
+                "event_type": "primitive",
+                "payload": {
+                    "artifact_path": "artifacts/source.json", "artifact_sha256": source_sha,
+                    "dwg_version": configuration["dwg_version"], "handle_conflicts": conflicts,
+                    "input_sha256": input_sha, "object_count": len(source_json["OBJECTS"]),
+                    "profile": configuration["profile"], "schema": "aecctx.dwg.source.v2",
+                    "units": source_json["aecctx_units"], "unsupported_classes": unsupported,
+                },
+                "sequence": 0, "source_locator": f"sha256:{input_sha}",
+            },
+            {
+                "event_type": "primitive",
+                "payload": {
+                    "artifact_path": "artifacts/converted.dxf", "artifact_sha256": dxf_sha,
+                    "conversion_losses": [item["code"] for item in diagnostics if item["code"] in {"AECCTX_DWG_ACIS_UNSUPPORTED", "AECCTX_DWG_PROXY_OBJECT_UNSUPPORTED"}],
+                    "converter": "LibreDWG dwgread 0.13.4", "input_sha256": input_sha,
+                    "observed_dxf_version": configuration["dwg_version"], "profile": configuration["profile"],
+                    "representation_fidelity": "converted", "requested_dxf_version": configuration["dwg_version"],
+                    "schema": "aecctx.dwg.conversion.v2",
+                },
+                "sequence": 1, "source_locator": f"dwg-artifact:converted-dxf:sha256:{dxf_sha}",
+            },
+        ]
+        return {
+            "artifacts": [
+                {"bytes": len(source_bytes), "media_type": "application/vnd.aecctx.libredwg+json", "path": "artifacts/source.json", "sha256": source_sha},
+                {"bytes": len(dxf_bytes), "media_type": "application/dxf", "path": "artifacts/converted.dxf", "sha256": dxf_sha},
+            ],
+            "capability_report": _capability_report(True, bool(conflicts), v03=True),
+            "diagnostics": diagnostics, "events": events, "ok": True,
+            "resource_usage": {"artifacts": 2, "events": 2, "source_objects": len(source_json["OBJECTS"])},
+        }
     events = [
         {
             "event_type": "primitive",
@@ -282,7 +349,9 @@ def main() -> int:
             "ok": False,
             "resource_usage": {"artifacts": 0, "events": 0},
         }
-    described = descriptor()
+    v03 = isinstance(request.get("configuration"), dict) and str(request["configuration"].get("profile", "")).startswith("acx33-")
+    provider_version = "0.3.0" if v03 else "0.2.0"
+    described = descriptor(provider_version=provider_version)
     response = {
         **payload,
         "attestation": {
@@ -291,7 +360,7 @@ def main() -> int:
             "enforcement_profile": "oci-docker-v1",
             "network_mode": "disabled",
             "provider_id": PROVIDER_ID,
-            "provider_version": "0.2.0",
+            "provider_version": provider_version,
             "request_digest": _digest(request),
             "response_payload_digest": "0" * 64,
             "runtime_digest": RUNTIME_DIGEST,

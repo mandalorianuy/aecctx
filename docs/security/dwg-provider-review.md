@@ -18,6 +18,14 @@ LibreDWG describes advanced and newer classes as beta, unstable, undertested or 
 
 The official upstream issue [#1037](https://github.com/LibreDWG/libredwg/issues/1037) reports a heap-buffer-overflow in `dwg_decode_MATERIAL_private`, with allocation in `MATERIAL_Texture_diffusemap_private`. Upstream closed it on 2025-08-18 as no longer reproducible, before the selected 0.13.4 release of 2026-03-18. No fixing commit, CVE or dedicated regression test is linked in that issue, so this review cannot prove the exact fix lineage. The selected release is newer than the closure, but native-decoder compromise remains a residual risk and the full sandbox is mandatory.
 
+## ACX-33 v0.3 review amendment
+
+The expanded worker admits only AC1012, AC1014 and AC1015 through three exact configuration objects. The action remains `extract`; `dxf2dwg`, `dwgwrite`, `dwgrewrite`, shell, caller commands, paths, callbacks and writer options are rejected before process launch. Fixture generation is a repository maintenance operation outside provider requests.
+
+Xrefs are admitted only through the shared content-addressed source bundle validator. Every member is hash/size/type bound before decoder execution, decoded independently, and correlated to an inert retained logical path. The worker never opens source-declared paths; network, host-relative lookup, symlinks, traversal, undeclared members and cycles remain denied.
+
+Encrypted/protected project-authored envelope mutations fail before the decoder. ACIS, proxy and custom classes remain structured unsupported output; converted DXF and simple 3D geometry are never promoted to direct or source-exact evidence. The #1037 uncertainty, native memory safety, aggregate upstream writer-test failures, and lack of image publisher authenticity remain residual risks. Both exact Linux architecture images, the two-PID ceiling, read-only filesystem, non-root user, no network, bounded resources, response validation and complete cleanup remain mandatory.
+
 ## Verification limits
 
 - Official `programs/dxf.test` passes in the reviewed build and covers the read/DWG-to-DXF plus project fixture generation paths used here.

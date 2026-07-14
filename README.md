@@ -110,13 +110,18 @@ aecctx ingest model.step --output model-step-v02.aecctx --adapter step-iges \
   --aecctx-version 0.2.0 --provider-replay conformance/v0.2/step-iges-corpus.json \
   --provider-entry ap214-assembly --json
 
-# Portable R2000 DWG replay; the CLI never launches LibreDWG.
+# Portable R13/R14/R2000 DWG replay; the CLI never launches LibreDWG.
 aecctx ingest drawing.dwg --output drawing-dwg-v02.aecctx --adapter dwg \
-  --aecctx-version 0.2.0 --provider-replay conformance/v0.2/dwg-corpus.json \
-  --provider-entry r2000-profile --json
+  --aecctx-version 0.2.0 --provider-replay conformance/v0.3/dwg-corpus.json \
+  --provider-entry r2000-m-profile --json
+
+# Closed xref bundle: pass one replay entry for each hash-bound DWG member.
+aecctx ingest fixtures/v0.3/dwg/xref-bundle --output xref-dwg-v02.aecctx --adapter dwg \
+  --aecctx-version 0.2.0 --provider-replay conformance/v0.3/dwg-corpus.json \
+  --provider-entry r2000-mm-xref --provider-entry r2000-m-profile --json
 ```
 
-Other adapters currently reject `--aecctx-version 0.2.0` until their governed expansion task publishes a profile. OCR, STEP/IGES and DWG remain experimental and partial under their normative profiles. STEP/IGES and DWG require a validated replay in CLI or validated `ProviderResult` in SDK. DWG is limited to self-contained `AC1015`; JSON objects are observed decoder evidence while DXF/geometry are converted evidence. Other DWG releases, xref traversal, ACIS/proxy/custom semantics, qualified units/CRS and complete 3D remain unsupported. Mesh registration never guesses units/CRS or rewrites source coordinates. Vision and hidden geometry are not inferred.
+Other adapters currently reject `--aecctx-version 0.2.0` until their governed expansion task publishes a profile. OCR, STEP/IGES and DWG remain experimental and partial under their normative profiles. STEP/IGES and DWG require a validated replay in CLI or validated `ProviderResult` in SDK. DWG is limited to exact `AC1012`, `AC1014` and `AC1015` profiles; JSON objects are observed decoder evidence while DXF/geometry are converted evidence. Xrefs require a closed hash-bound source bundle and explicit per-member replay. R12, R2004+, ambient traversal, encryption, ACIS/proxy/custom semantics, CRS and complete 3D remain unsupported or non-claims. Mesh registration never guesses units/CRS or rewrites source coordinates. Vision and hidden geometry are not inferred.
 
 Signing accepts valid v0.1/v0.2 directory or ZIP packages and emits a detached JWS General JSON sidecar. Integrity, cryptographic validity, key lifecycle, trust and authorization remain separate fields. A valid signature proves key possession over the governed statement; it does not by itself prove organizational identity, engineering approval or construction readiness. X.509, online revocation, timestamps, countersignatures and implicit trust discovery remain unsupported.
 

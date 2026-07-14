@@ -209,6 +209,22 @@
         "tests/test_step_iges_v03.py::test_live_healing_is_opt_in_and_preserves_raw_translator_artifacts",
         "tests/test_step_iges_v03.py::test_schema_rejects_source_exact_or_silent_healing"
       ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-33.md",
+      "fixture_ids": ["v03-dwg-acx33"],
+      "id": "dwg.external-provider.v03",
+      "platform_scope": ["linux/arm64", "linux/amd64", "portable-replay"],
+      "profile": "libredwg-r13-r14-r2000-bounded-v03",
+      "provider_scope": "org.aecctx.dwg.libredwg@0.3.0; GNU LibreDWG 0.13.4 API/ABI 1; AC1012/AC1014/AC1015 only",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_dwg_v03.py::test_committed_v03_corpus_binds_all_selected_versions_units_and_generator",
+        "tests/test_dwg_v03.py::test_dwg_content_addressed_bundle_maps_separate_sources_and_xref",
+        "tests/test_dwg_v03.py::test_v03_events_map_explicit_units_and_converted_3d_without_fidelity_escalation",
+        "tests/test_dwg_v03.py::test_live_v03_profiles_are_equal_on_arm64_and_amd64"
+      ]
     }
   ],
   "fixtures": [
@@ -247,6 +263,10 @@
     {
       "id": "v03-step-iges-acx32",
       "path": "fixtures/v0.3/step-iges"
+    },
+    {
+      "id": "v03-dwg-acx33",
+      "path": "fixtures/v0.3/dwg"
     }
   ],
   "version": "0.3.0"

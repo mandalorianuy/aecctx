@@ -1,0 +1,20 @@
+{
+  "entries": [
+    {
+      "bytes": 5462,
+      "media_type": "image/vnd.dwg",
+      "path": "root.dwg",
+      "role": "root",
+      "sha256": "d5a3a31bc1327cd76b54f8f3ac55503d3ab8ec27da02987c2f422dfd5860cf72"
+    },
+    {
+      "bytes": 5460,
+      "media_type": "image/vnd.dwg",
+      "path": "refs/child.dwg",
+      "role": "xref",
+      "sha256": "37468865d8b504ea4c94bee4da859ecc07a982e576cd5d014b1f8003d4c285a5"
+    }
+  ],
+  "root": "root.dwg",
+  "version": "0.2"
+}

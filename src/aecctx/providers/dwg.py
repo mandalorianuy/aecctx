@@ -31,6 +31,29 @@ DWG_CONFIGURATION = {
     "profile": "acx18-r2000-v1",
     "resolve_external_references": False,
 }
+DWG_CONFIGURATIONS = {
+    "acx33-r13-v1": {
+        "dwg_version": "AC1012",
+        "dxf_version": "r13",
+        "json_format": "JSON",
+        "profile": "acx33-r13-v1",
+        "resolve_external_references": False,
+    },
+    "acx33-r14-v1": {
+        "dwg_version": "AC1014",
+        "dxf_version": "r14",
+        "json_format": "JSON",
+        "profile": "acx33-r14-v1",
+        "resolve_external_references": False,
+    },
+    "acx33-r2000-v1": {
+        "dwg_version": "AC1015",
+        "dxf_version": "r2000",
+        "json_format": "JSON",
+        "profile": "acx33-r2000-v1",
+        "resolve_external_references": False,
+    },
+}
 
 
 def dwg_descriptor() -> ProviderDescriptor:
@@ -54,12 +77,36 @@ def dwg_descriptor() -> ProviderDescriptor:
     )
 
 
+def dwg_v03_descriptor() -> ProviderDescriptor:
+    value = dwg_descriptor().to_dict()
+    value["provider_version"] = "0.3.0"
+    return ProviderDescriptor.from_dict(value)
+
+
 def dwg_registry(*, repository_root: str | Path | None = None) -> ProviderRegistry:
     root = Path(repository_root) if repository_root is not None else Path(__file__).resolve().parents[3]
     registry = ProviderRegistry(allowed_worker_modules={DWG_WORKER_MODULE})
     registry.register(
         ProviderRegistration(
             descriptor=dwg_descriptor(),
+            worker_module=DWG_WORKER_MODULE,
+            container_image=DWG_IMAGE,
+            container_image_id=DWG_IMAGE_ID,
+            container_command=("python3", "/provider/worker.py"),
+            container_pids_limit=2,
+            worker_path=root / "providers" / "libredwg" / "worker.py",
+            oci_targets=DWG_OCI_TARGETS,
+        )
+    )
+    return registry
+
+
+def dwg_v03_registry(*, repository_root: str | Path | None = None) -> ProviderRegistry:
+    root = Path(repository_root) if repository_root is not None else Path(__file__).resolve().parents[3]
+    registry = ProviderRegistry(allowed_worker_modules={DWG_WORKER_MODULE})
+    registry.register(
+        ProviderRegistration(
+            descriptor=dwg_v03_descriptor(),
             worker_module=DWG_WORKER_MODULE,
             container_image=DWG_IMAGE,
             container_image_id=DWG_IMAGE_ID,

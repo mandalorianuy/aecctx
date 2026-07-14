@@ -25,6 +25,7 @@ fi
 "$python_runtime" -m json.tool schemas/v0.2/step-iges-provider-event.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/step-iges-xde-event.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/dwg-provider-event.schema.json >/dev/null
+"$python_runtime" -m json.tool schemas/v0.2/dwg-v03-event.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/rvt-provider-decision.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/signature-bundle.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/signing-key-registry.schema.json >/dev/null
@@ -50,6 +51,7 @@ fi
 "$python_runtime" -m json.tool conformance/v0.3/ifc-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/mesh-crs-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/step-iges-corpus.json >/dev/null
+"$python_runtime" -m json.tool conformance/v0.3/dwg-corpus.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/.codex-plugin/plugin.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/.mcp.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/assets/compatibility.json >/dev/null
@@ -74,6 +76,8 @@ fi
 "$python_runtime" scripts/check_vision_v03_conformance.py --require-public
 "$python_runtime" scripts/check_mesh_crs_v03_conformance.py --require-public
 "$python_runtime" scripts/check_step_iges_v03_conformance.py --require-public
+"$python_runtime" fixtures/v0.3/dwg/generate_fixtures.py --check
+"$python_runtime" scripts/check_dwg_v03_conformance.py --require-public
 "$python_runtime" -c 'from aecctx.release_conformance import validate_release_corpus; result = validate_release_corpus("conformance/v0.2/corpus.json", repository_root="."); raise SystemExit(0 if result["ok"] else "v0.2 release corpus failed")'
 "$python_runtime" -c 'from aecctx.conformance import validate_claim_registry_file; result = validate_claim_registry_file("conformance/v0.2/claims.json"); raise SystemExit(0 if result.valid else "; ".join(result.errors))'
 "$python_runtime" -c 'from aecctx.conformance import validate_claim_registry_file; result = validate_claim_registry_file("conformance/v0.3/claims.json"); raise SystemExit(0 if result.valid else "; ".join(result.errors))'
@@ -93,6 +97,7 @@ fi
 "$python_runtime" scripts/check_vision_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
 "$python_runtime" scripts/check_mesh_crs_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
 "$python_runtime" scripts/check_step_iges_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
+"$python_runtime" scripts/check_dwg_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
 
 # Baseline-owned offer snapshots include upstream EOF formatting and are checked
 # byte-for-byte by the full baseline integration checker when its private runtime
