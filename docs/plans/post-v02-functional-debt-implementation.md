@@ -260,7 +260,7 @@ def run_remote_provider(
 - Consumes: `ingest_ifc(..., aecctx_version="0.2.0")`, v0.2 coordinate/fidelity records.
 - Produces: claims `ifc.native-2d.v03` and `ifc.georeferencing.v03`; no change to default v0.1 output.
 
-- [ ] Govern ACXD-035 with exact IfcOpenShell version, IFC schemas, item classes and coordinate operations after official API review.
+- [x] Govern ACXD-035 with exact IfcOpenShell version, IFC schemas, item classes and coordinate operations after official API review.
 - [ ] RED-test every selected curve/annotation/style/operation plus absent, empty, unsupported, multiple, conflicted and non-invertible cases.
 - [ ] Generate legally publishable IFC fixtures and bind source hashes before adapter changes.
 - [ ] Implement evidence-first helpers that return source primitives before neutral records; use namespaced extensions for new source structures.

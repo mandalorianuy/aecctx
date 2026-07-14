@@ -21,11 +21,11 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 - Plan: ACX-24 through ACX-38, dependency-first.
 - Completed: ACX-24 live OCI providers, ACX-25 deterministic native-profile rejection/reporting and ACX-26 bounded remote-provider protocol.
-- Sole `pending-next`: ACX-27, expanded IFC 2D and georeferencing.
+- Sole `in_progress`: ACX-27, expanded IFC 2D and georeferencing under ACXD-035.
 - ACX-28 through ACX-38: `pending`.
 - Claim posture: `sandbox.oci-multiarch` and `sandbox.remote-provider` are public `partial`; `sandbox.local-enforcement` is public `unsupported`; every later post-v0.2 entry remains a target until its owning milestone closes.
 - Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
-- Execution boundary: ACX-26 is complete; ACX-27 alone is promoted but MUST NOT execute without a new continuation request.
+- Execution boundary: ACX-27 alone is executing after explicit continuation; ACX-28 and later remain unauthorized.
 
 ## ACX-24 evidence
 
