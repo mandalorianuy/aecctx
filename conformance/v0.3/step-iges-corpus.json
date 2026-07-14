@@ -1,0 +1,277 @@
+{
+  "entries": [
+    {
+      "action": "extract",
+      "configuration": {
+        "angular_deflection": 0.5,
+        "brep_format": "occt-ascii-brep-7.9.3",
+        "healing": {
+          "enabled": false,
+          "maximum_tolerance": 0.001,
+          "minimum_tolerance": 1e-07,
+          "precision": 1e-07
+        },
+        "linear_deflection": 0.1,
+        "schema_profile": "acx32-xde-v1",
+        "tessellation_units": "source",
+        "xde": {
+          "colors": true,
+          "layers": true,
+          "materials": true,
+          "names": true,
+          "placements": true,
+          "units": true
+        }
+      },
+      "descriptor": "fixtures/v0.3/step-iges/descriptor.json",
+      "id": "ap203-xde",
+      "input": "fixtures/v0.2/step-iges/ap203-part.step",
+      "limits": {
+        "cpu_seconds": 60,
+        "max_decompression_ratio": 20.0,
+        "max_files": 20,
+        "max_input_bytes": 10000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 20000000,
+        "max_records": 100000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 60.0
+      },
+      "output_root": "fixtures/v0.3/step-iges/outputs/ap203-xde",
+      "request": "fixtures/v0.3/step-iges/requests/ap203-xde.json",
+      "response": "fixtures/v0.3/step-iges/outputs/ap203-xde/response.json"
+    },
+    {
+      "action": "extract",
+      "configuration": {
+        "angular_deflection": 0.5,
+        "brep_format": "occt-ascii-brep-7.9.3",
+        "healing": {
+          "enabled": false,
+          "maximum_tolerance": 0.001,
+          "minimum_tolerance": 1e-07,
+          "precision": 1e-07
+        },
+        "linear_deflection": 0.1,
+        "schema_profile": "acx32-xde-v1",
+        "tessellation_units": "source",
+        "xde": {
+          "colors": true,
+          "layers": true,
+          "materials": true,
+          "names": true,
+          "placements": true,
+          "units": true
+        }
+      },
+      "descriptor": "fixtures/v0.3/step-iges/descriptor.json",
+      "id": "ap214-xde",
+      "input": "fixtures/v0.2/step-iges/ap214-assembly.step",
+      "limits": {
+        "cpu_seconds": 60,
+        "max_decompression_ratio": 20.0,
+        "max_files": 20,
+        "max_input_bytes": 10000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 20000000,
+        "max_records": 100000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 60.0
+      },
+      "output_root": "fixtures/v0.3/step-iges/outputs/ap214-xde",
+      "request": "fixtures/v0.3/step-iges/requests/ap214-xde.json",
+      "response": "fixtures/v0.3/step-iges/outputs/ap214-xde/response.json"
+    },
+    {
+      "action": "extract",
+      "configuration": {
+        "angular_deflection": 0.5,
+        "brep_format": "occt-ascii-brep-7.9.3",
+        "healing": {
+          "enabled": false,
+          "maximum_tolerance": 0.001,
+          "minimum_tolerance": 1e-07,
+          "precision": 1e-07
+        },
+        "linear_deflection": 0.1,
+        "schema_profile": "acx32-xde-v1",
+        "tessellation_units": "source",
+        "xde": {
+          "colors": true,
+          "layers": true,
+          "materials": true,
+          "names": true,
+          "placements": true,
+          "units": true
+        }
+      },
+      "descriptor": "fixtures/v0.3/step-iges/descriptor.json",
+      "id": "ap242-xde",
+      "input": "fixtures/v0.2/step-iges/ap242-part.step",
+      "limits": {
+        "cpu_seconds": 60,
+        "max_decompression_ratio": 20.0,
+        "max_files": 20,
+        "max_input_bytes": 10000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 20000000,
+        "max_records": 100000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 60.0
+      },
+      "output_root": "fixtures/v0.3/step-iges/outputs/ap242-xde",
+      "request": "fixtures/v0.3/step-iges/requests/ap242-xde.json",
+      "response": "fixtures/v0.3/step-iges/outputs/ap242-xde/response.json"
+    },
+    {
+      "action": "extract",
+      "configuration": {
+        "angular_deflection": 0.5,
+        "brep_format": "occt-ascii-brep-7.9.3",
+        "healing": {
+          "enabled": false,
+          "maximum_tolerance": 0.001,
+          "minimum_tolerance": 1e-07,
+          "precision": 1e-07
+        },
+        "linear_deflection": 0.1,
+        "schema_profile": "acx32-xde-v1",
+        "tessellation_units": "source",
+        "xde": {
+          "colors": true,
+          "layers": true,
+          "materials": true,
+          "names": true,
+          "placements": true,
+          "units": true
+        }
+      },
+      "descriptor": "fixtures/v0.3/step-iges/descriptor.json",
+      "id": "iges53-xde",
+      "input": "fixtures/v0.2/step-iges/iges53-part.igs",
+      "limits": {
+        "cpu_seconds": 60,
+        "max_decompression_ratio": 20.0,
+        "max_files": 20,
+        "max_input_bytes": 10000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 20000000,
+        "max_records": 100000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 60.0
+      },
+      "output_root": "fixtures/v0.3/step-iges/outputs/iges53-xde",
+      "request": "fixtures/v0.3/step-iges/requests/iges53-xde.json",
+      "response": "fixtures/v0.3/step-iges/outputs/iges53-xde/response.json"
+    },
+    {
+      "action": "extract",
+      "configuration": {
+        "angular_deflection": 0.5,
+        "brep_format": "occt-ascii-brep-7.9.3",
+        "healing": {
+          "enabled": false,
+          "maximum_tolerance": 0.001,
+          "minimum_tolerance": 1e-07,
+          "precision": 1e-07
+        },
+        "linear_deflection": 0.1,
+        "schema_profile": "acx32-xde-v1",
+        "tessellation_units": "source",
+        "xde": {
+          "colors": true,
+          "layers": true,
+          "materials": true,
+          "names": true,
+          "placements": true,
+          "units": true
+        }
+      },
+      "descriptor": "fixtures/v0.3/step-iges/descriptor.json",
+      "id": "ap214-metadata",
+      "input": "fixtures/v0.3/step-iges/ap214-xde.step",
+      "limits": {
+        "cpu_seconds": 60,
+        "max_decompression_ratio": 20.0,
+        "max_files": 20,
+        "max_input_bytes": 10000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 20000000,
+        "max_records": 100000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 60.0
+      },
+      "output_root": "fixtures/v0.3/step-iges/outputs/ap214-metadata",
+      "request": "fixtures/v0.3/step-iges/requests/ap214-metadata.json",
+      "response": "fixtures/v0.3/step-iges/outputs/ap214-metadata/response.json"
+    },
+    {
+      "action": "extract",
+      "configuration": {
+        "angular_deflection": 0.5,
+        "brep_format": "occt-ascii-brep-7.9.3",
+        "healing": {
+          "enabled": true,
+          "maximum_tolerance": 0.001,
+          "minimum_tolerance": 1e-07,
+          "precision": 1e-07
+        },
+        "linear_deflection": 0.1,
+        "schema_profile": "acx32-xde-v1",
+        "tessellation_units": "source",
+        "xde": {
+          "colors": true,
+          "layers": true,
+          "materials": true,
+          "names": true,
+          "placements": true,
+          "units": true
+        }
+      },
+      "descriptor": "fixtures/v0.3/step-iges/descriptor.json",
+      "id": "ap214-metadata-healed",
+      "input": "fixtures/v0.3/step-iges/ap214-xde.step",
+      "limits": {
+        "cpu_seconds": 60,
+        "max_decompression_ratio": 20.0,
+        "max_files": 20,
+        "max_input_bytes": 10000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 20000000,
+        "max_records": 100000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 60.0
+      },
+      "output_root": "fixtures/v0.3/step-iges/outputs/ap214-metadata-healed",
+      "request": "fixtures/v0.3/step-iges/requests/ap214-metadata-healed.json",
+      "response": "fixtures/v0.3/step-iges/outputs/ap214-metadata-healed/response.json"
+    }
+  ],
+  "fixture": {
+    "path": "fixtures/v0.3/step-iges/ap214-xde.step",
+    "sha256": "d5c28c62920f082c5e3de992ed7ed7d151a38fb31887ead01c338210b0c2e1e2"
+  },
+  "generator": {
+    "path": "fixtures/v0.3/step-iges/generate_replay.py",
+    "sha256": "f61ed24e4ea07bd4556b7432b0678665e63da331372596ae46f2c1e6946c831e"
+  },
+  "profile": {
+    "path": "docs/specs/step-iges-v03-profile.md",
+    "sha256": "cf65710f039cfb3567dd4426dc5807d4f1da0986b6d4d10818ed1fc2c0e3aa4b"
+  },
+  "schema": {
+    "path": "schemas/v0.2/step-iges-xde-event.schema.json",
+    "sha256": "e2a95108bca08b8d26095bae457ec2c7cc0e332496694a69862e147071065836"
+  },
+  "version": "0.2.0",
+  "worker": {
+    "path": "providers/step-iges-ocp/worker.py",
+    "sha256": "f6b90a805a950ba95a1708e3c6feb596b625475459fbb5d6926dd4ebf2fe98ff"
+  }
+}

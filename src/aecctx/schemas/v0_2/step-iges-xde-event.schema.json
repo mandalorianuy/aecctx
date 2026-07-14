@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aecctx.org/schemas/v0.2/step-iges-xde-event.schema.json",
+  "title": "AECCTX STEP/IGES v0.3 XDE and per-root event payload",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["schema", "format", "session_completeness", "labels"],
+      "properties": {
+        "schema": {"const": "aecctx.step-iges.xde.v1"},
+        "format": {"enum": ["step", "iges"]},
+        "session_completeness": {"enum": ["complete", "partial"]},
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["entry", "kind", "name", "colors", "layers", "materials", "parent_entries", "placement", "source_correlation", "unit"],
+            "properties": {
+              "entry": {"type": "string", "pattern": "^[0-9]+(?::[0-9]+)+$"},
+              "kind": {"enum": ["assembly", "component", "reference", "simple-shape"]},
+              "name": {"$ref": "#/$defs/stateString"},
+              "colors": {"type": "array", "items": {"type": "object", "required": ["kind", "rgba"], "properties": {"kind": {"enum": ["generic", "surface", "curve"]}, "rgba": {"$ref": "#/$defs/rgba"}}, "additionalProperties": false}},
+              "layers": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+              "materials": {"type": "array", "items": {"type": "object", "required": ["kind", "name"], "properties": {"kind": {"enum": ["physical", "visual"]}, "name": {"type": "string"}}, "additionalProperties": false}},
+              "parent_entries": {"type": "array", "items": {"type": "string", "pattern": "^[0-9]+(?::[0-9]+)+$"}, "uniqueItems": true},
+              "placement": {
+                "oneOf": [
+                  {"type": "object", "required": ["state", "matrix_3x4"], "properties": {"state": {"const": "known"}, "matrix_3x4": {"type": "array", "items": {"type": "number"}, "minItems": 12, "maxItems": 12}}, "additionalProperties": false},
+                  {"$ref": "#/$defs/unknown"}
+                ]
+              },
+              "source_correlation": {
+                "oneOf": [
+                  {"type": "object", "required": ["state", "method", "source_entity_ids"], "properties": {"state": {"const": "known"}, "method": {"const": "exact-unique-name"}, "source_entity_ids": {"type": "array", "items": {"type": "integer", "minimum": 1}, "minItems": 1, "uniqueItems": true}}, "additionalProperties": false},
+                  {"type": "object", "required": ["state", "reason_code"], "properties": {"state": {"enum": ["unknown", "conflicted"]}, "reason_code": {"enum": ["AECCTX_STEP_IGES_XDE_CORRELATION_UNKNOWN", "AECCTX_STEP_IGES_XDE_CORRELATION_CONFLICT"]}}, "additionalProperties": false}
+                ]
+              },
+              "unit": {"oneOf": [{"type": "object", "required": ["state", "value"], "properties": {"state": {"const": "known"}, "value": {"enum": ["millimetre", "metre", "inch"]}}, "additionalProperties": false}, {"$ref": "#/$defs/unknown"}]}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": ["schema", "format", "root_id", "xde_entry", "status"],
+      "properties": {
+        "schema": {"const": "aecctx.step-iges.root.v1"},
+        "format": {"enum": ["step", "iges"]},
+        "root_id": {"type": "string", "pattern": "^root:[1-9][0-9]*$"},
+        "xde_entry": {"type": "string", "pattern": "^[0-9]+(?::[0-9]+)+$"},
+        "status": {"enum": ["success", "failed"]},
+        "diagnostic": {"const": "AECCTX_STEP_IGES_ROOT_TRANSFER_FAILED"},
+        "artifact_path": {"type": "string", "pattern": "^artifacts/root-[1-9][0-9]*\\.translated\\.brep$"},
+        "mesh_artifact_path": {"type": "string", "pattern": "^artifacts/root-[1-9][0-9]*\\.mesh\\.json$"},
+        "representation_fidelity": {"const": "brep-translator-derived"},
+        "valid": {"type": "boolean"},
+        "bounds": {"type": "object", "required": ["min", "max"], "properties": {"min": {"$ref": "#/$defs/vector3"}, "max": {"$ref": "#/$defs/vector3"}}, "additionalProperties": false},
+        "topology": {"$ref": "#/$defs/topology"},
+        "tolerances": {"$ref": "#/$defs/tolerances"},
+        "healing": {"$ref": "#/$defs/healing"}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "success"}}}, "then": {"required": ["artifact_path", "mesh_artifact_path", "representation_fidelity", "valid", "bounds", "topology", "tolerances", "healing"], "not": {"required": ["diagnostic"]}}},
+        {"if": {"properties": {"status": {"const": "failed"}}}, "then": {"required": ["diagnostic"], "not": {"anyOf": [{"required": ["artifact_path"]}, {"required": ["mesh_artifact_path"]}, {"required": ["healing"]}]}}}
+      ],
+      "additionalProperties": false
+    }
+  ],
+  "$defs": {
+    "unknown": {"type": "object", "required": ["state", "reason_code"], "properties": {"state": {"const": "unknown"}, "reason_code": {"type": "string", "pattern": "^AECCTX_[A-Z0-9_]+$"}}, "additionalProperties": false},
+    "stateString": {"oneOf": [{"type": "object", "required": ["state", "value"], "properties": {"state": {"const": "known"}, "value": {"type": "string"}}, "additionalProperties": false}, {"$ref": "#/$defs/unknown"}]},
+    "vector3": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}], "items": false, "minItems": 3, "maxItems": 3},
+    "rgba": {"type": "array", "prefixItems": [{"type": "number", "minimum": 0, "maximum": 1}, {"type": "number", "minimum": 0, "maximum": 1}, {"type": "number", "minimum": 0, "maximum": 1}, {"type": "number", "minimum": 0, "maximum": 1}], "items": false, "minItems": 4, "maxItems": 4},
+    "topology": {"type": "object", "required": ["vertices", "edges", "wires", "faces", "shells", "solids"], "properties": {"vertices": {"type": "integer", "minimum": 0}, "edges": {"type": "integer", "minimum": 0}, "wires": {"type": "integer", "minimum": 0}, "faces": {"type": "integer", "minimum": 0}, "shells": {"type": "integer", "minimum": 0}, "solids": {"type": "integer", "minimum": 0}}, "additionalProperties": false},
+    "tolerances": {"type": "object", "required": ["minimum", "average", "maximum"], "properties": {"minimum": {"type": "number", "minimum": 0}, "average": {"type": "number", "minimum": 0}, "maximum": {"type": "number", "minimum": 0}}, "additionalProperties": false},
+    "healing": {
+      "type": "object",
+      "required": ["applied", "artifact_path", "precision", "minimum_tolerance", "maximum_tolerance", "after_valid"],
+      "properties": {
+        "applied": {"type": "boolean"},
+        "artifact_path": {"type": ["string", "null"], "pattern": "^artifacts/root-[1-9][0-9]*\\.healed\\.brep$"},
+        "precision": {"const": 1e-7},
+        "minimum_tolerance": {"const": 1e-7},
+        "maximum_tolerance": {"const": 0.001},
+        "after_valid": {"type": ["boolean", "null"]}
+      },
+      "allOf": [
+        {"if": {"properties": {"applied": {"const": true}}}, "then": {"properties": {"artifact_path": {"type": "string"}, "after_valid": {"type": "boolean"}}}},
+        {"if": {"properties": {"applied": {"const": false}}}, "then": {"properties": {"artifact_path": {"type": "null"}, "after_valid": {"type": "null"}}}}
+      ],
+      "additionalProperties": false
+    }
+  }
+}

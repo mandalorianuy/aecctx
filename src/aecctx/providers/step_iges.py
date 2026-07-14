@@ -32,6 +32,27 @@ STEP_IGES_CONFIGURATION = {
     "schema_profile": "acx17-v1",
     "tessellation_units": "source",
 }
+STEP_IGES_XDE_CONFIGURATION = {
+    "angular_deflection": 0.5,
+    "brep_format": "occt-ascii-brep-7.9.3",
+    "healing": {
+        "enabled": False,
+        "maximum_tolerance": 0.001,
+        "minimum_tolerance": 1e-7,
+        "precision": 1e-7,
+    },
+    "linear_deflection": 0.1,
+    "schema_profile": "acx32-xde-v1",
+    "tessellation_units": "source",
+    "xde": {
+        "colors": True,
+        "layers": True,
+        "materials": True,
+        "names": True,
+        "placements": True,
+        "units": True,
+    },
+}
 
 
 def step_iges_descriptor() -> ProviderDescriptor:
