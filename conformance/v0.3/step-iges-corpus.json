@@ -263,7 +263,7 @@
   },
   "profile": {
     "path": "docs/specs/step-iges-v03-profile.md",
-    "sha256": "cf65710f039cfb3567dd4426dc5807d4f1da0986b6d4d10818ed1fc2c0e3aa4b"
+    "sha256": "421b1083bca009dd1b98809a23b827458c597b5505becbbd16fbfbc52dd2b0b1"
   },
   "schema": {
     "path": "schemas/v0.2/step-iges-xde-event.schema.json",
