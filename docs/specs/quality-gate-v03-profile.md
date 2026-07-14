@@ -11,6 +11,8 @@ This profile extends only the IDS evaluator selected by `docs/specs/quality-gate
 
 The new public target is claim `quality-gate.ids-expanded` under profile `aecctx-gate-v1-ids-1.0-expanded-v1`. Until ACX-36 acceptance completes, it remains a target and MUST NOT be advertised as implemented.
 
+The `ids.specification` configuration gains one backward-compatible optional field, `ids_profile`. An absent field or `aecctx-gate-v1-ids-1.0-simple-v1` selects the immutable v0.2 behavior. Only the exact value `aecctx-gate-v1-ids-1.0-expanded-v1` enables this profile. Unknown values fail closed as unsupported policy configuration. Existing policies, digests and results therefore remain unchanged.
+
 ## 2. Fixed standard and runtime
 
 - buildingSMART IDS `v1.0.0`, final commit `1effec6f419798ce09617416d258a35bdc58320a`;
