@@ -12,15 +12,11 @@ import sys
 import tempfile
 from pathlib import Path
 
-from aecctx.providers import OCIDockerProfile, ProviderLimits, ProviderRunner, build_provider_request
-from aecctx.providers.dwg import DWG_CONFIGURATIONS, DWG_OCI_TARGETS, DWG_PROVIDER_ID, dwg_v03_descriptor, dwg_v03_registry
-
-
 ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 IMAGE = "aecctx-dwg-libredwg:0.3.0-linux-arm64"
 IMAGE_ID = "sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1"
-LIMITS = ProviderLimits(max_input_bytes=2_000_000, max_output_bytes=30_000_000, max_records=2_000, max_files=10, max_recursion_depth=64, max_decompression_ratio=20.0, wall_time_seconds=30.0, cpu_seconds=30, max_memory_bytes=1_073_741_824, max_open_files=32)
+LIMIT_VALUES = {"max_input_bytes": 2_000_000, "max_output_bytes": 30_000_000, "max_records": 2_000, "max_files": 10, "max_recursion_depth": 64, "max_decompression_ratio": 20.0, "wall_time_seconds": 30.0, "cpu_seconds": 30, "max_memory_bytes": 1_073_741_824, "max_open_files": 32}
 PROFILES = (("r13-profile", "R12", "r13", "acx33-r13-v1", None), ("r14-profile", "R12", "r14", "acx33-r14-v1", None), ("r2000-m-profile", "R2000", "r2000", "acx33-r2000-v1", 6), ("r2000-mm-xref", "R2000", "r2000", "acx33-r2000-v1", 4))
 
 
@@ -93,11 +89,15 @@ def snapshot(corpus_path: Path) -> tuple[dict[Path, bytes], bytes]:
 
 
 def generate() -> None:
+    from aecctx.providers import OCIDockerProfile, ProviderLimits, ProviderRunner, build_provider_request
+    from aecctx.providers.dwg import DWG_CONFIGURATIONS, DWG_OCI_TARGETS, DWG_PROVIDER_ID, dwg_v03_descriptor, dwg_v03_registry
+
     HERE.mkdir(parents=True, exist_ok=True)
+    limits = ProviderLimits(**LIMIT_VALUES)
     descriptor = dwg_v03_descriptor()
     (HERE / "descriptor.json").write_text(canonical(descriptor.to_dict()), encoding="utf-8")
     target = DWG_OCI_TARGETS[0]
-    runner = ProviderRunner(registry=dwg_v03_registry(repository_root=ROOT), profile=OCIDockerProfile(image=target.image, platform=target.platform, architecture=target.architecture), limits=LIMITS)
+    runner = ProviderRunner(registry=dwg_v03_registry(repository_root=ROOT), profile=OCIDockerProfile(image=target.image, platform=target.platform, architecture=target.architecture), limits=limits)
     entries = []
     for entry_id, dxf_version, target_version, profile, units in PROFILES:
         source_dxf = HERE / f"{entry_id}.dxf"
@@ -106,7 +106,7 @@ def generate() -> None:
         encode(source_dxf, source_dwg, target_version)
         configuration = DWG_CONFIGURATIONS[profile]
         source_bytes = source_dwg.read_bytes()
-        request = build_provider_request(DWG_PROVIDER_ID, "extract", source_bytes, limits=LIMITS, configuration=configuration)
+        request = build_provider_request(DWG_PROVIDER_ID, "extract", source_bytes, limits=limits, configuration=configuration)
         request_path = HERE / "requests" / f"{entry_id}.json"
         request_path.parent.mkdir(exist_ok=True)
         request_path.write_text(canonical(request), encoding="utf-8")
@@ -119,7 +119,7 @@ def generate() -> None:
             artifact = destination / logical; artifact.parent.mkdir(parents=True, exist_ok=True); artifact.write_bytes(content)
         response = {"protocol_version": "0.2", "provider_id": DWG_PROVIDER_ID, "request_id": request["request_id"], "ok": result.ok, "events": list(result.events), "artifacts": list(result.artifacts), "diagnostics": list(result.diagnostics), "capability_report": result.capability_report, "resource_usage": result.resource_usage, "attestation": result.attestation}
         (destination / "response.json").write_text(canonical(response), encoding="utf-8")
-        entries.append({"action": "extract", "configuration": configuration, "descriptor": "fixtures/v0.3/dwg/descriptor.json", "id": entry_id, "input": f"fixtures/v0.3/dwg/{entry_id}.dwg", "limits": LIMITS.to_dict(), "output_root": f"fixtures/v0.3/dwg/outputs/{entry_id}", "request": f"fixtures/v0.3/dwg/requests/{entry_id}.json", "response": f"fixtures/v0.3/dwg/outputs/{entry_id}/response.json"})
+        entries.append({"action": "extract", "configuration": configuration, "descriptor": "fixtures/v0.3/dwg/descriptor.json", "id": entry_id, "input": f"fixtures/v0.3/dwg/{entry_id}.dwg", "limits": limits.to_dict(), "output_root": f"fixtures/v0.3/dwg/outputs/{entry_id}", "request": f"fixtures/v0.3/dwg/requests/{entry_id}.json", "response": f"fixtures/v0.3/dwg/outputs/{entry_id}/response.json"})
     root_data = (HERE / "r2000-m-profile.dwg").read_bytes(); child_data = (HERE / "r2000-mm-xref.dwg").read_bytes()
     bundle = HERE / "xref-bundle"; (bundle / "refs").mkdir(parents=True, exist_ok=True)
     (bundle / "root.dwg").write_bytes(root_data); (bundle / "refs/child.dwg").write_bytes(child_data)
@@ -130,9 +130,6 @@ def generate() -> None:
 
 
 def main() -> None:
-    if os.environ.get("PYTHONHASHSEED") != "0":
-        env = dict(os.environ); env["PYTHONHASHSEED"] = "0"
-        os.execve(sys.executable, [sys.executable, str(Path(__file__).resolve()), *sys.argv[1:]], env)
     parser = argparse.ArgumentParser()
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--check", action="store_true")
@@ -142,6 +139,9 @@ def main() -> None:
     if arguments.check:
         portable_check()
         return
+    if os.environ.get("PYTHONHASHSEED") != "0":
+        env = dict(os.environ); env["PYTHONHASHSEED"] = "0"
+        os.execve(sys.executable, [sys.executable, str(Path(__file__).resolve()), *sys.argv[1:]], env)
     before = snapshot(corpus_path) if arguments.live_check else None
     generate()
     if before is not None:

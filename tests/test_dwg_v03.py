@@ -5,6 +5,8 @@ import importlib.util
 import io
 import json
 import os
+import subprocess
+import sys
 import zipfile
 from dataclasses import replace
 from importlib.resources import files
@@ -193,6 +195,17 @@ def test_portable_fixture_check_never_invokes_external_runtime(monkeypatch: pyte
     generator = _generator()
     monkeypatch.setattr(generator.subprocess, "run", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("external runtime invoked")))
     generator.portable_check()
+
+
+def test_portable_fixture_check_runs_without_site_packages() -> None:
+    process = subprocess.run(
+        [sys.executable, "-S", str(ROOT / "fixtures/v0.3/dwg/generate_fixtures.py"), "--check"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert process.returncode == 0, process.stderr
 
 
 def test_shared_source_bundle_accepts_only_hash_bound_dwg_members(tmp_path: Path) -> None:

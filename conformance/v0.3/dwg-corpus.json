@@ -133,7 +133,7 @@
   ],
   "generator": {
     "path": "fixtures/v0.3/dwg/generate_fixtures.py",
-    "sha256": "0c98efc0c9323befc29354f41fda9d7a1956c64e20444752e6d530d4cf5f9fce"
+    "sha256": "e6917b045a852f3cffbc2890ba4795835a2452efa2a6246452449d9b2d76cfa6"
   },
   "profile": {
     "path": "docs/specs/dwg-v03-profile.md",
