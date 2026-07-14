@@ -12,8 +12,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-import ezdxf
-
 from aecctx.providers import OCIDockerProfile, ProviderLimits, ProviderRunner, build_provider_request
 from aecctx.providers.dwg import DWG_CONFIGURATIONS, DWG_OCI_TARGETS, DWG_PROVIDER_ID, dwg_v03_descriptor, dwg_v03_registry
 
@@ -23,8 +21,7 @@ HERE = Path(__file__).resolve().parent
 IMAGE = "aecctx-dwg-libredwg:0.3.0-linux-arm64"
 IMAGE_ID = "sha256:bb237d62599b5204b550fb075ee9f738e4198e031b71f3a6d7f85eae07c0c7c1"
 LIMITS = ProviderLimits(max_input_bytes=2_000_000, max_output_bytes=30_000_000, max_records=2_000, max_files=10, max_recursion_depth=64, max_decompression_ratio=20.0, wall_time_seconds=30.0, cpu_seconds=30, max_memory_bytes=1_073_741_824, max_open_files=32)
-PROFILES = (("r13-profile", "R12", "r13", "acx33-r13-v1", None), ("r14-profile", "R12", "r14", "acx33-r14-v1", None), ("r2000-m-profile", "R2000", "r2000", "acx33-r2000-v1", ezdxf.units.M), ("r2000-mm-xref", "R2000", "r2000", "acx33-r2000-v1", ezdxf.units.MM))
-ezdxf.options.write_fixed_meta_data_for_testing = True
+PROFILES = (("r13-profile", "R12", "r13", "acx33-r13-v1", None), ("r14-profile", "R12", "r14", "acx33-r14-v1", None), ("r2000-m-profile", "R2000", "r2000", "acx33-r2000-v1", 6), ("r2000-mm-xref", "R2000", "r2000", "acx33-r2000-v1", 4))
 
 
 def canonical(value: object) -> str:
@@ -39,6 +36,9 @@ def write_dxf(doc: object, path: Path) -> None:
 
 
 def drawing(version: str, label: str, units: int | None) -> object:
+    import ezdxf
+
+    ezdxf.options.write_fixed_meta_data_for_testing = True
     doc = ezdxf.new(version, units=units or 0)
     doc.header["$TDCREATE"] = 2461234.5
     doc.header["$TDUPDATE"] = 2461234.5
@@ -71,6 +71,25 @@ def encode(source: Path, output: Path, target: str) -> None:
 
 def reference(path: Path) -> dict[str, str]:
     return {"path": path.relative_to(ROOT).as_posix(), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+
+
+def portable_check() -> None:
+    corpus_path = ROOT / "conformance/v0.3/dwg-corpus.json"
+    corpus = json.loads(corpus_path.read_text(encoding="utf-8"))
+    references = [corpus.get(key) for key in ("generator", "profile", "schema", "worker")]
+    references.extend(corpus.get("fixtures", []))
+    for item in references:
+        if not isinstance(item, dict) or set(item) != {"path", "sha256"}:
+            raise SystemExit("AECCTX_DWG_V03_REFERENCE_INVALID")
+        path = ROOT / str(item["path"])
+        if not path.is_file() or path.is_symlink():
+            raise SystemExit(f"AECCTX_DWG_V03_REFERENCE_MISSING: {path}")
+        if hashlib.sha256(path.read_bytes()).hexdigest() != item["sha256"]:
+            raise SystemExit(f"AECCTX_DWG_V03_FIXTURE_DRIFT: {path}")
+
+
+def snapshot(corpus_path: Path) -> tuple[dict[Path, bytes], bytes]:
+    return ({path.relative_to(HERE): path.read_bytes() for path in HERE.rglob("*") if path.is_file() and path.name != "generate_fixtures.py"}, corpus_path.read_bytes())
 
 
 def generate() -> None:
@@ -115,15 +134,18 @@ def main() -> None:
         env = dict(os.environ); env["PYTHONHASHSEED"] = "0"
         os.execve(sys.executable, [sys.executable, str(Path(__file__).resolve()), *sys.argv[1:]], env)
     parser = argparse.ArgumentParser()
-    parser.add_argument("--check", action="store_true")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--check", action="store_true")
+    mode.add_argument("--live-check", action="store_true")
     arguments = parser.parse_args()
     corpus_path = ROOT / "conformance/v0.3/dwg-corpus.json"
-    before = None
     if arguments.check:
-        before = ({path.relative_to(HERE): path.read_bytes() for path in HERE.rglob("*") if path.is_file() and path.name != "generate_fixtures.py"}, corpus_path.read_bytes())
+        portable_check()
+        return
+    before = snapshot(corpus_path) if arguments.live_check else None
     generate()
     if before is not None:
-        after = ({path.relative_to(HERE): path.read_bytes() for path in HERE.rglob("*") if path.is_file() and path.name != "generate_fixtures.py"}, corpus_path.read_bytes())
+        after = snapshot(corpus_path)
         if before != after:
             raise SystemExit("AECCTX_DWG_V03_FIXTURE_DRIFT")
 

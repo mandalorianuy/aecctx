@@ -37,6 +37,15 @@ def _worker():
     return module
 
 
+def _generator():
+    path = ROOT / "fixtures/v0.3/dwg/generate_fixtures.py"
+    spec = importlib.util.spec_from_file_location("aecctx_test_dwg_v03_generator", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def _capabilities() -> dict[str, dict[str, object]]:
     names = (
         "identity", "hierarchy", "properties", "relationships", "text", "2d_geometry",
@@ -178,6 +187,12 @@ def test_package_gate_allows_license_review_but_rejects_external_runtime(tmp_pat
 def test_repository_preserves_generated_dwg_dxf_evidence_as_binary() -> None:
     attributes = (ROOT / ".gitattributes").read_text(encoding="utf-8")
     assert "fixtures/v0.3/dwg/**/*.dxf binary" in attributes
+
+
+def test_portable_fixture_check_never_invokes_external_runtime(monkeypatch: pytest.MonkeyPatch) -> None:
+    generator = _generator()
+    monkeypatch.setattr(generator.subprocess, "run", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("external runtime invoked")))
+    generator.portable_check()
 
 
 def test_shared_source_bundle_accepts_only_hash_bound_dwg_members(tmp_path: Path) -> None:

@@ -32,7 +32,9 @@ The first full gate correctly stopped at the new package scan, which exposed a c
 
 Pre-push committed-blob inspection then found that the repository's general DXF text rule normalized provider-retained CRLF evidence after its digest was computed. ACXD-042's delivery amendment classifies all v0.3 DWG DXF fixtures as binary; a regression test and committed-blob digest comparison prove that clean checkouts preserve the validated bytes.
 
-Final local closure produced 255 tests in the full-dependency phase and 740 passed with 13 intentional provider/platform skips in the portable matrix. Wheel and sdist built successfully; both passed the corrected GPL-runtime scan, release verification and baseline integration. Commit, PR, exact-head CI and squash merge remain delivery evidence recorded by the task closeout.
+Exact-head GitHub run `29356222503` then proved that the initial fixture `--check` was not portable: Ubuntu and macOS attempted unavailable Docker/image inspection, while Windows terminated in that external generation path. The governed correction makes `--check` read-only and provider-free and keeps full exact-image regeneration under `--live-check`; neither portable replay nor this correction replaces the already executed live arm64/amd64 matrix.
+
+Final local closure produced 255 tests in the full-dependency phase and 742 passed with 13 intentional provider/platform skips in the portable matrix. Wheel and sdist built successfully; both passed the corrected GPL-runtime scan, release verification and baseline integration. Commit, PR, exact-head CI and squash merge remain delivery evidence recorded by the task closeout.
 
 ## Claim ceiling and residuals
 
