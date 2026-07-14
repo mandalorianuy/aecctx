@@ -327,7 +327,7 @@ def run_remote_provider(
 **Files:**
 - Create: `docs/specs/vision-v03-profile.md`
 - Create: `schemas/v0.2/vision-candidate.schema.json` and packaged mirror
-- Create: `src/aecctx/inference/vision.py`
+- Create: `src/aecctx/vision.py` (ACXD-039 compatibility-preserving owner path)
 - Create: `fixtures/v0.3/vision/`
 - Create: `conformance/v0.3/vision-corpus.json`
 - Create: `scripts/check_vision_v03_conformance.py`
@@ -339,7 +339,7 @@ def run_remote_provider(
 - Consumes: ACX-26 for network providers or ACX-24/25 for local providers, v0.2 inference envelope.
 - Produces: `map_vision_result(result: ProviderResult) -> tuple[dict[str, object], ...]`, claims `pdf-image.vision-inference` and `pdf-image.reconstruction-hypothesis`.
 
-- [ ] Govern ACXD-038 by selecting one exact provider, vocabulary, thresholds, confidence calibration, privacy/network profile and reproducibility class. If none qualifies, execute only the blocked/anti-claim branch.
+- [x] Govern ACXD-039 by selecting one exact provider, vocabulary, thresholds, confidence calibration, privacy/network profile and reproducibility class. ACXD-038 is already owned by the ACX-29 DXF gate correction.
 - [ ] RED-test symbols/regions/dimensions/tables, ambiguity/conflict/absence, prompt text, crop/occlusion/redaction and calibration conflict.
 - [ ] Implement schema validation and mapping only after provider output passes the existing provider boundary.
 - [ ] Keep every output `inferred`; add tests that source identity, measurement, CRS, validation completeness and geometry support cannot consume hypotheses.

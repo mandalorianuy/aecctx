@@ -316,3 +316,16 @@ None.
 - Correction: project-owned generation MUST serialize ASCII DXF through an in-memory text stream and encode the resulting LF bytes explicitly; binary DXF remains an in-memory binary stream. The conformance owner MUST launch regeneration with explicit `PYTHONHASHSEED=0` and preserve child stdout/stderr so Windows cannot hide per-file drift behind process replacement. A regression test MUST emulate Windows text translation and prove committed fixture bytes and hashes remain unchanged.
 - Scope ceiling: no entity, release, xref, geometry, semantic, fixture, corpus-hash or public-claim change is admissible. ACX-29 cannot close and ACX-30 cannot be promoted until local canonical verification and the full exact-head GitHub check set pass.
 - Completion result candidate: the emulated Windows-newline test changed RED to GREEN, all six committed DXF fixtures and entry hashes stayed identical, and the generator digest alone was rebound. Exact-head Windows must still prove both pre-build and post-build regeneration with the explicit deterministic child environment before ACX-29 delivery closes.
+
+### ACXD-039: Closed deterministic visible-raster vision provider
+
+- Date: 2026-07-14.
+- Status: Accepted for ACX-30 implementation; it creates no public claim until live multi-architecture and conformance gates pass.
+- Identifier correction: the subordinate plan's draft ACX-30 reference to ACXD-038 is superseded by ACXD-039 because ACXD-038 was already accepted for the ACX-29 DXF delivery correction. Decision identifiers are immutable and cannot be reused.
+- Provider decision: select only the project-owned Apache-2.0 `org.aecctx.vision.raster-rules@0.3.0` Python 3.12 standard-library worker through `oci-docker-v1` on Linux arm64/amd64. It has no learned model, weights, network, prompt, credential, telemetry, retention or third-party runtime dependency.
+- Vocabulary decision: `visible-raster-rules-v1` recognizes only exact visible rectangle, grid, cross and linear-dimension pixel patterns, deterministic containment, and planar-boundary reconstruction hypotheses. Exact rule confidence is rule-match confidence, never semantic truth.
+- Evidence decision: all results remain inferred, content-addressed and pixel-coordinate-only. Source identity, measurement, units, CRS, validation completeness, source/full geometry, hidden geometry, engineering approval and consumer semantics cannot consume them.
+- Privacy/security decision: input stays in a network-disabled disposable OCI workspace; caller code/paths/configuration are forbidden; malformed, oversized, drifted, unavailable, unknown or out-of-contract results fail closed.
+- Layout decision: the planned `src/aecctx/inference/vision.py` path is replaced by `src/aecctx/vision.py` because the existing public implementation is the module `src/aecctx/inference.py`; converting it into a package would be an unrelated compatibility change. Ownership and public mapper behavior remain ACX-30-only.
+- Claim decision: the two ACX-30 claims may become public `partial` only after live architecture equivalence and all mapped conformance gates pass. Replay alone is insufficient.
+- Evidence owner: `docs/specs/vision-v03-profile.md`, `fixtures/v0.3/vision/`, `conformance/v0.3/vision-corpus.json`, `scripts/check_vision_v03_conformance.py` and `docs/evidence/ACX-30.md`.

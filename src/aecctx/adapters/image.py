@@ -7,6 +7,7 @@ from typing import Any, Iterable
 
 from ..ingest import CAPABILITIES, IngestResult, _timestamp
 from ..inference import InferenceMappingError, canonical_ocr_pgm, map_ocr_result
+from ..vision import VisionMappingError, map_vision_result
 from ..package import PackageArtifact, PackageWriter, canonical_json, hash_file
 from ..providers.protocol import ProviderResult
 
@@ -131,6 +132,7 @@ def ingest_image(
     max_pixels: int = 100_000_000,
     aecctx_version: str = "0.1.0",
     ocr_result: ProviderResult | None = None,
+    vision_result: ProviderResult | None = None,
 ) -> IngestResult:
     Image, runtime = _pillow()
     source = Path(source_path)
@@ -141,8 +143,8 @@ def ingest_image(
         raise ValueError("embedding_policy must be external, embedded, or redacted")
     if aecctx_version not in {"0.1.0", "0.2.0"}:
         raise ValueError("aecctx_version must be 0.1.0 or 0.2.0")
-    if ocr_result is not None and aecctx_version != "0.2.0":
-        raise ValueError("ocr_result requires aecctx_version of 0.2.0")
+    if (ocr_result is not None or vision_result is not None) and aecctx_version != "0.2.0":
+        raise ValueError("inference results require aecctx_version of 0.2.0")
     source_digest, source_bytes = hash_file(source)
     identity = source_digest[:24]
     source_id = f"src_{identity}"
@@ -211,6 +213,17 @@ def ingest_image(
             capabilities["text"] = "partial"
             primitives.extend(mapping.primitives)
             assertions.extend(mapping.assertions)
+    vision_mapping = None
+    vision_error: VisionMappingError | None = None
+    if vision_result is not None:
+        try:
+            vision_mapping = map_vision_result(vision_result, input_bytes=ocr_input, source_id=source_id, parent_record_id=primitive_id, source_locator="pixel-canvas", width=width, height=height, recorded_at=instant)
+        except VisionMappingError as error:
+            vision_error = error
+        else:
+            primitive["vision"] = _known("inferred-visible-raster-candidates")
+            primitives.extend(vision_mapping.primitives)
+            assertions.extend(vision_mapping.assertions)
     reasons = {
         "hierarchy": "AECCTX_IMAGE_HIERARCHY_OPAQUE",
         "properties": "AECCTX_IMAGE_METADATA_PARTIAL",
@@ -241,6 +254,10 @@ def ingest_image(
                 "support_level": level,
             }
         )
+    if vision_mapping is not None:
+        diagnostics.extend(vision_mapping.diagnostics)
+    elif vision_error is not None:
+        diagnostics.append({"affected_count": 1, "capability": "2d_geometry", "code": "AECCTX_VISION_PROVIDER_RESULT_REJECTED", "fallback": "Inspect exact source pixels.", "message": str(vision_error), "provenance": _provenance(instant, [source_id], runtime), "severity": "warning", "source_refs": [{"locator": "pixel-canvas", "source_id": source_id}]})
     if mapping is not None:
         diagnostics.extend(mapping.diagnostics)
     if ocr_error is not None:
