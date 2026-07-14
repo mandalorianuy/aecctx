@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-14
-Handoff status: `0.3.0-ACX-32-COMPLETE`
+Handoff status: `0.3.0-ACX-33-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 through ACX-32 are complete; ACX-33 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
+AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 through ACX-33 are complete; ACX-34 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
 
 ## Start here
 
@@ -13,19 +13,26 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
 4. Read `docs/specs/aecctx-post-v02-functional-debt-spec.md` and `docs/plans/post-v02-functional-debt-implementation.md` completely.
-5. ACX-01 through ACX-09, ACX-11 through ACX-18, ACX-20 through ACX-32 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-33 is the only authorized next task and has not started.
+5. ACX-01 through ACX-09, ACX-11 through ACX-18, ACX-20 through ACX-33 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-34 is the only authorized next task and has not started.
 6. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 7. Run `./scripts/verify.sh` before handoff.
 
 ## Active post-v0.2 plan
 
 - Plan: ACX-24 through ACX-38, dependency-first.
-- Completed: ACX-24 through ACX-32, including bounded STEP/IGES XDE, per-root recovery and opt-in healing evidence.
-- Sole `pending-next`: ACX-33, DWG version, xref, units and geometry expansion.
-- ACX-34 through ACX-38: `pending`.
-- Claim posture: accepted post-v0.2 public partial claims through ACX-32 include provider multiarch/remote, IFC, DXF, OCR, vision/reconstruction, mesh CRS/datum and bounded STEP/IGES XDE/recovery; `sandbox.local-enforcement` is public `unsupported`; ACX-33 and later entries remain targets until their owning milestone closes.
+- Completed: ACX-24 through ACX-33, including bounded DWG R13/R14/R2000, closed xrefs, explicit units and simple geometry evidence.
+- Sole `pending-next`: ACX-34, RVT provider reopening or renewed executable blocker.
+- ACX-35 through ACX-38: `pending`.
+- Claim posture: accepted post-v0.2 public partial claims through ACX-33 include provider multiarch/remote, IFC, DXF, OCR, vision/reconstruction, mesh CRS/datum, bounded STEP/IGES XDE/recovery and exact-profile DWG; `sandbox.local-enforcement` is public `unsupported`; ACX-34 and later entries remain targets until their owning milestone closes.
 - Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
-- Execution boundary: ACX-32 is complete; ACX-33 alone is promoted but MUST NOT execute without a new continuation request.
+- Execution boundary: ACX-33 is complete; ACX-34 alone is promoted but MUST NOT execute without a new continuation request.
+
+## ACX-33 evidence
+
+- Normative profile: `docs/specs/dwg-v03-profile.md` and ACXD-042.
+- Acceptance evidence: `docs/evidence/ACX-33.md`.
+- Corpus/checker: `conformance/v0.3/dwg-corpus.json` and `scripts/check_dwg_v03_conformance.py`.
+- Public boundary: only AC1012/R13, AC1014/R14 and AC1015/R2000 on the exact reviewed LibreDWG provider are partial; R12/R2004+, encryption, ACIS/proxy/custom semantics, complete xrefs/3D, CRS and consumer mappings remain non-claims.
 
 ## ACX-28 evidence
 
@@ -200,7 +207,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 ## Next implementation task
 
-ACX-32 is complete under ACXD-041 and `docs/specs/step-iges-v03-profile.md`. The exact OCP/OCCT XDE profile preserves selected metadata and per-root outcomes while keeping lexical, raw translated, optional healed and tessellated evidence distinct. ACX-33 is the sole `pending-next` task and must not start without a new continuation request.
+ACX-33 is complete under ACXD-042 and `docs/specs/dwg-v03-profile.md`. The exact LibreDWG profile preserves observed decoder JSON separately from converted DXF/simple geometry and resolves xrefs only through closed content-addressed bundles. ACX-34 is the sole `pending-next` task and must not start without a new continuation request.
 
 ## Consumer integration planning entry point
 

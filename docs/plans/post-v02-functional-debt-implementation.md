@@ -425,13 +425,13 @@ def apply_datum_operation(
 - Consumes: ACX-24 multiarch and ACX-28 source-bundle contract.
 - Produces: exact version profiles and claim `dwg.external-provider.v03`.
 
-- [ ] Govern ACXD-042 with exact LibreDWG/alternative provider version, supported DWG releases, xref and geometry ceiling, GPL/commercial posture and known upstream failures.
-- [ ] RED-test every selected version, units, 3D, xref, duplicate handle, conversion loss, encrypted/protected, ACIS/proxy/custom and writer denial.
-- [ ] Generate project-authored DWG inputs through a documented legal toolchain; bind generator and output hashes.
-- [ ] Extend worker actions without exposing writer operations or caller commands.
-- [ ] Keep direct decoder JSON observed and DXF/geometry converted/derived with complete lineage.
-- [ ] Run live arm64/amd64, replay, adversarial, packaging and full gates.
-- [ ] Write evidence, promote only ACX-34 and commit `feat: expand bounded DWG provider profiles`.
+- [x] Govern ACXD-042 with exact LibreDWG/alternative provider version, supported DWG releases, xref and geometry ceiling, GPL/commercial posture and known upstream failures.
+- [x] RED-test every selected version, units, 3D, xref, duplicate handle, conversion loss, encrypted/protected, ACIS/proxy/custom and writer denial.
+- [x] Generate project-authored DWG inputs through a documented legal toolchain; bind generator and output hashes.
+- [x] Extend worker actions without exposing writer operations or caller commands.
+- [x] Keep direct decoder JSON observed and DXF/geometry converted/derived with complete lineage.
+- [x] Run live arm64/amd64, replay, adversarial, packaging and full gates.
+- [x] Write evidence, promote only ACX-34 and commit `feat: expand bounded DWG provider profiles`.
 
 ---
 

@@ -1,0 +1,151 @@
+{
+  "entries": [
+    {
+      "action": "extract",
+      "configuration": {
+        "dwg_version": "AC1012",
+        "dxf_version": "r13",
+        "json_format": "JSON",
+        "profile": "acx33-r13-v1",
+        "resolve_external_references": false
+      },
+      "descriptor": "fixtures/v0.3/dwg/descriptor.json",
+      "id": "r13-profile",
+      "input": "fixtures/v0.3/dwg/r13-profile.dwg",
+      "limits": {
+        "cpu_seconds": 30,
+        "max_decompression_ratio": 20.0,
+        "max_files": 10,
+        "max_input_bytes": 2000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 30000000,
+        "max_records": 2000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 30.0
+      },
+      "output_root": "fixtures/v0.3/dwg/outputs/r13-profile",
+      "request": "fixtures/v0.3/dwg/requests/r13-profile.json",
+      "response": "fixtures/v0.3/dwg/outputs/r13-profile/response.json"
+    },
+    {
+      "action": "extract",
+      "configuration": {
+        "dwg_version": "AC1014",
+        "dxf_version": "r14",
+        "json_format": "JSON",
+        "profile": "acx33-r14-v1",
+        "resolve_external_references": false
+      },
+      "descriptor": "fixtures/v0.3/dwg/descriptor.json",
+      "id": "r14-profile",
+      "input": "fixtures/v0.3/dwg/r14-profile.dwg",
+      "limits": {
+        "cpu_seconds": 30,
+        "max_decompression_ratio": 20.0,
+        "max_files": 10,
+        "max_input_bytes": 2000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 30000000,
+        "max_records": 2000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 30.0
+      },
+      "output_root": "fixtures/v0.3/dwg/outputs/r14-profile",
+      "request": "fixtures/v0.3/dwg/requests/r14-profile.json",
+      "response": "fixtures/v0.3/dwg/outputs/r14-profile/response.json"
+    },
+    {
+      "action": "extract",
+      "configuration": {
+        "dwg_version": "AC1015",
+        "dxf_version": "r2000",
+        "json_format": "JSON",
+        "profile": "acx33-r2000-v1",
+        "resolve_external_references": false
+      },
+      "descriptor": "fixtures/v0.3/dwg/descriptor.json",
+      "id": "r2000-m-profile",
+      "input": "fixtures/v0.3/dwg/r2000-m-profile.dwg",
+      "limits": {
+        "cpu_seconds": 30,
+        "max_decompression_ratio": 20.0,
+        "max_files": 10,
+        "max_input_bytes": 2000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 30000000,
+        "max_records": 2000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 30.0
+      },
+      "output_root": "fixtures/v0.3/dwg/outputs/r2000-m-profile",
+      "request": "fixtures/v0.3/dwg/requests/r2000-m-profile.json",
+      "response": "fixtures/v0.3/dwg/outputs/r2000-m-profile/response.json"
+    },
+    {
+      "action": "extract",
+      "configuration": {
+        "dwg_version": "AC1015",
+        "dxf_version": "r2000",
+        "json_format": "JSON",
+        "profile": "acx33-r2000-v1",
+        "resolve_external_references": false
+      },
+      "descriptor": "fixtures/v0.3/dwg/descriptor.json",
+      "id": "r2000-mm-xref",
+      "input": "fixtures/v0.3/dwg/r2000-mm-xref.dwg",
+      "limits": {
+        "cpu_seconds": 30,
+        "max_decompression_ratio": 20.0,
+        "max_files": 10,
+        "max_input_bytes": 2000000,
+        "max_memory_bytes": 1073741824,
+        "max_open_files": 32,
+        "max_output_bytes": 30000000,
+        "max_records": 2000,
+        "max_recursion_depth": 64,
+        "wall_time_seconds": 30.0
+      },
+      "output_root": "fixtures/v0.3/dwg/outputs/r2000-mm-xref",
+      "request": "fixtures/v0.3/dwg/requests/r2000-mm-xref.json",
+      "response": "fixtures/v0.3/dwg/outputs/r2000-mm-xref/response.json"
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "fixtures/v0.3/dwg/r13-profile.dwg",
+      "sha256": "3bc7958c591e9fa26b89b5281bd144bc05e4f2f94fd36c36a5ed5cddfe96fabe"
+    },
+    {
+      "path": "fixtures/v0.3/dwg/r14-profile.dwg",
+      "sha256": "80af6de20cd3506342c5c2842d9926893865602f889a762163d12810264a84cc"
+    },
+    {
+      "path": "fixtures/v0.3/dwg/r2000-m-profile.dwg",
+      "sha256": "d5a3a31bc1327cd76b54f8f3ac55503d3ab8ec27da02987c2f422dfd5860cf72"
+    },
+    {
+      "path": "fixtures/v0.3/dwg/r2000-mm-xref.dwg",
+      "sha256": "37468865d8b504ea4c94bee4da859ecc07a982e576cd5d014b1f8003d4c285a5"
+    }
+  ],
+  "generator": {
+    "path": "fixtures/v0.3/dwg/generate_fixtures.py",
+    "sha256": "e6917b045a852f3cffbc2890ba4795835a2452efa2a6246452449d9b2d76cfa6"
+  },
+  "profile": {
+    "path": "docs/specs/dwg-v03-profile.md",
+    "sha256": "a053caaf3cf844c8dcbbf03aa4f13be6117298b6f52470f575255a2e3b5656a9"
+  },
+  "schema": {
+    "path": "schemas/v0.2/dwg-v03-event.schema.json",
+    "sha256": "7e55bdde45b525a3d8e48c1a89aef4cb538cbc7d71f9f9bba07a44e86c263897"
+  },
+  "version": "0.2.0",
+  "worker": {
+    "path": "providers/libredwg/worker.py",
+    "sha256": "f11a944b389650ada29c5971d5af534ab4a11ef3ac0f4b68549185fc8e1a2e77"
+  }
+}

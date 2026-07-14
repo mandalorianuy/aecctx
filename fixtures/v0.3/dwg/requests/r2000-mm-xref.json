@@ -1,0 +1,31 @@
+{
+  "action": "extract",
+  "configuration": {
+    "dwg_version": "AC1015",
+    "dxf_version": "r2000",
+    "json_format": "JSON",
+    "profile": "acx33-r2000-v1",
+    "resolve_external_references": false
+  },
+  "configuration_digest": "ac1a877eca7ba396440b160d885cf09647c705652a94f70168eb1b86d1391db0",
+  "input": {
+    "bytes": 5460,
+    "path": "input/37468865d8b504ea4c94bee4da859ecc07a982e576cd5d014b1f8003d4c285a5",
+    "sha256": "37468865d8b504ea4c94bee4da859ecc07a982e576cd5d014b1f8003d4c285a5"
+  },
+  "limits": {
+    "cpu_seconds": 30,
+    "max_decompression_ratio": 20.0,
+    "max_files": 10,
+    "max_input_bytes": 2000000,
+    "max_memory_bytes": 1073741824,
+    "max_open_files": 32,
+    "max_output_bytes": 30000000,
+    "max_records": 2000,
+    "max_recursion_depth": 64,
+    "wall_time_seconds": 30.0
+  },
+  "protocol_version": "0.2",
+  "provider_id": "org.aecctx.dwg.libredwg",
+  "request_id": "555e48690298b4af0bc07f40a54d3c533e3fe36d897a8bd32b2dc25bc32f63dd"
+}

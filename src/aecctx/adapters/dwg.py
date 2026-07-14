@@ -3,12 +3,13 @@ from __future__ import annotations
 import hashlib
 import io
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from ..dwg import DWGInputError, validate_dwg_events
 from ..ingest import CAPABILITIES, IngestResult, _timestamp, ingest_opaque
 from ..package import PackageArtifact, PackageWriter, canonical_json, hash_file
 from ..providers.protocol import ProviderResult
+from ..source_bundle import SourceBundle, load_source_bundle
 from .dxf import _geometry
 
 
@@ -53,17 +54,39 @@ def ingest_dwg(
     package_form: str = "directory",
     aecctx_version: str = "0.1.0",
     provider_result: ProviderResult | None = None,
+    provider_results: Mapping[str, ProviderResult] | None = None,
 ) -> IngestResult:
     if aecctx_version == "0.1.0":
-        if provider_result is not None:
+        if provider_result is not None or provider_results is not None:
             raise DWGInputError("AECCTX_DWG_VERSION_INVALID", "Provider result requires AECCTX v0.2")
         return ingest_opaque(source_path, output_path, created_at=created_at, embedding_policy=embedding_policy, package_form=package_form)
     if aecctx_version != "0.2.0":
         raise DWGInputError("AECCTX_DWG_VERSION_INVALID", "AECCTX version must be 0.1.0 or 0.2.0")
+    requested_source = Path(source_path)
+    source_bundle: SourceBundle | None = None
+    bundle_evidence: dict[str, Any] = {}
+    if requested_source.is_dir() and not requested_source.is_symlink():
+        source_bundle = load_source_bundle(
+            requested_source,
+            allowed_media_types={"image/vnd.dwg"},
+            diagnostic_prefix="DWG",
+        )
+        if provider_result is not None or provider_results is None or set(provider_results) != {entry.logical_path for entry in source_bundle.entries}:
+            raise DWGInputError("AECCTX_DWG_BUNDLE_PROVIDER_RESULTS_INVALID", "DWG source bundle requires one exact provider result per declared member")
+        for entry in source_bundle.entries:
+            item = validate_dwg_events(provider_results[entry.logical_path])
+            if item.source_event["input_sha256"] != entry.sha256:
+                raise DWGInputError("AECCTX_DWG_INPUT_HASH_MISMATCH", f"Provider evidence does not match bundle member: {entry.logical_path}")
+            bundle_evidence[entry.logical_path] = item
+        provider_result = provider_results[source_bundle.root.logical_path]
+        source = source_bundle.root.path
+    else:
+        if provider_results is not None:
+            raise DWGInputError("AECCTX_DWG_BUNDLE_PROVIDER_RESULTS_INVALID", "Multiple provider results require a content-addressed DWG source bundle")
+        source = requested_source
     if provider_result is None:
         raise DWGInputError("AECCTX_DWG_RUNTIME_UNAVAILABLE", "A validated DWG provider result is required")
     evidence = validate_dwg_events(provider_result)
-    source = Path(source_path)
     output = Path(output_path)
     if not source.is_file() or source.is_symlink():
         raise ValueError("source_path must be a regular file")
@@ -72,21 +95,30 @@ def ingest_dwg(
     source_digest, source_bytes = hash_file(source)
     if source_digest != evidence.source_event["input_sha256"]:
         raise DWGInputError("AECCTX_DWG_INPUT_HASH_MISMATCH", "Provider evidence does not match source bytes")
-    identity = source_digest[:24]
+    identity = (
+        hashlib.sha256("\0".join(entry.sha256 for entry in source_bundle.entries).encode()).hexdigest()[:24]
+        if source_bundle is not None
+        else source_digest[:24]
+    )
     source_id = f"src_{identity}"
     package_id = f"pkg_{identity}"
     instant = _timestamp(created_at)
     runtime_digest = str(provider_result.attestation.get("runtime_digest", "unknown"))
+    dwg_version = str(evidence.source_event["dwg_version"])
+    v03 = evidence.source_event.get("schema") == "aecctx.dwg.source.v2"
+    version_labels = {"AC1012": "R13", "AC1014": "R14", "AC1015": "R2000"}
+    units = evidence.source_event.get("units") if v03 else None
+    detected_units = _known(units["symbol"]) if isinstance(units, dict) and units.get("state") == "known" else _unknown("AECCTX_DWG_UNITS_NOT_QUALIFIED")
     storage_ref = f"sources/content/{source.name}" if embedding_policy == "embedded" else None
 
     source_record: dict[str, Any] = {
         "acquisition_origin": "local-file",
         "byte_size": source_bytes,
-        "declared_format": _known("DWG R2000"),
-        "declared_units": _unknown("AECCTX_DWG_UNITS_NOT_QUALIFIED"),
-        "detected_format": _known("DWG AC1015"),
+        "declared_format": _known(f"DWG {version_labels.get(dwg_version, dwg_version)}"),
+        "declared_units": detected_units,
+        "detected_format": _known(f"DWG {dwg_version}"),
         "detected_producer": _known("LibreDWG 0.13.4 external provider"),
-        "detected_units": _unknown("AECCTX_DWG_UNITS_NOT_QUALIFIED"),
+        "detected_units": detected_units,
         "display_name": source.name,
         "embedding_policy": embedding_policy,
         "evidence_class": "observed",
@@ -107,10 +139,14 @@ def ingest_dwg(
         source_record["storage_ref"] = storage_ref
     elif embedding_policy == "redacted":
         source_record["redaction_reason"] = "AECCTX_SOURCE_CONTENT_REDACTED_BY_POLICY"
+    source_records = [source_record]
+    if source_bundle is not None:
+        source_record["bundle_logical_path"] = source_bundle.root.logical_path
 
     primitives: list[dict[str, Any]] = []
     entities: list[dict[str, Any]] = []
     relations: list[dict[str, Any]] = []
+    bundle_artifacts: list[PackageArtifact] = []
     observed_by_handle: dict[str, str] = {}
     conflicts = set(evidence.source_json["aecctx_handle_conflicts"])
     for item in evidence.source_json["OBJECTS"]:
@@ -213,8 +249,82 @@ def ingest_dwg(
             }
         )
 
+    if source_bundle is not None:
+        def contains_path(value: Any, logical_path: str) -> bool:
+            if isinstance(value, str):
+                return value == logical_path
+            if isinstance(value, Mapping):
+                return any(contains_path(item, logical_path) for item in value.values())
+            if isinstance(value, list):
+                return any(contains_path(item, logical_path) for item in value)
+            return False
+
+        for entry in source_bundle.entries:
+            if entry.role == "root":
+                continue
+            if not contains_path(evidence.source_json, entry.logical_path):
+                raise DWGInputError("AECCTX_DWG_BUNDLE_XREF_UNREACHABLE", f"Declared DWG xref is not retained by root decoder evidence: {entry.logical_path}")
+            child = bundle_evidence[entry.logical_path]
+            child_result = provider_results[entry.logical_path]
+            child_source_id = f"src_{entry.sha256[:24]}"
+            child_units = child.source_event.get("units")
+            child_unit_state = _known(child_units["symbol"]) if isinstance(child_units, Mapping) and child_units.get("state") == "known" else _unknown("AECCTX_DWG_UNITS_NOT_QUALIFIED")
+            child_version = str(child.source_event["dwg_version"])
+            source_records.append(
+                {
+                    "acquisition_origin": "content-addressed-source-bundle",
+                    "bundle_logical_path": entry.logical_path,
+                    "byte_size": entry.byte_size,
+                    "declared_format": _known(f"DWG {child_version}"),
+                    "declared_units": child_unit_state,
+                    "detected_format": _known(f"DWG {child_version}"),
+                    "detected_producer": _known("LibreDWG 0.13.4 external provider"),
+                    "detected_units": child_unit_state,
+                    "display_name": Path(entry.logical_path).name,
+                    "embedding_policy": embedding_policy,
+                    "evidence_class": "observed",
+                    "extractor": {"plugin_id": PLUGIN_ID, "plugin_version": PLUGIN_VERSION},
+                    "media_type": "image/vnd.dwg",
+                    "prior_source_revision": _unknown("AECCTX_PRIOR_REVISION_NOT_PROVIDED"),
+                    "provenance": _provenance(instant, [], str(child_result.attestation.get("runtime_digest", "unknown")), "content-addressed-xref-source-registration"),
+                    "record_id": child_source_id,
+                    "record_type": "source",
+                    "record_version": "0.2",
+                    "safety_diagnostics": ["AECCTX_DWG_CONTENT_ADDRESSED_XREFS_ONLY", "AECCTX_EXTERNAL_REFERENCES_NOT_OPENED"],
+                    "sha256": entry.sha256,
+                    "source_id": child_source_id,
+                    "source_refs": [],
+                    "spatial_reference": _unknown("AECCTX_DWG_CRS_UNSUPPORTED"),
+                }
+            )
+            relation_id = _stable_id("relation_dwg_xref", source_digest, entry.logical_path)
+            relations.append(
+                {
+                    "declared_path": entry.logical_path,
+                    "evidence_class": "observed",
+                    "endpoints": [{"record_id": source_id, "role": "declaring-source"}, {"record_id": child_source_id, "role": "xref-source"}],
+                    "evidence_record_ids": [source_id, child_source_id],
+                    "provenance": _provenance(instant, [source_id, child_source_id], runtime_digest, "content-addressed-xref-correlation"),
+                    "record_id": relation_id,
+                    "record_type": "relation",
+                    "record_version": "0.2",
+                    "relation_id": relation_id,
+                    "relation_type": "aecctx:external-reference",
+                    "resolution": "content-addressed-source-bundle",
+                    "source_refs": [{"locator": entry.logical_path, "source_id": source_id}],
+                }
+            )
+            bundle_artifacts.extend(
+                [
+                    PackageArtifact(f"evidence/dwg-bundle/{entry.logical_path}.source.json", canonical_json(child.source_json), "application/vnd.aecctx.libredwg+json", "observed-decoder-source", True),
+                    PackageArtifact(f"evidence/dwg-bundle/{entry.logical_path}.converted.dxf", child.converted_dxf, "application/dxf", "converted-dxf", True),
+                ]
+            )
+            if embedding_policy == "embedded":
+                bundle_artifacts.append(PackageArtifact(f"sources/content/{entry.logical_path}", entry.path, "image/vnd.dwg", "embedded-source", True))
+
     record_sets = {
-        "sources/sources.jsonl": [source_record],
+        "sources/sources.jsonl": source_records,
         "evidence/primitives.jsonl": primitives,
         "evidence/assertions.jsonl": [],
         "model/entities.jsonl": entities,
@@ -225,7 +335,7 @@ def ingest_dwg(
     artifacts.extend(
         [
             PackageArtifact("evidence/libredwg-source.json", canonical_json(evidence.source_json), "application/vnd.aecctx.libredwg+json", "observed-decoder-source", True),
-            PackageArtifact("evidence/converted-r2000.dxf", evidence.converted_dxf, "application/dxf", "converted-dxf", True),
+            PackageArtifact("evidence/converted.dxf" if v03 else "evidence/converted-r2000.dxf", evidence.converted_dxf, "application/dxf", "converted-dxf", True),
             PackageArtifact(
                 "context/index.md",
                 (f"# DWG AECCTX package\n\nPackage `{package_id}` preserves {len(evidence.source_json['OBJECTS'])} observed LibreDWG objects. Converted DXF geometry is derived evidence; structured records remain authoritative.\n").encode(),
@@ -235,6 +345,7 @@ def ingest_dwg(
             ),
         ]
     )
+    artifacts.extend(bundle_artifacts)
     if storage_ref:
         artifacts.append(PackageArtifact(storage_ref, source, "image/vnd.dwg", "embedded-source", True))
     capabilities = {name: str(provider_result.capability_report[name]["support_level"]) for name in CAPABILITIES}
@@ -245,7 +356,7 @@ def ingest_dwg(
     manifest = PackageWriter(output, package_form=package_form).write(
         package_id=package_id,
         created_at=instant,
-        source_ids=[source_id],
+        source_ids=[record["source_id"] for record in source_records],
         capabilities=capabilities,
         loss_summary=loss_summary,
         embedding_policy=embedding_policy,

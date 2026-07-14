@@ -17,7 +17,7 @@
       "required": ["path", "role", "media_type", "bytes", "sha256"],
       "properties": {
         "path": {"$ref": "#/$defs/path"}, "role": {"enum": ["root", "xref"]},
-        "media_type": {"enum": ["application/dxf", "application/x-dxf"]},
+        "media_type": {"enum": ["application/dxf", "application/x-dxf", "image/vnd.dwg"]},
         "bytes": {"type": "integer", "minimum": 1, "maximum": 536870912},
         "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       }

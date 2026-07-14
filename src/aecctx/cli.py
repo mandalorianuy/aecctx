@@ -133,7 +133,7 @@ def build_parser() -> argparse.ArgumentParser:
     ingest.add_argument("--vision-replay", help="validated bounded vision provider replay corpus (AECCTX v0.2 PDF/image package profile)")
     ingest.add_argument("--vision-entry", help="entry ID inside --vision-replay")
     ingest.add_argument("--provider-replay", help="validated STEP/IGES or DWG provider replay corpus (v0.2 only)")
-    ingest.add_argument("--provider-entry", help="entry ID inside --provider-replay")
+    ingest.add_argument("--provider-entry", action="append", help="entry ID inside --provider-replay; repeat for a closed DWG source bundle")
     ingest.add_argument("--mesh-coordinate-profile", help="manual mesh coordinate profile JSON (v0.2 geometry only)")
     ingest.add_argument("--mesh-crs-profile", help="governed offline CRS registry JSON (v0.2 geometry only)")
     ingest.add_argument("--created-at")
@@ -493,15 +493,31 @@ def main(argv: Sequence[str] | None = None) -> int:
             if bool(arguments.provider_replay) != bool(arguments.provider_entry):
                 raise ValueError("--provider-replay and --provider-entry must be provided together")
             external_provider_result = None
+            external_provider_results = None
             if arguments.provider_replay:
                 if arguments.aecctx_version != "0.2.0" or adapter not in {"step-iges", "dwg"}:
                     raise ValueError("provider replay is limited to governed v0.2 STEP/IGES or DWG profiles")
                 from .providers import load_provider_replay_entry
-                replay = load_provider_replay_entry(arguments.provider_replay, arguments.provider_entry)
+                replay_entries = [load_provider_replay_entry(arguments.provider_replay, entry_id) for entry_id in arguments.provider_entry]
+                replay = replay_entries[0]
                 expected_provider = "org.aecctx.step-iges.ocp" if adapter == "step-iges" else "org.aecctx.dwg.libredwg"
-                if replay.descriptor.provider_id != expected_provider:
+                if any(item.descriptor.provider_id != expected_provider for item in replay_entries):
                     raise ValueError(f"provider replay does not contain the governed {adapter} provider")
-                external_provider_result = replay.result
+                if adapter == "dwg" and Path(arguments.source).is_dir():
+                    from .source_bundle import load_source_bundle
+                    import hashlib
+
+                    bundle = load_source_bundle(arguments.source, allowed_media_types={"image/vnd.dwg"}, diagnostic_prefix="DWG")
+                    by_digest = {hashlib.sha256(item.input_bytes).hexdigest(): item.result for item in replay_entries}
+                    external_provider_results = {
+                        entry.logical_path: by_digest[entry.sha256]
+                        for entry in bundle.entries
+                        if entry.sha256 in by_digest
+                    }
+                elif len(replay_entries) != 1:
+                    raise ValueError("multiple provider replay entries are limited to a closed DWG source bundle")
+                else:
+                    external_provider_result = replay.result
             if adapter == "ifc":
                 from .adapters.ifc import ingest_ifc
 
@@ -535,6 +551,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     package_form=arguments.form,
                     aecctx_version=arguments.aecctx_version,
                     provider_result=external_provider_result,
+                    provider_results=external_provider_results,
                 )
             elif adapter == "pdf":
                 from .adapters.pdf import ingest_pdf

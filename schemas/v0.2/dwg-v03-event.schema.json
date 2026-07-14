@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aecctx.org/schemas/v0.2/dwg-v03-event.schema.json",
+  "title": "AECCTX bounded DWG v0.3 event payload",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_path", "artifact_sha256", "dwg_version", "handle_conflicts", "input_sha256", "object_count", "profile", "schema", "units", "unsupported_classes"],
+      "properties": {
+        "artifact_path": {"const": "artifacts/source.json"},
+        "artifact_sha256": {"$ref": "#/$defs/digest"},
+        "dwg_version": {"$ref": "#/$defs/dwg_version"},
+        "handle_conflicts": {"type": "array", "items": {"type": "string", "pattern": "^[0-9A-F]+$"}, "uniqueItems": true},
+        "input_sha256": {"$ref": "#/$defs/digest"},
+        "object_count": {"type": "integer", "minimum": 0},
+        "profile": {"$ref": "#/$defs/profile"},
+        "schema": {"const": "aecctx.dwg.source.v2"},
+        "units": {"$ref": "#/$defs/units"},
+        "unsupported_classes": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_path", "artifact_sha256", "conversion_losses", "converter", "input_sha256", "observed_dxf_version", "profile", "representation_fidelity", "requested_dxf_version", "schema"],
+      "properties": {
+        "artifact_path": {"const": "artifacts/converted.dxf"},
+        "artifact_sha256": {"$ref": "#/$defs/digest"},
+        "conversion_losses": {"type": "array", "items": {"type": "string", "pattern": "^AECCTX_[A-Z0-9_]+$"}, "uniqueItems": true},
+        "converter": {"const": "LibreDWG dwgread 0.13.4"},
+        "input_sha256": {"$ref": "#/$defs/digest"},
+        "observed_dxf_version": {"$ref": "#/$defs/dwg_version"},
+        "profile": {"$ref": "#/$defs/profile"},
+        "representation_fidelity": {"const": "converted"},
+        "requested_dxf_version": {"$ref": "#/$defs/dwg_version"},
+        "schema": {"const": "aecctx.dwg.conversion.v2"}
+      }
+    }
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "dwg_version": {"enum": ["AC1012", "AC1014", "AC1015"]},
+    "profile": {"enum": ["acx33-r13-v1", "acx33-r14-v1", "acx33-r2000-v1"]},
+    "units": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["code", "state", "symbol"],
+          "properties": {
+            "code": {"enum": [1, 2, 4, 5, 6, 7]},
+            "state": {"const": "known"},
+            "symbol": {"enum": ["in", "ft", "mm", "cm", "m", "km"]}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["reason_code", "state"],
+          "properties": {
+            "reason_code": {"const": "AECCTX_DWG_UNITS_NOT_QUALIFIED"},
+            "state": {"const": "unknown"}
+          }
+        }
+      ]
+    }
+  }
+}
+

@@ -192,8 +192,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-30 | completed | Bounded vision inference and reconstruction hypotheses |
 | ACX-31 | completed | Mesh CRS registry and datum-operation qualification |
 | ACX-32 | completed | STEP/IGES XDE and fidelity expansion |
-| ACX-33 | pending-next | DWG version, xref, units and geometry expansion |
-| ACX-34 | pending | RVT provider reopening or renewed executable blocker |
+| ACX-33 | completed | DWG version, xref, units and geometry expansion |
+| ACX-34 | pending-next | RVT provider reopening or renewed executable blocker |
 | ACX-35 | pending | Advanced optional signing and trust profiles |
 | ACX-36 | pending | Expanded bounded IDS and quality-gate profiles |
 | ACX-37 | pending | Inspector distribution and host portability |
@@ -927,7 +927,7 @@ Detailed implementation authority: [`docs/plans/post-v02-functional-debt-impleme
 
 Program rules:
 
-- ACX-24 through ACX-32 are complete and ACX-33 alone is `pending-next`; no later ACX may execute or borrow scope.
+- ACX-24 through ACX-33 are complete and ACX-34 alone is `pending-next`; no later ACX may execute or borrow scope.
 - Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
 - Replay cannot satisfy a live platform/provider acceptance item.
 - A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.
@@ -966,3 +966,15 @@ ACX-31 completion resolution: `mesh.crs-registry` and `mesh.datum-transform` are
 ACX-32 execution cut: ACXD-041 and `docs/specs/step-iges-v03-profile.md` keep the exact `cadquery-ocp==7.9.3.1.1` / OCCT 7.9.3 runtime and select only the documented STEPCAF/IGESCAF XDE label, color, layer, material, unit, placement and per-root APIs. XDE metadata augments the immutable lexical graph; raw translator BREP, optional healed BREP and tessellation remain separate. Healing is disabled by default and the sole admitted profile uses fixed tolerances with a new derived artifact. ACX-32 is `in_progress`; ACX-33 remains `pending` until live arm64/amd64, replay, mapping, corpus, security, licensing and full repository gates close both bounded claims or document an exact blocker.
 
 ACX-32 completion resolution: `step-iges.xde-structure` and `step-iges.partial-recovery` are public `partial` only for ACXD-041's exact OCP/OCCT XDE and per-root profile on Linux arm64/amd64 plus portable replay. The lexical graph remains observed authority; XDE label evidence, raw translated BREP, optional fixed-profile healed BREP and combined GLB remain distinct and content-addressed. Five selected source inputs are byte-equivalent across both live architectures; the six-entry replay corpus, two-root disabled/enabled healing pair, focused suites, package checks and complete local gates pass. Complete source/XDE correlation, source-exact BREP, implicit/correct repair, unlisted schemas/runtimes/platforms, external content and consumer semantics remain non-claims. ACX-33 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+ACX-33 execution cut: ACXD-042 and `docs/specs/dwg-v03-profile.md` retain GNU LibreDWG 0.13.4 API/ABI 1 in the exact ACX-24 Linux arm64/amd64 images and select only AC1012/R13, AC1014/R14 and AC1015/R2000. Direct decoder JSON remains observed; converted DXF and simple geometry remain converted/derived. Xrefs reuse closed content-addressed bundles and are decoded member-by-member without ambient path access. Units require explicit `$INSUNITS`; writers, encryption, ACIS/proxy/custom semantics, complete 3D, R12/R2004+, CRS and consumer mappings remain non-claims. ACX-33 is `in_progress`; ACX-34 remains `pending` until all live, replay, adversarial, mapping, package, security, license and repository gates pass or an exact blocker is documented.
+
+ACX-33 shared-owner amendment: the already normative ACX-28 `source-bundle.json` validator moves from the DXF adapter to `src/aecctx/source_bundle.py`; DXF re-exports the unchanged public API and remains fully regression-gated. The schema adds only `image/vnd.dwg`. A parallel DWG-specific path validator or ambient xref resolver is forbidden.
+
+ACX-33 packaging-gate amendment: clean `uv sync` exposed that ACX-31 added the governed `crs`/`pyproj==3.7.2` extras to `pyproject.toml` without regenerating `uv.lock`. ACX-33 updates only the lock projection to match the already accepted dependency contract; it adds no dependency, CRS behavior or claim. Clean/frozen installation and canonical package gates own acceptance of this correction.
+
+ACX-33 delivery-gate amendment: pre-push blob inspection exposed Git LF normalization of provider-emitted converted DXF evidence despite byte hashes being computed over the retained CRLF payloads. All `fixtures/v0.3/dwg/**/*.dxf` files are binary evidence and MUST bypass text normalization; committed-blob hashes, corpus hashes and clean-checkout regeneration MUST agree before publication. This changes no source/provider output, interpretation or claim.
+
+ACX-33 portable-gate amendment: exact-head GitHub CI proved that fixture `--check` incorrectly required Docker and the reviewed local image on every portable runner; Ubuntu/macOS failed unavailable and Windows terminated in the external path. `--check` MUST be read-only, provider-free and executable under Python `-S` without site-packages, validating committed generator/profile/schema/worker/fixture hashes. All AECCTX, ezdxf and provider imports belong exclusively to full generation. Full byte regeneration moves to explicit `--live-check` and remains required only where the exact reviewed OCI runtime is available. Portable replay cannot satisfy or replace the separately recorded live arm64/amd64 acceptance evidence.
+
+ACX-33 completion resolution: `dwg.external-provider.v03` is public `partial` only for AC1012/R13, AC1014/R14 and AC1015/R2000 under ACXD-042's exact LibreDWG 0.13.4 Linux arm64/amd64 provider profile plus portable replay. Four project-authored fixtures, exact-version and unit outcomes, closed source-bundle xrefs, observed JSON, converted DXF/simple geometry, writer denial, adversarial cases, package exclusion of the GPL runtime and complete repository gates pass. R12, R2004+, encryption, ACIS/proxy/custom semantics, exact BREP, complete xrefs/3D, CRS, unreviewed runtimes/platforms and consumer mappings remain non-claims. ACX-34 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.

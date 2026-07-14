@@ -31,8 +31,9 @@ class DWGEvidence:
 
 
 def probe_dwg(prefix: bytes) -> dict[str, Any]:
-    if prefix.startswith(b"AC1015"):
-        return {"confidence": 1.0, "format": "dwg", "version": "AC1015"}
+    for version in ("AC1012", "AC1014", "AC1015"):
+        if prefix.startswith(version.encode("ascii")):
+            return {"confidence": 1.0, "format": "dwg", "version": version}
     return {"confidence": 0.0, "format": "unknown", "version": "unclaimed"}
 
 
@@ -49,8 +50,8 @@ def _artifact(result: ProviderResult, path: str, media_type: str, expected_sha: 
 def _validate_source_json(value: Any, event: Mapping[str, Any]) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise DWGInputError("AECCTX_DWG_SOURCE_INVALID", "LibreDWG source artifact must be an object")
-    if not isinstance(value.get("FILEHEADER"), Mapping) or value["FILEHEADER"].get("version") != "AC1015":
-        raise DWGInputError("AECCTX_DWG_SOURCE_INVALID", "LibreDWG source version is not AC1015")
+    if not isinstance(value.get("FILEHEADER"), Mapping) or value["FILEHEADER"].get("version") != event.get("dwg_version"):
+        raise DWGInputError("AECCTX_DWG_SOURCE_INVALID", "LibreDWG source version does not match event")
     if not isinstance(value.get("HEADER"), Mapping) or not isinstance(value.get("CLASSES"), list) or not isinstance(value.get("OBJECTS"), list):
         raise DWGInputError("AECCTX_DWG_SOURCE_INVALID", "LibreDWG source containers are invalid")
     objects = value["OBJECTS"]
@@ -91,7 +92,10 @@ def validate_dwg_events(result: ProviderResult) -> DWGEvidence:
     payloads = [item.get("payload") for item in result.events]
     if any(not isinstance(payload, Mapping) for payload in payloads):
         raise DWGInputError("AECCTX_DWG_EVENT_INVALID", "Provider event payload is invalid")
-    schema = json.loads(files("aecctx.schemas.v0_2").joinpath("dwg-provider-event.schema.json").read_text(encoding="utf-8"))
+    event_schemas = [payload.get("schema") for payload in payloads]
+    v03 = event_schemas == ["aecctx.dwg.source.v2", "aecctx.dwg.conversion.v2"]
+    schema_name = "dwg-v03-event.schema.json" if v03 else "dwg-provider-event.schema.json"
+    schema = json.loads(files("aecctx.schemas.v0_2").joinpath(schema_name).read_text(encoding="utf-8"))
     validator = Draft202012Validator(schema)
     for payload in payloads:
         errors = sorted(validator.iter_errors(payload), key=lambda error: list(error.absolute_path))
@@ -99,14 +103,29 @@ def validate_dwg_events(result: ProviderResult) -> DWGEvidence:
             location = "/".join(str(item) for item in errors[0].absolute_path) or "<root>"
             raise DWGInputError("AECCTX_DWG_EVENT_INVALID", f"Provider event invalid at {location}: {errors[0].message}")
     source_event, conversion_event = payloads
-    if source_event.get("schema") != "aecctx.dwg.source.v1" or conversion_event.get("schema") != "aecctx.dwg.conversion.v1":
+    if not v03 and (source_event.get("schema") != "aecctx.dwg.source.v1" or conversion_event.get("schema") != "aecctx.dwg.conversion.v1"):
         raise DWGInputError("AECCTX_DWG_EVENT_INVALID", "Provider source/conversion event ordering is invalid")
     if source_event.get("input_sha256") != conversion_event.get("input_sha256"):
         raise DWGInputError("AECCTX_DWG_EVENT_INVALID", "Provider conversion input hash is disconnected")
+    if v03 and (
+        source_event.get("profile") != conversion_event.get("profile")
+        or source_event.get("dwg_version") != conversion_event.get("requested_dxf_version")
+        or source_event.get("dwg_version") != conversion_event.get("observed_dxf_version")
+    ):
+        raise DWGInputError("AECCTX_DWG_EVENT_INVALID", "Provider v0.3 profile/version lineage is disconnected")
     source_bytes = _artifact(result, str(source_event["artifact_path"]), "application/vnd.aecctx.libredwg+json", str(source_event["artifact_sha256"]))
     converted_dxf = _artifact(result, str(conversion_event["artifact_path"]), "application/dxf", str(conversion_event["artifact_sha256"]))
     try:
         source_json = json.loads(source_bytes)
     except (UnicodeDecodeError, json.JSONDecodeError) as error:
         raise DWGInputError("AECCTX_DWG_SOURCE_INVALID", "LibreDWG source artifact is invalid JSON") from error
-    return DWGEvidence(source_event, conversion_event, _validate_source_json(source_json, source_event), converted_dxf, result)
+    validated_source = _validate_source_json(source_json, source_event)
+    if v03 and (
+        (validated_source.get("aecctx_units") is not None and validated_source.get("aecctx_units") != source_event.get("units"))
+        or (
+            validated_source.get("aecctx_unsupported_classes") is not None
+            and validated_source.get("aecctx_unsupported_classes") != source_event.get("unsupported_classes")
+        )
+    ):
+        raise DWGInputError("AECCTX_DWG_SOURCE_INVALID", "Provider v0.3 source metadata does not match event")
+    return DWGEvidence(source_event, conversion_event, validated_source, converted_dxf, result)
