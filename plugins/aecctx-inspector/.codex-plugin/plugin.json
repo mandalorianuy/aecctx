@@ -1,6 +1,6 @@
 {
   "name": "aecctx-inspector",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Read-only inspection and quality-gate orchestration for validated AECCTX packages.",
   "author": {
     "name": "AECCTX contributors",

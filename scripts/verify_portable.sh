@@ -59,10 +59,15 @@ done
 "$python_runtime" -m json.tool conformance/v0.3/dwg-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/signing-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/gate-corpus.json >/dev/null
+"$python_runtime" -m json.tool conformance/v0.3/plugin-corpus.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/.codex-plugin/plugin.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/.mcp.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/assets/compatibility.json >/dev/null
+"$python_runtime" -m json.tool plugins/aecctx-inspector/assets/distribution.json >/dev/null
 "$python_runtime" -m json.tool fixtures/v0.2/plugin/prompt-injection-cases.json >/dev/null
+"$python_runtime" -m json.tool fixtures/v0.3/plugin/host-matrix.json >/dev/null
+"$python_runtime" -m json.tool fixtures/v0.3/plugin/adversarial-cases.json >/dev/null
+"$python_runtime" -m json.tool fixtures/v0.3/plugin/lifecycle-cases.json >/dev/null
 "$python_runtime" -m json.tool fixtures/v0.3/local-providers/adversarial-cases.json >/dev/null
 "$python_runtime" -m json.tool fixtures/v0.3/remote-providers/adversarial-cases.json >/dev/null
 "$python_runtime" -m json.tool fixtures/minimal-aecctx/manifest.json >/dev/null
@@ -79,6 +84,8 @@ done
 "$python_runtime" scripts/check_gate_v03_conformance.py --require-public
 "$python_runtime" scripts/check_codex_plugin.py
 "$python_runtime" scripts/check_codex_plugin_conformance.py
+"$python_runtime" scripts/build_inspector_distribution.py --check
+"$python_runtime" scripts/check_inspector_v03_conformance.py --require-public
 "$python_runtime" scripts/check_provider_multiarch_conformance.py
 "$python_runtime" scripts/check_local_enforcement_conformance.py
 "$python_runtime" scripts/check_remote_provider_conformance.py --require-public
@@ -111,6 +118,7 @@ done
 "$python_runtime" scripts/check_step_iges_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
 "$python_runtime" scripts/check_dwg_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
 "$python_runtime" scripts/check_gate_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
+"$python_runtime" scripts/check_inspector_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
 
 # Baseline-owned offer snapshots include upstream EOF formatting and are checked
 # byte-for-byte by the full baseline integration checker when its private runtime

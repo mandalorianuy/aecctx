@@ -196,8 +196,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-34 | blocked | No authorized/admissible RVT route; renewed executable unsupported boundary |
 | ACX-35 | completed | Advanced optional signing and trust profiles |
 | ACX-36 | completed | Expanded bounded IDS and quality-gate profiles |
-| ACX-37 | pending-next | Inspector distribution and host portability |
-| ACX-38 | pending | Aggregate conformance, packaging and `0.3.0` release |
+| ACX-37 | completed | Inspector distribution and host portability |
+| ACX-38 | pending-next | Aggregate conformance, packaging and `0.3.0` release |
 
 ## ACX-00: Specification and repository foundation
 
@@ -927,7 +927,7 @@ Detailed implementation authority: [`docs/plans/post-v02-functional-debt-impleme
 
 Program rules:
 
-- ACX-24 through ACX-33 and ACX-35 through ACX-36 are complete, ACX-34 is documented `blocked`, and ACX-37 alone is `pending-next`; no later ACX may execute or borrow scope.
+- ACX-24 through ACX-33 and ACX-35 through ACX-37 are complete, ACX-34 is documented `blocked`, and ACX-38 alone is `pending-next`; no later ACX may execute or borrow scope.
 - Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
 - Replay cannot satisfy a live platform/provider acceptance item.
 - A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.
@@ -992,3 +992,7 @@ ACX-35 delivery-gate amendment: exact-head Ubuntu CI proved that the new subproc
 ACX-36 execution cut: ACXD-045 and `docs/specs/quality-gate-v03-profile.md` retain the complete v0.2 gate/result/waiver/CLI contract and exact optional `ifctester==0.8.5` plus `ifcopenshell==0.8.5` runtime. The optional `ids_profile` selector preserves absent/simple v0.2 behavior and only `aecctx-gate-v1-ids-1.0-expanded-v1` enables exact `partOf` relations `IFCRELAGGREGATES`, `IFCRELASSIGNSTOGROUP`, `IFCRELCONTAINEDINSPATIALSTRUCTURE` and `IFCRELNESTS`; string pattern/enumeration and numeric inclusive/exclusive bound restrictions; and required/optional/prohibited specification cardinality. URI/bSDD, geometry, quantity-specific interpretation, length/digit/whitespace restrictions, remote lookup, unlisted relations/facets/schemas and approval remain unsupported. ACX-36 is `in_progress`; ACX-37 remains `pending` until unchanged official fixtures, separate project cases, fail-closed/security/worker, projection parity, clean-install, package and repository gates pass.
 
 ACX-36 completion resolution: `quality-gate.ids-expanded` is public `partial` only for ACXD-045's exact IDS v1.0.0 expanded profile with `ifctester==0.8.5` and `ifcopenshell==0.8.5`. The 45-case hash-bound corpus, unchanged official provenance/license, separate deterministic project cases, v0.2 compatibility, fail-closed unsupported/security/worker outcomes, projection parity, package and repository gates pass. URI/bSDD, geometry and quantity-specific interpretation, unlisted relations/facets/schemas/cardinalities/restrictions, remote validation, source correctness and approval/certification remain non-claims. ACX-37 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+ACX-37 execution cut: ACXD-046 and `docs/specs/inspector-distribution-v03-profile.md` select only the deterministic local `aecctx-inspector-distribution-v1` ZIP and `codex-local-plugin-contract-v1` on Python 3.12 Linux/macOS/Windows with AECCTX `>=0.2.0,<0.4.0` and exact locked MCP `1.28.1`. Mandatory checksum/inventory integrity, optional explicit Ed25519 archive signatures, create-only install, strictly increasing rollback-safe upgrade, exact-inventory uninstall and six-operation parity are the complete scope. Marketplace/host-product compatibility, universal model behavior, publisher trust, third-party hosts, unique semantics and plugin shell/provider execution remain non-claims. ACX-37 is `in_progress`; ACX-38 remains `pending` until all distribution, lifecycle, parity, security, clean-install, package and repository gates pass.
+
+ACX-37 completion resolution: `codex.aecctx-inspector-distribution` is public `partial` only for `aecctx-inspector-distribution-v1` and the exact `codex-local-plugin-contract-v1` Python 3.12 Linux/macOS/Windows matrix with MCP `1.28.1`. Deterministic archive/inventory/checksum, optional explicit Ed25519 signature, verified-byte install, create-only/upgrade/rollback/downgrade/uninstall lifecycle, six-operation parity, prompt-injection treatment, core independence, package/security scans and repository gates pass. Marketplace and host-product compatibility, hosted/third-party behavior, universal model behavior, publisher trust, unique semantics and provider shell execution remain non-claims. ACX-38 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.

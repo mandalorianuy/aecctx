@@ -10,13 +10,17 @@ from typing import Any
 
 
 EXPECTED_COMPATIBILITY = {
-    "aecctx": ">=0.1.0,<0.3.0",
+    "aecctx": ">=0.2.0,<0.4.0",
     "core_optional": True,
+    "host_contract": "codex-local-plugin-contract-v1",
+    "host_profiles": ["codex-local-v1-linux", "codex-local-v1-macos", "codex-local-v1-windows"],
     "marketplace_published": False,
     "mcp": ">=1.20,<2",
-    "plugin_version": "0.2.0",
-    "profile": "aecctx-inspector-v1",
+    "mcp_claimed": "1.28.1",
+    "plugin_version": "0.3.0",
+    "profile": "aecctx-inspector-distribution-v1",
     "python": ">=3.12",
+    "python_claimed": "3.12",
 }
 EXPECTED_MCP = {
     "mcpServers": {
@@ -54,8 +58,8 @@ def validate_plugin(plugin_root: Path) -> tuple[str, ...]:
     if manifest is not None:
         if manifest.get("name") != "aecctx-inspector":
             errors.append("plugin manifest name must be aecctx-inspector")
-        if manifest.get("version") != "0.2.0":
-            errors.append("plugin manifest version must be 0.2.0")
+        if manifest.get("version") != "0.3.0":
+            errors.append("plugin manifest version must be 0.3.0")
         if manifest.get("skills") != "./skills/":
             errors.append("plugin manifest must reference ./skills/")
         if manifest.get("mcpServers") != "./.mcp.json":

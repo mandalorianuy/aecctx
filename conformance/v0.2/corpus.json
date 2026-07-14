@@ -20,7 +20,6 @@
     {"id": "rvt-blocked", "path": "conformance/v0.2/rvt-provider-decision.json", "sha256": "d7bc7e0b8f14b9c41e4914675fddb967d1e14d934bd33dd0c8decc05e46f4fa8"},
     {"id": "signing", "path": "conformance/v0.2/signing-corpus.json", "sha256": "ee4362c1ce21692b2634f289a9ac4da8ba98f33a9eb7cc0d72bb24ca856a3eee"},
     {"id": "gate", "path": "conformance/v0.2/gate-corpus.json", "sha256": "15e018f2ed8f294c452ef6d1280530ade7fbb4b0438341e8fbf04c1442d65092"},
-    {"id": "plugin", "path": "conformance/v0.2/plugin-corpus.json", "sha256": "c174ef3811ee6cacb6acc51c10e181b27f02a0da616d1e7c59ccc098112994c4"}
+    {"id": "plugin", "path": "conformance/v0.2/plugin-corpus.json", "sha256": "2beef408a9589069f04afed13ec2a71879b4bfa7ae0f8ac96bf9cc7367e779a5"}
   ]
 }
-

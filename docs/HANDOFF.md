@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-14
-Handoff status: `0.3.0-ACX-36-COMPLETE`
+Handoff status: `0.3.0-ACX-37-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 through ACX-33 and ACX-35 through ACX-36 are complete; ACX-34 is documented `blocked`; ACX-37 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
+AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 through ACX-33 and ACX-35 through ACX-37 are complete; ACX-34 is documented `blocked`; ACX-38 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
 
 ## Start here
 
@@ -13,20 +13,26 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
 4. Read `docs/specs/aecctx-post-v02-functional-debt-spec.md` and `docs/plans/post-v02-functional-debt-implementation.md` completely.
-5. ACX-01 through ACX-09, ACX-11 through ACX-18, ACX-20 through ACX-33 and ACX-35 through ACX-36 are complete; ACX-19 and ACX-34 are documented `blocked`; ACX-10 remains deferred. ACX-37 is the only authorized next task and has not started.
+5. ACX-01 through ACX-09, ACX-11 through ACX-18, ACX-20 through ACX-33 and ACX-35 through ACX-37 are complete; ACX-19 and ACX-34 are documented `blocked`; ACX-10 remains deferred. ACX-38 is the only authorized next task and has not started.
 6. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 7. Run `./scripts/verify.sh` before handoff.
 
 ## Active post-v0.2 plan
 
 - Plan: ACX-24 through ACX-38, dependency-first.
-- Completed: ACX-24 through ACX-33 and ACX-35 through ACX-36, including bounded DWG, advanced optional offline trust and expanded IDS profiles.
+- Completed: ACX-24 through ACX-33 and ACX-35 through ACX-37, including bounded DWG, advanced optional offline trust, expanded IDS and portable inspector distribution profiles.
 - Documented blocked: ACX-34; RVT remains public `unsupported` under the renewed executable anti-claim boundary.
-- Sole `pending-next`: ACX-37, inspector distribution and host portability.
-- ACX-38: `pending`.
+- Sole `pending-next`: ACX-38, aggregate conformance and `0.3.0` release.
 - Claim posture: accepted post-v0.2 public partial claims through ACX-36 include provider multiarch/remote, IFC, DXF, OCR, vision/reconstruction, mesh CRS/datum, bounded STEP/IGES/DWG, `package.advanced-trust-signing` and `quality-gate.ids-expanded`; `sandbox.local-enforcement` and `rvt.external-provider` are public `unsupported`.
 - Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
-- Execution boundary: ACX-36 is complete; ACX-37 alone is promoted but MUST NOT execute without a new continuation request.
+- Execution boundary: ACX-37 is complete; ACX-38 alone is promoted but MUST NOT execute without a new continuation request.
+
+## ACX-37 evidence
+
+- Normative profile: `docs/specs/inspector-distribution-v03-profile.md` and ACXD-046.
+- Acceptance evidence: `docs/evidence/ACX-37.md`.
+- Corpus/checker: `conformance/v0.3/plugin-corpus.json` and `scripts/check_inspector_v03_conformance.py`.
+- Public boundary: only the exact local Python 3.12 Linux/macOS/Windows contract with MCP 1.28.1 is partial; marketplace/host-product behavior, publisher trust, universal models, third-party hosts, unique semantics and provider shell execution remain unclaimed.
 
 ## ACX-36 evidence
 
@@ -222,7 +228,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 ## Next implementation task
 
-ACX-34 is documented blocked under ACXD-043. Its v0.3 decision is bound to the immutable v0.2 blocker and preserves only the public unsupported/opaque anti-claim boundary; no RVT adapter, provider, replay, real/proprietary fixture or semantic claim exists. ACX-35 is complete under ACXD-044 and ACX-36 is complete under ACXD-045; ACX-37 is the sole `pending-next` task and must not start without a new continuation request.
+ACX-34 is documented blocked under ACXD-043. Its v0.3 decision is bound to the immutable v0.2 blocker and preserves only the public unsupported/opaque anti-claim boundary; no RVT adapter, provider, replay, real/proprietary fixture or semantic claim exists. ACX-35, ACX-36 and ACX-37 are complete under ACXD-044 through ACXD-046; ACX-38 is the sole `pending-next` task and must not start without a new continuation request.
 
 ## Consumer integration planning entry point
 

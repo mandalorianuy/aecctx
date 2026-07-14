@@ -1,0 +1,13 @@
+{
+  "contract": "codex-local-plugin-contract-v1",
+  "core": ">=0.2.0,<0.4.0",
+  "hosts": [
+    {"host_profile": "codex-local-v1-linux", "mcp": "1.28.1", "platform": "linux", "python": "3.12"},
+    {"host_profile": "codex-local-v1-macos", "mcp": "1.28.1", "platform": "macos", "python": "3.12"},
+    {"host_profile": "codex-local-v1-windows", "mcp": "1.28.1", "platform": "windows", "python": "3.12"}
+  ],
+  "license": "Apache-2.0",
+  "marketplace_published": false,
+  "plugin_version": "0.3.0",
+  "profile": "aecctx-inspector-distribution-v1"
+}
