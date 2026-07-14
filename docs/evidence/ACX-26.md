@@ -32,6 +32,8 @@ The claim-promotion RED command `python scripts/check_remote_provider_conformanc
 
 The repository owner confirmed GitHub, not OneDev, is the delivery authority for AECCTX. The configured `origin` and authenticated `gh` account are therefore the accepted publication path. GitHub reports that `main` has no branch protection and the repository has no rulesets, so zero external approvals are required; a non-draft PR, explicit diff/check review, successful CI and squash merge remain mandatory evidence.
 
+Acceptance transition commit `d7097cd` is delivered by non-draft [GitHub PR #1](https://github.com/mandalorianuy/aecctx/pull/1). The PR diff, exact-head checks and squash result are the delivery record; no direct-main or alternate-platform bypass is permitted.
+
 The acceptance transition is authoritative only after its non-draft GitHub PR passes review/checks and is squash-merged. The resulting public claim is `sandbox.remote-provider`, support level `partial`, for `remote-https-spki-v1` on Python 3.12 Linux/macOS/Windows. ACX-27 alone is promoted to `pending-next` and is not executed by this task.
 
 ## Fixtures and conformance claims
