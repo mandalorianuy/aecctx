@@ -283,3 +283,4 @@ None.
 - Safety decision: exact text/point/segment/member/depth limits, finite-value validation, cycle rejection and stable diagnostics precede public claims.
 - Claim decision: `ifc.native-2d.v03` and `ifc.georeferencing.v03` may become public `partial` only after their digest-bound fixture/corpus, RED/GREEN, reversibility, derived-preview, packaging and cross-platform gates pass.
 - Evidence owner: `docs/specs/ifc-v03-profile.md`, `fixtures/v0.3/ifc/`, `conformance/v0.3/ifc-corpus.json`, `scripts/check_ifc_v03_conformance.py` and `docs/evidence/ACX-27.md`.
+- Completion result: both exact claims are public `partial` after source-structure, degradation, limit, reversibility, derived-preview, package and repository gates passed. The non-claims above remain unchanged.
