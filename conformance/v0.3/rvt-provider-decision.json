@@ -1,0 +1,83 @@
+{
+  "version": "0.3.0",
+  "decision": "blocked",
+  "selected_route": null,
+  "human_route_authorization": "missing",
+  "evaluated_at": "2026-07-14",
+  "predecessor": {
+    "path": "conformance/v0.2/rvt-provider-decision.json",
+    "sha256": "d7bc7e0b8f14b9c41e4914675fddb967d1e14d934bd33dd0c8decc05e46f4fa8"
+  },
+  "routes": [
+    {
+      "id": "licensed-local-runtime",
+      "official_sources": [
+        "https://help.autodesk.com/cloudhelp/2024/ENU/Revit-API/files/Revit_API_Developers_Guide/Introduction/Getting_Started/Welcome_to_the_Revit_Platform_API/Revit_API_Revit_API_Developers_Guide_Introduction_Getting_Started_Welcome_to_the_Revit_Platform_API_Installation_html.html",
+        "https://help.autodesk.com/cloudhelp/2025/ENU/Revit-API/files/Revit_API_Developers_Guide/Introduction/Getting_Started/Using_the_Autodesk_Revit_API/Revit_API_Revit_API_Developers_Guide_Introduction_Getting_Started_Using_the_Autodesk_Revit_API_Deployment_Options_html.html",
+        "https://www.opendesign.com/products/bimrv"
+      ],
+      "axes": {
+        "license_entitlement": "unavailable",
+        "exact_runtime_rvt_versions": "unavailable",
+        "automation_rights": "unavailable",
+        "sandbox_or_network_profile": "unavailable",
+        "ci_access": "unavailable",
+        "fixture_rights": "unavailable",
+        "privacy": "unknown",
+        "telemetry": "unknown",
+        "billing": "unapproved",
+        "retention": "not_applicable",
+        "jurisdiction": "not_applicable",
+        "lifecycle": "unknown"
+      },
+      "blocker_codes": [
+        "AECCTX_RVT_HUMAN_ROUTE_SELECTION_MISSING",
+        "AECCTX_RVT_ENTITLEMENT_UNAVAILABLE",
+        "AECCTX_RVT_EXACT_VERSION_UNAVAILABLE",
+        "AECCTX_RVT_AUTOMATION_RIGHTS_UNAVAILABLE",
+        "AECCTX_RVT_SANDBOX_PROFILE_UNAVAILABLE",
+        "AECCTX_RVT_CI_UNAVAILABLE",
+        "AECCTX_RVT_FIXTURE_RIGHTS_UNAVAILABLE",
+        "AECCTX_RVT_LIFECYCLE_UNAVAILABLE"
+      ],
+      "impact": "No licensed local provider can be executed or claimed without a selected route and written entitlement, exact versions, automation rights, complete enforcement, private CI and publishable real fixtures."
+    },
+    {
+      "id": "aps-network-provider",
+      "official_sources": [
+        "https://aps.autodesk.com/developer/overview/automation-api",
+        "https://aps.autodesk.com/blog/aps-business-model-evolution"
+      ],
+      "axes": {
+        "license_entitlement": "unapproved",
+        "exact_runtime_rvt_versions": "unavailable",
+        "automation_rights": "unapproved",
+        "sandbox_or_network_profile": "unapproved",
+        "ci_access": "unavailable",
+        "fixture_rights": "unavailable",
+        "privacy": "unapproved",
+        "telemetry": "unapproved",
+        "billing": "unapproved",
+        "retention": "unapproved",
+        "jurisdiction": "unapproved",
+        "lifecycle": "unknown"
+      },
+      "blocker_codes": [
+        "AECCTX_RVT_HUMAN_ROUTE_SELECTION_MISSING",
+        "AECCTX_RVT_ENTITLEMENT_UNAVAILABLE",
+        "AECCTX_RVT_EXACT_VERSION_UNAVAILABLE",
+        "AECCTX_RVT_AUTOMATION_RIGHTS_UNAVAILABLE",
+        "AECCTX_RVT_CI_UNAVAILABLE",
+        "AECCTX_RVT_FIXTURE_RIGHTS_UNAVAILABLE",
+        "AECCTX_RVT_NETWORK_POLICY_UNAPPROVED",
+        "AECCTX_RVT_PRIVACY_POLICY_UNAPPROVED",
+        "AECCTX_RVT_BILLING_POLICY_UNAPPROVED",
+        "AECCTX_RVT_RETENTION_POLICY_UNAPPROVED",
+        "AECCTX_RVT_JURISDICTION_POLICY_UNAPPROVED",
+        "AECCTX_RVT_LIFECYCLE_UNAVAILABLE"
+      ],
+      "impact": "The neutral ACX-26 protocol does not authorize Autodesk credentials, paid service use, source upload, storage, telemetry, deletion, region or provider lifecycle, and no live RVT CI or public real fixture exists."
+    }
+  ],
+  "exact_reopening_decision": "Select exactly one route and supply its written entitlement, exact runtime and RVT versions, automation rights, complete enforcement profile, live CI, legally publishable real fixtures, privacy and telemetry posture, billing, retention, jurisdiction and lifecycle evidence before decoder code."
+}

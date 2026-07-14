@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-14
-Handoff status: `0.3.0-ACX-33-COMPLETE`
+Handoff status: `0.3.0-ACX-34-BLOCKED`
 
 ## Outcome
 
-AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 through ACX-33 are complete; ACX-34 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
+AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 through ACX-33 are complete; ACX-34 is documented `blocked`; ACX-35 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
 
 ## Start here
 
@@ -13,7 +13,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
 4. Read `docs/specs/aecctx-post-v02-functional-debt-spec.md` and `docs/plans/post-v02-functional-debt-implementation.md` completely.
-5. ACX-01 through ACX-09, ACX-11 through ACX-18, ACX-20 through ACX-33 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-34 is the only authorized next task and has not started.
+5. ACX-01 through ACX-09, ACX-11 through ACX-18, ACX-20 through ACX-33 are complete; ACX-19 and ACX-34 are documented `blocked`; ACX-10 remains deferred. ACX-35 is the only authorized next task and has not started.
 6. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 7. Run `./scripts/verify.sh` before handoff.
 
@@ -21,11 +21,12 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 - Plan: ACX-24 through ACX-38, dependency-first.
 - Completed: ACX-24 through ACX-33, including bounded DWG R13/R14/R2000, closed xrefs, explicit units and simple geometry evidence.
-- Sole `pending-next`: ACX-34, RVT provider reopening or renewed executable blocker.
-- ACX-35 through ACX-38: `pending`.
-- Claim posture: accepted post-v0.2 public partial claims through ACX-33 include provider multiarch/remote, IFC, DXF, OCR, vision/reconstruction, mesh CRS/datum, bounded STEP/IGES XDE/recovery and exact-profile DWG; `sandbox.local-enforcement` is public `unsupported`; ACX-34 and later entries remain targets until their owning milestone closes.
+- Documented blocked: ACX-34; RVT remains public `unsupported` under the renewed executable anti-claim boundary.
+- Sole `pending-next`: ACX-35, advanced optional signing and trust profiles.
+- ACX-36 through ACX-38: `pending`.
+- Claim posture: accepted post-v0.2 public partial claims through ACX-33 include provider multiarch/remote, IFC, DXF, OCR, vision/reconstruction, mesh CRS/datum, bounded STEP/IGES XDE/recovery and exact-profile DWG; `sandbox.local-enforcement` and `rvt.external-provider` are public `unsupported`.
 - Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
-- Execution boundary: ACX-33 is complete; ACX-34 alone is promoted but MUST NOT execute without a new continuation request.
+- Execution boundary: ACX-34 is documented blocked; ACX-35 alone is promoted but MUST NOT execute without a new continuation request.
 
 ## ACX-33 evidence
 
@@ -207,7 +208,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 ## Next implementation task
 
-ACX-33 is complete under ACXD-042 and `docs/specs/dwg-v03-profile.md`. The exact LibreDWG profile preserves observed decoder JSON separately from converted DXF/simple geometry and resolves xrefs only through closed content-addressed bundles. ACX-34 is the sole `pending-next` task and must not start without a new continuation request.
+ACX-34 is documented blocked under ACXD-043. Its v0.3 decision is bound to the immutable v0.2 blocker and preserves only the public unsupported/opaque anti-claim boundary; no RVT adapter, provider, replay, real/proprietary fixture or semantic claim exists. ACX-35 is the sole `pending-next` task and must not start without a new continuation request.
 
 ## Consumer integration planning entry point
 

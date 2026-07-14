@@ -225,6 +225,21 @@
         "tests/test_dwg_v03.py::test_v03_events_map_explicit_units_and_converted_3d_without_fidelity_escalation",
         "tests/test_dwg_v03.py::test_live_v03_profiles_are_equal_on_arm64_and_amd64"
       ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-34.md",
+      "fixture_ids": ["v02-rvt-acx19-anti-claim"],
+      "id": "rvt.external-provider",
+      "platform_scope": ["any"],
+      "profile": "rvt-no-provider-blocked-v03",
+      "provider_scope": "none",
+      "status": "public",
+      "support_level": "unsupported",
+      "test_ids": [
+        "tests/test_rvt_v03.py::test_acx34_committed_renewal_is_machine_validated",
+        "tests/test_rvt_blocked_profile.py::test_rvt_suffix_uses_deterministic_opaque_fallback",
+        "tests/test_rvt_blocked_profile.py::test_cli_auto_does_not_promote_rvt_suffix"
+      ]
     }
   ],
   "fixtures": [
@@ -267,6 +282,10 @@
     {
       "id": "v03-dwg-acx33",
       "path": "fixtures/v0.3/dwg"
+    },
+    {
+      "id": "v02-rvt-acx19-anti-claim",
+      "path": "fixtures/v0.2/rvt/not-a-real-rvt.rvt"
     }
   ],
   "version": "0.3.0"

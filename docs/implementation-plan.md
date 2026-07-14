@@ -193,8 +193,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-31 | completed | Mesh CRS registry and datum-operation qualification |
 | ACX-32 | completed | STEP/IGES XDE and fidelity expansion |
 | ACX-33 | completed | DWG version, xref, units and geometry expansion |
-| ACX-34 | pending-next | RVT provider reopening or renewed executable blocker |
-| ACX-35 | pending | Advanced optional signing and trust profiles |
+| ACX-34 | blocked | No authorized/admissible RVT route; renewed executable unsupported boundary |
+| ACX-35 | pending-next | Advanced optional signing and trust profiles |
 | ACX-36 | pending | Expanded bounded IDS and quality-gate profiles |
 | ACX-37 | pending | Inspector distribution and host portability |
 | ACX-38 | pending | Aggregate conformance, packaging and `0.3.0` release |
@@ -978,3 +978,7 @@ ACX-33 delivery-gate amendment: pre-push blob inspection exposed Git LF normaliz
 ACX-33 portable-gate amendment: exact-head GitHub CI proved that fixture `--check` incorrectly required Docker and the reviewed local image on every portable runner; Ubuntu/macOS failed unavailable and Windows terminated in the external path. `--check` MUST be read-only, provider-free and executable under Python `-S` without site-packages, validating committed generator/profile/schema/worker/fixture hashes. All AECCTX, ezdxf and provider imports belong exclusively to full generation. Full byte regeneration moves to explicit `--live-check` and remains required only where the exact reviewed OCI runtime is available. Portable replay cannot satisfy or replace the separately recorded live arm64/amd64 acceptance evidence.
 
 ACX-33 completion resolution: `dwg.external-provider.v03` is public `partial` only for AC1012/R13, AC1014/R14 and AC1015/R2000 under ACXD-042's exact LibreDWG 0.13.4 Linux arm64/amd64 provider profile plus portable replay. Four project-authored fixtures, exact-version and unit outcomes, closed source-bundle xrefs, observed JSON, converted DXF/simple geometry, writer denial, adversarial cases, package exclusion of the GPL runtime and complete repository gates pass. R12, R2004+, encryption, ACIS/proxy/custom semantics, exact BREP, complete xrefs/3D, CRS, unreviewed runtimes/platforms and consumer mappings remain non-claims. ACX-34 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+ACX-34 execution cut: ACXD-043 records that neither the licensed-local nor APS-remote route has the required human authorization and executable provider evidence. The task therefore renews the blocked boundary under `conformance/v0.3/rvt-provider-decision.json`; it MUST NOT add an RVT adapter, provider descriptor, real/proprietary fixture, replay or semantic claim. ACX-35 remains `pending` until the renewed decision, anti-claim, distribution, consumer-boundary and repository gates pass.
+
+ACX-34 completion resolution: ACXD-043 renews the public `unsupported` boundary because neither governed route has explicit human selection plus the required entitlement, exact versions, automation rights, complete enforcement, live CI, real publishable fixture, privacy, billing/retention/jurisdiction and lifecycle evidence. The immutable v0.2 decision and sentinel remain unchanged; the v0.3 decision is schema-backed and hash-bound to them, and the dual-version checker rejects route promotion, positive claims, adapter/provider scaffolding, proprietary runtimes/fixtures and consumer leakage. No RVT capability was implemented. ACX-35 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.

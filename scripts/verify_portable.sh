@@ -27,6 +27,7 @@ fi
 "$python_runtime" -m json.tool schemas/v0.2/dwg-provider-event.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/dwg-v03-event.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/rvt-provider-decision.schema.json >/dev/null
+"$python_runtime" -m json.tool schemas/v0.2/rvt-provider-decision-v03.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/signature-bundle.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/signing-key-registry.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/signing-trust-policy.schema.json >/dev/null
@@ -34,6 +35,7 @@ fi
 "$python_runtime" -m json.tool conformance/v0.2/claims.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/rvt-provider-decision.json >/dev/null
+"$python_runtime" -m json.tool conformance/v0.3/rvt-provider-decision.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/provider-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/ifc-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/dxf-corpus.json >/dev/null
@@ -61,6 +63,7 @@ fi
 "$python_runtime" -m json.tool fixtures/minimal-aecctx/manifest.json >/dev/null
 "$python_runtime" -m json.tool fixtures/v0.2/shared/minimal-v02/manifest.json >/dev/null
 "$python_runtime" scripts/check_rvt_blocked_conformance.py
+"$python_runtime" scripts/check_rvt_blocked_conformance.py --decision conformance/v0.3/rvt-provider-decision.json --claims conformance/v0.3/claims.json
 "$python_runtime" fixtures/v0.2/signing/generate_fixtures.py --check
 "$python_runtime" scripts/check_signing_conformance.py
 "$python_runtime" fixtures/v0.2/gate/generate_fixtures.py --check

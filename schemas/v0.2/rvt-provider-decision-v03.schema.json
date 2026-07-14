@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aecctx.dev/schemas/v0.2/rvt-provider-decision-v03.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "decision",
+    "selected_route",
+    "human_route_authorization",
+    "evaluated_at",
+    "predecessor",
+    "routes",
+    "exact_reopening_decision"
+  ],
+  "properties": {
+    "version": {"const": "0.3.0"},
+    "decision": {"const": "blocked"},
+    "selected_route": {"type": "null"},
+    "human_route_authorization": {"const": "missing"},
+    "evaluated_at": {"const": "2026-07-14"},
+    "predecessor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"const": "conformance/v0.2/rvt-provider-decision.json"},
+        "sha256": {"const": "d7bc7e0b8f14b9c41e4914675fddb967d1e14d934bd33dd0c8decc05e46f4fa8"}
+      }
+    },
+    "routes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/route"}
+    },
+    "exact_reopening_decision": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "axisState": {
+      "enum": ["unavailable", "unapproved", "unknown", "not_applicable"]
+    },
+    "axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "license_entitlement",
+        "exact_runtime_rvt_versions",
+        "automation_rights",
+        "sandbox_or_network_profile",
+        "ci_access",
+        "fixture_rights",
+        "privacy",
+        "telemetry",
+        "billing",
+        "retention",
+        "jurisdiction",
+        "lifecycle"
+      ],
+      "properties": {
+        "license_entitlement": {"$ref": "#/$defs/axisState"},
+        "exact_runtime_rvt_versions": {"$ref": "#/$defs/axisState"},
+        "automation_rights": {"$ref": "#/$defs/axisState"},
+        "sandbox_or_network_profile": {"$ref": "#/$defs/axisState"},
+        "ci_access": {"$ref": "#/$defs/axisState"},
+        "fixture_rights": {"$ref": "#/$defs/axisState"},
+        "privacy": {"$ref": "#/$defs/axisState"},
+        "telemetry": {"$ref": "#/$defs/axisState"},
+        "billing": {"$ref": "#/$defs/axisState"},
+        "retention": {"$ref": "#/$defs/axisState"},
+        "jurisdiction": {"$ref": "#/$defs/axisState"},
+        "lifecycle": {"$ref": "#/$defs/axisState"}
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "official_sources", "axes", "blocker_codes", "impact"],
+      "properties": {
+        "id": {"enum": ["licensed-local-runtime", "aps-network-provider"]},
+        "official_sources": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "format": "uri"}
+        },
+        "axes": {"$ref": "#/$defs/axes"},
+        "blocker_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^AECCTX_RVT_[A-Z0-9_]+$"}
+        },
+        "impact": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

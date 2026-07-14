@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the governed ACX-19 no-provider decision without claiming RVT support."""
+"""Validate governed ACX-19/ACX-34 no-provider decisions without claiming RVT support."""
 
 from __future__ import annotations
 
@@ -20,7 +20,10 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = REPOSITORY_ROOT / "schemas" / "v0.2" / "rvt-provider-decision.schema.json"
+SCHEMAS = {
+    "0.2.0": REPOSITORY_ROOT / "schemas" / "v0.2" / "rvt-provider-decision.schema.json",
+    "0.3.0": REPOSITORY_ROOT / "schemas" / "v0.2" / "rvt-provider-decision-v03.schema.json",
+}
 ALLOWED_BLOCKERS = frozenset(
     {
         "AECCTX_RVT_ENTITLEMENT_UNAVAILABLE",
@@ -31,6 +34,12 @@ ALLOWED_BLOCKERS = frozenset(
         "AECCTX_RVT_NETWORK_POLICY_UNAPPROVED",
         "AECCTX_RVT_BILLING_POLICY_UNAPPROVED",
         "AECCTX_RVT_RETENTION_POLICY_UNAPPROVED",
+        "AECCTX_RVT_HUMAN_ROUTE_SELECTION_MISSING",
+        "AECCTX_RVT_EXACT_VERSION_UNAVAILABLE",
+        "AECCTX_RVT_AUTOMATION_RIGHTS_UNAVAILABLE",
+        "AECCTX_RVT_PRIVACY_POLICY_UNAPPROVED",
+        "AECCTX_RVT_JURISDICTION_POLICY_UNAPPROVED",
+        "AECCTX_RVT_LIFECYCLE_UNAVAILABLE",
     }
 )
 OFFICIAL_HOSTS = frozenset({"help.autodesk.com", "aps.autodesk.com", "www.opendesign.com", "github.com"})
@@ -48,8 +57,19 @@ EXPECTED_SOURCES = {
     ),
     "autodesk-revit-ifc-exporter": ("https://github.com/Autodesk/revit-ifc",),
 }
+EXPECTED_V03_SOURCES = {
+    "licensed-local-runtime": (
+        "https://help.autodesk.com/cloudhelp/2024/ENU/Revit-API/files/Revit_API_Developers_Guide/Introduction/Getting_Started/Welcome_to_the_Revit_Platform_API/Revit_API_Revit_API_Developers_Guide_Introduction_Getting_Started_Welcome_to_the_Revit_Platform_API_Installation_html.html",
+        "https://help.autodesk.com/cloudhelp/2025/ENU/Revit-API/files/Revit_API_Developers_Guide/Introduction/Getting_Started/Using_the_Autodesk_Revit_API/Revit_API_Revit_API_Developers_Guide_Introduction_Getting_Started_Using_the_Autodesk_Revit_API_Deployment_Options_html.html",
+        "https://www.opendesign.com/products/bimrv",
+    ),
+    "aps-network-provider": (
+        "https://aps.autodesk.com/developer/overview/automation-api",
+        "https://aps.autodesk.com/blog/aps-business-model-evolution",
+    ),
+}
 EXPECTED_RVT_FIXTURE = {"id": "v02-rvt-acx19-anti-claim", "path": "fixtures/v0.2/rvt/not-a-real-rvt.rvt"}
-EXPECTED_RVT_CLAIM = {
+EXPECTED_V02_RVT_CLAIM = {
     "id": "rvt.external-provider",
     "status": "public",
     "support_level": "unsupported",
@@ -62,6 +82,21 @@ EXPECTED_RVT_CLAIM = {
         "tests/test_rvt_blocked_profile.py::test_cli_auto_does_not_promote_rvt_suffix",
     ],
     "evidence": "docs/evidence/ACX-19.md",
+}
+EXPECTED_V03_RVT_CLAIM = {
+    "evidence": "docs/evidence/ACX-34.md",
+    "fixture_ids": ["v02-rvt-acx19-anti-claim"],
+    "id": "rvt.external-provider",
+    "platform_scope": ["any"],
+    "profile": "rvt-no-provider-blocked-v03",
+    "provider_scope": "none",
+    "status": "public",
+    "support_level": "unsupported",
+    "test_ids": [
+        "tests/test_rvt_v03.py::test_acx34_committed_renewal_is_machine_validated",
+        "tests/test_rvt_blocked_profile.py::test_rvt_suffix_uses_deterministic_opaque_fallback",
+        "tests/test_rvt_blocked_profile.py::test_cli_auto_does_not_promote_rvt_suffix",
+    ],
 }
 PROHIBITED_RUNTIME_SUFFIXES = (".dll", ".dylib", ".exe", ".pyd", ".so")
 PROHIBITED_DEPENDENCY_NAMES = ("autodesk", "aps", "bimrv", "oda", "revit", "woodframing", "wfdomain", "wfimport")
@@ -82,19 +117,28 @@ def _load_json(path: Path, label: str) -> tuple[object | None, tuple[str, ...]]:
 
 def validate_decision(record: object) -> tuple[str, ...]:
     errors: list[str] = []
-    schema, schema_errors = _load_json(SCHEMA, "decision schema")
+    if not isinstance(record, dict):
+        return ("provider decision must be an object",)
+    version = record.get("version")
+    schema_path = SCHEMAS.get(version) if isinstance(version, str) else None
+    if schema_path is None:
+        return (f"unsupported provider decision version: {version}",)
+    schema, schema_errors = _load_json(schema_path, "decision schema")
     if schema_errors:
         return schema_errors
     assert isinstance(schema, dict)
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     errors.extend(error.message for error in validator.iter_errors(record))
-    if not isinstance(record, dict):
-        return tuple(sorted(set(errors)))
-
-    if record.get("selected_provider") is not None:
-        errors.append("selected_provider must be null")
-
-    candidates = record.get("candidates", [])
+    if version == "0.3.0":
+        if record.get("human_route_authorization") == "missing" and record.get("selected_route") is not None:
+            errors.append("selected_route must be null while human_route_authorization is missing")
+        candidates = record.get("routes", [])
+        expected_sources = EXPECTED_V03_SOURCES
+    else:
+        if record.get("selected_provider") is not None:
+            errors.append("selected_provider must be null")
+        candidates = record.get("candidates", [])
+        expected_sources = EXPECTED_SOURCES
     candidate_ids = [item.get("id") for item in candidates if isinstance(item, dict)] if isinstance(candidates, list) else []
     if len(candidate_ids) != len(set(candidate_ids)):
         errors.append("duplicate candidate id")
@@ -111,13 +155,14 @@ def validate_decision(record: object) -> tuple[str, ...]:
             if not isinstance(source, str) or urlparse(source).hostname not in OFFICIAL_HOSTS:
                 errors.append(f"non-official decision source: {source}")
         if isinstance(candidate_id, str) and isinstance(official_sources, list):
-            if tuple(official_sources) != EXPECTED_SOURCES.get(candidate_id):
+            if tuple(official_sources) != expected_sources.get(candidate_id):
                 errors.append(f"official sources do not match candidate: {candidate_id}")
 
-    alternatives = record.get("reopening_alternatives", [])
-    alternative_ids = [item.get("id") for item in alternatives if isinstance(item, dict)] if isinstance(alternatives, list) else []
-    if len(alternative_ids) != len(set(alternative_ids)):
-        errors.append("duplicate reopening alternative id")
+    if version == "0.2.0":
+        alternatives = record.get("reopening_alternatives", [])
+        alternative_ids = [item.get("id") for item in alternatives if isinstance(item, dict)] if isinstance(alternatives, list) else []
+        if len(alternative_ids) != len(set(alternative_ids)):
+            errors.append("duplicate reopening alternative id")
 
     serialized = json.dumps(record, sort_keys=True)
     if re.search(
@@ -136,6 +181,13 @@ def validate_claim(registry: object) -> tuple[str, ...]:
         return ("claim registry must be an object",)
     errors: list[str] = []
     fixtures = registry.get("fixtures")
+    registry_version = registry.get("version")
+    if registry_version == "0.2.0":
+        expected_claim = EXPECTED_V02_RVT_CLAIM
+    elif registry_version == "0.3.0":
+        expected_claim = EXPECTED_V03_RVT_CLAIM
+    else:
+        return (f"unsupported claim registry version: {registry_version}",)
     if not isinstance(fixtures, list) or EXPECTED_RVT_FIXTURE not in fixtures:
         errors.append("RVT anti-claim fixture mapping is missing or changed")
     claims = registry.get("claims")
@@ -150,7 +202,7 @@ def validate_claim(registry: object) -> tuple[str, ...]:
         if claim.get("id") != "rvt.external-provider":
             errors.append(f"unexpected RVT claim id: {claim['id']}")
     blocked_claims = [item for item in rvt_claims if item.get("id") == "rvt.external-provider"]
-    if len(blocked_claims) != 1 or blocked_claims[0] != EXPECTED_RVT_CLAIM:
+    if len(blocked_claims) != 1 or blocked_claims[0] != expected_claim:
         errors.append("RVT claim does not match blocked boundary")
     return tuple(sorted(set(errors)))
 

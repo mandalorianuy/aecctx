@@ -77,8 +77,10 @@ def test_portable_verify_gates_rvt_boundary_before_tests_and_after_build() -> No
     script = (Path(__file__).parents[1] / "scripts" / "verify_portable.sh").read_text(encoding="utf-8")
 
     assert "schemas/v0.2/rvt-provider-decision.schema.json" in script
+    assert "schemas/v0.2/rvt-provider-decision-v03.schema.json" in script
     assert "conformance/v0.2/rvt-provider-decision.json" in script
-    assert script.count("scripts/check_rvt_blocked_conformance.py") == 2
+    assert "conformance/v0.3/rvt-provider-decision.json" in script
+    assert script.count("scripts/check_rvt_blocked_conformance.py") == 3
     assert script.index("scripts/check_rvt_blocked_conformance.py") < script.index('"$python_runtime" -m pytest')
     assert script.rindex("scripts/check_rvt_blocked_conformance.py") > script.index('"$python_runtime" -m build')
     assert "--artifact dist/aecctx-0.2.0-py3-none-any.whl" in script
@@ -90,7 +92,9 @@ def test_spec_contract_requires_rvt_blocked_conformance_material() -> None:
 
     for path in (
         "schemas/v0.2/rvt-provider-decision.schema.json",
+        "schemas/v0.2/rvt-provider-decision-v03.schema.json",
         "conformance/v0.2/rvt-provider-decision.json",
+        "conformance/v0.3/rvt-provider-decision.json",
         "scripts/check_rvt_blocked_conformance.py",
         "fixtures/v0.2/rvt/not-a-real-rvt.rvt",
         "docs/specs/rvt-v02-blocked-profile.md",
