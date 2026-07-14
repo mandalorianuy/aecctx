@@ -20,12 +20,18 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 ## Active post-v0.2 plan
 
 - Plan: ACX-24 through ACX-38, dependency-first.
-- Completed: ACX-24 live OCI providers, ACX-25 deterministic native-profile rejection/reporting and ACX-26 bounded remote-provider protocol.
-- Sole `pending-next`: ACX-27, expanded IFC 2D and georeferencing.
-- ACX-28 through ACX-38: `pending`.
-- Claim posture: `sandbox.oci-multiarch` and `sandbox.remote-provider` are public `partial`; `sandbox.local-enforcement` is public `unsupported`; every later post-v0.2 entry remains a target until its owning milestone closes.
+- Completed: ACX-24 live OCI providers, ACX-25 deterministic native-profile rejection/reporting, ACX-26 bounded remote-provider protocol and ACX-27 bounded IFC4X3 ADD2 2D/georeferencing.
+- Sole `pending-next`: ACX-28, expanded DXF semantics, geometry and bounded xrefs.
+- ACX-29 through ACX-38: `pending`.
+- Claim posture: `sandbox.oci-multiarch`, `sandbox.remote-provider`, `ifc.native-2d.v03` and `ifc.georeferencing.v03` are public `partial`; `sandbox.local-enforcement` is public `unsupported`; every later post-v0.2 entry remains a target until its owning milestone closes.
 - Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
-- Execution boundary: ACX-26 is complete; ACX-27 alone is promoted but MUST NOT execute without a new continuation request.
+- Execution boundary: ACX-27 is complete; ACX-28 alone is promoted but MUST NOT execute without a new continuation request.
+
+## ACX-27 evidence
+
+- Normative profile: `docs/specs/ifc-v03-profile.md` and ACXD-035.
+- Acceptance evidence: `docs/evidence/ACX-27.md`.
+- Corpus/checker: `conformance/v0.3/ifc-corpus.json` and `scripts/check_ifc_v03_conformance.py`.
 
 ## ACX-24 evidence
 

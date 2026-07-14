@@ -260,13 +260,13 @@ def run_remote_provider(
 - Consumes: `ingest_ifc(..., aecctx_version="0.2.0")`, v0.2 coordinate/fidelity records.
 - Produces: claims `ifc.native-2d.v03` and `ifc.georeferencing.v03`; no change to default v0.1 output.
 
-- [ ] Govern ACXD-035 with exact IfcOpenShell version, IFC schemas, item classes and coordinate operations after official API review.
-- [ ] RED-test every selected curve/annotation/style/operation plus absent, empty, unsupported, multiple, conflicted and non-invertible cases.
-- [ ] Generate legally publishable IFC fixtures and bind source hashes before adapter changes.
-- [ ] Implement evidence-first helpers that return source primitives before neutral records; use namespaced extensions for new source structures.
-- [ ] Prove SVG remains derived, transform chains are reversible and no EPSG/unit/operation is guessed.
-- [ ] Run `pytest tests/test_ifc_adapter.py tests/test_ifc_v02.py tests/test_ifc_v03.py -q`, checker and repository gates.
-- [ ] Write evidence, promote only ACX-28 and commit `feat: expand bounded IFC evidence profiles`.
+- [x] Govern ACXD-035 with exact IfcOpenShell version, IFC schemas, item classes and coordinate operations after official API review.
+- [x] RED-test every selected curve/annotation/style/operation plus absent, empty, unsupported, multiple, conflicted and non-invertible cases.
+- [x] Generate legally publishable IFC fixtures and bind source hashes before adapter changes.
+- [x] Implement evidence-first helpers that return source primitives before neutral records; use namespaced extensions for new source structures.
+- [x] Prove SVG remains derived, transform chains are reversible and no EPSG/unit/operation is guessed.
+- [x] Run `pytest tests/test_ifc_adapter.py tests/test_ifc_v02.py tests/test_ifc_v03.py -q`, checker and repository gates.
+- [x] Write evidence, promote only ACX-28 and commit `feat: expand bounded IFC evidence profiles`.
 
 ---
 

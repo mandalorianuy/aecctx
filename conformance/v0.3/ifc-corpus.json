@@ -1,0 +1,50 @@
+{
+  "entries": [
+    {
+      "expected": [
+        "native-2d:selected-structural-forms",
+        "georeferencing:known-scaled-mapconversion",
+        "preview:derived-only"
+      ],
+      "id": "ifc4x3-curves-annotations-scaled",
+      "path": "fixtures/v0.3/ifc/ifc4x3-curves-annotations-scaled.ifc",
+      "schema": "IFC4X3",
+      "schema_identifier": "IFC4X3_ADD2",
+      "sha256": "e493521f9dee630d142edd1da8ab6d4f3aaabc0fa27dd0e39a4ce658a014af3f"
+    },
+    {
+      "expected": [
+        "native-2d:degraded-explicit",
+        "georeferencing:unsupported-noninvertible",
+        "limits:fail-closed"
+      ],
+      "id": "ifc4x3-degraded",
+      "path": "fixtures/v0.3/ifc/ifc4x3-degraded.ifc",
+      "schema": "IFC4X3",
+      "schema_identifier": "IFC4X3_ADD2",
+      "sha256": "ebeeafa0a3ebe76d8984e9a377dc528e8250a4db7a5cbacd2b4a7a3b91259cb8"
+    },
+    {
+      "expected": [
+        "native-2d:not-declared",
+        "georeferencing:conflicted-no-guess"
+      ],
+      "id": "ifc4x3-conflicted-georef",
+      "path": "fixtures/v0.3/ifc/ifc4x3-conflicted-georef.ifc",
+      "schema": "IFC4X3",
+      "schema_identifier": "IFC4X3_ADD2",
+      "sha256": "38e1ddba69ebf39d544246aa8f35db7b6aba68ddce58a9ebd991f4b0ec6b4353"
+    }
+  ],
+  "generator": {
+    "license": "Apache-2.0",
+    "path": "fixtures/v0.3/ifc/generate_fixtures.py",
+    "runtime": "ifcopenshell==0.8.5",
+    "sha256": "e986d2487cf24155f19fa53508c58512ba9d1299fab9fd9fadb0bbfbad4f270f"
+  },
+  "profile": {
+    "path": "docs/specs/ifc-v03-profile.md",
+    "sha256": "e240e4a5b06cfc51f6f116610fa719280ba9d2590872c0109b2b722cd9c242bd"
+  },
+  "version": "0.3.0"
+}

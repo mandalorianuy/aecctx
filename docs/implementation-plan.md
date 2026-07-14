@@ -186,8 +186,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-24 | completed | Live OCI providers on Linux arm64 and amd64 with cross-architecture equivalence |
 | ACX-25 | completed | Additional reviewed local enforcement profiles |
 | ACX-26 | completed | Optional remote/customer-managed provider protocol |
-| ACX-27 | pending-next | Expanded IFC 2D and georeferencing profiles |
-| ACX-28 | pending | Expanded DXF semantics, geometry and bounded xrefs |
+| ACX-27 | completed | Expanded IFC 2D and georeferencing profiles |
+| ACX-28 | pending-next | Expanded DXF semantics, geometry and bounded xrefs |
 | ACX-29 | pending | Multilingual and layout-aware OCR profiles |
 | ACX-30 | pending | Bounded vision inference and reconstruction hypotheses |
 | ACX-31 | pending | Mesh CRS registry and datum-operation qualification |
@@ -946,3 +946,7 @@ ACX-25 completion resolution: `linux-native-v1`, `macos-app-sandbox-v1` and `win
 ACX-26 execution cut: ACXD-034 and `docs/specs/provider-remote-v03-profile.md` select only `remote-https-spki-v1` with explicit invocation consent, exact registered origin/SPKI identity, fixed route, no redirects/proxies/ambient credentials/trust store/clock/discovery, bounded canonical envelopes and deterministic retry/replay. The public ceiling is protocol `partial` backed by repository-owned loopback TLS; third-party service availability, semantics, deletion, jurisdiction and provider-side sandboxing remain non-claims. ACX-27 remains `pending`.
 
 ACX-26 completion resolution: `remote-https-spki-v1` is public `partial` only for the closed customer-selected HTTPS/SPKI protocol and repository-owned loopback TLS/replay corpus. Consent, credential, region, retention, telemetry, byte, timeout, retry, strict-envelope and artifact-confinement boundaries are executable and deterministic; core commands remain network-free. Third-party service availability, provider-side isolation/deletion, jurisdiction, billing, entitlement, semantic correctness, general Web PKI lifecycle, discovery, OAuth, mTLS, streaming and consumer approval remain non-claims. GitHub is the corrected delivery authority; `main` has no branch protection or rulesets, so zero external approvals are required, while non-draft PR review, green CI and squash merge remain mandatory. ACX-27 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+ACX-27 execution cut: ACXD-035 and `docs/specs/ifc-v03-profile.md` select only `ifcopenshell==0.8.5`, project-authored `IFC4X3_ADD2` STEP fixtures, the enumerated structural curve/annotation/style profiles and explicit `IfcMapConversionScaled`. Default v0.1 output and ACX-13 claims remain unchanged. IFC2X3 property-set georeferencing, implicit/default parameters, rendering authority, survey authority and unlisted schemas/items/operations remain non-claims. ACX-28 remains `pending`.
+
+ACX-27 completion resolution: `ifc.native-2d.v03` and `ifc.georeferencing.v03` are public `partial` only for the exact ACXD-035 IFC4X3 ADD2 profiles under optional `ifcopenshell==0.8.5`. Source curve/annotation/style evidence precedes deterministic derived SVG; scaled map factors remain explicit and reversible. Glyph/hatch rendering, topology, arbitrary curves/trims, external presentation resources, IFC2X3 property-set georeferencing, other schemas/operations, CRS validation and survey authority remain non-claims. ACX-28 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.

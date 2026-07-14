@@ -57,6 +57,37 @@
         "tests/test_remote_providers.py::test_remote_transport_adversarial_matrix",
         "tests/test_remote_providers.py::test_remote_replay_is_deterministic_and_drift_bound"
       ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-27.md",
+      "fixture_ids": ["v03-ifc-acx27"],
+      "id": "ifc.native-2d.v03",
+      "platform_scope": ["python-3.12-linux", "python-3.12-macos", "python-3.12-windows"],
+      "profile": "ifc4x3-add2-native-2d-v03",
+      "provider_scope": "ifcopenshell==0.8.5",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_ifc_v03.py::test_ifc4x3_v03_preserves_selected_curve_annotation_and_style_evidence",
+        "tests/test_ifc_v03.py::test_ifc_v03_degraded_states_and_limits_are_explicit",
+        "tests/test_ifc_v03.py::test_ifc_v03_structural_limits_and_cycles_fail_closed",
+        "tests/test_ifc_v03.py::test_ifc_v03_preview_is_derived_and_deterministic"
+      ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-27.md",
+      "fixture_ids": ["v03-ifc-acx27"],
+      "id": "ifc.georeferencing.v03",
+      "platform_scope": ["python-3.12-linux", "python-3.12-macos", "python-3.12-windows"],
+      "profile": "ifc4x3-add2-mapconversion-scaled-v03",
+      "provider_scope": "ifcopenshell==0.8.5",
+      "status": "public",
+      "support_level": "partial",
+      "test_ids": [
+        "tests/test_ifc_v03.py::test_ifc4x3_v03_scaled_map_conversion_is_explicit_and_reversible",
+        "tests/test_ifc_v03.py::test_ifc_v03_georeferencing_conflicts_never_guess",
+        "tests/test_ifc_v03.py::test_ifc_v03_default_v01_and_acx13_v02_are_unchanged"
+      ]
     }
   ],
   "fixtures": [
@@ -71,6 +102,10 @@
     {
       "id": "v03-remote-provider",
       "path": "fixtures/v0.3/remote-providers"
+    },
+    {
+      "id": "v03-ifc-acx27",
+      "path": "fixtures/v0.3/ifc"
     }
   ],
   "version": "0.3.0"

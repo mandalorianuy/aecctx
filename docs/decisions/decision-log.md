@@ -272,3 +272,15 @@ None.
 - Claim decision: `sandbox.remote-provider` may become public `partial` only for this exact protocol after loopback live/adversarial, deterministic replay, packaging and offline-core gates pass. No provider SLA, deletion, jurisdiction, billing, semantic, entitlement or provider-side sandbox guarantee is claimed.
 - Evidence owner: `docs/specs/provider-remote-v03-profile.md`, `conformance/v0.3/remote-provider-corpus.json`, `scripts/check_remote_provider_conformance.py` and `docs/evidence/ACX-26.md`.
 - Completion result: all governed live loopback, adversarial, replay, packaging, offline-core and cross-platform CI gates passed; only the exact protocol is public `partial`. GitHub is the repository delivery authority, with zero externally required approvals under the current unprotected/no-ruleset configuration and mandatory PR/check/squash evidence.
+
+### ACXD-035: Bounded IFC4X3 2D and scaled-map expansion
+
+- Date: 2026-07-13.
+- Status: Accepted for ACX-27 implementation; it creates no survey, rendering or consumer-semantic authority.
+- Runtime/schema decision: positive v0.3 claims use only optional `ifcopenshell==0.8.5` and project-authored `IFC4X3_ADD2` STEP fixtures. Existing ACX-13 IFC2X3/IFC4 claims and default v0.1 output remain unchanged.
+- 2D decision: the exact additional structural profiles are finite 2D `IfcCircle`, `IfcEllipse`, parameter-trimmed supported conics, bounded `IfcCompositeCurve`, explicit line/arc indexed polycurves, bounded `IfcTextLiteral`, supported-boundary `IfcAnnotationFillArea` and directly associated bounded text/curve/fill/hatching style evidence. SVG stays derived and cannot create source geometry.
+- Coordinate decision: only explicit `IfcMapConversionScaled` with one projected CRS, complete ACX-13 parameters and finite positive explicit X/Y/Z factors may become a reversible known transform. Factors scale coordinates, not units. IFC2X3 property sets, defaulted parameters, multiple operations, false EPSG cues and unlisted operations remain observed loss/unknown/unsupported/conflicted.
+- Safety decision: exact text/point/segment/member/depth limits, finite-value validation, cycle rejection and stable diagnostics precede public claims.
+- Claim decision: `ifc.native-2d.v03` and `ifc.georeferencing.v03` may become public `partial` only after their digest-bound fixture/corpus, RED/GREEN, reversibility, derived-preview, packaging and cross-platform gates pass.
+- Evidence owner: `docs/specs/ifc-v03-profile.md`, `fixtures/v0.3/ifc/`, `conformance/v0.3/ifc-corpus.json`, `scripts/check_ifc_v03_conformance.py` and `docs/evidence/ACX-27.md`.
+- Completion result: both exact claims are public `partial` after source-structure, degradation, limit, reversibility, derived-preview, package and repository gates passed. The non-claims above remain unchanged.
