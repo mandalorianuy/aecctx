@@ -89,8 +89,8 @@ def test_portable_verify_gates_rvt_boundary_before_tests_and_after_build() -> No
     assert script.count("scripts/check_rvt_blocked_conformance.py") == 3
     assert script.index("scripts/check_rvt_blocked_conformance.py") < script.index('"$python_runtime" -m pytest')
     assert script.rindex("scripts/check_rvt_blocked_conformance.py") > script.index('"$python_runtime" -m build')
-    assert "--artifact dist/aecctx-0.2.0-py3-none-any.whl" in script
-    assert "--artifact dist/aecctx-0.2.0.tar.gz" in script
+    assert "release_artifacts=(dist/aecctx-0.3.0-py3-none-any.whl dist/aecctx-0.3.0.tar.gz)" in script
+    assert '--artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"' in script
 
 
 def test_spec_contract_requires_rvt_blocked_conformance_material() -> None:

@@ -2,9 +2,7 @@
 
 AECCTX is an open, application-agnostic specification and local-first Python toolchain for compiling CAD, BIM, drawings, meshes, and related AEC files into deterministic context packages that humans, agents, and downstream applications can inspect without silently losing source evidence.
 
-Version **0.1.0** is implemented, packaged and covered by a public conformance corpus.
-
-AECCTX 0.2.0 is the released expansion line. It includes the bounded v0.2 shared schema, reviewed provider boundary, IFC 2D/georeferencing, DXF semantics/3D, experimental English OCR, mesh registration, experimental STEP/IGES and R2000 DWG, optional detached Ed25519 signing, the quality gate and the optional Codex inspector plugin. Claims remain exact and bounded by the aggregate v0.2 corpus.
+AECCTX 0.3.0 is the current reference release. It retains the stable v0.1 and v0.2 package schema lines while adding bounded post-v0.2 provider, format, trust, quality-gate and inspector-distribution profiles. Claims remain exact and are bound by the aggregate v0.3 corpus.
 
 ## Why this exists
 
@@ -24,13 +22,13 @@ AECCTX instead produces a package with:
 Python 3.12 or newer is required.
 
 ```bash
-python -m pip install https://github.com/mandalorianuy/aecctx/releases/download/v0.2.0/aecctx-0.2.0-py3-none-any.whl
+python -m pip install https://github.com/mandalorianuy/aecctx/releases/download/v0.3.0/aecctx-0.3.0-py3-none-any.whl
 ```
 
 For optional adapters or MCP, install from the tagged source checkout:
 
 ```bash
-git clone --branch v0.1.0 --depth 1 https://github.com/mandalorianuy/aecctx.git
+git clone --branch v0.3.0 --depth 1 https://github.com/mandalorianuy/aecctx.git
 cd aecctx
 python -m pip install '.[all]'
 ```
@@ -55,6 +53,7 @@ python -m pip install -e '.[gate-ids]'
 - Plugin contract: [`docs/specs/aec-context-plugin-contract.md`](docs/specs/aec-context-plugin-contract.md)
 - Post-v0.1 expansion specification: [`docs/specs/aecctx-capability-expansion-spec.md`](docs/specs/aecctx-capability-expansion-spec.md)
 - v0.2 compatibility and migration: [`docs/compatibility-v0.2.md`](docs/compatibility-v0.2.md)
+- v0.3 implementation compatibility: [`docs/compatibility-v0.3.md`](docs/compatibility-v0.3.md)
 - Capability matrix: [`docs/capability-matrix.md`](docs/capability-matrix.md)
 - Active implementation sequence: [`docs/implementation-plan.md`](docs/implementation-plan.md)
 - Handoff for the implementation task: [`docs/HANDOFF.md`](docs/HANDOFF.md)
@@ -121,7 +120,7 @@ aecctx ingest fixtures/v0.3/dwg/xref-bundle --output xref-dwg-v02.aecctx --adapt
   --provider-entry r2000-mm-xref --provider-entry r2000-m-profile --json
 ```
 
-Other adapters currently reject `--aecctx-version 0.2.0` until their governed expansion task publishes a profile. OCR, STEP/IGES and DWG remain experimental and partial under their normative profiles. STEP/IGES and DWG require a validated replay in CLI or validated `ProviderResult` in SDK. DWG is limited to exact `AC1012`, `AC1014` and `AC1015` profiles; JSON objects are observed decoder evidence while DXF/geometry are converted evidence. Xrefs require a closed hash-bound source bundle and explicit per-member replay. R12, R2004+, ambient traversal, encryption, ACIS/proxy/custom semantics, CRS and complete 3D remain unsupported or non-claims. Mesh registration never guesses units/CRS or rewrites source coordinates. Vision and hidden geometry are not inferred.
+Other adapters reject `--aecctx-version 0.2.0` unless a governed profile exists. OCR, visible-pixel inference, STEP/IGES and DWG remain partial under exact normative profiles. STEP/IGES and DWG require validated replay in CLI or a validated `ProviderResult` in SDK. DWG is limited to exact `AC1012`, `AC1014` and `AC1015` profiles; JSON objects are observed decoder evidence while DXF/geometry are converted evidence. Xrefs require a closed hash-bound source bundle and explicit per-member replay. R12, R2004+, ambient traversal, encryption, ACIS/proxy/custom semantics, CRS and complete 3D remain unsupported or non-claims. Mesh registration never guesses units/CRS or rewrites source coordinates. Vision outputs remain inferred visible-pixel evidence; hidden source geometry remains unsupported.
 
 Signing accepts valid v0.1/v0.2 directory or ZIP packages and emits a detached JWS General JSON sidecar. Integrity, cryptographic validity, key lifecycle, trust and authorization remain separate fields. A valid signature proves key possession over the governed statement; it does not by itself prove organizational identity, engineering approval or construction readiness.
 
@@ -161,6 +160,6 @@ The optional MCP server is installed with `aecctx[mcp]` and launched with `aecct
 
 `verify.sh` includes the baseline integration gate and expects the baseline package or sibling checkout available to maintainers. Public CI runs `scripts/verify_portable.sh` so external contributors need no private dependency.
 
-Public CI runs on Linux, macOS and Windows. v0.1 compatibility remains governed by [`conformance/v0.1/corpus.json`](conformance/v0.1/corpus.json); v0.2 claims are aggregated by [`conformance/v0.2/corpus.json`](conformance/v0.2/corpus.json). See [`docs/compatibility-v0.2.md`](docs/compatibility-v0.2.md) and [`docs/releases/v0.2.0.md`](docs/releases/v0.2.0.md).
+Public CI runs on Linux, macOS and Windows. v0.1 and v0.2 compatibility remain governed by their immutable aggregate corpora; post-v0.2 outcomes are aggregated by [`conformance/v0.3/corpus.json`](conformance/v0.3/corpus.json). See [`docs/compatibility-v0.3.md`](docs/compatibility-v0.3.md) and [`docs/releases/v0.3.0.md`](docs/releases/v0.3.0.md).
 
 AECCTX is licensed under Apache-2.0. Optional adapters retain their separately documented permissive or LGPL dependency boundaries. See [`LICENSE`](LICENSE) and [`docs/licenses/`](docs/licenses/).

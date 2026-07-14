@@ -561,13 +561,13 @@ The published `conformance/v0.2/rvt-provider-decision.json`, ACX-19 evidence and
 - Consumes: every ACX-24 through ACX-37 completed or documented-blocked outcome.
 - Produces: strict aggregate checker, deterministic artifacts and immutable `v0.3.0` release only after exact gates.
 
-- [ ] Audit the ledger and reject any earlier task lacking evidence, claim mapping or documented blocker.
-- [ ] RED-test missing/duplicate/unmapped claim, digest drift, target/blocked promotion, replay-as-live and restricted/consumer artifact leakage.
-- [ ] Build `conformance/v0.3/corpus.json` with every component corpus digest and exact task outcome.
-- [ ] Verify v0.1/v0.2 package read compatibility, v0.1 default output stability and all optional v0.2 profiles.
-- [ ] Build deterministic wheel, sdist and inspector archive; emit SHA256SUMS and SPDX SBOM.
-- [ ] Run clean core/all-extras installs and scan artifacts for RVT/proprietary/provider/consumer leakage.
-- [ ] Run:
+- [x] Audit the ledger and reject any earlier task lacking evidence, claim mapping or documented blocker.
+- [x] RED-test missing/duplicate/unmapped claim, digest drift, target/blocked promotion, replay-as-live and restricted/consumer artifact leakage.
+- [x] Build `conformance/v0.3/corpus.json` with every component corpus digest and exact task outcome.
+- [x] Verify v0.1/v0.2 package read compatibility, v0.1 default output stability and all optional v0.2 profiles.
+- [x] Build deterministic wheel, sdist and inspector archive; emit SHA256SUMS and SPDX SBOM.
+- [x] Run clean core/all-extras installs and scan artifacts for RVT/proprietary/provider/consumer leakage.
+- [x] Run:
 
   ```bash
   python -m pytest tests/test_v03_release.py -q

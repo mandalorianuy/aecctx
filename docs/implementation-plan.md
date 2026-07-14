@@ -197,7 +197,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-35 | completed | Advanced optional signing and trust profiles |
 | ACX-36 | completed | Expanded bounded IDS and quality-gate profiles |
 | ACX-37 | completed | Inspector distribution and host portability |
-| ACX-38 | pending-next | Aggregate conformance, packaging and `0.3.0` release |
+| ACX-38 | in_progress | Aggregate conformance, packaging and `0.3.0` release |
 
 ## ACX-00: Specification and repository foundation
 
@@ -927,7 +927,7 @@ Detailed implementation authority: [`docs/plans/post-v02-functional-debt-impleme
 
 Program rules:
 
-- ACX-24 through ACX-33 and ACX-35 through ACX-37 are complete, ACX-34 is documented `blocked`, and ACX-38 alone is `pending-next`; no later ACX may execute or borrow scope.
+- ACX-24 through ACX-33 and ACX-35 through ACX-37 are complete, ACX-34 is documented `blocked`, and ACX-38 alone is `in_progress`; no later ACX may execute or borrow scope.
 - Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
 - Replay cannot satisfy a live platform/provider acceptance item.
 - A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.
@@ -996,3 +996,5 @@ ACX-36 completion resolution: `quality-gate.ids-expanded` is public `partial` on
 ACX-37 execution cut: ACXD-046 and `docs/specs/inspector-distribution-v03-profile.md` select only the deterministic local `aecctx-inspector-distribution-v1` ZIP and `codex-local-plugin-contract-v1` on Python 3.12 Linux/macOS/Windows with AECCTX `>=0.2.0,<0.4.0` and exact locked MCP `1.28.1`. Mandatory checksum/inventory integrity, optional explicit Ed25519 archive signatures, create-only install, strictly increasing rollback-safe upgrade, exact-inventory uninstall and six-operation parity are the complete scope. Marketplace/host-product compatibility, universal model behavior, publisher trust, third-party hosts, unique semantics and plugin shell/provider execution remain non-claims. ACX-37 is `in_progress`; ACX-38 remains `pending` until all distribution, lifecycle, parity, security, clean-install, package and repository gates pass.
 
 ACX-37 completion resolution: `codex.aecctx-inspector-distribution` is public `partial` only for `aecctx-inspector-distribution-v1` and the exact `codex-local-plugin-contract-v1` Python 3.12 Linux/macOS/Windows matrix with MCP `1.28.1`. Deterministic archive/inventory/checksum, optional explicit Ed25519 signature, verified-byte install, create-only/upgrade/rollback/downgrade/uninstall lifecycle, six-operation parity, prompt-injection treatment, core independence, package/security scans and repository gates pass. Marketplace and host-product compatibility, hosted/third-party behavior, universal model behavior, publisher trust, unique semantics and provider shell execution remain non-claims. ACX-38 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+ACX-38 execution cut: aggregate only the accepted ACX-24 through ACX-37 outcomes, preserving ACX-34 as documented `blocked`; reuse the v0.1/v0.2 compatibility and anti-claim corpus; build deterministic wheel, sdist and inspector artifacts with checksums and SPDX SBOM; and reject targets, blocked-positive claims, replay-as-live evidence, restricted/provider payloads and consumer leakage. No capability semantics, provider profile or schema field may be added. Delivery uses the established GitHub contract: non-draft PR, required review, exact-head green checks and squash merge; this supersedes the detailed plan's older no-ff wording. ACX-38 is `in_progress`; no successor is promoted.

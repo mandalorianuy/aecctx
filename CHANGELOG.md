@@ -4,6 +4,14 @@ All notable changes are documented here. AECCTX follows Semantic Versioning for 
 
 ## Unreleased
 
+## 0.3.0 - 2026-07-14
+
+- Added exact Linux arm64/amd64 OCI provider evidence and a closed optional remote-provider protocol while keeping native local restricted-provider execution explicitly unsupported.
+- Expanded bounded IFC, DXF, OCR, visible-pixel inference, mesh CRS/datum, STEP/IGES XDE and DWG profiles with exact claim, fixture, test and evidence mappings.
+- Added optional advanced offline trust, expanded IDS evaluation and a reproducible integrity-bound inspector distribution.
+- Added the digest-bound 0.3 aggregate corpus, v0.1/v0.2 compatibility gate, reproducible wheel/sdist/plugin builds, clean-install matrix, restricted-artifact scans, checksums and SPDX SBOM.
+- Kept RVT blocked and retained every unproved platform, provider, format, trust, hidden-geometry, survey, marketplace and consumer outcome as an explicit non-claim.
+
 ## 0.2.0 - 2026-07-13
 
 - Added the ACX-11 v0.2 shared schema substrate for observation/inference, coordinate qualification, representation fidelity and provider attestation.

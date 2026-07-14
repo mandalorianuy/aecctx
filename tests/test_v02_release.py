@@ -12,10 +12,10 @@ from aecctx.release_conformance import validate_release_corpus
 ROOT = Path(__file__).parents[1]
 
 
-def test_reference_release_version_is_0_2_0() -> None:
+def test_current_reader_preserves_the_v02_release_corpus() -> None:
     import aecctx
 
-    assert aecctx.__version__ == VERSION == "0.2.0"
+    assert aecctx.__version__ == VERSION == "0.3.0"
 
 
 def test_v02_release_corpus_maps_every_non_target_claim() -> None:
@@ -44,8 +44,8 @@ def test_release_corpus_rejects_positive_claim_without_evidence(tmp_path: Path) 
 
 
 def test_release_metadata_is_versioned_and_deterministic(tmp_path: Path) -> None:
-    wheel = tmp_path / "aecctx-0.2.0-py3-none-any.whl"
-    plugin = tmp_path / "aecctx-inspector-0.2.0.zip"
+    wheel = tmp_path / "aecctx-0.3.0-py3-none-any.whl"
+    plugin = tmp_path / "aecctx-inspector-0.3.0.zip"
     wheel.write_bytes(b"wheel")
     plugin.write_bytes(b"plugin")
 
@@ -56,10 +56,10 @@ def test_release_metadata_is_versioned_and_deterministic(tmp_path: Path) -> None
 
     assert first_sums == Path(second["checksums"]).read_bytes()
     assert first_sbom == Path(second["sbom"]).read_bytes()
-    assert Path(first["sbom"]).name == "aecctx-0.2.0.spdx.json"
+    assert Path(first["sbom"]).name == "aecctx-0.3.0.spdx.json"
 
 
-def test_v02_release_documents_and_workflow_are_version_consistent() -> None:
+def test_v02_release_documents_remain_published_history() -> None:
     for path in (
         ROOT / "docs/releases/v0.2.0.md",
         ROOT / "docs/release/v0.2.0-evidence-index.md",
@@ -68,16 +68,6 @@ def test_v02_release_documents_and_workflow_are_version_consistent() -> None:
     ):
         assert path.is_file()
 
-    workflow = (ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8")
-    for asset in (
-        "dist/aecctx-0.2.0-py3-none-any.whl",
-        "dist/aecctx-0.2.0.tar.gz",
-        "dist/aecctx-inspector-0.2.0.zip",
-        "dist/SHA256SUMS",
-        "dist/aecctx-0.2.0.spdx.json",
-    ):
-        assert workflow.count(asset) == 1
-    assert "docs/releases/v0.2.0.md" in workflow
 
 
 def test_release_member_check_does_not_sigpipe_tar_under_pipefail() -> None:
