@@ -188,7 +188,7 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-26 | completed | Optional remote/customer-managed provider protocol |
 | ACX-27 | completed | Expanded IFC 2D and georeferencing profiles |
 | ACX-28 | completed | Expanded DXF semantics, geometry and bounded xrefs |
-| ACX-29 | pending-next | Multilingual and layout-aware OCR profiles |
+| ACX-29 | in_progress | Multilingual and layout-aware OCR profiles |
 | ACX-30 | pending | Bounded vision inference and reconstruction hypotheses |
 | ACX-31 | pending | Mesh CRS registry and datum-operation qualification |
 | ACX-32 | pending | STEP/IGES XDE and fidelity expansion |

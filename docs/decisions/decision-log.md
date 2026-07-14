@@ -294,3 +294,14 @@ None.
 - Claim decision: `ifc.native-2d.v03` and `ifc.georeferencing.v03` may become public `partial` only after their digest-bound fixture/corpus, RED/GREEN, reversibility, derived-preview, packaging and cross-platform gates pass.
 - Evidence owner: `docs/specs/ifc-v03-profile.md`, `fixtures/v0.3/ifc/`, `conformance/v0.3/ifc-corpus.json`, `scripts/check_ifc_v03_conformance.py` and `docs/evidence/ACX-27.md`.
 - Completion result: both exact claims are public `partial` after source-structure, degradation, limit, reversibility, derived-preview, package and repository gates passed. The non-claims above remain unchanged.
+
+### ACXD-037: Closed multilingual and layout-aware OCR profile
+
+- Date: 2026-07-14.
+- Status: Accepted for ACX-29 implementation; it creates no public claim until live multi-architecture and conformance gates pass.
+- Runtime decision: the only engine is Tesseract 5.3.4 behind the existing reviewed Linux OCI boundary, with exact Ubuntu Noble `eng`, `spa` and `por` trained-data packages `1:4.1.0-2`. Engine and data are Apache-2.0; Pillow remains HPND. No executable, model, tessdata or configuration path is caller-selectable.
+- Profile decision: the closed profiles are `eng-auto-v1`/PSM 3, `eng-column-v1`/PSM 4, `eng-block-v1`, `spa-block-v1`, `por-block-v1` and `eng-table-v1`/PSM 6. Only clockwise corrections 0/90/180/270 are accepted. Mixed languages, other scripts, arbitrary PSM and unlisted models remain unsupported.
+- Evidence decision: `aecctx.ocr.layout.v1` retains TSV hierarchy as inferred blocks, lines and words with source-pixel geometry and exact input/request/response/runtime hashes. Order and topology are known only when the closed rules establish them; otherwise they remain explicit unknown states.
+- Table decision: `eng-table-v1` may infer only a two-to-eight-column rectangular grid with at least two equal-width rows and a 12-pixel centre-alignment tolerance. Spans, headers, borders and spreadsheet semantics are non-claims.
+- Claim decision: `pdf-image.ocr-layout` may become public `partial` only after every profile passes live Linux arm64/amd64, replay equivalence, negative/security, package and repository gates.
+- Evidence owner: `docs/specs/ocr-v03-profile.md`, `conformance/v0.3/ocr-corpus.json`, `scripts/check_ocr_v03_conformance.py` and `docs/evidence/ACX-29.md`.

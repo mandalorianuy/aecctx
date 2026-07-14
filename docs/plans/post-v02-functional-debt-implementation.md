@@ -312,7 +312,7 @@ def run_remote_provider(
 - Consumes: ACX-24 live matrix, existing `ProviderResult` inference mapping.
 - Produces: closed `aecctx.ocr.layout.v1` event payload and claim `pdf-image.ocr-layout`.
 
-- [ ] Govern ACXD-037 with exact languages, data packages, orientations, PSM/layout profiles and licensing.
+- [x] Govern ACXD-037 with exact languages, data packages, orientations, PSM/layout profiles and licensing.
 - [ ] RED-test multilingual, rotated, multi-column/table, blank, mixed-script, corrupt, low-confidence and native-text conflict fixtures.
 - [ ] Extend the fixed worker configuration allowlist; no caller-selected executable/model path.
 - [ ] Map words/lines/blocks/tables as inferred evidence with exact region/request/response/runtime hashes; unknown order/topology stays unknown.
