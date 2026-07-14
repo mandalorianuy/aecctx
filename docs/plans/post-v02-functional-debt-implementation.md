@@ -532,13 +532,13 @@ The published `conformance/v0.2/rvt-provider-decision.json`, ACX-19 evidence and
 - Consumes: stable library/CLI/MCP/gate/signing results through ACX-36.
 - Produces: deterministic inventory/checksum/signature metadata and claim `codex.aecctx-inspector-distribution`.
 
-- [ ] Govern ACXD-046 with exact host/core/MCP version matrix, package format, integrity/signature rules and marketplace non-claim.
-- [ ] RED-test compatible/incompatible versions, mutation, downgrade, install/upgrade/rollback/uninstall and adversarial parity.
-- [ ] Build reproducible create-only artifacts; installation cannot overwrite unknown files and uninstall removes only exact inventory.
-- [ ] Run parity for validate/info/query/diff/context/gate across every claimed host profile.
-- [ ] Prove core has no plugin dependency and provider execution never becomes a plugin shell tool.
-- [ ] Run plugin checker, clean installs, platform CI and full gates.
-- [ ] Write evidence, promote only ACX-38 and commit `feat: package portable inspector distribution`.
+- [x] Govern ACXD-046 with exact host/core/MCP version matrix, package format, integrity/signature rules and marketplace non-claim.
+- [x] RED-test compatible/incompatible versions, mutation, downgrade, install/upgrade/rollback/uninstall and adversarial parity.
+- [x] Build reproducible create-only artifacts; installation cannot overwrite unknown files and uninstall removes only exact inventory.
+- [x] Run parity for validate/info/query/diff/context/gate across every claimed host profile.
+- [x] Prove core has no plugin dependency and provider execution never becomes a plugin shell tool.
+- [x] Run plugin checker, clean installs, platform CI and full gates.
+- [x] Write evidence, promote only ACX-38 and commit `feat: package portable inspector distribution`.
 
 ---
 

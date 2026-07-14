@@ -1,0 +1,14 @@
+{
+  "cases": [
+    {"case_id": "archive-traversal", "expected": "reject_before_destination_change"},
+    {"case_id": "archive-symlink", "expected": "reject_before_destination_change"},
+    {"case_id": "checksum-mutation", "expected": "reject_before_destination_change"},
+    {"case_id": "inventory-mutation", "expected": "reject_before_destination_change"},
+    {"case_id": "signature-mutation", "expected": "signature_invalid"},
+    {"case_id": "downgrade", "expected": "reject_preserve_installed"},
+    {"case_id": "prompt-injection", "expected": "untrusted_data"},
+    {"case_id": "provider-shell", "expected": "absent"}
+  ],
+  "license": "Apache-2.0",
+  "profile": "aecctx-inspector-distribution-v1"
+}

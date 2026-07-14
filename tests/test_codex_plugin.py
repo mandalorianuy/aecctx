@@ -55,7 +55,7 @@ def test_plugin_checker_accepts_only_the_governed_manifest_and_compatibility(tmp
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     result = _run_checker(invalid)
     assert result.returncode == 1
-    assert "version must be 0.2.0" in result.stderr
+    assert "version must be 0.3.0" in result.stderr
 
 
 def test_plugin_checker_rejects_non_allowlisted_mcp_transport(tmp_path: Path) -> None:

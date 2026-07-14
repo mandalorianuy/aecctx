@@ -1,9 +1,17 @@
 {
-  "aecctx": ">=0.1.0,<0.3.0",
+  "aecctx": ">=0.2.0,<0.4.0",
   "core_optional": true,
+  "host_contract": "codex-local-plugin-contract-v1",
+  "host_profiles": [
+    "codex-local-v1-linux",
+    "codex-local-v1-macos",
+    "codex-local-v1-windows"
+  ],
   "marketplace_published": false,
   "mcp": ">=1.20,<2",
-  "plugin_version": "0.2.0",
-  "profile": "aecctx-inspector-v1",
-  "python": ">=3.12"
+  "mcp_claimed": "1.28.1",
+  "plugin_version": "0.3.0",
+  "profile": "aecctx-inspector-distribution-v1",
+  "python": ">=3.12",
+  "python_claimed": "3.12"
 }

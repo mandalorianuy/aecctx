@@ -1,0 +1,40 @@
+{
+  "claim_id": "codex.aecctx-inspector-distribution",
+  "claim_status": "public",
+  "file_sha256": {
+    "docs/specs/inspector-distribution-v03-profile.md": "48384a24878833fc39e0bb2a5c21fe477ad1e8c60b259ebc85a2cf1cab9173ef",
+    "fixtures/v0.3/plugin/adversarial-cases.json": "5332d68588500c8f51bdb5c18176d10d40336803a4a3d1db569e8506482341e1",
+    "fixtures/v0.3/plugin/host-matrix.json": "2060fbdce40500afcabd24245b81f6d28d56a96bf73e1f4134f961837590abee",
+    "fixtures/v0.3/plugin/lifecycle-cases.json": "ac5bf48a52ed623df51276e04489cec77a9f63a4dd4f74554924d6334bfa4000",
+    "fixtures/v0.2/plugin/prompt-injection-cases.json": "a9a3bf4ad4225b15862035337a8a602460b1a20f93580ce7453971487db6118c",
+    "plugins/aecctx-inspector/.codex-plugin/plugin.json": "5c88cf2fbb35654525de0f73a3f5602734dd4ff5fa3585c3942b48122551a79e",
+    "plugins/aecctx-inspector/.mcp.json": "45f30583e0d0579e8ba396d4564b7dff8fd319f1c8bb3a4a710b9e4a5bc1493b",
+    "plugins/aecctx-inspector/assets/compatibility.json": "80d055daf288fd363be5993db190acdc126086e53be622e02bce68d90c246385",
+    "plugins/aecctx-inspector/assets/distribution.json": "c24595c7c688530aaa228efa2ce5f3d0f12f923a9a8e6869ee309f1fd92c20c9",
+    "plugins/aecctx-inspector/scripts/manage.py": "587624c45a0ca36670b101c853e95c665a5f3a2edaf2715e4a0b8d49eb2d48e0",
+    "plugins/aecctx-inspector/skills/compare-revisions/SKILL.md": "cce08c2d8721c2a7be51b3827d12149efab65d2d6c2f067de88a6814461b6091",
+    "plugins/aecctx-inspector/skills/explain-quality-gate/SKILL.md": "638694b68f37273be4a4270e2ba0988d46c737df1434c09e5d0fbda96ea2d3ab",
+    "plugins/aecctx-inspector/skills/inspect-package/SKILL.md": "ffd27678a78507d2323b32d15398b53a698f78470da9562515f24c2716010550",
+    "plugins/aecctx-inspector/skills/render-agent-context/SKILL.md": "d8200210c4cd54b47662065e4ee3888bc92cf909e00059dc5b914e83e195d5da",
+    "plugins/aecctx-inspector/skills/triage-capability-loss/SKILL.md": "7c7d43fe6419c5303d9b271062aca9fed60462ce97b96042822a08d4875cc9b2",
+    "scripts/build_inspector_distribution.py": "5417dbba2f5bb1f8d9320aa05d8e461bd7d788f3d33a0cd527acc6a1b28b220e",
+    "scripts/check_codex_plugin.py": "a89b29bab39ce57f6ed16849b38735f1dd71f083da0d4b1ecac37ecb86d8054c",
+    "tests/test_codex_plugin_v03.py": "ec3736c9afc44418283a650cb7f3c5db4d7bd594fde4ea955f123675bed8d0a5"
+  },
+  "host_profiles": ["codex-local-v1-linux", "codex-local-v1-macos", "codex-local-v1-windows"],
+  "inventory_sha256": "063b98f8ec5000cf41039b8ee60733878b94ee18b3fcf0029b20d0858508beb2",
+  "license": "Apache-2.0",
+  "lifecycle_cases": ["clean-install", "existing-destination", "upgrade", "upgrade-failure", "equal-version", "downgrade", "exact-uninstall", "modified-uninstall"],
+  "maximum_support": "partial",
+  "operations": [
+    {"library_function": "aecctx.validation.validate_package", "mcp_tool": "aecctx_validate"},
+    {"library_function": "aecctx.mcp_server.mcp_info", "mcp_tool": "aecctx_info"},
+    {"library_function": "aecctx.query.query_package", "mcp_tool": "aecctx_query"},
+    {"library_function": "aecctx.diff.diff_packages", "mcp_tool": "aecctx_diff"},
+    {"library_function": "aecctx.context.render_context", "mcp_tool": "aecctx_context"},
+    {"library_function": "aecctx.gate.evaluate_gate", "mcp_tool": "aecctx_gate"}
+  ],
+  "plugin_version": "0.3.0",
+  "profile": "aecctx-inspector-distribution-v1",
+  "signature_profile": "aecctx-inspector-distribution-signing-v1"
+}

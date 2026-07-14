@@ -1,0 +1,14 @@
+{
+  "cases": [
+    {"case_id": "clean-install", "expected": "installed"},
+    {"case_id": "existing-destination", "expected": "refused"},
+    {"case_id": "upgrade", "expected": "upgraded"},
+    {"case_id": "upgrade-failure", "expected": "rolled_back"},
+    {"case_id": "equal-version", "expected": "refused"},
+    {"case_id": "downgrade", "expected": "refused"},
+    {"case_id": "exact-uninstall", "expected": "removed"},
+    {"case_id": "modified-uninstall", "expected": "refused_preserved"}
+  ],
+  "license": "Apache-2.0",
+  "profile": "aecctx-inspector-distribution-v1"
+}

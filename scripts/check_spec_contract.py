@@ -119,6 +119,13 @@ def check_required_files() -> None:
         ROOT / "docs/specs/provider-remote-v03-profile.md",
         ROOT / "docs/specs/ifc-v03-profile.md",
         ROOT / "docs/specs/dxf-v03-profile.md",
+        ROOT / "docs/specs/inspector-distribution-v03-profile.md",
+        ROOT / "conformance/v0.3/plugin-corpus.json",
+        ROOT / "fixtures/v0.3/plugin/host-matrix.json",
+        ROOT / "fixtures/v0.3/plugin/adversarial-cases.json",
+        ROOT / "fixtures/v0.3/plugin/lifecycle-cases.json",
+        ROOT / "scripts/build_inspector_distribution.py",
+        ROOT / "scripts/check_inspector_v03_conformance.py",
         ROOT / "docs/security/signing-threat-model.md",
         ROOT / "docs/security/signing-v2-threat-model.md",
         ROOT / "docs/plans/acx-20-implementation.md",
@@ -184,6 +191,11 @@ def check_authorities() -> None:
     for phrase in ["Functional result", "Gates and non-claims", "ACX-24", "ACX-38"]:
         if phrase not in post_v02:
             fail(f"post-v0.2 spec missing authority phrase: {phrase}")
+
+    inspector = (ROOT / "docs/specs/inspector-distribution-v03-profile.md").read_text(encoding="utf-8")
+    for phrase in ["Exact profile and compatibility matrix", "Reproducible package", "Lifecycle and rollback", "marketplace"]:
+        if phrase not in inspector:
+            fail(f"inspector distribution profile missing authority phrase: {phrase}")
 
     signing = (ROOT / "docs/specs/signing-v1-profile.md").read_text(encoding="utf-8")
     for phrase in [
