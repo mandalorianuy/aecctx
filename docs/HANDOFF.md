@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
 Date: 2026-07-13
-Handoff status: `0.3.0-ACX-25-COMPLETE`
+Handoff status: `0.3.0-ACX-26-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 and ACX-25 are complete; ACX-26 alone is `in_progress` under ACXD-034. WoodFraming integration remains intentionally deferred and consumer-owned.
+AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 through ACX-26 are complete; ACX-27 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
 
 ## Start here
 
@@ -13,19 +13,19 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
 4. Read `docs/specs/aecctx-post-v02-functional-debt-spec.md` and `docs/plans/post-v02-functional-debt-implementation.md` completely.
-5. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-25 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-26 is the only authorized task and is implementing `remote-https-spki-v1`.
+5. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-26 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-27 is the only authorized next task and has not started.
 6. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 7. Run `./scripts/verify.sh` before handoff.
 
 ## Active post-v0.2 plan
 
 - Plan: ACX-24 through ACX-38, dependency-first.
-- Completed: ACX-24 live OCI providers and ACX-25 deterministic native-profile rejection/reporting.
-- Sole `in_progress`: ACX-26, optional remote/customer-managed provider protocol.
-- ACX-27 through ACX-38: `pending`.
-- Claim posture: `sandbox.oci-multiarch` is public `partial`; `sandbox.local-enforcement` is public `unsupported`; every later post-v0.2 entry remains a target until its owning milestone closes.
+- Completed: ACX-24 live OCI providers, ACX-25 deterministic native-profile rejection/reporting and ACX-26 bounded remote-provider protocol.
+- Sole `pending-next`: ACX-27, expanded IFC 2D and georeferencing.
+- ACX-28 through ACX-38: `pending`.
+- Claim posture: `sandbox.oci-multiarch` and `sandbox.remote-provider` are public `partial`; `sandbox.local-enforcement` is public `unsupported`; every later post-v0.2 entry remains a target until its owning milestone closes.
 - Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
-- Execution boundary: ACX-26 alone is executing after explicit continuation; ACX-27 and later remain unauthorized.
+- Execution boundary: ACX-26 is complete; ACX-27 alone is promoted but MUST NOT execute without a new continuation request.
 
 ## ACX-24 evidence
 
@@ -187,9 +187,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 ## Next implementation task
 
-ACX-26 is the sole `in_progress` task in the active post-v0.2 plan because the accepted dependency line places the optional remote/customer-managed provider protocol after local enforcement decisions. ACXD-034 governs its closed HTTPS/SPKI, consent, credential, retry and replay contract. ACX-27 and later remain `pending`.
-
-The repository owner corrected ACX-26 delivery authority to GitHub. The configured `origin` and authenticated `gh` account are admissible; GitHub reports no branch protection or repository rulesets, so zero external approvals are required. ACX-26 still remains `in_progress` and its claim remains `target` until a non-draft PR receives explicit diff/check review, green CI and a verified squash merge. Do not promote ACX-27 before that delivery completes.
+ACX-26 is complete under ACXD-034. Only the exact `remote-https-spki-v1` protocol is public `partial`, backed by repository-owned TLS loopback, deterministic replay, 16 adversarial cases, packaging/offline-core proof and Python 3.12 CI on Linux/macOS/Windows. Third-party service and provider-side guarantees remain non-claims. GitHub is the delivery authority; the completion transition used a non-draft PR, explicit diff/check review, green CI and squash merge under the repository's zero-external-approval rule. ACX-27 alone is `pending-next` and has not started.
 
 ## Consumer integration planning entry point
 

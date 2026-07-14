@@ -241,7 +241,7 @@ def run_remote_provider(
 - [x] Prove core install and every non-provider command remain network-free.
 - [x] Bind loopback success/degraded/error responses and replay to the corpus; do not claim third-party service availability.
 - [x] Run focused tests, `check_remote_provider_conformance.py`, portable/full gates and exact-SHA CI.
-- [ ] Write `docs/evidence/ACX-26.md`; promote only ACX-27; commit `feat: add optional remote provider protocol`.
+- [x] Write `docs/evidence/ACX-26.md`; promote only ACX-27; commit `feat: add optional remote provider protocol`.
 
 ---
 

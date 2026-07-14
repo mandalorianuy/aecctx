@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -14,6 +15,15 @@ def test_v03_claim_registry_is_complete() -> None:
     result = validate_claim_registry_file(ROOT / "conformance/v0.3/claims.json")
 
     assert result.valid is True, result.errors
+
+
+def test_remote_provider_claim_is_public_partial() -> None:
+    registry = json.loads((ROOT / "conformance/v0.3/claims.json").read_text(encoding="utf-8"))
+    claim = next(item for item in registry["claims"] if item["id"] == "sandbox.remote-provider")
+
+    assert claim["status"] == "public"
+    assert claim["support_level"] == "partial"
+    assert claim["evidence"] == "docs/evidence/ACX-26.md"
 
 
 def test_provider_multiarch_portable_corpus_is_digest_bound() -> None:

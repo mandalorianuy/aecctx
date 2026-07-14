@@ -263,7 +263,7 @@ None.
 ### ACXD-034: Closed HTTPS/SPKI remote provider protocol
 
 - Date: 2026-07-13.
-- Status: Accepted for ACX-26 implementation; it creates no service-availability or third-party capability claim.
+- Status: Accepted and conformance-complete for ACX-26; it creates no service-availability or third-party capability claim.
 - Endpoint decision: `remote-https-spki-v1` binds one normalized HTTPS origin and one SHA-256 SPKI pin in both registration and invocation policy. The route is fixed; redirects, discovery, proxies, URL credentials, ambient CA roots and wall-clock trust decisions are forbidden. The repository-owned conformance endpoint is loopback TLS, not plain HTTP.
 - Consent/privacy decision: upload and billing consent, region allowlist, retention ceiling and telemetry consent are explicit per invocation and checked before network access. Credentials are caller bytes used only after pin verification and are forbidden from bodies, digests, diagnostics, details, fixtures and replay.
 - Protocol decision: canonical request/response envelopes bind source, existing v0.2 request/response, artifacts, policy projection and transport body hashes. Existing response validation remains authoritative after confined artifact materialization. Core commands never invoke this client.
@@ -271,3 +271,4 @@ None.
 - Dependency/license decision: optional `cryptography>=45,<50` supplies certificate/SPKI parsing under Apache-2.0 OR BSD-3-Clause and remains outside core. No remote SDK, commercial/GPL decoder, credential or service dependency is distributed.
 - Claim decision: `sandbox.remote-provider` may become public `partial` only for this exact protocol after loopback live/adversarial, deterministic replay, packaging and offline-core gates pass. No provider SLA, deletion, jurisdiction, billing, semantic, entitlement or provider-side sandbox guarantee is claimed.
 - Evidence owner: `docs/specs/provider-remote-v03-profile.md`, `conformance/v0.3/remote-provider-corpus.json`, `scripts/check_remote_provider_conformance.py` and `docs/evidence/ACX-26.md`.
+- Completion result: all governed live loopback, adversarial, replay, packaging, offline-core and cross-platform CI gates passed; only the exact protocol is public `partial`. GitHub is the repository delivery authority, with zero externally required approvals under the current unprotected/no-ruleset configuration and mandatory PR/check/squash evidence.
