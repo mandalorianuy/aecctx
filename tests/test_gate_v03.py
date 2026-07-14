@@ -1,12 +1,20 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 
 import pytest
 
-from aecctx.adapters.ifc import ingest_ifc
-from aecctx.gate import GateError, canonical_gate_json, evaluate_gate, load_gate_policy
+from aecctx.gate import (
+    GateError,
+    canonical_gate_json,
+    evaluate_gate,
+    load_gate_policy,
+    render_ci_annotations,
+    render_gate_markdown,
+)
+from aecctx.package import PackageArtifact, PackageWriter
 
 
 SHA256 = "0" * 64
@@ -15,6 +23,8 @@ SIMPLE_PROFILE = "aecctx-gate-v1-ids-1.0-simple-v1"
 EXPANDED_PROFILE = "aecctx-gate-v1-ids-1.0-expanded-v1"
 ROOT = Path(__file__).parents[1]
 OFFICIAL = ROOT / "fixtures" / "v0.3" / "gate" / "official" / "cases"
+PROJECT = ROOT / "fixtures" / "v0.3" / "gate" / "project"
+CORPUS = json.loads((ROOT / "conformance" / "v0.3" / "gate-corpus.json").read_bytes())
 
 
 def _policy_bytes(ids_profile: str | None) -> bytes:
@@ -67,8 +77,70 @@ def _digest(path: Path) -> str:
 
 def _candidate(tmp_path: Path, source: Path) -> tuple[Path, str]:
     package = tmp_path / "candidate"
-    result = ingest_ifc(source, package, created_at=FIXED_TIME)
-    return package, result.source_id
+    source_bytes = source.read_bytes()
+    digest = hashlib.sha256(source_bytes).hexdigest()
+    source_id = f"src_{digest[:24]}"
+    def unknown(reason: str) -> dict[str, str]:
+        return {"reason_code": reason, "state": "unknown"}
+    provenance = {
+        "method": "test-fixture-registration",
+        "parent_record_ids": [],
+        "producer_id": "aecctx-test",
+        "producer_version": "0.1.0",
+        "recorded_at": FIXED_TIME,
+    }
+    source_record = {
+        "acquisition_origin": "local-file",
+        "byte_size": len(source_bytes),
+        "declared_format": {"state": "known", "value": "IFC STEP physical file"},
+        "declared_units": unknown("AECCTX_TEST_UNITS_UNKNOWN"),
+        "detected_format": {
+            "state": "known",
+            "value": "IFC2X3" if b"IFC2X3" in source_bytes else "IFC4",
+        },
+        "detected_producer": unknown("AECCTX_TEST_PRODUCER_UNKNOWN"),
+        "detected_units": unknown("AECCTX_TEST_UNITS_UNKNOWN"),
+        "display_name": source.name,
+        "embedding_policy": "external",
+        "extractor": {"plugin_id": "aecctx-test", "plugin_version": "0.1.0"},
+        "media_type": "application/vnd.ifc",
+        "prior_source_revision": unknown("AECCTX_TEST_REVISION_UNKNOWN"),
+        "provenance": provenance,
+        "record_id": source_id,
+        "record_type": "source",
+        "record_version": "0.1",
+        "safety_diagnostics": ["AECCTX_INPUT_TREATED_AS_DATA"],
+        "sha256": digest,
+        "source_id": source_id,
+        "source_refs": [],
+        "spatial_reference": unknown("AECCTX_TEST_CRS_UNKNOWN"),
+    }
+    artifacts = [
+        PackageArtifact("context/index.md", b"# ACX-36 test candidate\n", "text/markdown", "agent-context", False),
+        PackageArtifact("diagnostics/diagnostics.jsonl", b"", "application/x-ndjson", "diagnostics", True),
+        PackageArtifact("evidence/assertions.jsonl", b"", "application/x-ndjson", "assertions", True),
+        PackageArtifact("evidence/primitives.jsonl", b"", "application/x-ndjson", "primitives", True),
+        PackageArtifact("model/entities.jsonl", b"", "application/x-ndjson", "entities", True),
+        PackageArtifact("model/relations.jsonl", b"", "application/x-ndjson", "relations", True),
+        PackageArtifact(
+            "sources/sources.jsonl",
+            canonical_gate_json(source_record),
+            "application/x-ndjson",
+            "sources",
+            True,
+        ),
+    ]
+    PackageWriter(package).write(
+        package_id=f"pkg_{digest[:24]}",
+        created_at=FIXED_TIME,
+        source_ids=[source_id],
+        capabilities={"identity": "full", "validation": "full"},
+        loss_summary=[],
+        embedding_policy="external",
+        producer={"name": "aecctx-test", "version": "0.1.0"},
+        artifacts=artifacts,
+    )
+    return package, source_id
 
 
 def _expanded_policy(ids_path: Path, source_id: str, *, failure_mode: str = "fail"):
@@ -117,6 +189,61 @@ def test_selected_official_expanded_case_matches_filename_expectation(
     expected = "pass" if ids_path.name.startswith("pass-") else "fail"
     assert result.outcome == expected
     assert result.ids_digest == _digest(ids_path)
+
+
+@pytest.mark.parametrize(
+    "entry",
+    [entry for entry in CORPUS["entries"] if entry["origin"] == "AECCTX project-authored"],
+    ids=lambda entry: entry["case_id"],
+)
+def test_project_authored_expanded_cases_match_expected_outcomes(tmp_path: Path, entry: dict[str, str]) -> None:
+    ids_path = ROOT / entry["ids"]
+    source = ROOT / entry["ifc"]
+    package, source_id = _candidate(tmp_path, source)
+
+    first = evaluate_gate(
+        package,
+        _expanded_policy(ids_path, source_id),
+        ids_document=ids_path,
+        ifc_source=source,
+    )
+    assert first.outcome == entry["expected"]
+
+
+def test_expanded_evaluation_is_byte_deterministic(tmp_path: Path) -> None:
+    ids_path = PROJECT / "cases" / "partof-group-pass.ids"
+    source = PROJECT / "expanded-profile.ifc"
+    package, source_id = _candidate(tmp_path, source)
+    policy = _expanded_policy(ids_path, source_id)
+    first = evaluate_gate(package, policy, ids_document=ids_path, ifc_source=source)
+    second = evaluate_gate(package, policy, ids_document=ids_path, ifc_source=source)
+    assert canonical_gate_json(first.to_dict()) == canonical_gate_json(second.to_dict())
+
+
+def test_expanded_result_projections_preserve_canonical_identity(tmp_path: Path) -> None:
+    ids_path = PROJECT / "cases" / "partof-group-fail.ids"
+    source = PROJECT / "expanded-profile.ifc"
+    package, source_id = _candidate(tmp_path, source)
+    result = evaluate_gate(
+        package,
+        _expanded_policy(ids_path, source_id),
+        ids_document=ids_path,
+        ifc_source=source,
+    )
+
+    authoritative = result.to_dict()
+    markdown = render_gate_markdown(result)
+    annotations = [json.loads(line) for line in render_ci_annotations(result).splitlines()]
+    assert markdown == render_gate_markdown(result)
+    assert render_ci_annotations(result) == render_ci_annotations(result)
+    assert authoritative["outcome"] == "fail"
+    assert f"Outcome: `{authoritative['outcome']}`".encode() in markdown
+    assert {item["check_id"] for item in annotations if item["kind"] == "check"} == {
+        item["check_id"] for item in authoritative["checks"]
+    }
+    assert {item["fingerprint"] for item in annotations if item["kind"] == "finding"} == {
+        item["fingerprint"] for item in authoritative["findings"]
+    }
 
 
 @pytest.mark.parametrize(

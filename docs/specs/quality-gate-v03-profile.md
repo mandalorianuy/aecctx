@@ -1,15 +1,15 @@
 # AECCTX Quality Gate v0.3 Expanded IDS Profile
 
-Version: `0.3.0-draft.1`
+Version: `0.3.0`
 Date: 2026-07-14
-Status: Normative ACX-36 implementation authority
+Status: Accepted public partial profile
 Decision authority: ACXD-045
 
 ## 1. Relationship to the v0.2 gate
 
 This profile extends only the IDS evaluator selected by `docs/specs/quality-gate-v02-profile.md`. The gate policy, result, finding, waiver, aggregate outcome, exit code, SDK, CLI, projection, atomic-output and limit contracts remain unchanged. A v0.2 policy and every accepted v0.2 corpus result MUST remain byte-compatible.
 
-The new public target is claim `quality-gate.ids-expanded` under profile `aecctx-gate-v1-ids-1.0-expanded-v1`. Until ACX-36 acceptance completes, it remains a target and MUST NOT be advertised as implemented.
+The public partial claim is `quality-gate.ids-expanded` under profile `aecctx-gate-v1-ids-1.0-expanded-v1` and is limited by this document and the accepted conformance corpus.
 
 The `ids.specification` configuration gains one backward-compatible optional field, `ids_profile`. An absent field or `aecctx-gate-v1-ids-1.0-simple-v1` selects the immutable v0.2 behavior. Only the exact value `aecctx-gate-v1-ids-1.0-expanded-v1` enables this profile. Unknown values fail closed as unsupported policy configuration. Existing policies, digests and results therefore remain unchanged.
 

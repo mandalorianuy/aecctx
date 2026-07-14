@@ -26,6 +26,15 @@ def test_advanced_trust_signing_claim_is_exact_public_partial() -> None:
     assert claim["fixture_ids"] == ["v03-signing-acx35"]
 
 
+def test_expanded_ids_claim_is_exact_public_partial() -> None:
+    registry = json.loads((ROOT / "conformance/v0.3/claims.json").read_text(encoding="utf-8"))
+    claim = next(item for item in registry["claims"] if item["id"] == "quality-gate.ids-expanded")
+    assert claim["status"] == "public"
+    assert claim["support_level"] == "partial"
+    assert claim["profile"] == "aecctx-gate-v1-ids-1.0-expanded-v1"
+    assert claim["fixture_ids"] == ["v03-gate-acx36"]
+
+
 def test_remote_provider_claim_is_public_partial() -> None:
     registry = json.loads((ROOT / "conformance/v0.3/claims.json").read_text(encoding="utf-8"))
     claim = next(item for item in registry["claims"] if item["id"] == "sandbox.remote-provider")

@@ -14,6 +14,9 @@ from .policy import canonical_gate_json
 EXPECTED_DEPENDENCIES = {"ifcopenshell": "0.8.5", "ifctester": "0.8.5"}
 ALLOWED_SCHEMAS = frozenset({"IFC2X3", "IFC4"})
 ALLOWED_FACETS = frozenset({"Entity", "Attribute", "Classification", "Property", "Material"})
+EXPANDED_FACETS = ALLOWED_FACETS | {"PartOf"}
+SIMPLE_PROFILE = "aecctx-gate-v1-ids-1.0-simple-v1"
+EXPANDED_PROFILE = "aecctx-gate-v1-ids-1.0-expanded-v1"
 
 
 def _fail(code: str) -> int:
@@ -27,10 +30,14 @@ def _request() -> dict[str, Any]:
         raise ValueError("request too large")
     value = json.loads(raw)
     if not isinstance(value, dict) or set(value) != {
-        "version", "ids_path", "ids_digest", "ifc_path", "ifc_digest", "ifc_schema", "limits"
+        "version", "ids_profile", "ids_path", "ids_digest", "ifc_path", "ifc_digest", "ifc_schema", "limits"
     }:
         raise ValueError("invalid request envelope")
-    if value["version"] != "1" or value["ifc_schema"] not in ALLOWED_SCHEMAS:
+    if (
+        value["version"] != "1"
+        or value["ids_profile"] not in {SIMPLE_PROFILE, EXPANDED_PROFILE}
+        or value["ifc_schema"] not in ALLOWED_SCHEMAS
+    ):
         raise ValueError("invalid request profile")
     limits = value["limits"]
     if not isinstance(limits, dict) or set(limits) != {
@@ -61,7 +68,7 @@ def _entity_ref(entity: Any) -> str:
     return f"ifc-step:{step_id}"
 
 
-def _normalize(ids_file: Any, ifc_schema: str, limits: dict[str, int]) -> dict[str, Any]:
+def _normalize(ids_file: Any, ifc_schema: str, ids_profile: str, limits: dict[str, int]) -> dict[str, Any]:
     if len(ids_file.specifications) > limits["max_specifications"]:
         raise ValueError("specification limit exceeded")
     specifications: list[dict[str, Any]] = []
@@ -72,8 +79,9 @@ def _normalize(ids_file: Any, ifc_schema: str, limits: dict[str, int]) -> dict[s
         facet_count += len(specification.applicability) + len(specification.requirements)
         if facet_count > limits["max_facets"]:
             raise ValueError("facet limit exceeded")
+        allowed_facets = EXPANDED_FACETS if ids_profile == EXPANDED_PROFILE else ALLOWED_FACETS
         for facet in (*specification.applicability, *specification.requirements):
-            if type(facet).__name__ not in ALLOWED_FACETS:
+            if type(facet).__name__ not in allowed_facets:
                 raise ValueError("unsupported facet reached worker")
         applicable = sorted({_entity_ref(entity) for entity in specification.applicable_entities})
         failed = sorted({_entity_ref(entity) for entity in specification.failed_entities})
@@ -141,7 +149,7 @@ def main() -> int:
         if ifc_file.schema_identifier != request["ifc_schema"] or ifc_file.schema_identifier not in ALLOWED_SCHEMAS:
             raise ValueError("IFC schema mismatch")
         ids_file.validate(ifc_file, should_filter_version=True)
-        response = _normalize(ids_file, request["ifc_schema"], request["limits"])
+        response = _normalize(ids_file, request["ifc_schema"], request["ids_profile"], request["limits"])
         sys.stdout.buffer.write(canonical_gate_json(response))
         return 0
     except Exception:
