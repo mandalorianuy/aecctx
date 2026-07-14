@@ -376,9 +376,16 @@ def main(argv: Sequence[str] | None = None) -> int:
                 from .step_iges import probe_step_iges
                 from .dwg import probe_dwg
 
-                with open(arguments.source, "rb") as source_handle:
-                    prefix = source_handle.read(64 * 1024)
-                if IFCPlugin().probe(prefix)["confidence"] == 1.0:
+                source_candidate = Path(arguments.source)
+                if source_candidate.is_dir() and (source_candidate / "source-bundle.json").is_file():
+                    adapter = "dxf"
+                    prefix = b""
+                else:
+                    with open(arguments.source, "rb") as source_handle:
+                        prefix = source_handle.read(64 * 1024)
+                if adapter == "dxf":
+                    pass
+                elif IFCPlugin().probe(prefix)["confidence"] == 1.0:
                     adapter = "ifc"
                 elif probe_step_iges(prefix)["confidence"] == 1.0:
                     adapter = "step-iges"

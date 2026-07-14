@@ -1,0 +1,27 @@
+{
+  "entries": [
+    {
+      "bytes": 15676,
+      "media_type": "application/dxf",
+      "path": "root.dxf",
+      "role": "root",
+      "sha256": "9ecda7725bba4d32b6cdf6dfdcb02ef3ee3e74ced1cf6e0c6b9e0701c58529d8"
+    },
+    {
+      "bytes": 15781,
+      "media_type": "application/dxf",
+      "path": "refs/child.dxf",
+      "role": "xref",
+      "sha256": "967efb17f9be39e72fe80563a8ddbb11ec66227e4dfefe48dce209f9bdf0b307"
+    },
+    {
+      "bytes": 14380,
+      "media_type": "application/dxf",
+      "path": "refs/nested/nested.dxf",
+      "role": "xref",
+      "sha256": "e9ba34d7c648a41c35b2debcc56b34ef615f2bfd2f90843e7240e74500e58efd"
+    }
+  ],
+  "root": "root.dxf",
+  "version": "0.2"
+}

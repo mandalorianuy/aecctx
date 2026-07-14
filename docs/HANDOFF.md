@@ -1,11 +1,11 @@
 # AECCTX Implementation Handoff
 
-Date: 2026-07-13
-Handoff status: `0.3.0-ACX-26-COMPLETE`
+Date: 2026-07-14
+Handoff status: `0.3.0-ACX-28-COMPLETE`
 
 ## Outcome
 
-AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 through ACX-26 are complete; ACX-27 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
+AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 plan governs ACX-24 through ACX-38. ACX-24 through ACX-28 are complete; ACX-29 alone is `pending-next`. WoodFraming integration remains intentionally deferred and consumer-owned.
 
 ## Start here
 
@@ -13,19 +13,26 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
 4. Read `docs/specs/aecctx-post-v02-functional-debt-spec.md` and `docs/plans/post-v02-functional-debt-implementation.md` completely.
-5. ACX-01 through ACX-09, ACX-11 through ACX-18 and ACX-20 through ACX-26 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-27 is the only authorized next task and has not started.
+5. ACX-01 through ACX-09, ACX-11 through ACX-18, ACX-20 through ACX-28 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-29 is the only authorized next task and has not started.
 6. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 7. Run `./scripts/verify.sh` before handoff.
 
 ## Active post-v0.2 plan
 
 - Plan: ACX-24 through ACX-38, dependency-first.
-- Completed: ACX-24 live OCI providers, ACX-25 deterministic native-profile rejection/reporting, ACX-26 bounded remote-provider protocol and ACX-27 bounded IFC4X3 ADD2 2D/georeferencing.
-- Sole `pending-next`: ACX-28, expanded DXF semantics, geometry and bounded xrefs.
-- ACX-29 through ACX-38: `pending`.
-- Claim posture: `sandbox.oci-multiarch`, `sandbox.remote-provider`, `ifc.native-2d.v03` and `ifc.georeferencing.v03` are public `partial`; `sandbox.local-enforcement` is public `unsupported`; every later post-v0.2 entry remains a target until its owning milestone closes.
+- Completed: ACX-24 live OCI providers, ACX-25 deterministic native-profile rejection/reporting, ACX-26 bounded remote-provider protocol, ACX-27 bounded IFC4X3 ADD2 2D/georeferencing and ACX-28 bounded DXF releases/curves/MESH/xrefs.
+- Sole `pending-next`: ACX-29, multilingual and layout-aware OCR profiles.
+- ACX-30 through ACX-38: `pending`.
+- Claim posture: `sandbox.oci-multiarch`, `sandbox.remote-provider`, `ifc.native-2d.v03`, `ifc.georeferencing.v03`, `dxf.source-semantics.v03` and `dxf.geometry.v03` are public `partial`; `sandbox.local-enforcement` is public `unsupported`; every later post-v0.2 entry remains a target until its owning milestone closes.
 - Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
-- Execution boundary: ACX-27 is complete; ACX-28 alone is promoted but MUST NOT execute without a new continuation request.
+- Execution boundary: ACX-28 is complete; ACX-29 alone is promoted but MUST NOT execute without a new continuation request.
+
+## ACX-28 evidence
+
+- Normative profile: `docs/specs/dxf-v03-profile.md` and ACXD-036.
+- Acceptance evidence: `docs/evidence/ACX-28.md`.
+- Corpus/checker: `conformance/v0.3/dxf-corpus.json` and `scripts/check_dxf_v03_conformance.py`.
+- Public boundary: exact selected releases/entities and content-addressed source bundles are partial; ACIS/proxy/custom/protected content, ambient/network/DWG xrefs and unlisted releases remain unsupported or opaque.
 
 ## ACX-27 evidence
 
@@ -193,7 +200,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 ## Next implementation task
 
-ACX-26 is complete under ACXD-034. Only the exact `remote-https-spki-v1` protocol is public `partial`, backed by repository-owned TLS loopback, deterministic replay, 16 adversarial cases, packaging/offline-core proof and Python 3.12 CI on Linux/macOS/Windows. Third-party service and provider-side guarantees remain non-claims. GitHub is the delivery authority; the completion transition used a non-draft PR, explicit diff/check review, green CI and squash merge under the repository's zero-external-approval rule. ACX-27 alone is `pending-next` and has not started.
+ACX-28 is complete under ACXD-036. Only the exact `dxf-selected-releases-source-semantics-v03`, `dxf-selected-releases-geometry-v03` and `dxf-content-addressed-xref-bundle-v1` cuts are public `partial`, backed by project-authored digest-bound fixtures, deterministic replay, bundle-safety tests and Python 3.12 CI on Linux/macOS/Windows. ACIS/proxy/custom/protected content and ambient/network/DWG xrefs remain non-claims. GitHub is the delivery authority. ACX-29 alone is `pending-next` and has not started.
 
 ## Consumer integration planning entry point
 

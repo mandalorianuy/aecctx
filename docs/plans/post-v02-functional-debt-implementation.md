@@ -286,13 +286,13 @@ def run_remote_provider(
 - Consumes: v0.2 DXF raw tags/ownership/geometry and package safety primitives.
 - Produces: `load_source_bundle(path) -> SourceBundle`, claims `dxf.source-semantics.v03` and `dxf.geometry.v03`.
 
-- [ ] Govern ACXD-036 with exact releases/entities, xref bundle rules and the selected ACIS decision; ACIS remains unsupported unless an accepted kernel provider exists.
-- [ ] RED-test selected curves/surfaces/releases, bounded xrefs, cycles, escapes, hashes, proxy/custom/encrypted/ACIS and resource limits.
-- [ ] Generate ASCII/binary fixtures and content-addressed xref bundles; no test may depend on host-relative paths.
-- [ ] Implement source-bundle validation before opening any xref and evidence mapping before tessellation.
-- [ ] Preserve raw tags and fidelity; prove no entity becomes a consumer wall/beam/panel classification.
-- [ ] Run DXF v0.1/v0.2/v0.3, CLI, bundle-safety, determinism and full gates.
-- [ ] Write evidence, promote only ACX-29 and commit `feat: expand bounded DXF profiles`.
+- [x] Govern ACXD-036 with exact releases/entities, xref bundle rules and the selected ACIS decision; ACIS remains unsupported unless an accepted kernel provider exists.
+- [x] RED-test selected curves/surfaces/releases, bounded xrefs, cycles, escapes, hashes, proxy/custom/encrypted/ACIS and resource limits.
+- [x] Generate ASCII/binary fixtures and content-addressed xref bundles; no test may depend on host-relative paths.
+- [x] Implement source-bundle validation before opening any xref and evidence mapping before tessellation.
+- [x] Preserve raw tags and fidelity; prove no entity becomes a consumer wall/beam/panel classification.
+- [x] Run DXF v0.1/v0.2/v0.3, CLI, bundle-safety, determinism and full gates.
+- [x] Write evidence, promote only ACX-29 and commit `feat: expand bounded DXF profiles`.
 
 ---
 

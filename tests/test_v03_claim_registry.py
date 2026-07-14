@@ -40,6 +40,16 @@ def test_ifc_v03_claims_are_public_partial() -> None:
     assert {claim["evidence"] for claim in claims.values()} == {"docs/evidence/ACX-27.md"}
 
 
+def test_dxf_v03_claims_are_public_partial() -> None:
+    registry = json.loads((ROOT / "conformance/v0.3/claims.json").read_text(encoding="utf-8"))
+    claims = {item["id"]: item for item in registry["claims"] if item["id"] in {"dxf.source-semantics.v03", "dxf.geometry.v03"}}
+
+    assert set(claims) == {"dxf.source-semantics.v03", "dxf.geometry.v03"}
+    assert {claim["status"] for claim in claims.values()} == {"public"}
+    assert {claim["support_level"] for claim in claims.values()} == {"partial"}
+    assert {claim["evidence"] for claim in claims.values()} == {"docs/evidence/ACX-28.md"}
+
+
 def test_provider_multiarch_portable_corpus_is_digest_bound() -> None:
     completed = subprocess.run(
         [sys.executable, str(ROOT / "scripts/check_provider_multiarch_conformance.py")],
