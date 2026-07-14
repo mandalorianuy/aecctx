@@ -66,6 +66,7 @@ fi
 "$python_runtime" scripts/check_remote_provider_conformance.py --require-public
 "$python_runtime" scripts/check_ifc_v03_conformance.py --require-public
 "$python_runtime" scripts/check_dxf_v03_conformance.py --require-public
+"$python_runtime" scripts/check_ocr_v03_conformance.py --require-public
 "$python_runtime" -c 'from aecctx.release_conformance import validate_release_corpus; result = validate_release_corpus("conformance/v0.2/corpus.json", repository_root="."); raise SystemExit(0 if result["ok"] else "v0.2 release corpus failed")'
 "$python_runtime" -c 'from aecctx.conformance import validate_claim_registry_file; result = validate_claim_registry_file("conformance/v0.2/claims.json"); raise SystemExit(0 if result.valid else "; ".join(result.errors))'
 "$python_runtime" -c 'from aecctx.conformance import validate_claim_registry_file; result = validate_claim_registry_file("conformance/v0.3/claims.json"); raise SystemExit(0 if result.valid else "; ".join(result.errors))'
@@ -81,6 +82,7 @@ fi
 "$python_runtime" scripts/check_remote_provider_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
 "$python_runtime" scripts/check_ifc_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
 "$python_runtime" scripts/check_dxf_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
+"$python_runtime" scripts/check_ocr_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
 
 # Baseline-owned offer snapshots include upstream EOF formatting and are checked
 # byte-for-byte by the full baseline integration checker when its private runtime

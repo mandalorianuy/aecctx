@@ -188,8 +188,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-26 | completed | Optional remote/customer-managed provider protocol |
 | ACX-27 | completed | Expanded IFC 2D and georeferencing profiles |
 | ACX-28 | completed | Expanded DXF semantics, geometry and bounded xrefs |
-| ACX-29 | in_progress | Multilingual and layout-aware OCR profiles |
-| ACX-30 | pending | Bounded vision inference and reconstruction hypotheses |
+| ACX-29 | completed | Multilingual and layout-aware OCR profiles |
+| ACX-30 | pending-next | Bounded vision inference and reconstruction hypotheses |
 | ACX-31 | pending | Mesh CRS registry and datum-operation qualification |
 | ACX-32 | pending | STEP/IGES XDE and fidelity expansion |
 | ACX-33 | pending | DWG version, xref, units and geometry expansion |
@@ -927,7 +927,7 @@ Detailed implementation authority: [`docs/plans/post-v02-functional-debt-impleme
 
 Program rules:
 
-- ACX-24 through ACX-26 are complete and ACX-27 alone is `pending-next`; no later ACX may execute or borrow scope.
+- ACX-24 through ACX-29 are complete and ACX-30 alone is `pending-next`; no later ACX may execute or borrow scope.
 - Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
 - Replay cannot satisfy a live platform/provider acceptance item.
 - A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.
@@ -950,3 +950,5 @@ ACX-26 completion resolution: `remote-https-spki-v1` is public `partial` only fo
 ACX-27 execution cut: ACXD-035 and `docs/specs/ifc-v03-profile.md` select only `ifcopenshell==0.8.5`, project-authored `IFC4X3_ADD2` STEP fixtures, the enumerated structural curve/annotation/style profiles and explicit `IfcMapConversionScaled`. Default v0.1 output and ACX-13 claims remain unchanged. IFC2X3 property-set georeferencing, implicit/default parameters, rendering authority, survey authority and unlisted schemas/items/operations remain non-claims. ACX-28 remains `pending`.
 
 ACX-27 completion resolution: `ifc.native-2d.v03` and `ifc.georeferencing.v03` are public `partial` only for the exact ACXD-035 IFC4X3 ADD2 profiles under optional `ifcopenshell==0.8.5`. Source curve/annotation/style evidence precedes deterministic derived SVG; scaled map factors remain explicit and reversible. Glyph/hatch rendering, topology, arbitrary curves/trims, external presentation resources, IFC2X3 property-set georeferencing, other schemas/operations, CRS validation and survey authority remain non-claims. ACX-28 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
+
+ACX-29 completion resolution: `pdf-image.ocr-layout` is public `partial` only for the closed ACXD-037 Tesseract 5.3.4 `eng`/`spa`/`por`, PSM 3/4/6 and orthogonal-correction matrix on Linux arm64/amd64. Words, lines, blocks and the bounded rectangular table rule remain inferred evidence with exact hashes; native text conflicts and unknown topology remain explicit. Other languages/scripts, handwriting, arbitrary models/PSM, semantic tables, vision, hidden geometry and consumer semantics remain non-claims. ACX-30 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.

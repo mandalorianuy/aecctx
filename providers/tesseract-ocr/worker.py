@@ -12,14 +12,24 @@ from PIL import Image
 
 PROVIDER_ID = "org.aecctx.ocr.tesseract-tsv"
 RUNTIME_DIGEST = "sha256:6d52ebcafef0ccdf59f58beccc7483c16a6e160fc94e3c3ea59f3f10c991f492"
+V03_RUNTIME_DIGEST = "sha256:73de5713dfa61b9da97576d05bdf2180fa32a0d9edc8293eb92ae9f568521cff"
 REQUIRED_AXES = (
     "cpu", "decompression", "environment", "filesystem", "input_bytes", "memory", "network", "open_files",
     "output_bytes", "process", "process_tree", "records", "recursion", "temporary_storage", "user_permissions", "wall_time",
 )
 CONFIGURATION_KEYS = {"dpi", "language", "minimum_confidence", "page_segmentation_mode"}
+CONFIGURATION_V03_KEYS = {"dpi", "minimum_confidence", "ocr_profile", "orientation_degrees"}
+V03_PROFILES = {
+    "eng-auto-v1": ("eng", 3),
+    "eng-column-v1": ("eng", 4),
+    "eng-block-v1": ("eng", 6),
+    "spa-block-v1": ("spa", 6),
+    "por-block-v1": ("por", 6),
+    "eng-table-v1": ("eng", 6),
+}
 
 
-def descriptor() -> dict[str, Any]:
+def descriptor(*, v03: bool = False) -> dict[str, Any]:
     return {
         "actions": ["extract"],
         "deterministic": True,
@@ -32,9 +42,9 @@ def descriptor() -> dict[str, Any]:
         "platforms": ["linux-container"],
         "protocol_version": "0.2",
         "provider_id": PROVIDER_ID,
-        "provider_version": "0.2.0",
-        "runtime_version": "tesseract-5.3.4+capi+eng",
-        "runtime_digest": RUNTIME_DIGEST,
+        "provider_version": "0.3.0" if v03 else "0.2.0",
+        "runtime_version": "tesseract-5.3.4+capi+eng+spa+por" if v03 else "tesseract-5.3.4+capi+eng",
+        "runtime_digest": V03_RUNTIME_DIGEST if v03 else RUNTIME_DIGEST,
     }
 
 
@@ -84,7 +94,27 @@ def _configuration(request: dict[str, Any]) -> tuple[int, float]:
     return dpi, float(confidence)
 
 
-def _ocr_tsv(pixels: bytes, width: int, height: int, dpi: int) -> str:
+def _configuration_v03(request: dict[str, Any]) -> tuple[int, float, str, int, int, str]:
+    configuration = request.get("configuration")
+    if not isinstance(configuration, dict) or set(configuration) != CONFIGURATION_V03_KEYS:
+        raise ValueError("AECCTX_OCR_CONFIGURATION_INVALID")
+    profile = configuration.get("ocr_profile")
+    if profile not in V03_PROFILES:
+        raise ValueError("AECCTX_OCR_CONFIGURATION_OUTSIDE_PROFILE")
+    dpi = configuration.get("dpi")
+    confidence = configuration.get("minimum_confidence")
+    orientation = configuration.get("orientation_degrees")
+    if not isinstance(dpi, int) or isinstance(dpi, bool) or not 70 <= dpi <= 1200:
+        raise ValueError("AECCTX_OCR_DPI_INVALID")
+    if not isinstance(confidence, (int, float)) or isinstance(confidence, bool) or not 0 <= float(confidence) <= 100:
+        raise ValueError("AECCTX_OCR_CONFIDENCE_INVALID")
+    if orientation not in {0, 90, 180, 270}:
+        raise ValueError("AECCTX_OCR_ORIENTATION_INVALID")
+    language, psm = V03_PROFILES[str(profile)]
+    return dpi, float(confidence), language, psm, int(orientation), str(profile)
+
+
+def _ocr_tsv(pixels: bytes, width: int, height: int, dpi: int, *, language: str = "eng", psm: int = 6) -> str:
     library = ctypes.CDLL("libtesseract.so.5")
     library.TessBaseAPICreate.restype = ctypes.c_void_p
     library.TessBaseAPIInit3.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
@@ -103,9 +133,9 @@ def _ocr_tsv(pixels: bytes, width: int, height: int, dpi: int) -> str:
     text_pointer: int | None = None
     buffer = ctypes.create_string_buffer(pixels)
     try:
-        if library.TessBaseAPIInit3(handle, None, b"eng") != 0:
+        if library.TessBaseAPIInit3(handle, None, language.encode("ascii")) != 0:
             raise RuntimeError("AECCTX_OCR_ENGINE_INIT_FAILED")
-        library.TessBaseAPISetPageSegMode(handle, 6)
+        library.TessBaseAPISetPageSegMode(handle, psm)
         library.TessBaseAPISetImage(handle, buffer, width, height, 1, width)
         library.TessBaseAPISetSourceResolution(handle, dpi)
         if library.TessBaseAPIRecognize(handle, None) != 0:
@@ -150,11 +180,83 @@ def _words(tsv: str, minimum_confidence: float, width: int, height: int) -> list
     return words
 
 
+def _union(boxes: list[list[int]]) -> list[int]:
+    left = min(box[0] for box in boxes); top = min(box[1] for box in boxes)
+    right = max(box[0] + box[2] for box in boxes); bottom = max(box[1] + box[3] for box in boxes)
+    return [left, top, right - left, bottom - top]
+
+
+def _layout(tsv: str, minimum_confidence: float, width: int, height: int, profile: str, language: str, psm: int, orientation: int) -> dict[str, Any]:
+    rows = tsv.splitlines()
+    header = ["level", "page_num", "block_num", "par_num", "line_num", "word_num", "left", "top", "width", "height", "conf", "text"]
+    if rows and rows[0].split("\t") == header:
+        rows = rows[1:]
+    words: list[dict[str, Any]] = []
+    hierarchy: list[tuple[int, int, int, int]] = []
+    for row in rows:
+        fields = row.split("\t", 11)
+        if len(fields) != 12 or fields[0] != "5":
+            continue
+        block, paragraph, line, word = (int(fields[index]) for index in range(2, 6))
+        left, top, box_width, box_height = (int(fields[index]) for index in range(6, 10))
+        confidence = float(fields[10]); text = fields[11]
+        if not text or confidence < minimum_confidence:
+            continue
+        if left < 0 or top < 0 or box_width < 1 or box_height < 1 or left + box_width > width or top + box_height > height:
+            raise ValueError("AECCTX_OCR_WORD_BOUNDS_INVALID")
+        index = len(words); hierarchy.append((block, paragraph, line, word))
+        words.append({"id": f"w{index}", "bbox": [left, top, box_width, box_height], "confidence": round(confidence, 6), "text": text, "block": block, "paragraph": paragraph, "line": line, "word": word, "reading_order": index})
+    monotonic = hierarchy == sorted(hierarchy) and len(set(hierarchy)) == len(hierarchy)
+    line_groups: dict[tuple[int, int, int], list[dict[str, Any]]] = {}
+    for item in words:
+        line_groups.setdefault((item["block"], item["paragraph"], item["line"]), []).append(item)
+    lines: list[dict[str, Any]] = []
+    for index, (key, members) in enumerate(sorted(line_groups.items())):
+        lines.append({"id": f"l{index}", "bbox": _union([member["bbox"] for member in members]), "block": key[0], "paragraph": key[1], "line": key[2], "word_ids": [member["id"] for member in members]})
+    block_groups: dict[int, list[dict[str, Any]]] = {}
+    for line in lines:
+        block_groups.setdefault(line["block"], []).append(line)
+    blocks = [{"id": f"b{index}", "bbox": _union([line["bbox"] for line in members]), "block": block, "line_ids": [line["id"] for line in members]} for index, (block, members) in enumerate(sorted(block_groups.items()))]
+    tables: list[dict[str, Any]] = []
+    if profile == "eng-table-v1":
+        rows_words = [[next(word for word in words if word["id"] == word_id) for word_id in line["word_ids"]] for line in lines]
+        counts = {len(row) for row in rows_words}
+        known = len(rows_words) >= 2 and len(counts) == 1 and 2 <= next(iter(counts), 0) <= 8
+        if known:
+            for column in range(len(rows_words[0])):
+                centres = [row[column]["bbox"][0] + row[column]["bbox"][2] / 2 for row in rows_words]
+                if max(centres) - min(centres) > 12:
+                    known = False
+        topology = {"state": "known", "value": {"rows": [[word["id"] for word in row] for row in rows_words], "column_count": len(rows_words[0])}} if known else {"state": "unknown", "reason_code": "AECCTX_OCR_TABLE_TOPOLOGY_NOT_ESTABLISHED"}
+        tables.append({"id": "t0", "topology": topology})
+    return {"schema": "aecctx.ocr.layout.v1", "profile": profile, "language": language, "page_segmentation_mode": psm, "orientation_degrees": orientation, "width": width, "height": height, "reading_order": {"state": "known", "value": "tsv-hierarchy"} if monotonic else {"state": "unknown", "reason_code": "AECCTX_OCR_READING_ORDER_NOT_ESTABLISHED"}, "words": words, "lines": lines, "blocks": blocks, "tables": tables}
+
+
+def _source_bbox(box: list[int], orientation: int, width: int, height: int) -> list[int]:
+    left, top, box_width, box_height = box
+    if orientation == 0:
+        return box
+    if orientation == 90:
+        return [top, height - left - box_width, box_height, box_width]
+    if orientation == 180:
+        return [width - left - box_width, height - top - box_height, box_width, box_height]
+    return [width - top - box_height, left, box_height, box_width]
+
+
+def _restore_source_coordinates(layout: dict[str, Any], orientation: int, width: int, height: int) -> dict[str, Any]:
+    for collection in (layout["words"], layout["lines"], layout["blocks"]):
+        for item in collection:
+            item["bbox"] = _source_bbox(item["bbox"], orientation, width, height)
+    layout["width"] = width; layout["height"] = height
+    return layout
+
+
 def main() -> int:
     workspace = Path.cwd()
     response_path = workspace / "output" / "response.json"
     request = json.loads((workspace / "request.json").read_text(encoding="utf-8"))
-    described = descriptor()
+    v03 = isinstance(request.get("configuration"), dict) and "ocr_profile" in request["configuration"]
+    described = descriptor(v03=v03)
     events: list[dict[str, Any]] = []
     diagnostics: list[dict[str, Any]] = []
     error: dict[str, str] | None = None
@@ -163,7 +265,10 @@ def main() -> int:
     try:
         if request.get("provider_id") != PROVIDER_ID or request.get("action") != "extract":
             raise ValueError("AECCTX_OCR_REQUEST_OUTSIDE_PROFILE")
-        dpi, minimum_confidence = _configuration(request)
+        if v03:
+            dpi, minimum_confidence, language, psm, orientation, profile = _configuration_v03(request)
+        else:
+            dpi, minimum_confidence = _configuration(request)
         input_path = workspace / request["input"]["path"]
         input_bytes = input_path.read_bytes()
         if hashlib.sha256(input_bytes).hexdigest() != request["input"]["sha256"]:
@@ -174,18 +279,19 @@ def main() -> int:
         with Image.open(io.BytesIO(input_bytes)) as image:
             grayscale = image.convert("L")
             width, height = grayscale.size
+            if v03 and orientation:
+                transpose = {90: Image.Transpose.ROTATE_270, 180: Image.Transpose.ROTATE_180, 270: Image.Transpose.ROTATE_90}[orientation]
+                grayscale = grayscale.transpose(transpose)
+            ocr_width, ocr_height = grayscale.size
             pixels = grayscale.tobytes()
-        accepted = _words(_ocr_tsv(pixels, width, height, dpi), minimum_confidence, width, height)
+        tsv = _ocr_tsv(pixels, ocr_width, ocr_height, dpi, language=language if v03 else "eng", psm=psm if v03 else 6)
+        payload = _restore_source_coordinates(_layout(tsv, minimum_confidence, ocr_width, ocr_height, profile, language, psm, orientation), orientation, width, height) if v03 else {
+            "height": height, "language": "eng", "page_segmentation_mode": 6, "schema": "aecctx.ocr.words.v1", "width": width,
+            "words": _words(tsv, minimum_confidence, width, height),
+        }
         events.append({
             "event_type": "primitive",
-            "payload": {
-                "height": height,
-                "language": "eng",
-                "page_segmentation_mode": 6,
-                "schema": "aecctx.ocr.words.v1",
-                "width": width,
-                "words": accepted,
-            },
+            "payload": payload,
             "sequence": 0,
             "source_locator": f"sha256:{request['input']['sha256']}",
         })
@@ -202,11 +308,11 @@ def main() -> int:
             "enforcement_profile": "oci-docker-v1",
             "network_mode": "disabled",
             "provider_id": PROVIDER_ID,
-            "provider_version": "0.2.0",
+            "provider_version": "0.3.0" if v03 else "0.2.0",
             "request_digest": _digest(request),
             "response_payload_digest": "0" * 64,
-            "runtime_digest": RUNTIME_DIGEST,
-            "runtime_version": "tesseract-5.3.4+capi+eng",
+            "runtime_digest": V03_RUNTIME_DIGEST if v03 else RUNTIME_DIGEST,
+            "runtime_version": "tesseract-5.3.4+capi+eng+spa+por" if v03 else "tesseract-5.3.4+capi+eng",
         },
         "capability_report": _capability_report(ok),
         "diagnostics": diagnostics,

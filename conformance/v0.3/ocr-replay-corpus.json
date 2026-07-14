@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "entries": [{
+    "id": "tesseract-ocr-v03-spa-layout",
+    "action": "extract",
+    "configuration": {"dpi": 300, "minimum_confidence": 0, "ocr_profile": "spa-block-v1", "orientation_degrees": 0},
+    "descriptor": "fixtures/v0.3/ocr/replay/descriptor.json",
+    "input": "fixtures/v0.3/ocr/replay/input.pgm",
+    "limits": {"cpu_seconds": 30, "max_decompression_ratio": 200.0, "max_files": 1000, "max_input_bytes": 536870912, "max_memory_bytes": 2147483648, "max_open_files": 64, "max_output_bytes": 67108864, "max_records": 1000000, "max_recursion_depth": 64, "wall_time_seconds": 30},
+    "output_root": "fixtures/v0.3/ocr/replay/output",
+    "request": "fixtures/v0.3/ocr/replay/request.json",
+    "response": "fixtures/v0.3/ocr/replay/output/response.json"
+  }]
+}

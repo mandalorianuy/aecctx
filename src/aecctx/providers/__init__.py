@@ -35,6 +35,7 @@ from .tesseract import IMAGE as TESSERACT_OCR_IMAGE
 from .tesseract import IMAGE_ID as TESSERACT_OCR_IMAGE_ID
 from .tesseract import PROVIDER_ID as TESSERACT_OCR_PROVIDER_ID
 from .tesseract import tesseract_ocr_descriptor, tesseract_ocr_registry
+from .tesseract import tesseract_ocr_v03_descriptor, tesseract_ocr_v03_registry
 from .step_iges import (
     STEP_IGES_CONFIGURATION,
     STEP_IGES_IMAGE,
@@ -89,6 +90,8 @@ __all__ = [
     "TESSERACT_OCR_PROVIDER_ID",
     "tesseract_ocr_descriptor",
     "tesseract_ocr_registry",
+    "tesseract_ocr_v03_descriptor",
+    "tesseract_ocr_v03_registry",
     "STEP_IGES_CONFIGURATION",
     "STEP_IGES_IMAGE",
     "STEP_IGES_IMAGE_ID",

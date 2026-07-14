@@ -282,7 +282,7 @@ def ingest_pdf(
             locators = [
                 event.get("source_locator")
                 for event in ocr_result.events
-                if event.get("event_type") == "primitive" and event.get("payload", {}).get("schema") == "aecctx.ocr.words.v1"
+                if event.get("event_type") == "primitive" and event.get("payload", {}).get("schema") in {"aecctx.ocr.words.v1", "aecctx.ocr.layout.v1"}
             ]
             if len(locators) != 1 or not isinstance(locators[0], str) or not locators[0].startswith("sha256:"):
                 raise InferenceMappingError("AECCTX_OCR_EVENT_PROFILE_INVALID", "OCR response does not identify exactly one input artifact")

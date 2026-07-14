@@ -305,3 +305,4 @@ None.
 - Table decision: `eng-table-v1` may infer only a two-to-eight-column rectangular grid with at least two equal-width rows and a 12-pixel centre-alignment tolerance. Spans, headers, borders and spreadsheet semantics are non-claims.
 - Claim decision: `pdf-image.ocr-layout` may become public `partial` only after every profile passes live Linux arm64/amd64, replay equivalence, negative/security, package and repository gates.
 - Evidence owner: `docs/specs/ocr-v03-profile.md`, `conformance/v0.3/ocr-corpus.json`, `scripts/check_ocr_v03_conformance.py` and `docs/evidence/ACX-29.md`.
+- Completion result: all six profiles passed live Linux arm64/amd64 execution and byte-equivalent replay, inferred-layout/schema/fixture/package/security gates. Only `pdf-image.ocr-layout` is public `partial`; every stated non-claim remains unchanged.

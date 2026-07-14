@@ -128,7 +128,7 @@ def build_parser() -> argparse.ArgumentParser:
     ingest.add_argument("--embedding-policy", choices=("external", "embedded", "redacted"), default="external")
     ingest.add_argument("--adapter", choices=("auto", "opaque", "ifc", "dxf", "dwg", "pdf", "image", "geometry", "step-iges"), default="auto")
     ingest.add_argument("--aecctx-version", choices=("0.1.0", "0.2.0"), default="0.1.0")
-    ingest.add_argument("--inference-replay", help="validated provider replay corpus (v0.2 PDF/image only)")
+    ingest.add_argument("--inference-replay", help="validated bounded OCR provider replay corpus (AECCTX v0.2 PDF/image package profile)")
     ingest.add_argument("--inference-entry", help="entry ID inside --inference-replay")
     ingest.add_argument("--provider-replay", help="validated STEP/IGES or DWG provider replay corpus (v0.2 only)")
     ingest.add_argument("--provider-entry", help="entry ID inside --provider-replay")
@@ -420,7 +420,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             inference_result = None
             if arguments.inference_replay:
                 if arguments.aecctx_version != "0.2.0" or adapter not in {"pdf", "image"}:
-                    raise ValueError("inference replay is limited to governed v0.2 PDF/image profiles")
+                    raise ValueError("inference replay is limited to governed OCR PDF/image profiles in AECCTX v0.2 packages")
                 from .providers import load_provider_replay_entry
 
                 inference_result = load_provider_replay_entry(arguments.inference_replay, arguments.inference_entry).result

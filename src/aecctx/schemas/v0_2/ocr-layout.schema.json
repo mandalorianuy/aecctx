@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aecctx.dev/schemas/v0.2/ocr-layout.schema.json",
+  "title": "AECCTX OCR layout v1 event payload",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "profile", "language", "page_segmentation_mode", "orientation_degrees", "width", "height", "reading_order", "words", "lines", "blocks", "tables"],
+  "properties": {
+    "schema": {"const": "aecctx.ocr.layout.v1"},
+    "profile": {"enum": ["eng-auto-v1", "eng-column-v1", "eng-block-v1", "spa-block-v1", "por-block-v1", "eng-table-v1"]},
+    "language": {"enum": ["eng", "spa", "por"]},
+    "page_segmentation_mode": {"enum": [3, 4, 6]},
+    "orientation_degrees": {"enum": [0, 90, 180, 270]},
+    "width": {"type": "integer", "minimum": 1},
+    "height": {"type": "integer", "minimum": 1},
+    "reading_order": {"$ref": "#/$defs/state"},
+    "words": {"type": "array", "maxItems": 100000, "items": {"$ref": "#/$defs/word"}},
+    "lines": {"type": "array", "maxItems": 50000, "items": {"$ref": "#/$defs/line"}},
+    "blocks": {"type": "array", "maxItems": 10000, "items": {"$ref": "#/$defs/block"}},
+    "tables": {"type": "array", "maxItems": 1, "items": {"$ref": "#/$defs/table"}}
+  },
+  "$defs": {
+    "bbox": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 1}, {"type": "integer", "minimum": 1}], "items": false, "minItems": 4, "maxItems": 4},
+    "state": {"oneOf": [{"type": "object", "additionalProperties": false, "required": ["state", "value"], "properties": {"state": {"const": "known"}, "value": {"type": ["string", "object"]}}}, {"type": "object", "additionalProperties": false, "required": ["state", "reason_code"], "properties": {"state": {"const": "unknown"}, "reason_code": {"type": "string", "pattern": "^AECCTX_"}}}]},
+    "word": {"type": "object", "additionalProperties": false, "required": ["id", "bbox", "confidence", "text", "block", "paragraph", "line", "word", "reading_order"], "properties": {"id": {"type": "string", "pattern": "^w[0-9]+$"}, "bbox": {"$ref": "#/$defs/bbox"}, "confidence": {"type": "number", "minimum": 0, "maximum": 100}, "text": {"type": "string", "minLength": 1}, "block": {"type": "integer", "minimum": 0}, "paragraph": {"type": "integer", "minimum": 0}, "line": {"type": "integer", "minimum": 0}, "word": {"type": "integer", "minimum": 0}, "reading_order": {"type": "integer", "minimum": 0}}},
+    "line": {"type": "object", "additionalProperties": false, "required": ["id", "bbox", "block", "paragraph", "line", "word_ids"], "properties": {"id": {"type": "string", "pattern": "^l[0-9]+$"}, "bbox": {"$ref": "#/$defs/bbox"}, "block": {"type": "integer"}, "paragraph": {"type": "integer"}, "line": {"type": "integer"}, "word_ids": {"type": "array", "items": {"type": "string"}}}},
+    "block": {"type": "object", "additionalProperties": false, "required": ["id", "bbox", "block", "line_ids"], "properties": {"id": {"type": "string", "pattern": "^b[0-9]+$"}, "bbox": {"$ref": "#/$defs/bbox"}, "block": {"type": "integer"}, "line_ids": {"type": "array", "items": {"type": "string"}}}},
+    "table": {"type": "object", "additionalProperties": false, "required": ["id", "topology"], "properties": {"id": {"const": "t0"}, "topology": {"$ref": "#/$defs/state"}}}
+  }
+}
