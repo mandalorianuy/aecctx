@@ -32,6 +32,9 @@ fi
 "$python_runtime" -m json.tool schemas/v0.2/signing-key-registry.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/signing-trust-policy.schema.json >/dev/null
 "$python_runtime" -m json.tool schemas/v0.2/signature-verification-result.schema.json >/dev/null
+for schema in signing-v2-policy x509-chain-result certificate-status-result timestamp-result countersignature-result advanced-trust-result; do
+  "$python_runtime" -m json.tool "schemas/v0.2/${schema}.schema.json" >/dev/null
+done
 "$python_runtime" -m json.tool conformance/v0.2/claims.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/rvt-provider-decision.json >/dev/null
@@ -54,6 +57,7 @@ fi
 "$python_runtime" -m json.tool conformance/v0.3/mesh-crs-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/step-iges-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/dwg-corpus.json >/dev/null
+"$python_runtime" -m json.tool conformance/v0.3/signing-corpus.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/.codex-plugin/plugin.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/.mcp.json >/dev/null
 "$python_runtime" -m json.tool plugins/aecctx-inspector/assets/compatibility.json >/dev/null
@@ -66,6 +70,8 @@ fi
 "$python_runtime" scripts/check_rvt_blocked_conformance.py --decision conformance/v0.3/rvt-provider-decision.json --claims conformance/v0.3/claims.json
 "$python_runtime" fixtures/v0.2/signing/generate_fixtures.py --check
 "$python_runtime" scripts/check_signing_conformance.py
+"$python_runtime" fixtures/v0.3/signing/generate_fixtures.py --check
+"$python_runtime" scripts/check_signing_v03_conformance.py
 "$python_runtime" fixtures/v0.2/gate/generate_fixtures.py --check
 "$python_runtime" scripts/check_gate_conformance.py
 "$python_runtime" scripts/check_codex_plugin.py

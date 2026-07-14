@@ -123,7 +123,14 @@ aecctx ingest fixtures/v0.3/dwg/xref-bundle --output xref-dwg-v02.aecctx --adapt
 
 Other adapters currently reject `--aecctx-version 0.2.0` until their governed expansion task publishes a profile. OCR, STEP/IGES and DWG remain experimental and partial under their normative profiles. STEP/IGES and DWG require a validated replay in CLI or validated `ProviderResult` in SDK. DWG is limited to exact `AC1012`, `AC1014` and `AC1015` profiles; JSON objects are observed decoder evidence while DXF/geometry are converted evidence. Xrefs require a closed hash-bound source bundle and explicit per-member replay. R12, R2004+, ambient traversal, encryption, ACIS/proxy/custom semantics, CRS and complete 3D remain unsupported or non-claims. Mesh registration never guesses units/CRS or rewrites source coordinates. Vision and hidden geometry are not inferred.
 
-Signing accepts valid v0.1/v0.2 directory or ZIP packages and emits a detached JWS General JSON sidecar. Integrity, cryptographic validity, key lifecycle, trust and authorization remain separate fields. A valid signature proves key possession over the governed statement; it does not by itself prove organizational identity, engineering approval or construction readiness. X.509, online revocation, timestamps, countersignatures and implicit trust discovery remain unsupported.
+Signing accepts valid v0.1/v0.2 directory or ZIP packages and emits a detached JWS General JSON sidecar. Integrity, cryptographic validity, key lifecycle, trust and authorization remain separate fields. A valid signature proves key possession over the governed statement; it does not by itself prove organizational identity, engineering approval or construction readiness.
+
+ACX-35 adds the exact optional `aecctx-x509-ed25519-crl-time-v1` profile: explicit Ed25519 X.509 paths, complete offline base CRLs, closed AECCTX trusted-time tokens and exact-target countersignatures. These layers remain separate from v1 and from one another. RFC 3161/CMS, OCSP, online or host discovery, production key custody, legal/qualified signatures and universal trust remain unsupported.
+
+```bash
+aecctx verify-advanced-trust PACKAGE --signature-bundle signatures.json \
+  --policy advanced-trust-policy.json --json
+```
 
 ## Python API
 

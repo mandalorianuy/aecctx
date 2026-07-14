@@ -384,3 +384,17 @@ None.
 - Decision: renew `blocked` in a new v0.3 decision record bound to the immutable v0.2 record. Retain public `unsupported`, deterministic opaque fallback and anti-claim enforcement. Do not create `docs/specs/rvt-v03-profile.md`, an implementation sub-plan, adapter/provider scaffolding, replay or real/proprietary fixture.
 - Exact reopening decision required: the human owner must select exactly one route and supply every route-specific entitlement, version, automation, enforcement, CI, fixture, privacy, billing/retention/jurisdiction and lifecycle artifact before a future plan may authorize decoder code.
 - Sequencing consequence: after executable blocker evidence and all gates pass, ACX-34 closes documented `blocked` and ACX-35 alone may be promoted. The blocked outcome is not RVT capability progress.
+
+### ACXD-044: Closed advanced offline X.509, CRL, trusted-time and countersignature profile
+
+- Date: 2026-07-14.
+- Status: Accepted for ACX-35 implementation; it creates no public claim until schema, SDK/CLI, fixture, conformance, packaging and repository gates pass.
+- Dependency and algorithm decision: retain only optional `cryptography>=45,<50`; X.509 certificates, CRLs, v1 JWS verification, trusted-time tokens and countersignatures use Ed25519 with SHA-256 binding. No new ASN.1 dependency, algorithm negotiation or fallback is admitted.
+- Path and status decision: paths are explicit leaf/optional-intermediate/root inputs, terminate only in policy-selected root fingerprints and evaluate at caller time. Only explicit complete base CRLs are selected. Host stores/clocks, AIA/CDP discovery, OCSP, delta/indirect CRLs and ACX-26 retrieval remain unsupported.
+- Time decision: select only the closed canonical `aecctx-trusted-time-v1` Ed25519 token. It is deliberately not RFC 3161/CMS and cannot claim qualified/legal time, transparency or universal archival validity.
+- Multi-party decision: v1 independent signatures remain unchanged. A countersignature binds the exact canonical target signature object, cannot target another countersignature and does not count toward the independent authorization threshold.
+- Authority decision: package integrity, cryptographic validity, identity, lifecycle, root trust, policy authorization and archival-time acceptance remain machine-distinct; no aggregate authenticity claim exists.
+- Security and license decision: all inputs are bounded untrusted data, network-free and path-free. `cryptography` retains Apache-2.0/BSD licensing; no production key custody or provider is introduced.
+- Claim decision: `package.advanced-trust-signing` may become public `partial` only for the exact ACX-35 corpus. RFC 3161, OCSP, online retrieval, production key management, legal signatures and universal trust remain explicit non-claims.
+- Evidence owner: `docs/specs/signing-v2-profile.md`, `fixtures/v0.3/signing/`, `conformance/v0.3/signing-corpus.json`, `tests/test_signing_v03.py`, `scripts/check_signing_v03_conformance.py` and `docs/evidence/ACX-35.md`.
+- Completion result: the exact advanced profile passed eight deterministic PKI cases, valid/revoked/stale/unknown/expired/rotated lifecycle states, two-of-two signatures, trusted-time and countersignature mutation, no-network and missing-extra behavior, ACX-20 compatibility, package and repository gates. Only `package.advanced-trust-signing` is public `partial`; every stated non-claim remains unchanged.

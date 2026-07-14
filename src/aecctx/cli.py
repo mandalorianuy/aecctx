@@ -166,6 +166,11 @@ def build_parser() -> argparse.ArgumentParser:
     verify_signatures.add_argument("--key-registry", required=True)
     verify_signatures.add_argument("--trust-policy")
     verify_signatures.add_argument("--json", action="store_true", dest="as_json")
+    verify_advanced = subparsers.add_parser("verify-advanced-trust")
+    verify_advanced.add_argument("package")
+    verify_advanced.add_argument("--signature-bundle", required=True)
+    verify_advanced.add_argument("--policy", required=True)
+    verify_advanced.add_argument("--json", action="store_true", dest="as_json")
     gate = subparsers.add_parser("gate")
     gate.add_argument("package")
     gate.add_argument("--policy", required=True)
@@ -405,6 +410,26 @@ def main(argv: Sequence[str] | None = None) -> int:
                 f"policy_satisfied={policy_state}"
             )
         return 0 if result.policy_satisfied is True else 1
+    if arguments.command == "verify-advanced-trust":
+        from ._signing_io import read_bounded_regular_file
+        from .trust import TrustError, evaluate_advanced_trust
+
+        try:
+            bundle = read_bounded_regular_file(arguments.signature_bundle, max_bytes=1_048_576, label="signature bundle")
+            policy = read_bounded_regular_file(arguments.policy, max_bytes=1_048_576, label="advanced trust policy")
+            data = evaluate_advanced_trust(arguments.package, bundle, policy)
+        except (OSError, ValueError, TrustError) as error:
+            return _emit_signing_error(error, as_json=arguments.as_json)
+        if arguments.as_json:
+            print(json.dumps(_envelope(True, data, []), sort_keys=True, separators=(",", ":")))
+        else:
+            print(
+                "AECCTX advanced trust: "
+                f"signatures={len(data['signatures'])} "
+                f"authorized={data['authorized_signature_count']} "
+                f"policy_satisfied={str(data['policy_satisfied']).lower()}"
+            )
+        return 0 if data["policy_satisfied"] else 1
     if arguments.command == "ingest":
         try:
             adapter = arguments.adapter

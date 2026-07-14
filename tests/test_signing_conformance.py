@@ -238,7 +238,11 @@ def test_clean_install_base_and_signing_extra_boundaries(tmp_path: Path) -> None
         assert any(name.endswith("/conformance/v0.2/signing-corpus.json") for name in members)
         private_members = [name for name in members if name.lower().endswith(".pem")]
         assert private_members
-        assert all("/fixtures/v0.2/signing/keys/test-" in name for name in private_members)
+        assert all(
+            "/fixtures/v0.2/signing/keys/test-" in name
+            or "/fixtures/v0.3/signing/keys/test-" in name
+            for name in private_members
+        )
         readme_name = next(name for name in members if name.endswith("/fixtures/v0.2/signing/README.md"))
         readme = archive.extractfile(readme_name)
         assert readme is not None
@@ -286,6 +290,16 @@ def test_clean_install_base_and_signing_extra_boundaries(tmp_path: Path) -> None
         text=True,
         capture_output=True,
     )
+    fixture_v03 = ROOT / "fixtures" / "v0.3" / "signing"
+    base_advanced = subprocess.run(
+        [
+            str(_venv_python(base)), "-m", "aecctx", "verify-advanced-trust", str(PACKAGE),
+            "--signature-bundle", str(fixture_v03 / "bundles/valid.json"),
+            "--policy", str(fixture_v03 / "policies/valid.json"), "--json",
+        ],
+        text=True,
+        capture_output=True,
+    )
     signed_verify = subprocess.run(
         [
             str(_venv_python(signing)),
@@ -308,5 +322,7 @@ def test_clean_install_base_and_signing_extra_boundaries(tmp_path: Path) -> None
     assert base_validate.returncode == 0, base_validate.stdout + base_validate.stderr
     assert base_sign.returncode == 2
     assert json.loads(base_sign.stdout)["diagnostics"][0]["code"] == "AECCTX_SIGNING_CRYPTO_UNAVAILABLE"
+    assert base_advanced.returncode == 2
+    assert json.loads(base_advanced.stdout)["diagnostics"][0]["code"] == "AECCTX_TRUST_DEPENDENCY_UNAVAILABLE"
     assert signed_verify.returncode == 0, signed_verify.stdout + signed_verify.stderr
     assert json.loads(signed_verify.stdout)["data"]["policy_evaluation"]["policy_satisfied"] is True
