@@ -23,6 +23,7 @@ Decision/profile: ACXD-036 and `docs/specs/dxf-v03-profile.md`
 - Portable gate: `verify_portable.sh` passed 253 tests, deterministic corpora, wheel/sdist build and artifact scans.
 - Canonical gate: `PYTHONPATH=src PATH=/Users/facundo/desarrollo/aecctx/.venv/bin:$PATH PYTHON=/Users/facundo/desarrollo/aecctx/.venv/bin/python AGENT_BASELINE_ROOT=/Users/facundo/desarrollo/codex-agent-baseline ./scripts/verify.sh` passed 691 tests with 10 intentional conditional skips, healthy `baseline-shared-v1` integration with zero issues, v0.1/v0.2 release verification, clean builds and clean-install checks.
 - Exact-SHA GitHub CI and squash merge remain mandatory delivery evidence; the task is accepted on `main` only after those checks pass.
+- The first published candidate exposed a Git index normalization defect: the binary DXF had been staged before the v0.3 corpus received its `binary` attribute, so CI correctly rejected the committed blob against deterministic regeneration. A follow-up commit re-added the blob under the governed `.gitattributes` rule without changing source semantics or corpus expectations; replacement exact-head CI is the acceptance authority.
 
 ## Fixtures, claims and provenance
 
