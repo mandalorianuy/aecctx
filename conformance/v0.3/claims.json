@@ -137,6 +137,18 @@
         "tests/test_ocr_v03.py::test_layout_mapping_emits_inferred_word_line_block_and_table_evidence",
         "tests/test_ocr_v03.py::test_layout_mapping_rejects_mixed_script_profile_and_preserves_native_conflict"
       ]
+    },
+    {
+      "evidence": "docs/evidence/ACX-30.md", "fixture_ids": ["v03-vision-acx30"], "id": "pdf-image.vision-inference",
+      "platform_scope": ["linux/arm64", "linux/amd64"], "profile": "visible-raster-rules-v1",
+      "provider_scope": "org.aecctx.vision.raster-rules@0.3.0 exact visible-pixel rules", "status": "public", "support_level": "partial",
+      "test_ids": ["tests/test_vision_v03.py::test_mapper_emits_only_inferred_candidates_relationships_and_hypotheses", "tests/test_vision_v03.py::test_worker_detects_exact_visible_patterns_and_rejects_configuration_paths", "tests/test_vision_v03.py::test_image_adapter_maps_vision_without_promoting_geometry"]
+    },
+    {
+      "evidence": "docs/evidence/ACX-30.md", "fixture_ids": ["v03-vision-acx30"], "id": "pdf-image.reconstruction-hypothesis",
+      "platform_scope": ["linux/arm64", "linux/amd64"], "profile": "visible-raster-rules-v1",
+      "provider_scope": "org.aecctx.vision.raster-rules@0.3.0 visible planar boundary only", "status": "public", "support_level": "partial",
+      "test_ids": ["tests/test_vision_v03.py::test_mapper_emits_only_inferred_candidates_relationships_and_hypotheses", "tests/test_vision_v03.py::test_mapper_rejects_unknown_fields_bounds_digest_and_calibration_authority"]
     }
   ],
   "fixtures": [
@@ -163,6 +175,10 @@
     {
       "id": "v03-ocr-acx29",
       "path": "fixtures/v0.3/ocr"
+    },
+    {
+      "id": "v03-vision-acx30",
+      "path": "fixtures/v0.3/vision"
     }
   ],
   "version": "0.3.0"

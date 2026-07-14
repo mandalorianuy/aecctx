@@ -45,6 +45,9 @@ from .step_iges import (
     step_iges_registry,
 )
 from .runner import ProviderRunner
+from .vision import CONFIGURATION as VISION_CONFIGURATION
+from .vision import PROVIDER_ID as VISION_PROVIDER_ID
+from .vision import vision_descriptor, vision_registry
 from .dwg import (
     DWG_CONFIGURATION,
     DWG_IMAGE,
@@ -67,6 +70,10 @@ __all__ = [
     "ProviderReplay",
     "ProviderRegistry",
     "ProviderRunner",
+    "VISION_CONFIGURATION",
+    "VISION_PROVIDER_ID",
+    "vision_descriptor",
+    "vision_registry",
     "RemoteProviderPolicy",
     "RemoteProviderProfile",
     "REQUIRED_ENFORCEMENT_AXES",

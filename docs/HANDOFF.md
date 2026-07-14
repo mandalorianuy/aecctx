@@ -13,19 +13,19 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 2. Read the stable package/plugin contracts and `docs/specs/aecctx-capability-expansion-spec.md` completely.
 3. Read `docs/decisions/decision-log.md` and do not resolve open items silently.
 4. Read `docs/specs/aecctx-post-v02-functional-debt-spec.md` and `docs/plans/post-v02-functional-debt-implementation.md` completely.
-5. ACX-01 through ACX-09, ACX-11 through ACX-18, ACX-20 through ACX-28 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-29 is the only authorized next task and has not started.
+5. ACX-01 through ACX-09, ACX-11 through ACX-18, ACX-20 through ACX-30 are complete; ACX-19 is documented `blocked`; ACX-10 remains deferred. ACX-31 is the only authorized next task and has not started.
 6. Follow the definition-of-ready, work breakdown, test matrix, evidence template and promotion protocol in `docs/implementation-plan.md`.
 7. Run `./scripts/verify.sh` before handoff.
 
 ## Active post-v0.2 plan
 
 - Plan: ACX-24 through ACX-38, dependency-first.
-- Completed: ACX-24 live OCI providers, ACX-25 deterministic native-profile rejection/reporting, ACX-26 bounded remote-provider protocol, ACX-27 bounded IFC4X3 ADD2 2D/georeferencing and ACX-28 bounded DXF releases/curves/MESH/xrefs.
-- Sole `pending-next`: ACX-29, multilingual and layout-aware OCR profiles.
-- ACX-30 through ACX-38: `pending`.
+- Completed: ACX-24 through ACX-30, including multilingual/layout OCR and bounded visible-raster vision/reconstruction hypotheses.
+- Sole `pending-next`: ACX-31, mesh CRS registry and datum-operation qualification.
+- ACX-32 through ACX-38: `pending`.
 - Claim posture: `sandbox.oci-multiarch`, `sandbox.remote-provider`, `ifc.native-2d.v03`, `ifc.georeferencing.v03`, `dxf.source-semantics.v03` and `dxf.geometry.v03` are public `partial`; `sandbox.local-enforcement` is public `unsupported`; every later post-v0.2 entry remains a target until its owning milestone closes.
 - Package posture: continue reading v0.1/v0.2 and reuse v0.2 shared evidence/extensions. Stop the affected task before any standard-field change until compatibility is governed.
-- Execution boundary: ACX-28 is complete; ACX-29 alone is promoted but MUST NOT execute without a new continuation request.
+- Execution boundary: ACX-30 is complete; ACX-31 alone is promoted but MUST NOT execute without a new continuation request.
 
 ## ACX-28 evidence
 
@@ -200,7 +200,7 @@ AECCTX `0.2.0` is publicly released from immutable tag `v0.2.0`. The post-v0.2 p
 
 ## Next implementation task
 
-ACX-29 is complete under ACXD-037. Only the exact Tesseract 5.3.4 `eng`/`spa`/`por`, PSM 3/4/6, orthogonal-correction and bounded rectangular-table cuts are public `partial`, backed by project-authored digest-bound fixtures plus live/equivalent Linux arm64/amd64 evidence. Other languages/scripts, handwriting, arbitrary models/PSM, semantic tables, vision and hidden geometry remain non-claims. GitHub is the delivery authority. ACX-30 alone is `pending-next` and has not started.
+ACX-30 is complete under ACXD-039. Only exact visible rectangle/grid/cross/linear-dimension candidates, containment and planar-boundary hypotheses are public `partial`, backed by project-authored digest-bound fixtures and live/equivalent Linux arm64/amd64 evidence. Every output is inferred pixel evidence; general/learned recognition, measurement authority and hidden/source geometry remain unsupported. GitHub is the delivery authority. ACX-31 alone is `pending-next` and has not started.
 
 ## Consumer integration planning entry point
 

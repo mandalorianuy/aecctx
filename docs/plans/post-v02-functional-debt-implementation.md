@@ -340,11 +340,11 @@ def run_remote_provider(
 - Produces: `map_vision_result(result: ProviderResult) -> tuple[dict[str, object], ...]`, claims `pdf-image.vision-inference` and `pdf-image.reconstruction-hypothesis`.
 
 - [x] Govern ACXD-039 by selecting one exact provider, vocabulary, thresholds, confidence calibration, privacy/network profile and reproducibility class. ACXD-038 is already owned by the ACX-29 DXF gate correction.
-- [ ] RED-test symbols/regions/dimensions/tables, ambiguity/conflict/absence, prompt text, crop/occlusion/redaction and calibration conflict.
-- [ ] Implement schema validation and mapping only after provider output passes the existing provider boundary.
-- [ ] Keep every output `inferred`; add tests that source identity, measurement, CRS, validation completeness and geometry support cannot consume hypotheses.
-- [ ] Run privacy-denied, provider-unavailable, replay-drift and nondeterminism-bound tests.
-- [ ] Complete either positive claim evidence or documented `blocked` evidence; promote only ACX-31; commit `feat: add bounded vision inference` or `docs: close ACX-30 vision provider blocker`.
+- [x] RED-test symbols/regions/dimensions/tables, ambiguity/conflict/absence, prompt text, crop/occlusion/redaction and calibration conflict.
+- [x] Implement schema validation and mapping only after provider output passes the existing provider boundary.
+- [x] Keep every output `inferred`; add tests that source identity, measurement, CRS, validation completeness and geometry support cannot consume hypotheses.
+- [x] Run privacy-denied, provider-unavailable, replay-drift and nondeterminism-bound tests.
+- [x] Complete positive claim evidence; promote only ACX-31; commit `feat: add bounded vision inference`.
 
 ---
 

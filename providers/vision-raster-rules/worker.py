@@ -1,5 +1,14 @@
 from __future__ import annotations
 
+import hashlib
+import json
+from pathlib import Path
+from typing import Any
+
+PROVIDER_ID = "org.aecctx.vision.raster-rules"
+RUNTIME_DIGEST = "sha256:fd95fa221297a88e1cf49c55ec1828edd7c5a428187e67b5d1805692d11588db"
+AXES = ("cpu", "decompression", "environment", "filesystem", "input_bytes", "memory", "network", "open_files", "output_bytes", "process", "process_tree", "records", "recursion", "temporary_storage", "user_permissions", "wall_time")
+
 
 def configuration(request: dict[str, object]) -> tuple[int, int, int, bool]:
     value = request.get("configuration", {})
@@ -53,3 +62,48 @@ def detect(pixels: bytes, width: int, height: int) -> dict[str, object]:
             x, y, w, h = candidate["bbox"]
             reconstructions.append({"id": f"h{len(reconstructions)}", "kind": "reconstruction.planar-boundary", "source_candidate_ids": [candidate["id"]], "pixel_polygon": [[x, y], [x + w - 1, y], [x + w - 1, y + h - 1], [x, y + h - 1], [x, y]], "confidence": 1.0})
     return {"schema": "aecctx.vision.candidates.v1", "profile": "visible-raster-rules-v1", "width": width, "height": height, "candidates": candidates, "relationships": relationships, "reconstructions": reconstructions}
+
+
+def descriptor() -> dict[str, Any]:
+    return {"actions": ["extract"], "deterministic": True, "distribution": "operator-built-oci-image", "enforced_axes": {axis: True for axis in AXES}, "enforcement_profile": "oci-docker-v1", "formats": ["image/x-portable-graymap"], "license_spdx": "Apache-2.0 AND PSF-2.0", "network_mode": "disabled", "platforms": ["linux-container"], "protocol_version": "0.2", "provider_id": PROVIDER_ID, "provider_version": "0.3.0", "runtime_version": "python-3.12.10-stdlib-raster-rules-v1", "runtime_digest": RUNTIME_DIGEST}
+
+
+def _canonical(value: object) -> bytes:
+    return json.dumps(value, ensure_ascii=False, allow_nan=False, sort_keys=True, separators=(",", ":")).encode()
+
+
+def _pgm(data: bytes) -> tuple[int, int, bytes]:
+    parts = data.split(b"\n", 3)
+    if len(parts) != 4 or parts[0] != b"P5" or parts[2] != b"255": raise ValueError("AECCTX_VISION_PGM_INVALID")
+    dimensions = parts[1].split()
+    if len(dimensions) != 2: raise ValueError("AECCTX_VISION_PGM_INVALID")
+    width, height = map(int, dimensions)
+    if len(parts[3]) != width * height: raise ValueError("AECCTX_VISION_PGM_INVALID")
+    return width, height, parts[3]
+
+
+def _capability_report() -> dict[str, dict[str, Any]]:
+    names = ("identity", "hierarchy", "properties", "relationships", "text", "2d_geometry", "3d_geometry", "materials_styles", "georeferencing", "validation")
+    return {name: ({"affected": [], "fallback": "source pixels", "reason_codes": ["AECCTX_VISION_INFERRED_ONLY"], "support_level": "partial"} if name in {"relationships", "2d_geometry"} else {"affected": ["visible-raster"], "fallback": "retain source pixels", "reason_codes": ["AECCTX_VISION_CAPABILITY_UNSUPPORTED"], "support_level": "unsupported"}) for name in names}
+
+
+def main() -> int:
+    root = Path.cwd(); output = root / "output"; request = json.loads((root / "request.json").read_text(encoding="utf-8")); desc = descriptor()
+    events: list[dict[str, Any]] = []; diagnostics: list[dict[str, Any]] = []; ok = True; error = None
+    try:
+        configuration(request)
+        data = (root / request["input"]["path"]).read_bytes()
+        if hashlib.sha256(data).hexdigest() != request["input"]["sha256"]: raise ValueError("AECCTX_VISION_INPUT_HASH_MISMATCH")
+        width, height, pixels = _pgm(data); payload = detect(pixels, width, height)
+        events.append({"event_type": "primitive", "payload": payload, "sequence": 0, "source_locator": f"sha256:{request['input']['sha256']}"})
+        if not payload["candidates"]: diagnostics.append({"code": "AECCTX_VISION_NO_CANDIDATE", "severity": "warning"})
+    except Exception as caught:
+        ok = False; error = {"code": "AECCTX_VISION_PROVIDER_FAILED", "message": f"{type(caught).__name__}: {caught}"}; diagnostics.append({"code": "AECCTX_VISION_PROVIDER_FAILED", "severity": "error"})
+    response: dict[str, Any] = {"artifacts": [], "attestation": {"descriptor_digest": hashlib.sha256(_canonical(desc)).hexdigest(), "deterministic": True, "enforcement_profile": "oci-docker-v1", "network_mode": "disabled", "provider_id": PROVIDER_ID, "provider_version": "0.3.0", "request_digest": hashlib.sha256(_canonical(request)).hexdigest(), "response_payload_digest": "0" * 64, "runtime_version": desc["runtime_version"], "runtime_digest": RUNTIME_DIGEST}, "capability_report": _capability_report(), "diagnostics": diagnostics, "events": events, "ok": ok, "protocol_version": "0.2", "provider_id": PROVIDER_ID, "request_id": request["request_id"], "resource_usage": {"artifacts": 0, "events": len(events)}}
+    if error: response["error"] = error
+    response["attestation"]["response_payload_digest"] = hashlib.sha256(_canonical({key: value for key, value in response.items() if key != "attestation"})).hexdigest()
+    (output / "response.json").write_bytes(_canonical(response))
+    return 0
+
+
+if __name__ == "__main__": raise SystemExit(main())

@@ -189,8 +189,8 @@ ACX-23 additionally runs clean-install artifact verification, the complete v0.1/
 | ACX-27 | completed | Expanded IFC 2D and georeferencing profiles |
 | ACX-28 | completed | Expanded DXF semantics, geometry and bounded xrefs |
 | ACX-29 | completed | Multilingual and layout-aware OCR profiles |
-| ACX-30 | in_progress | Bounded vision inference and reconstruction hypotheses |
-| ACX-31 | pending | Mesh CRS registry and datum-operation qualification |
+| ACX-30 | completed | Bounded vision inference and reconstruction hypotheses |
+| ACX-31 | pending-next | Mesh CRS registry and datum-operation qualification |
 | ACX-32 | pending | STEP/IGES XDE and fidelity expansion |
 | ACX-33 | pending | DWG version, xref, units and geometry expansion |
 | ACX-34 | pending | RVT provider reopening or renewed executable blocker |
@@ -927,7 +927,7 @@ Detailed implementation authority: [`docs/plans/post-v02-functional-debt-impleme
 
 Program rules:
 
-- ACX-24 through ACX-29 are complete and ACX-30 alone is `pending-next`; no later ACX may execute or borrow scope.
+- ACX-24 through ACX-30 are complete and ACX-31 alone is `pending-next`; no later ACX may execute or borrow scope.
 - Existing `0.2.0` public claims remain unchanged until an owning milestone passes its complete acceptance bundle.
 - Replay cannot satisfy a live platform/provider acceptance item.
 - A standard v0.2 schema-field change requires a separately governed compatibility decision; namespaced extensions remain permitted under existing contracts.
@@ -956,3 +956,5 @@ ACX-29 delivery amendment: exact-head Windows CI exposed host-newline drift and 
 ACX-29 completion resolution: `pdf-image.ocr-layout` is public `partial` only for the closed ACXD-037 Tesseract 5.3.4 `eng`/`spa`/`por`, PSM 3/4/6 and orthogonal-correction matrix on Linux arm64/amd64. Words, lines, blocks and the bounded rectangular table rule remain inferred evidence with exact hashes; native text conflicts and unknown topology remain explicit. ACXD-038 made the inherited DXF regeneration gate host-newline independent without changing a DXF fixture or claim. Focused tests, repeated DXF checks, 12 live OCR executions and complete local verification passed; exact-head GitHub CI and squash merge remain mandatory delivery evidence. ACX-30 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.
 
 ACX-30 execution cut: ACXD-039 supersedes the draft's reused ACXD-038 identifier and selects only the project-owned `visible-raster-rules-v1` provider under the existing OCI Linux arm64/amd64 boundary. The mapper lives in `src/aecctx/vision.py` because `src/aecctx/inference.py` is already a public module. ACX-30 is `in_progress`; ACX-31 remains `pending` until live provider, mapping, adapter/CLI, corpus, security, packaging and full gates close both bounded claims or document an exact blocker.
+
+ACX-30 completion resolution: `pdf-image.vision-inference` and `pdf-image.reconstruction-hypothesis` are public `partial` only for ACXD-039's exact project-owned visible rectangle/grid/cross/linear-dimension/containment and planar-boundary rules on Linux arm64/amd64. Eight focused tests, nine fixtures, two live byte-equivalent executions, replay, schema, adapter/CLI, privacy/security and packaging gates passed; exact-head GitHub CI and squash merge remain mandatory delivery evidence. All outputs are inferred pixel evidence and cannot establish semantic identity, measurement, units, CRS, validation completeness or source/full/hidden geometry. ACX-31 alone is promoted to `pending-next` and MUST NOT execute without a new continuation request.

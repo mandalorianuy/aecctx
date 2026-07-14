@@ -130,6 +130,8 @@ def build_parser() -> argparse.ArgumentParser:
     ingest.add_argument("--aecctx-version", choices=("0.1.0", "0.2.0"), default="0.1.0")
     ingest.add_argument("--inference-replay", help="validated bounded OCR provider replay corpus (AECCTX v0.2 PDF/image package profile)")
     ingest.add_argument("--inference-entry", help="entry ID inside --inference-replay")
+    ingest.add_argument("--vision-replay", help="validated bounded vision provider replay corpus (AECCTX v0.2 PDF/image package profile)")
+    ingest.add_argument("--vision-entry", help="entry ID inside --vision-replay")
     ingest.add_argument("--provider-replay", help="validated STEP/IGES or DWG provider replay corpus (v0.2 only)")
     ingest.add_argument("--provider-entry", help="entry ID inside --provider-replay")
     ingest.add_argument("--mesh-coordinate-profile", help="manual mesh coordinate profile JSON (v0.2 geometry only)")
@@ -424,6 +426,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                 from .providers import load_provider_replay_entry
 
                 inference_result = load_provider_replay_entry(arguments.inference_replay, arguments.inference_entry).result
+            if bool(arguments.vision_replay) != bool(arguments.vision_entry):
+                raise ValueError("--vision-replay and --vision-entry must be provided together")
+            vision_result = None
+            if arguments.vision_replay:
+                if arguments.aecctx_version != "0.2.0" or adapter not in {"pdf", "image"}:
+                    raise ValueError("vision replay is limited to governed PDF/image profiles in AECCTX v0.2 packages")
+                from .providers import load_provider_replay_entry
+                replay = load_provider_replay_entry(arguments.vision_replay, arguments.vision_entry)
+                if replay.descriptor.provider_id != "org.aecctx.vision.raster-rules":
+                    raise ValueError("vision replay does not contain the governed ACX-30 provider")
+                vision_result = replay.result
             if bool(arguments.provider_replay) != bool(arguments.provider_entry):
                 raise ValueError("--provider-replay and --provider-entry must be provided together")
             external_provider_result = None
@@ -481,6 +494,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     package_form=arguments.form,
                     aecctx_version=arguments.aecctx_version,
                     ocr_result=inference_result,
+                    vision_result=vision_result,
                 )
             elif adapter == "image":
                 from .adapters.image import ingest_image
@@ -493,6 +507,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     package_form=arguments.form,
                     aecctx_version=arguments.aecctx_version,
                     ocr_result=inference_result,
+                    vision_result=vision_result,
                 )
             elif adapter == "geometry":
                 from .adapters.geometry import ingest_geometry

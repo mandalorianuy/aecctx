@@ -102,3 +102,40 @@ def test_image_adapter_maps_vision_without_promoting_geometry(tmp_path: Path) ->
     records = RecordStore.open(output).records.values()
     assert {record.raw.get("original_class") for record in records} >= {"VISION_REGION_RECTANGLE", "VISION_SYMBOL_CROSS"}
     assert all(record.raw.get("evidence_class") == "inferred" for record in records if str(record.raw.get("original_class", "")).startswith("VISION_"))
+
+
+def test_cli_accepts_only_explicit_vision_replay(tmp_path: Path) -> None:
+    import subprocess, sys
+    output = tmp_path / "cli-package"
+    completed = subprocess.run([sys.executable, "-m", "aecctx", "ingest", str(ROOT / "fixtures/v0.3/vision/positive.pgm"), "--output", str(output), "--adapter", "image", "--aecctx-version", "0.2.0", "--vision-replay", str(ROOT / "conformance/v0.3/vision-replay-corpus.json"), "--vision-entry", "vision-visible-raster-v03"], cwd=ROOT, capture_output=True, text=True)
+    assert completed.returncode == 0, completed.stderr
+
+
+def test_pdf_adapter_maps_matching_visible_raster_without_source_geometry(tmp_path: Path) -> None:
+    from dataclasses import replace
+    from pypdf import PdfReader
+    from aecctx.adapters.pdf import ingest_pdf
+    from aecctx.inference import canonical_ocr_pgm
+    from aecctx.records import RecordStore
+    source = ROOT / "fixtures/v0.3/ocr/spa-raster.pdf"
+    image = PdfReader(source, strict=True).pages[0].images[0].image.convert("L"); width, height = image.size; data = canonical_ocr_pgm(width, height, image.tobytes())
+    payload = _payload(); payload["width"] = width; payload["height"] = height
+    result = _result(payload); result = replace(result, events=({**result.events[0], "source_locator": "sha256:" + hashlib.sha256(data).hexdigest()},))
+    output = tmp_path / "pdf-package"; ingest_pdf(source, output, created_at="2026-07-14T00:00:00Z", aecctx_version="0.2.0", vision_result=result)
+    classes = {record.raw.get("original_class") for record in RecordStore.open(output).records.values()}
+    assert "VISION_REGION_RECTANGLE" in classes
+    assert "PDF_PATH" not in classes or "VISION_REGION_RECTANGLE" in classes
+
+
+def test_negative_fixture_matrix_and_network_attestation_fail_closed() -> None:
+    path = ROOT / "providers/vision-raster-rules/worker.py"; spec = importlib.util.spec_from_file_location("aecctx_test_vision_worker_matrix", path); assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+    for name in ("blank.pgm", "cropped.pgm", "occluded.pgm", "prompt-like.pgm", "redacted.pgm", "rotated.pgm"):
+        width, height, pixels = module._pgm((ROOT / "fixtures/v0.3/vision" / name).read_bytes())
+        assert module.detect(pixels, width, height)["candidates"] == []
+    with pytest.raises(ValueError): module._pgm((ROOT / "fixtures/v0.3/vision/corrupt.pgm").read_bytes())
+    from dataclasses import replace
+    from aecctx.vision import VisionMappingError, map_vision_result
+    result = _result(); attestation = {**result.attestation, "network_mode": "allowlisted"}
+    with pytest.raises(VisionMappingError, match="attestation"):
+        map_vision_result(replace(result, attestation=attestation), input_bytes=INPUT, source_id="src", parent_record_id="image", source_locator="pixel-canvas", width=64, height=64, recorded_at="2026-07-14T00:00:00Z")
