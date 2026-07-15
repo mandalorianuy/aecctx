@@ -1,0 +1,41 @@
+{
+  "blocked_tasks": ["ACX-34"],
+  "claims": "conformance/v0.3/claims.json",
+  "compatibility": ["conformance/v0.1/corpus.json", "conformance/v0.2/corpus.json"],
+  "suites": [
+    {"id": "claims", "path": "conformance/v0.3/claims.json", "sha256": "e01da37e1e60db100a70f74b89c6f6fe917bfa808e262eba11276fe914a5cdc6"},
+    {"id": "provider-multiarch", "path": "conformance/v0.3/provider-multiarch-corpus.json", "sha256": "f8d059b3d770ab6268c904e39cee7f2a34826113e37d67363f899eabbd91f307"},
+    {"id": "local-enforcement", "path": "conformance/v0.3/local-enforcement-corpus.json", "sha256": "73205a0a48e871115643d8b11d8a48a3be2385255f50530edfea59d48ac007a5"},
+    {"id": "remote-provider", "path": "conformance/v0.3/remote-provider-corpus.json", "sha256": "91004a7224a1721fdfaf6bc68e69a1a077245fa062cfc7c720d4844c5355d298"},
+    {"id": "ifc", "path": "conformance/v0.3/ifc-corpus.json", "sha256": "ea87658173e99e35bf86f5799bd95ceaa94c31819a2785fabeadffc091b09808"},
+    {"id": "dxf", "path": "conformance/v0.3/dxf-corpus.json", "sha256": "d897c92410fcce73039e2247a917411696479a5a792c41ec24e7ec12d99d1375"},
+    {"id": "ocr", "path": "conformance/v0.3/ocr-corpus.json", "sha256": "9c72988c30c92de029f5a323da7114381288f396c493c7bffcb17d046b8097be"},
+    {"id": "vision", "path": "conformance/v0.3/vision-corpus.json", "sha256": "b0c3d7ae2d2b1457da2162345e56ec4168f8f04982fc71d3f93b82adf0579d86"},
+    {"id": "mesh-crs", "path": "conformance/v0.3/mesh-crs-corpus.json", "sha256": "d39ee0fcbdc105b68c821274122bfbedf87d000a85062031042cb402a717fd12"},
+    {"id": "step-iges", "path": "conformance/v0.3/step-iges-corpus.json", "sha256": "d6fc0644e8149b6cee548f93eafaa3a03798c5d0e7d1ecfb6a301eb07f726c15"},
+    {"id": "dwg", "path": "conformance/v0.3/dwg-corpus.json", "sha256": "37c7bf8102cbbad973cb01e98a012d120078aec9025652d5677e9c2beb87f31c"},
+    {"id": "rvt-blocked", "path": "conformance/v0.3/rvt-provider-decision.json", "sha256": "2a8c6d02a598e69e6e97b6888c92d4d2163709477f2c389868b015fb55b66709"},
+    {"id": "signing", "path": "conformance/v0.3/signing-corpus.json", "sha256": "cc0ee422d4ae878f7f67ea45f98aa735d5834b67aa6f223a41dc3aab8e2cc7c8"},
+    {"id": "gate", "path": "conformance/v0.3/gate-corpus.json", "sha256": "b200ad35960fc50591df003c1889e9a0cf38715e15c960e786164b960ed0d987"},
+    {"id": "plugin", "path": "conformance/v0.3/plugin-corpus.json", "sha256": "04231352a99138b97d5bc0ba576960c1f87a13a9fa266c9182fa084ff7a66ac9"},
+    {"id": "compatibility-v01", "path": "conformance/v0.1/corpus.json", "sha256": "16844cbbcb8f80da3a7f76c9865077693f6db8ceabc34f1eaa659fc9718a7ca8"},
+    {"id": "compatibility-v02", "path": "conformance/v0.2/corpus.json", "sha256": "c6fd3e0180fc62b2d2eb004df35616192e70fe81c98abe8a6ef97d6f798a2c2d"}
+  ],
+  "tasks": [
+    {"claim_ids": ["sandbox.oci-multiarch"], "evidence": "docs/evidence/ACX-24.md", "id": "ACX-24", "status": "completed"},
+    {"claim_ids": ["sandbox.local-enforcement"], "evidence": "docs/evidence/ACX-25.md", "id": "ACX-25", "status": "completed"},
+    {"claim_ids": ["sandbox.remote-provider"], "evidence": "docs/evidence/ACX-26.md", "id": "ACX-26", "status": "completed"},
+    {"claim_ids": ["ifc.native-2d.v03", "ifc.georeferencing.v03"], "evidence": "docs/evidence/ACX-27.md", "id": "ACX-27", "status": "completed"},
+    {"claim_ids": ["dxf.source-semantics.v03", "dxf.geometry.v03"], "evidence": "docs/evidence/ACX-28.md", "id": "ACX-28", "status": "completed"},
+    {"claim_ids": ["pdf-image.ocr-layout"], "evidence": "docs/evidence/ACX-29.md", "id": "ACX-29", "status": "completed"},
+    {"claim_ids": ["pdf-image.vision-inference", "pdf-image.reconstruction-hypothesis"], "evidence": "docs/evidence/ACX-30.md", "id": "ACX-30", "status": "completed"},
+    {"claim_ids": ["mesh.crs-registry", "mesh.datum-transform"], "evidence": "docs/evidence/ACX-31.md", "id": "ACX-31", "status": "completed"},
+    {"claim_ids": ["step-iges.xde-structure", "step-iges.partial-recovery"], "evidence": "docs/evidence/ACX-32.md", "id": "ACX-32", "status": "completed"},
+    {"claim_ids": ["dwg.external-provider.v03"], "evidence": "docs/evidence/ACX-33.md", "id": "ACX-33", "status": "completed"},
+    {"claim_ids": ["rvt.external-provider"], "evidence": "docs/evidence/ACX-34.md", "id": "ACX-34", "status": "blocked"},
+    {"claim_ids": ["package.advanced-trust-signing"], "evidence": "docs/evidence/ACX-35.md", "id": "ACX-35", "status": "completed"},
+    {"claim_ids": ["quality-gate.ids-expanded"], "evidence": "docs/evidence/ACX-36.md", "id": "ACX-36", "status": "completed"},
+    {"claim_ids": ["codex.aecctx-inspector-distribution"], "evidence": "docs/evidence/ACX-37.md", "id": "ACX-37", "status": "completed"}
+  ],
+  "version": "0.3.0"
+}

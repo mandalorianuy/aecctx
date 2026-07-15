@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 
 
 def _repository_root() -> Path:
@@ -72,15 +72,15 @@ def build_release_metadata(artifacts: Iterable[str | Path], *, output_directory:
         relationships.append({"relatedSpdxElement": spdx_id, "relationshipType": "DEPENDS_ON", "spdxElementId": "SPDXRef-Package-aecctx"})
     sbom = {
         "SPDXID": "SPDXRef-DOCUMENT",
-        "creationInfo": {"created": "2026-07-13T00:00:00Z", "creators": ["Tool: aecctx-release/0.2.0"]},
+        "creationInfo": {"created": "2026-07-14T00:00:00Z", "creators": ["Tool: aecctx-release/0.3.0"]},
         "dataLicense": "CC0-1.0",
-        "documentNamespace": "https://aecctx.dev/spdx/aecctx-0.2.0",
-        "name": "aecctx-0.2.0",
+        "documentNamespace": "https://aecctx.dev/spdx/aecctx-0.3.0",
+        "name": "aecctx-0.3.0",
         "packages": packages,
         "relationships": relationships,
         "spdxVersion": "SPDX-2.3",
     }
-    sbom_path = output / "aecctx-0.2.0.spdx.json"
+    sbom_path = output / "aecctx-0.3.0.spdx.json"
     sbom_path.write_text(json.dumps(sbom, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return {"checksums": str(checksums_path), "sbom": str(sbom_path)}
 

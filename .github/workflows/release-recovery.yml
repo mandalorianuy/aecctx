@@ -41,12 +41,12 @@ jobs:
           AECCTX_RELEASE_ROOT: ${{ github.workspace }}/source
       - run: >-
           gh release create "${{ inputs.tag }}"
-          source/dist/aecctx-0.2.0-py3-none-any.whl
-          source/dist/aecctx-0.2.0.tar.gz
-          source/dist/aecctx-inspector-0.2.0.zip
+          source/dist/aecctx-0.3.0-py3-none-any.whl
+          source/dist/aecctx-0.3.0.tar.gz
+          source/dist/aecctx-inspector-0.3.0.zip
           source/dist/SHA256SUMS
-          source/dist/aecctx-0.2.0.spdx.json
+          source/dist/aecctx-0.3.0.spdx.json
           --repo "$GITHUB_REPOSITORY"
-          --title "AECCTX 0.2.0"
-          --notes-file source/docs/releases/v0.2.0.md
+          --title "AECCTX 0.3.0"
+          --notes-file source/docs/releases/v0.3.0.md
           --verify-tag

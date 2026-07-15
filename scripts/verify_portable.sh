@@ -50,6 +50,7 @@ done
 "$python_runtime" -m json.tool conformance/v0.2/gate-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.2/plugin-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/claims.json >/dev/null
+"$python_runtime" -m json.tool conformance/v0.3/corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/provider-multiarch-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/local-enforcement-corpus.json >/dev/null
 "$python_runtime" -m json.tool conformance/v0.3/remote-provider-corpus.json >/dev/null
@@ -98,6 +99,7 @@ done
 "$python_runtime" fixtures/v0.3/dwg/generate_fixtures.py --check
 "$python_runtime" scripts/check_dwg_v03_conformance.py --require-public
 "$python_runtime" -c 'from aecctx.release_conformance import validate_release_corpus; result = validate_release_corpus("conformance/v0.2/corpus.json", repository_root="."); raise SystemExit(0 if result["ok"] else "v0.2 release corpus failed")'
+"$python_runtime" -m aecctx.release_v03_conformance
 "$python_runtime" -c 'from aecctx.conformance import validate_claim_registry_file; result = validate_claim_registry_file("conformance/v0.2/claims.json"); raise SystemExit(0 if result.valid else "; ".join(result.errors))'
 "$python_runtime" -c 'from aecctx.conformance import validate_claim_registry_file; result = validate_claim_registry_file("conformance/v0.3/claims.json"); raise SystemExit(0 if result.valid else "; ".join(result.errors))'
 "$python_runtime" -c 'from aecctx.providers import validate_provider_replay_corpus; result = validate_provider_replay_corpus("conformance/v0.2/provider-corpus.json"); raise SystemExit(0 if result["ok"] else "provider replay corpus failed")'
@@ -106,19 +108,22 @@ done
 "$python_runtime" -c 'from aecctx.providers import validate_provider_replay_corpus; result = validate_provider_replay_corpus("conformance/v0.2/dwg-corpus.json"); raise SystemExit(0 if result["ok"] else "DWG replay corpus failed")'
 "$python_runtime" -m pytest tests/test_gate_*.py tests/test_claim_registry.py tests/test_v03_claim_registry.py tests/test_provider_multiarch.py tests/test_local_provider_profiles.py tests/test_remote_providers.py tests/test_package_data.py
 "$python_runtime" -m pytest
-"$python_runtime" -m build --wheel --sdist --outdir dist
-"$python_runtime" scripts/check_rvt_blocked_conformance.py --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
-"$python_runtime" scripts/check_local_enforcement_conformance.py --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
-"$python_runtime" scripts/check_remote_provider_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
-"$python_runtime" scripts/check_ifc_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
-"$python_runtime" scripts/check_dxf_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
-"$python_runtime" scripts/check_ocr_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
-"$python_runtime" scripts/check_vision_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
-"$python_runtime" scripts/check_mesh_crs_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
-"$python_runtime" scripts/check_step_iges_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
-"$python_runtime" scripts/check_dwg_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
-"$python_runtime" scripts/check_gate_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
-"$python_runtime" scripts/check_inspector_v03_conformance.py --require-public --artifact dist/aecctx-0.2.0-py3-none-any.whl --artifact dist/aecctx-0.2.0.tar.gz
+rm -rf dist
+mkdir -p dist
+SOURCE_DATE_EPOCH=1783987200 "$python_runtime" -m build --wheel --sdist --outdir dist
+release_artifacts=(dist/aecctx-0.3.0-py3-none-any.whl dist/aecctx-0.3.0.tar.gz)
+"$python_runtime" scripts/check_rvt_blocked_conformance.py --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
+"$python_runtime" scripts/check_local_enforcement_conformance.py --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
+"$python_runtime" scripts/check_remote_provider_conformance.py --require-public --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
+"$python_runtime" scripts/check_ifc_v03_conformance.py --require-public --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
+"$python_runtime" scripts/check_dxf_v03_conformance.py --require-public --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
+"$python_runtime" scripts/check_ocr_v03_conformance.py --require-public --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
+"$python_runtime" scripts/check_vision_v03_conformance.py --require-public --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
+"$python_runtime" scripts/check_mesh_crs_v03_conformance.py --require-public --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
+"$python_runtime" scripts/check_step_iges_v03_conformance.py --require-public --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
+"$python_runtime" scripts/check_dwg_v03_conformance.py --require-public --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
+"$python_runtime" scripts/check_gate_v03_conformance.py --require-public --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
+"$python_runtime" scripts/check_inspector_v03_conformance.py --require-public --artifact "${release_artifacts[0]}" --artifact "${release_artifacts[1]}"
 
 # Baseline-owned offer snapshots include upstream EOF formatting and are checked
 # byte-for-byte by the full baseline integration checker when its private runtime

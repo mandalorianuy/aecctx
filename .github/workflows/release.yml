@@ -26,11 +26,11 @@ jobs:
       - run: ./scripts/verify_release.sh
       - run: >-
           gh release create "$GITHUB_REF_NAME"
-          dist/aecctx-0.2.0-py3-none-any.whl
-          dist/aecctx-0.2.0.tar.gz
-          dist/aecctx-inspector-0.2.0.zip
+          dist/aecctx-0.3.0-py3-none-any.whl
+          dist/aecctx-0.3.0.tar.gz
+          dist/aecctx-inspector-0.3.0.zip
           dist/SHA256SUMS
-          dist/aecctx-0.2.0.spdx.json
-          --title "AECCTX 0.2.0"
-          --notes-file docs/releases/v0.2.0.md
+          dist/aecctx-0.3.0.spdx.json
+          --title "AECCTX 0.3.0"
+          --notes-file docs/releases/v0.3.0.md
           --verify-tag
