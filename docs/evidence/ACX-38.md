@@ -1,8 +1,8 @@
 # ACX-38 Aggregate Conformance and 0.3.0 Release Evidence
 
 Date: 2026-07-14
-Status: Release candidate; remote CI, merge, tag and published-asset receipts pending
-Completion commit: pending reviewed squash merge
+Status: Completed; immutable v0.3.0 release published and verified
+Release commit: `d9c68d7d8a0b07efa8f87c2097571ba872e7d26f`
 
 ## Governed scope
 
@@ -37,7 +37,15 @@ python scripts/check_spec_contract.py
 python3 scripts/check_meta_agent_baseline_integration.py --fail-on-issues
 ```
 
-TDD RED was observed as `ModuleNotFoundError: No module named 'aecctx.release_v03_conformance'` before implementation. The focused release suite passes 7 tests; the release-focused compatibility/package suite passes 56 tests; `./scripts/verify_portable.sh` passes 311 focused tests and 828 complete tests with 13 intentional skips. Repeated fixed-epoch wheel/sdist builds and repeated inspector builds are byte-identical; clean core and all-extras installations, artifact scan, SHA-256 verification and SPDX generation pass. Remote receipts are recorded after delivery.
+TDD RED was observed as `ModuleNotFoundError: No module named 'aecctx.release_v03_conformance'` before implementation. The focused release suite passes 7 tests; the release-focused compatibility/package suite passes 56 tests; `./scripts/verify_portable.sh` passes 311 focused tests and 828 complete tests with 13 intentional skips. Repeated fixed-epoch wheel/sdist builds and repeated inspector builds are byte-identical; clean core and all-extras installations, artifact scan, SHA-256 verification and SPDX generation pass.
+
+## Delivery and publication receipts
+
+- Candidate commit `6b8ab606f4d204e8125680bafd695cb550b580a6` was independently approved on [PR #13](https://github.com/mandalorianuy/aecctx/pull/13); all six push/PR Linux, macOS and Windows checks passed.
+- Reviewed squash merge `d9c68d7d8a0b07efa8f87c2097571ba872e7d26f` passed merged-main [CI run 29378117244](https://github.com/mandalorianuy/aecctx/actions/runs/29378117244) on Linux, macOS and Windows.
+- Immutable annotated tag `v0.3.0` resolves to that exact merge commit. Tag [CI run 29378575104](https://github.com/mandalorianuy/aecctx/actions/runs/29378575104) and [release run 29378575118](https://github.com/mandalorianuy/aecctx/actions/runs/29378575118) passed.
+- [AECCTX 0.3.0](https://github.com/mandalorianuy/aecctx/releases/tag/v0.3.0) is public, non-draft and non-prerelease. Downloaded wheel, sdist and inspector ZIP pass `SHA256SUMS` and are byte-identical to the locally verified fixed-epoch artifacts.
+- Published SHA-256: wheel `0d247a0b9ce61603be4c9b768d0808a0a9b440d8083c32befa8c08ef78d00352`; sdist `11a11353ce9f58f6223713f2e384f3e35f51cb16de3f2ec9d731a974265e04a3`; inspector `ad138eb615ffa8b0143864fec81e1692ca27f3ca7a251a407ea6c79171f56fd3`; SPDX SBOM `1b3e01160e7500c3f2fc3aa8463a44d50f9ea2996114f95b2164239e5ec4d200`.
 
 ## Security, privacy, licensing and platforms
 

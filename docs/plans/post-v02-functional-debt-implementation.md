@@ -578,9 +578,9 @@ The published `conformance/v0.2/rvt-provider-decision.json`, ACX-19 evidence and
   ./scripts/verify_release.sh
   ```
 
-- [ ] Push a release candidate and require green exact-SHA CI on every claimed platform/provider matrix.
-- [ ] Merge through a no-ff reviewed commit, rerun full verification on `main`, create immutable `v0.3.0`, publish only verified assets and verify downloaded checksums.
-- [ ] Mark ACX-38 completed with no automatic next task; commit `release: publish AECCTX 0.3.0` plus a later evidence-only commit if remote publication receipts are required.
+- [x] Push a release candidate and require green exact-SHA CI on every claimed platform/provider matrix.
+- [x] Merge through the governed reviewed squash commit, rerun full verification on `main`, create immutable `v0.3.0`, publish only verified assets and verify downloaded checksums.
+- [x] Mark ACX-38 completed with no automatic next task; publish the evidence-only closeout after remote receipts exist.
 
 ---
 
